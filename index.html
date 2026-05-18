@@ -414,6 +414,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
       <input type="date" id="add-deadline"/>
     </div>
     <div class="modal-field">
+      <label>🔁 Se repite</label>
+      <select id="add-recur">
+        <option value="">— No se repite —</option>
+        <option value="daily">Cada día</option>
+        <option value="weekly">Cada semana</option>
+        <option value="biweekly">Cada 2 semanas</option>
+        <option value="monthly">Cada mes</option>
+      </select>
+    </div>
+    <div class="modal-field">
       <label>Categoría</label>
       <select id="add-cat">
         <option value="operacion">🟨 Operación</option>
@@ -505,6 +515,16 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <input type="text" id="st-edit-input" placeholder="Nueva acción…" style="flex:1;font-size:.85rem" onkeydown="if(event.key==='Enter'){addSubtask();event.preventDefault()}"/>
         <button onclick="addSubtask()" style="background:var(--purple);color:white;border:none;border-radius:8px;padding:7px 12px;font-size:.82rem;font-weight:700;cursor:pointer">+ Agregar</button>
       </div>
+    </div>
+    <div class="modal-field">
+      <label>🔁 Se repite</label>
+      <select id="edit-recur">
+        <option value="">— No se repite —</option>
+        <option value="daily">Cada día</option>
+        <option value="weekly">Cada semana</option>
+        <option value="biweekly">Cada 2 semanas</option>
+        <option value="monthly">Cada mes</option>
+      </select>
     </div>
     <div class="modal-field">
       <label>Nota / contexto</label>
@@ -864,7 +884,8 @@ function cardHTML(item){
   const noteH=item.note?`<div class="card-note">${h(item.note)}</div>`:'';
   const schedH=item.scheduledDate?`<span class="card-sched">📆 ${schedFmt(item.scheduledDate)}</span>`:'';
   const delegH=item.delegadoA?`<span class="delegate-badge">👤 ${DELEGATE_NAMES[item.delegadoA]||item.delegadoA}</span>`:'';
-  const badges=[eisBadgeHTML(item), (!isDone&&item.deadline)?dlBadgeHTML(item.deadline):'', schedH, delegH].filter(Boolean);
+  const recurH=item.recur?`<span style="font-size:.6rem;font-weight:700;background:#ede9fe;color:#6d28d9;padding:2px 7px;border-radius:999px">🔁 ${RECUR_LABELS[item.recur]||''}</span>`:'';
+  const badges=[eisBadgeHTML(item), (!isDone&&item.deadline)?dlBadgeHTML(item.deadline):'', schedH, delegH, recurH].filter(Boolean);
   const badgesH=badges.length?`<div class="card-badges">${badges.join('')}</div>`:'';
   const dragH=!isDone?`<div class="drag-handle" ontouchstart="startDrag(event,${item.id})" onmousedown="startMouseDrag(event,${item.id})" title="Arrastra a otra pestaña">⠿</div>`:'';
   const subs=item.subtasks||[];
@@ -1043,11 +1064,40 @@ function renderDash(){
   </div>`;
 }
 
+// ── PRIORITY SORT ───────────────────────────────
+function cardPriority(item){
+  let score=0;
+  // Eisenhower quadrant (urgencia + importancia)
+  const u=item.urgente, im=item.importante;
+  if(u===true  && im===true)  score+=400; // Q1 urgente+importante
+  else if(u===false && im===true)  score+=300; // Q2 planear
+  else if(u===true  && im===false) score+=200; // Q3 delegar
+  else if(u===false && im===false) score+=80;  // Q4 eliminar
+  else score+=250; // sin clasificar = medio
+  // Vitalidad para el negocio: OC + categoría
+  const oc=getOC(item);
+  score+=(oc==='construir'?35:oc==='operar'?20:10);
+  const vitCat={estrategia:30,proyectos:24,sistemas:22,rh:16,mktg:14,operacion:10,josh:8,tres:6,personal:4};
+  score+=(vitCat[item.cat]||10);
+  // Urgencia de fecha límite
+  if(item.deadline){
+    const today=new Date(); today.setHours(0,0,0,0);
+    const diff=Math.floor((new Date(item.deadline+'T00:00:00')-today)/86400000);
+    if(diff<0)       score+=120; // vencida
+    else if(diff===0)score+=90;  // hoy
+    else if(diff<=2) score+=65;  // pasado mañana
+    else if(diff<=7) score+=40;  // esta semana
+    else if(diff<=30)score+=15;  // este mes
+  }
+  return score;
+}
+
 // ── RENDER ──────────────────────────────────────
 function render(){
   renderDash();
   ['todo','compromisos','proyectos','extra','done'].forEach(col=>{
-    const ci=items.filter(i=>i.col===col);
+    const ci=items.filter(i=>i.col===col)
+      .sort((a,b)=>cardPriority(b)-cardPriority(a));
     const panel=document.getElementById('panel-'+col);
     if(!panel) return;
     const m=TYPE_META[col];
@@ -1076,6 +1126,7 @@ function openAddModal(){
   document.getElementById('add-deadline').value='';
   document.getElementById('add-scheduled').value='';
   document.getElementById('add-delegate').value='';
+  document.getElementById('add-recur').value='';
   setOC('add',null);
   setEisUI('add',null,null);
   document.getElementById('add-modal').classList.add('open');
@@ -1096,6 +1147,8 @@ function confirmAdd(){
     oc:ocState.add,
     urgente:eisState.add.urgente,
     importante:eisState.add.importante,
+    recur:document.getElementById('add-recur').value,
+    subtasks:[],progress:0,
   });
   document.getElementById('cap-input').value='';
   document.getElementById('add-text').value='';
@@ -1164,6 +1217,7 @@ function openEditModal(id){
   editingSubtasks=JSON.parse(JSON.stringify(item.subtasks||[]));
   renderSubtaskEditor();
   document.getElementById('st-edit-input').value='';
+  document.getElementById('edit-recur').value=item.recur||'';
   document.getElementById('edit-note').value=item.note||'';
   document.getElementById('edit-cat').value=item.cat;
   setEisUI('edit', item.urgente===undefined?null:item.urgente, item.importante===undefined?null:item.importante);
@@ -1184,11 +1238,44 @@ function confirmEdit(){
   item.cat     =document.getElementById('edit-cat').value;
   item.urgente   =eisState.edit.urgente;
   item.importante=eisState.edit.importante;
+  item.recur   =document.getElementById('edit-recur').value;
   editingId=null; save();render(); closeModal('edit-modal');
 }
 
+// ── RECURRENCE ──────────────────────────────────
+const RECUR_LABELS={daily:'Cada día',weekly:'Cada semana',biweekly:'Cada 2 sem.',monthly:'Mensual'};
+
+function nextDate(dateStr,recur){
+  if(!dateStr) return '';
+  const d=new Date(dateStr+'T12:00:00');
+  if(recur==='daily')    d.setDate(d.getDate()+1);
+  else if(recur==='weekly')   d.setDate(d.getDate()+7);
+  else if(recur==='biweekly') d.setDate(d.getDate()+14);
+  else if(recur==='monthly')  d.setMonth(d.getMonth()+1);
+  return d.toISOString().slice(0,10);
+}
+
 // ── ACTIONS ─────────────────────────────────────
-function markDone(id){const i=items.find(x=>x.id===id);if(i)i.col='done';save();render()}
+function markDone(id){
+  const i=items.find(x=>x.id===id); if(!i) return;
+  const origCol=i.col;
+  i.col='done';
+  if(i.recur){
+    items.push({
+      id:Date.now()+(Math.random()*999|0),
+      text:i.text, icon:i.icon||'', note:i.note||'',
+      col:origCol, cat:i.cat,
+      urgente:i.urgente, importante:i.importante,
+      deadline:nextDate(i.deadline,i.recur),
+      scheduledDate:nextDate(i.scheduledDate,i.recur),
+      delegadoA:i.delegadoA||'', oc:i.oc||null,
+      recur:i.recur,
+      subtasks:(i.subtasks||[]).map(s=>({...s,done:false})),
+      progress:0
+    });
+  }
+  save();render();
+}
 function startMove(id){movingId=id;document.getElementById('move-modal').classList.add('open')}
 function doMove(col){
   const i=items.find(x=>x.id===movingId);if(i)i.col=col;
