@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Montse's Flow">
+<meta name="theme-color" content="#7c3aed">
+<title>Montse's Flow</title>
+<style>
+:root {
+  --purple:#5e7226; --purple-dark:#3d5218; --purple-light:#eef3d6;
+  --bg:#f4f7ec; --card:#ffffff; --text:#1e1b4b; --text2:#6b7280; --border:#e5e7eb;
+  --radius:16px; --tab-h:64px;
+  --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+  --todo-bg:#fff7ed;--todo-b:#f97316;--todo-t:#9a3412;
+  --comp-bg:#eff6ff;--comp-b:#3b82f6;--comp-t:#1e40af;
+  --proj-bg:#fef2f2;--proj-b:#ef4444;--proj-t:#991b1b;
+  --extr-bg:#f0fdf4;--extr-b:#22c55e;--extr-t:#14532d;
+  --done-bg:#f5f3ff;--done-b:#a78bfa;--done-t:#5b21b6;
+  /* eisenhower */
+  --q1-bg:#fee2e2;--q1-b:#ef4444;--q1-t:#991b1b;
+  --q2-bg:#dbeafe;--q2-b:#3b82f6;--q2-t:#1e40af;
+  --q3-bg:#fef3c7;--q3-b:#f59e0b;--q3-t:#92400e;
+  --q4-bg:#f1f5f9;--q4-b:#94a3b8;--q4-t:#475569;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overscroll-behavior:none}
+
+/* ── HEADER ── */
+.app-header{background:linear-gradient(135deg,#3d5218 0%,#5e7226 100%);color:white;padding:14px 16px 12px;padding-top:calc(14px + var(--safe-t));position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(62,82,24,.3)}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.app-header h1{font-size:1.1rem;font-weight:900;letter-spacing:-.03em}
+.app-header h1 span{opacity:.65;font-weight:400}
+.capture-row{display:flex;gap:8px}
+.capture-row input{flex:1;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);border-radius:10px;padding:9px 14px;color:white;font-size:.88rem;outline:none}
+.capture-row input::placeholder{color:rgba(255,255,255,.6)}
+.capture-row input:focus{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5)}
+.add-btn{background:white;color:var(--purple-dark);border:none;border-radius:10px;padding:9px 15px;font-size:.88rem;font-weight:700;cursor:pointer;white-space:nowrap}
+
+/* ── TAB BAR ── */
+.tab-bar{display:flex;background:white;border-top:1px solid var(--border);position:fixed;bottom:0;left:0;right:0;height:calc(var(--tab-h) + var(--safe-b));padding-bottom:var(--safe-b);z-index:100;box-shadow:0 -4px 24px rgba(0,0,0,.08)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:#9ca3af;padding:6px 2px;position:relative;transition:color .15s;border-radius:0}
+.tab.active{color:var(--purple)}
+.tab::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%) scaleX(0);width:32px;height:3px;background:var(--purple);border-radius:0 0 6px 6px;transition:transform .22s}
+.tab.active::before{transform:translateX(-50%) scaleX(1)}
+.tab.active .tab-icon-wrap{background:var(--purple-light);border-radius:10px}
+.tab-icon-wrap{padding:3px 8px;border-radius:10px;transition:background .15s}
+.tab-icon{font-size:1.1rem;transition:transform .15s;display:block}
+.tab.active .tab-icon{transform:scale(1.12)}
+.tab.drag-over{background:#ede9fe!important;border-radius:12px;color:var(--purple)}
+.tab.drag-over .tab-icon{transform:scale(1.25)}
+.tab-label{font-size:.54rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.tab.active .tab-label{font-weight:900}
+.tab-count{position:absolute;top:5px;right:calc(50% - 18px);background:#ef4444;color:white;border-radius:999px;font-size:.54rem;font-weight:700;padding:1px 5px;min-width:15px;text-align:center}
+
+/* ── DRAG ── */
+.card.dragging{opacity:.25;transform:scale(.97)}
+.drag-handle{display:flex;align-items:center;justify-content:center;padding:4px 2px 4px 6px;color:#d1d5db;cursor:grab;font-size:1rem;flex-shrink:0;touch-action:none}
+.drag-handle:active{cursor:grabbing;color:var(--purple)}
+
+/* ── DELEGATE BADGE ── */
+.delegate-badge{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:999px;display:inline-block;background:#cffafe;color:#0e7490}
+
+/* ── EMOJI PICKER ── */
+.emoji-cat-bar{display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.emoji-cat-bar::-webkit-scrollbar{display:none}
+.emoji-cat-btn{border:1.5px solid var(--border);border-radius:20px;padding:5px 11px;font-size:.72rem;font-weight:700;cursor:pointer;background:white;color:var(--text2);white-space:nowrap;flex-shrink:0;transition:all .12s}
+.emoji-cat-btn.active{background:var(--purple);border-color:var(--purple);color:white}
+.emoji-grid-wrap{display:flex;flex-wrap:wrap;gap:7px;max-height:46vh;overflow-y:auto;padding:2px}
+#emoji-modal{z-index:400}
+
+/* ── CONTENT ── */
+.content{padding:16px 14px;padding-bottom:calc(var(--tab-h) + var(--safe-b) + 16px)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ── DASHBOARD ── */
+.dash-greeting{background:linear-gradient(135deg,#3d5218,#5e7226);border-radius:var(--radius);padding:18px 20px;color:white;margin-bottom:14px;position:relative;overflow:hidden}
+.dash-greeting::before{content:'';position:absolute;top:-20px;right:-20px;width:100px;height:100px;background:rgba(255,255,255,.08);border-radius:50%}
+.dash-greeting h2{font-size:1.2rem;font-weight:800;margin-bottom:2px}
+.dash-greeting p{font-size:.8rem;opacity:.75}
+.dash-progress{display:flex;align-items:center;gap:14px;margin-top:14px}
+.progress-ring-wrap svg{display:block}
+.progress-track{fill:none;stroke:rgba(255,255,255,.2);stroke-width:5}
+.progress-fill{fill:none;stroke:white;stroke-width:5;stroke-linecap:round;transition:stroke-dashoffset .6s ease;transform:rotate(-90deg);transform-origin:50% 50%}
+.progress-label{font-size:.78rem}
+.progress-label strong{font-size:1.1rem;display:block}
+
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.dash-type-card{background:var(--card);border-radius:14px;padding:14px;border-left:4px solid;box-shadow:0 2px 8px rgba(0,0,0,.05);cursor:pointer;transition:transform .12s}
+.dash-type-card:active{transform:scale(.97)}
+.dash-type-card.type-todo{border-color:var(--todo-b)}
+.dash-type-card.type-compromisos{border-color:var(--comp-b)}
+.dash-type-card.type-proyectos{border-color:var(--proj-b)}
+.dash-type-card.type-extra{border-color:var(--extr-b)}
+.dtc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.dtc-icon{font-size:1.5rem}
+.dtc-count{font-size:1.3rem;font-weight:900;line-height:1}
+.dtc-title{font-size:.72rem;font-weight:700;color:var(--text2);margin-bottom:6px}
+.dtc-preview{font-size:.68rem;color:var(--text2);line-height:1.4}
+
+/* Eisenhower mini matrix */
+.eis-section{margin-bottom:14px}
+.dash-section-title{font-size:.72rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.eis-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.eis-quad{border-radius:12px;padding:11px 13px;border-left:3px solid}
+.eis-quad.q1{background:var(--q1-bg);border-color:var(--q1-b)}
+.eis-quad.q2{background:var(--q2-bg);border-color:var(--q2-b)}
+.eis-quad.q3{background:var(--q3-bg);border-color:var(--q3-b)}
+.eis-quad.q4{background:var(--q4-bg);border-color:var(--q4-b)}
+.eis-quad-label{font-size:.64rem;font-weight:700;margin-bottom:3px}
+.eis-quad.q1 .eis-quad-label{color:var(--q1-t)}
+.eis-quad.q2 .eis-quad-label{color:var(--q2-t)}
+.eis-quad.q3 .eis-quad-label{color:var(--q3-t)}
+.eis-quad.q4 .eis-quad-label{color:var(--q4-t)}
+.eis-quad-count{font-size:1.3rem;font-weight:900}
+.eis-quad.q1 .eis-quad-count{color:var(--q1-t)}
+.eis-quad.q2 .eis-quad-count{color:var(--q2-t)}
+.eis-quad.q3 .eis-quad-count{color:var(--q3-t)}
+.eis-quad.q4 .eis-quad-count{color:var(--q4-t)}
+.eis-quad{cursor:pointer;transition:opacity .13s}
+.eis-quad:active{opacity:.75}
+
+/* Eis detail list */
+.eis-detail-item{background:var(--bg);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;border-left:3px solid;display:flex;align-items:center;gap:10px;transition:background .12s}
+.eis-detail-item:active,.eis-detail-item:hover{background:#ede9fe}
+.eis-detail-icon{font-size:1.1rem;flex-shrink:0}
+.eis-detail-info{flex:1;min-width:0}
+.eis-detail-title{font-size:.88rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.eis-detail-meta{font-size:.68rem;color:var(--text2);margin-top:2px}
+.eis-detail-arrow{font-size:.8rem;color:#cbd5e1;flex-shrink:0}
+
+/* Scheduled date badge */
+.card-sched{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:999px;display:inline-block;background:#ede9fe;color:#5b21b6}
+
+/* Deadlines */
+.deadline-chip{background:var(--card);border-radius:12px;padding:11px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.dl-icon{font-size:1.2rem;flex-shrink:0}
+.dl-info{flex:1;min-width:0}
+.dl-text{font-size:.85rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dl-date{font-size:.7rem;color:var(--text2);margin-top:1px}
+.dl-badge{font-size:.65rem;font-weight:700;padding:3px 8px;border-radius:999px;flex-shrink:0}
+.badge-overdue{background:#fee2e2;color:#dc2626}
+.badge-today{background:#fef3c7;color:#d97706}
+.badge-soon{background:#eff6ff;color:#2563eb}
+
+/* ── TYPE HEADER ── */
+.type-header{border-radius:14px;padding:13px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.th-icon{font-size:1.6rem}
+.th-title{font-size:.95rem;font-weight:800}
+.th-desc{font-size:.72rem;opacity:.7;margin-top:1px}
+.th-todo{background:var(--todo-bg);color:var(--todo-t)}
+.th-compromisos{background:var(--comp-bg);color:var(--comp-t)}
+.th-proyectos{background:var(--proj-bg);color:var(--proj-t)}
+.th-extra{background:var(--extr-bg);color:var(--extr-t)}
+.th-done{background:var(--done-bg);color:var(--done-t)}
+
+/* ── SUBTASKS ── */
+.subtask-list{display:flex;flex-direction:column;gap:0;margin-top:8px;border-top:1px solid var(--border);padding-top:7px}
+.subtask-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #f3f4f6}
+.subtask-row:last-child{border-bottom:none}
+.subtask-cb{width:18px;height:18px;border-radius:5px;border:1.5px solid #d1d5db;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;transition:all .15s;background:white}
+.subtask-cb.checked{background:#5e7226;border-color:#5e7226;color:white}
+.subtask-txt{flex:1;font-size:.8rem;line-height:1.3;color:var(--text);cursor:pointer}
+.subtask-txt.checked{text-decoration:line-through;opacity:.45}
+.card-progress{margin-top:8px;display:flex;align-items:center;gap:7px}
+.card-prog-bar{flex:1;height:5px;background:#f3f4f6;border-radius:999px;overflow:hidden}
+.card-prog-fill{height:100%;background:linear-gradient(90deg,#3d5218,#7a9232);border-radius:999px;transition:width .3s ease}
+.card-prog-label{font-size:.65rem;font-weight:700;color:#5e7226;flex-shrink:0;min-width:28px;text-align:right}
+/* subtask edit list */
+.st-edit-row{display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid #f3f4f6}
+.st-edit-row:last-child{border-bottom:none}
+.st-edit-cb{width:17px;height:17px;border-radius:4px;border:1.5px solid #d1d5db;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.65rem;transition:all .15s;background:white}
+.st-edit-cb.checked{background:#5e7226;border-color:#5e7226;color:white}
+.st-edit-txt{flex:1;font-size:.85rem;color:var(--text)}
+.st-edit-txt.checked{text-decoration:line-through;opacity:.45}
+.st-del{border:none;background:none;color:#d1d5db;cursor:pointer;font-size:.9rem;padding:2px 4px}
+.st-del:hover{color:#ef4444}
+
+/* ── CARDS ── */
+.card{background:var(--card);border-radius:14px;padding:13px 14px;margin-bottom:9px;box-shadow:0 1px 4px rgba(0,0,0,.06);border-left:4px solid;animation:slideIn .18s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.card.done-card{opacity:.45;border-left-color:#d1d5db!important}
+.card-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
+.card-custom-icon{font-size:1.3rem;flex-shrink:0;line-height:1.3}
+.card-text-wrap{flex:1}
+.card-text{font-size:.88rem;font-weight:600;line-height:1.4;color:var(--text)}
+.card.done-card .card-text{text-decoration:line-through;color:var(--text2)}
+.card-note{font-size:.7rem;color:var(--text2);margin-top:2px}
+.card-badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+
+/* eisenhower badge */
+.eis-badge{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:999px;display:inline-flex;align-items:center;gap:3px}
+.eis-badge.q1{background:var(--q1-bg);color:var(--q1-t)}
+.eis-badge.q2{background:var(--q2-bg);color:var(--q2-t)}
+.eis-badge.q3{background:var(--q3-bg);color:var(--q3-t)}
+.eis-badge.q4{background:var(--q4-bg);color:var(--q4-t)}
+
+/* deadline badge */
+.card-deadline{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:999px;display:inline-block}
+.dl-overdue{background:#fee2e2;color:#dc2626}
+.dl-today{background:#fef3c7;color:#d97706}
+.dl-soon{background:#eff6ff;color:#2563eb}
+.dl-future{background:#f1f5f9;color:#64748b}
+
+.card-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px}
+.cat-pill{font-size:.62rem;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0}
+.card-actions{display:flex;gap:4px}
+.action-btn{border:none;border-radius:8px;padding:5px 9px;font-size:.7rem;font-weight:600;cursor:pointer;transition:all .12s}
+.btn-done{background:#dcfce7;color:#15803d}
+.btn-done:hover{background:#bbf7d0}
+.btn-edit{background:#f1f5f9;color:#4f46e5}
+.btn-edit:hover{background:#e0e7ff}
+.btn-move{background:#f1f5f9;color:#475569}
+.btn-del{background:#fee2e2;color:#dc2626}
+
+/* category border colors */
+.bc-operacion{border-color:#f59e0b}.bc-sistemas{border-color:#3b82f6}
+.bc-estrategia{border-color:#ef4444}.bc-rh{border-color:#06b6d4}
+.bc-mktg{border-color:#ec4899}.bc-josh{border-color:#f97316}
+.bc-tres{border-color:#8b5cf6}.bc-personal{border-color:#a78bfa}
+/* category pill colors */
+.pc-operacion{background:#fef3c7;color:#92400e}.pc-sistemas{background:#dbeafe;color:#1e40af}
+.pc-estrategia{background:#fee2e2;color:#991b1b}.pc-rh{background:#cffafe;color:#0e7490}
+.pc-mktg{background:#fce7f3;color:#9d174d}.pc-josh{background:#ffedd5;color:#9a3412}
+.pc-tres{background:#ede9fe;color:#6d28d9}.pc-personal{background:#f5f3ff;color:#5b21b6}
+
+.empty-msg{text-align:center;color:#cbd5e1;font-size:.85rem;padding:32px 0}
+
+/* ── MODALS ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:flex-end}
+.modal-overlay.open{display:flex}
+.modal-sheet{background:white;border-radius:22px 22px 0 0;padding:22px 16px;padding-bottom:calc(20px + var(--safe-b));width:100%;animation:slideUp .22s ease;max-height:92vh;overflow-y:auto}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-title{font-size:.8rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px}
+.modal-field{margin-bottom:13px}
+.modal-field label{display:block;font-size:.68rem;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.modal-field input,.modal-field select,.modal-field textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;color:var(--text);background:white;outline:none;font-family:inherit}
+.modal-field input:focus,.modal-field select:focus,.modal-field textarea:focus{border-color:var(--purple)}
+
+/* operar/construir toggle */
+.oc-toggle{flex:1;padding:8px 6px;border:1.5px solid var(--border);border-radius:10px;font-size:.82rem;font-weight:600;cursor:pointer;background:white;color:var(--text2);text-align:center;transition:all .14s}
+.oc-toggle.sel-operar{background:#fef3c7;border-color:#f59e0b;color:#92400e}
+.oc-toggle.sel-construir{background:#eef3d6;border-color:#5e7226;color:#3d5218}
+
+/* icon picker */
+.icon-preview{display:flex;align-items:center;gap:10px}
+.icon-preview input{flex:1}
+.preview-box{width:44px;height:44px;background:var(--purple-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.emoji-suggestions{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.emoji-btn{width:36px;height:36px;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.emoji-btn:hover{background:var(--purple-light);border-color:var(--purple)}
+
+/* eisenhower toggles */
+.eis-toggles{display:flex;flex-direction:column;gap:8px}
+.eis-row{display:flex;gap:6px}
+.eis-row label{font-size:.68rem;font-weight:700;color:var(--text2);width:80px;flex-shrink:0;line-height:28px;text-transform:uppercase;letter-spacing:.05em}
+.eis-toggle{flex:1;padding:6px 8px;border:1.5px solid var(--border);border-radius:9px;font-size:.75rem;font-weight:600;cursor:pointer;background:white;color:var(--text2);text-align:center;transition:all .14s;-webkit-appearance:none}
+.eis-toggle.sel-urgente{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.eis-toggle.sel-no_urgente{background:#fef3c7;border-color:#f59e0b;color:#92400e}
+.eis-toggle.sel-importante{background:#dbeafe;border-color:#3b82f6;color:#1e40af}
+.eis-toggle.sel-no_importante{background:#f1f5f9;border-color:#94a3b8;color:#475569}
+
+.modal-btn-primary{width:100%;background:linear-gradient(135deg,var(--purple-dark),var(--purple));color:white;border:none;border-radius:12px;padding:14px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:4px}
+.modal-option{padding:14px 12px;border-radius:10px;font-size:.95rem;font-weight:500;cursor:pointer;margin-bottom:6px;transition:background .12s}
+.modal-option:hover,.modal-option:active{background:#f1f5f9}
+.modal-cancel{text-align:center;padding:14px;color:var(--purple);font-weight:600;cursor:pointer;font-size:.95rem;margin-top:4px}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-top">
+    <h1>✨ Montse<span>'s Flow</span></h1>
+  </div>
+  <div class="capture-row">
+    <input type="text" id="cap-input" placeholder="Captura rápida…" autocomplete="off"/>
+    <button class="add-btn" onclick="openAddModal()">+ Agregar</button>
+  </div>
+</div>
+
+<div class="content">
+  <div id="panel-dash"        class="tab-panel active"></div>
+  <div id="panel-todo"        class="tab-panel"></div>
+  <div id="panel-compromisos" class="tab-panel"></div>
+  <div id="panel-proyectos"   class="tab-panel"></div>
+  <div id="panel-extra"       class="tab-panel"></div>
+  <div id="panel-done"        class="tab-panel"></div>
+</div>
+
+<div class="tab-bar" id="tab-bar">
+  <div class="tab active" id="tab-dash" data-col="dash" onclick="switchTab('dash')">
+    <div class="tab-icon-wrap"><div class="tab-icon">🏠</div></div><div class="tab-label">Inicio</div>
+  </div>
+  <div class="tab" id="tab-todo" data-col="todo" onclick="switchTab('todo')">
+    <div class="tab-icon-wrap"><div class="tab-icon">⚡</div></div><div class="tab-label">To Do</div>
+    <div class="tab-count" id="tc-todo"></div>
+  </div>
+  <div class="tab" id="tab-compromisos" data-col="compromisos" onclick="switchTab('compromisos')">
+    <div class="tab-icon-wrap"><div class="tab-icon">🎯</div></div><div class="tab-label">Compromisos</div>
+    <div class="tab-count" id="tc-compromisos"></div>
+  </div>
+  <div class="tab" id="tab-proyectos" data-col="proyectos" onclick="switchTab('proyectos')">
+    <div class="tab-icon-wrap"><div class="tab-icon">🚀</div></div><div class="tab-label">Proyectos</div>
+    <div class="tab-count" id="tc-proyectos"></div>
+  </div>
+  <div class="tab" id="tab-extra" data-col="extra" onclick="switchTab('extra')">
+    <div class="tab-icon-wrap"><div class="tab-icon">⭐</div></div><div class="tab-label">Extra</div>
+    <div class="tab-count" id="tc-extra"></div>
+  </div>
+  <div class="tab" id="tab-done" data-col="done" onclick="switchTab('done')">
+    <div class="tab-icon-wrap"><div class="tab-icon">✅</div></div><div class="tab-label">Hechos</div>
+    <div class="tab-count" id="tc-done" style="background:#22c55e"></div>
+  </div>
+</div>
+
+<!-- EMOJI PICKER MODAL -->
+<div class="modal-overlay" id="emoji-modal" onclick="closeModal('emoji-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-title">Elegir emoji</div>
+    <div class="emoji-cat-bar">
+      <button class="emoji-cat-btn active" onclick="showEmojiCat(this,'general')">⭐ General</button>
+      <button class="emoji-cat-btn" onclick="showEmojiCat(this,'negocio')">💼 Negocio</button>
+      <button class="emoji-cat-btn" onclick="showEmojiCat(this,'operacion')">🔧 Operación</button>
+      <button class="emoji-cat-btn" onclick="showEmojiCat(this,'personas')">👥 Personas</button>
+      <button class="emoji-cat-btn" onclick="showEmojiCat(this,'comida')">🍽️ Comida</button>
+      <button class="emoji-cat-btn" onclick="showEmojiCat(this,'mktg')">📣 Marketing</button>
+    </div>
+    <div class="emoji-grid-wrap" id="emoji-grid"></div>
+    <div class="modal-cancel" onclick="closeModal('emoji-modal')">Cancelar</div>
+  </div>
+</div>
+
+<!-- EIS DETAIL MODAL -->
+<div class="modal-overlay" id="eis-detail-modal" onclick="closeModal('eis-detail-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-title" id="eis-detail-title"></div>
+    <div id="eis-detail-list"></div>
+    <div class="modal-cancel" onclick="closeModal('eis-detail-modal')">Cerrar</div>
+  </div>
+</div>
+
+<!-- MOVE MODAL -->
+<div class="modal-overlay" id="move-modal" onclick="closeModal('move-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-title">Mover a…</div>
+    <div class="modal-option" onclick="doMove('todo')">⚡ To Do</div>
+    <div class="modal-option" onclick="doMove('compromisos')">🎯 Compromisos</div>
+    <div class="modal-option" onclick="doMove('proyectos')">🚀 Proyectos</div>
+    <div class="modal-option" onclick="doMove('extra')">⭐ Extra</div>
+    <div class="modal-option" onclick="doMove('done')">✅ Completado</div>
+    <div class="modal-cancel" onclick="closeModal('move-modal')">Cancelar</div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal-overlay" id="add-modal" onclick="closeModal('add-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-title">Agregar tarea</div>
+    <div class="modal-field">
+      <label>Nombre</label>
+      <input type="text" id="add-text" placeholder="¿Qué tienes pendiente?"/>
+    </div>
+    <div class="modal-field">
+      <label>Icono</label>
+      <div class="icon-preview">
+        <input type="text" id="add-icon" placeholder="Emoji" maxlength="4" oninput="updatePreview('add-icon','add-prev')" readonly style="cursor:pointer" onclick="openEmojiPicker('add')"/>
+        <div class="preview-box" id="add-prev" onclick="openEmojiPicker('add')" style="cursor:pointer">✨</div>
+      </div>
+      <button onclick="openEmojiPicker('add')" style="margin-top:8px;width:100%;padding:8px;background:var(--purple-light);color:var(--purple);border:none;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer">🎨 Abrir menú de emojis</button>
+    </div>
+    <div class="modal-field">
+      <label>⚙️ ¿Es Operar o Construir?</label>
+      <div style="display:flex;gap:6px;margin-top:2px">
+        <button type="button" class="oc-toggle" id="add-oc-operar" onclick="toggleOC('add','operar')">⚙️ Operar</button>
+        <button type="button" class="oc-toggle" id="add-oc-construir" onclick="toggleOC('add','construir')">🏗️ Construir</button>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>👤 Delegar a (opcional)</label>
+      <select id="add-delegate">
+        <option value="">— Yo misma —</option>
+        <option value="benji">Benji</option>
+        <option value="dani">Dani</option>
+        <option value="bren">Bren</option>
+        <option value="eunice">Eunice</option>
+        <option value="coord_refugio">Coordinador Refugio</option>
+        <option value="coord_alamos">Coordinador Álamos</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Prioridad (Matriz Eisenhower)</label>
+      <div class="eis-toggles">
+        <div class="eis-row">
+          <label>Urgencia</label>
+          <button class="eis-toggle" id="add-urgente" onclick="toggleEis('add','urgente')">⚡ Urgente</button>
+          <button class="eis-toggle" id="add-no_urgente" onclick="toggleEis('add','no_urgente')">💤 No urgente</button>
+        </div>
+        <div class="eis-row">
+          <label>Importancia</label>
+          <button class="eis-toggle" id="add-importante" onclick="toggleEis('add','importante')">⭐ Importante</button>
+          <button class="eis-toggle" id="add-no_importante" onclick="toggleEis('add','no_importante')">➖ No importante</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>📅 Agendar para (¿cuándo lo harás?)</label>
+      <input type="date" id="add-scheduled"/>
+    </div>
+    <div class="modal-field">
+      <label>Fecha límite (opcional)</label>
+      <input type="date" id="add-deadline"/>
+    </div>
+    <div class="modal-field">
+      <label>Categoría</label>
+      <select id="add-cat">
+        <option value="operacion">🟨 Operación</option>
+        <option value="estrategia">🚀 Estrategia</option>
+        <option value="sistemas">🧠 Sistemas</option>
+        <option value="rh">🩵 RH</option>
+        <option value="mktg">💗 Marketing</option>
+        <option value="josh">🟠 Josh</option>
+        <option value="tres">💜 Tres Media</option>
+        <option value="personal">⭐ Personal</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Tipo</label>
+      <select id="add-col">
+        <option value="todo">⚡ To Do</option>
+        <option value="compromisos">🎯 Compromisos</option>
+        <option value="proyectos">🚀 Proyectos</option>
+        <option value="extra">⭐ Extra</option>
+      </select>
+    </div>
+    <button class="modal-btn-primary" onclick="confirmAdd()">✓ Agregar tarea</button>
+    <div class="modal-cancel" onclick="closeModal('add-modal')">Cancelar</div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="edit-modal" onclick="closeModal('edit-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-title">Editar tarea</div>
+    <div class="modal-field">
+      <label>Nombre</label>
+      <input type="text" id="edit-text" placeholder="Nombre de la tarea"/>
+    </div>
+    <div class="modal-field">
+      <label>Icono</label>
+      <div class="icon-preview">
+        <input type="text" id="edit-icon" placeholder="Emoji" maxlength="4" oninput="updatePreview('edit-icon','edit-prev')" readonly style="cursor:pointer" onclick="openEmojiPicker('edit')"/>
+        <div class="preview-box" id="edit-prev" onclick="openEmojiPicker('edit')" style="cursor:pointer">✨</div>
+      </div>
+      <button onclick="openEmojiPicker('edit')" style="margin-top:8px;width:100%;padding:8px;background:var(--purple-light);color:var(--purple);border:none;border-radius:10px;font-size:.85rem;font-weight:700;cursor:pointer">🎨 Abrir menú de emojis</button>
+    </div>
+    <div class="modal-field">
+      <label>⚙️ ¿Es Operar o Construir?</label>
+      <div style="display:flex;gap:6px;margin-top:2px">
+        <button type="button" class="oc-toggle" id="edit-oc-operar" onclick="toggleOC('edit','operar')">⚙️ Operar</button>
+        <button type="button" class="oc-toggle" id="edit-oc-construir" onclick="toggleOC('edit','construir')">🏗️ Construir</button>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>👤 Delegar a</label>
+      <select id="edit-delegate">
+        <option value="">— Yo misma —</option>
+        <option value="benji">Benji</option>
+        <option value="dani">Dani</option>
+        <option value="bren">Bren</option>
+        <option value="eunice">Eunice</option>
+        <option value="coord_refugio">Coordinador Refugio</option>
+        <option value="coord_alamos">Coordinador Álamos</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label>Prioridad (Matriz Eisenhower)</label>
+      <div class="eis-toggles">
+        <div class="eis-row">
+          <label>Urgencia</label>
+          <button class="eis-toggle" id="edit-urgente" onclick="toggleEis('edit','urgente')">⚡ Urgente</button>
+          <button class="eis-toggle" id="edit-no_urgente" onclick="toggleEis('edit','no_urgente')">💤 No urgente</button>
+        </div>
+        <div class="eis-row">
+          <label>Importancia</label>
+          <button class="eis-toggle" id="edit-importante" onclick="toggleEis('edit','importante')">⭐ Importante</button>
+          <button class="eis-toggle" id="edit-no_importante" onclick="toggleEis('edit','no_importante')">➖ No importante</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>📅 Agendar para (¿cuándo lo harás?)</label>
+      <input type="date" id="edit-scheduled"/>
+    </div>
+    <div class="modal-field">
+      <label>Fecha límite</label>
+      <input type="date" id="edit-deadline"/>
+    </div>
+    <div class="modal-field">
+      <label>✅ Acciones / subtareas</label>
+      <div id="st-edit-list" style="margin-bottom:8px"></div>
+      <div style="display:flex;gap:7px">
+        <input type="text" id="st-edit-input" placeholder="Nueva acción…" style="flex:1;font-size:.85rem" onkeydown="if(event.key==='Enter'){addSubtask();event.preventDefault()}"/>
+        <button onclick="addSubtask()" style="background:var(--purple);color:white;border:none;border-radius:8px;padding:7px 12px;font-size:.82rem;font-weight:700;cursor:pointer">+ Agregar</button>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>Nota / contexto</label>
+      <textarea id="edit-note" rows="2" placeholder="Contexto opcional…" style="resize:none"></textarea>
+    </div>
+    <div class="modal-field">
+      <label>Categoría</label>
+      <select id="edit-cat">
+        <option value="operacion">🟨 Operación</option>
+        <option value="estrategia">🚀 Estrategia</option>
+        <option value="sistemas">🧠 Sistemas</option>
+        <option value="rh">🩵 RH</option>
+        <option value="mktg">💗 Marketing</option>
+        <option value="josh">🟠 Josh</option>
+        <option value="tres">💜 Tres Media</option>
+        <option value="personal">⭐ Personal</option>
+      </select>
+    </div>
+    <button class="modal-btn-primary" onclick="confirmEdit()">✓ Guardar cambios</button>
+    <div class="modal-cancel" onclick="closeModal('edit-modal')">Cancelar</div>
+  </div>
+</div>
+
+<script>
+// ── DELEGATES ───────────────────────────────────
+const DELEGATE_NAMES = {
+  benji:'Benji', dani:'Dani', bren:'Bren', eunice:'Eunice',
+  coord_refugio:'Coord. Refugio', coord_alamos:'Coord. Álamos'
+};
+
+// ── EMOJI PICKER ────────────────────────────────
+const EMOJIS = {
+  general: ['⚡','🔥','💡','📌','📍','🎯','🏆','✅','⭐','💫','🔔','⚠️','🚨','💥','🌟','🎁','🎉','🏅','🥇','🔑','💎','📝','🏁','✏️','❌','💬','🗓️','⏰','🔎','💪'],
+  negocio: ['💰','💳','📊','📈','📉','📋','📄','📝','🏦','🤝','🎫','💼','🧾','🏧','💵','📃','📑','🖊️','🗂️','📁','📂','🗃️','📧','✉️','📨','🧮','💹','🏢','🏬','🏪'],
+  operacion: ['⚙️','🔧','🛠️','🏗️','🚗','🧹','🛒','📦','🔨','🪛','🔩','⛽','🚙','🚕','🚐','🏎️','🚦','🛻','🧴','🧽','🪣','🧺','🪠','🔌','💡','🔦','🪤','🛁','🚿'],
+  personas: ['👤','👥','🧑‍💼','👨‍💼','👩‍💼','🧑‍🔧','🏃‍♀️','💬','📞','📱','🤝','👋','🙌','💪','🧠','👁️','🫱','🫲','🗣️','👩','👨','🧑','🤵','👔'],
+  comida: ['🍽️','🍕','🍔','🌮','🌯','🥗','☕','🧃','🍷','🥂','🍺','🛒','👨‍🍳','🍱','🥡','🧂','🔪','🥩','🧀','🥑','🫔','🥪','🍜','🥘','🫕'],
+  mktg: ['📣','📢','🎬','🎥','📸','🎨','🖼️','✨','🌈','🎪','🎭','🎁','🎀','🎊','🎉','📱','💻','🖥️','📡','🔊','🎵','🎶','🌐','🔗','📲'],
+};
+let emojiTargetPrefix = 'add';
+
+function openEmojiPicker(prefix) {
+  emojiTargetPrefix = prefix;
+  // reset to first category
+  const catBtns = document.querySelectorAll('.emoji-cat-btn');
+  catBtns.forEach(b=>b.classList.remove('active'));
+  if(catBtns[0]) catBtns[0].classList.add('active');
+  showEmojiCat(null, 'general');
+  document.getElementById('emoji-modal').classList.add('open');
+}
+function showEmojiCat(btn, cat) {
+  document.querySelectorAll('.emoji-cat-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const grid = document.getElementById('emoji-grid');
+  grid.innerHTML = (EMOJIS[cat]||[]).map(e =>
+    `<button onclick="pickEmoji('${e}')" style="width:46px;height:46px;font-size:1.5rem;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center">${e}</button>`
+  ).join('');
+}
+function pickEmoji(emoji) {
+  document.getElementById(`${emojiTargetPrefix}-icon`).value = emoji;
+  document.getElementById(`${emojiTargetPrefix}-prev`).textContent = emoji;
+  closeModal('emoji-modal');
+}
+
+// ── DRAG (touch + mouse) ────────────────────────
+let dragId=null, dragGhost=null, dragOrigCard=null;
+
+function _createGhost(card, x, y) {
+  const rect = card.getBoundingClientRect();
+  const g = card.cloneNode(true);
+  g.removeAttribute('id');
+  g.style.cssText = `position:fixed;z-index:9999;opacity:.9;pointer-events:none;width:${rect.width}px;left:${rect.left}px;top:${y-44}px;transform:scale(1.04) rotate(1.2deg);box-shadow:0 14px 40px rgba(0,0,0,.25);border-radius:14px;margin:0;transition:none`;
+  document.body.appendChild(g);
+  return g;
+}
+function _highlightTab(x, y) {
+  document.querySelectorAll('.tab[data-col]').forEach(t=>t.classList.remove('drag-over'));
+  const el = document.elementFromPoint(x, y);
+  const tab = el && el.closest('.tab[data-col]');
+  if(tab && tab.dataset.col !== 'dash') tab.classList.add('drag-over');
+  return tab;
+}
+function _dropOnTab(x, y) {
+  const el = document.elementFromPoint(x, y);
+  const tab = el && el.closest('.tab[data-col]');
+  if(tab && tab.dataset.col && tab.dataset.col !== 'dash') {
+    const col = tab.dataset.col;
+    const item = items.find(i=>i.id===dragId);
+    if(item && col !== item.col) { item.col=col; save(); render(); switchTab(col); }
+  }
+}
+function _endDrag() {
+  if(dragGhost) { dragGhost.remove(); dragGhost=null; }
+  if(dragOrigCard) { dragOrigCard.classList.remove('dragging'); dragOrigCard=null; }
+  dragId=null;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('drag-over'));
+}
+
+// — Touch —
+function startDrag(e, id) {
+  e.stopPropagation();
+  const touch = e.touches[0];
+  dragId = id;
+  const card = document.getElementById('card-'+id); if(!card) return;
+  dragOrigCard = card; card.classList.add('dragging');
+  dragGhost = _createGhost(card, touch.clientX, touch.clientY);
+  document.addEventListener('touchmove', onDragMove, {passive:false});
+  document.addEventListener('touchend', onDragEnd);
+}
+function onDragMove(e) {
+  if(!dragGhost) return; e.preventDefault();
+  const t = e.touches[0];
+  dragGhost.style.top = `${t.clientY-44}px`;
+  _highlightTab(t.clientX, t.clientY);
+}
+function onDragEnd(e) {
+  document.removeEventListener('touchmove', onDragMove);
+  document.removeEventListener('touchend', onDragEnd);
+  const t = e.changedTouches[0];
+  _dropOnTab(t.clientX, t.clientY);
+  _endDrag();
+}
+
+// — Mouse (Mac) —
+function startMouseDrag(e, id) {
+  if(e.button !== 0) return;
+  e.preventDefault(); e.stopPropagation();
+  dragId = id;
+  const card = document.getElementById('card-'+id); if(!card) return;
+  dragOrigCard = card; card.classList.add('dragging');
+  dragGhost = _createGhost(card, e.clientX, e.clientY);
+  document.addEventListener('mousemove', onMouseDragMove);
+  document.addEventListener('mouseup', onMouseDragEnd);
+}
+function onMouseDragMove(e) {
+  if(!dragGhost) return;
+  dragGhost.style.top  = `${e.clientY-44}px`;
+  dragGhost.style.left = `${e.clientX - dragGhost.offsetWidth/2}px`;
+  _highlightTab(e.clientX, e.clientY);
+}
+function onMouseDragEnd(e) {
+  document.removeEventListener('mousemove', onMouseDragMove);
+  document.removeEventListener('mouseup', onMouseDragEnd);
+  _dropOnTab(e.clientX, e.clientY);
+  _endDrag();
+}
+
+// ── DATA ────────────────────────────────────────
+const CAT = {
+  operacion:['🟨 Operación','operacion'], sistemas:['🧠 Sistemas','sistemas'],
+  estrategia:['🚀 Estrategia','estrategia'], rh:['🩵 RH','rh'],
+  mktg:['💗 Marketing','mktg'], josh:['🟠 Josh','josh'],
+  tres:['💜 Tres Media','tres'], personal:['⭐ Personal','personal'],
+};
+const TYPE_META = {
+  todo:        {icon:'⚡',label:'To Do',        desc:'Acciones inmediatas — próximos días',                     cls:'th-todo'},
+  compromisos: {icon:'🎯',label:'Compromisos',  desc:'Cosas a las que te comprometiste y debes lograr pronto',  cls:'th-compromisos'},
+  proyectos:   {icon:'🚀',label:'Proyectos',    desc:'Proyectos que sí o sí tienes que lograr',                 cls:'th-proyectos'},
+  extra:       {icon:'⭐',label:'Extra',        desc:'Cosas que desearías hacer',                               cls:'th-extra'},
+  done:        {icon:'✅',label:'Completados',  desc:'¡Gran trabajo!',                                          cls:'th-done'},
+};
+const EIS = {
+  q1:{cls:'q1',label:'🔴 Hacer ya',     urgente:true,  importante:true},
+  q2:{cls:'q2',label:'🔵 Agendar',      urgente:false, importante:true},
+  q3:{cls:'q3',label:'🟡 Delegar',      urgente:true,  importante:false},
+  q4:{cls:'q4',label:'⚫ Eliminar',     urgente:false, importante:false},
+};
+
+// modal eis state
+let eisState = {add:{urgente:null,importante:null}, edit:{urgente:null,importante:null}};
+
+const SEED = [
+  {id:1, text:"Nuevo menú",                              note:"May 15 – PATIO CINCO",        col:"todo",        cat:"operacion",  icon:"🍽️",deadline:"2026-05-15",urgente:true, importante:true},
+  {id:2, text:"Declaración mensual",                     note:"Deadline urgente",             col:"todo",        cat:"operacion",  icon:"📄",deadline:"2026-05-14",urgente:true, importante:true},
+  {id:3, text:"Re-estructura Food Álamos",               note:"Revisar operación completa",   col:"todo",        cat:"operacion",  icon:"🏗️",deadline:"2026-05-25",urgente:true, importante:true},
+  {id:4, text:"Re-estructura Food Refugio",              note:"Revisar operación completa",   col:"todo",        cat:"operacion",  icon:"🏗️",deadline:"2026-05-27",urgente:true, importante:true},
+  {id:5, text:"Ajuste acuerdo de lavador",               note:"",                            col:"todo",        cat:"operacion",  icon:"🤝",deadline:"",         urgente:true, importante:true},
+  {id:6, text:"Completar cambio de precios (2ª mitad)",  note:"",                            col:"todo",        cat:"estrategia", icon:"💰",deadline:"",         urgente:true, importante:true},
+  {id:7, text:"Hacer playeras — orden y seguimiento",    note:"",                            col:"todo",        cat:"operacion",  icon:"👕",deadline:"",         urgente:true, importante:false},
+  {id:10,text:"RH – Auditoría Carwash + Food",           note:"Semanal – Refugio / Álamos",  col:"compromisos", cat:"rh",         icon:"🔍",deadline:"",         urgente:true, importante:true},
+  {id:11,text:"RH – Reclutamiento Refugio",              note:"Optimizar anuncio + publicar",col:"compromisos", cat:"rh",         icon:"👥",deadline:"",         urgente:false,importante:true},
+  {id:12,text:"VTS – Promoción de membresías",           note:"Semanal",                     col:"compromisos", cat:"estrategia", icon:"🎫",deadline:"",         urgente:true, importante:true},
+  {id:13,text:"Josh – Operación licenciamiento",         note:"Semanal – arranque",          col:"compromisos", cat:"josh",       icon:"🔑",deadline:"",         urgente:true, importante:true},
+  {id:14,text:"APP Jaguares",                            note:"Semanal – Tres Media",        col:"compromisos", cat:"tres",       icon:"📱",deadline:"",         urgente:true, importante:true},
+  {id:15,text:"MKTG – Ciclo de contenido semanal",       note:"Planear → Editar → Publicar", col:"compromisos", cat:"mktg",       icon:"📣",deadline:"",         urgente:false,importante:true},
+  {id:16,text:"FOOD – Pedido semanal",                   note:"Lunes",                       col:"compromisos", cat:"operacion",  icon:"🧾",deadline:"",         urgente:true, importante:false},
+  {id:17,text:"Pagos semanales",                         note:"Cada domingo",                col:"compromisos", cat:"operacion",  icon:"💳",deadline:"",         urgente:true, importante:false},
+  {id:18,text:"Límite de pago CFE",                      note:"",                            col:"compromisos", cat:"operacion",  icon:"⚡",deadline:"2026-06-02",urgente:true, importante:true},
+  {id:19,text:"Refuerzo metas coordinadores",            note:"Conversación 20 min c/u",     col:"compromisos", cat:"sistemas",   icon:"🎯",deadline:"",         urgente:false,importante:true},
+  {id:20,text:"Plan venta membresías",                   note:"Meta + script + seguimiento", col:"proyectos",   cat:"estrategia", icon:"🎫",deadline:"",         urgente:false,importante:true},
+  {id:21,text:"Implementar manual de operaciones",       note:"Con todo el equipo",          col:"proyectos",   cat:"sistemas",   icon:"📋",deadline:"",         urgente:false,importante:true},
+  {id:22,text:"Canal de comunicación lavadores",         note:"Formulario / plataforma",     col:"proyectos",   cat:"sistemas",   icon:"📡",deadline:"",         urgente:false,importante:true},
+  {id:23,text:"Campaña Quick Pass",                      note:"",                            col:"proyectos",   cat:"estrategia", icon:"🏎️",deadline:"",         urgente:false,importante:true},
+  {id:24,text:"Agilizar proceso de lavado",              note:"",                            col:"proyectos",   cat:"sistemas",   icon:"⚙️",deadline:"",         urgente:false,importante:true},
+  {id:25,text:"CEO Aceleradora",                         note:"Miércoles – seguimiento",     col:"proyectos",   cat:"estrategia", icon:"🚀",deadline:"",         urgente:false,importante:true},
+  {id:30,text:"Video introductorio Patio Cinco",         note:"",                            col:"extra",       cat:"mktg",       icon:"🎬",deadline:"",         urgente:false,importante:false},
+  {id:31,text:"Campaña posicionamiento Álamos",          note:"",                            col:"extra",       cat:"estrategia", icon:"📍",deadline:"",         urgente:false,importante:false},
+  {id:32,text:"Documentar procesos clave",               note:"",                            col:"extra",       cat:"sistemas",   icon:"📝",deadline:"",         urgente:false,importante:false},
+  {id:33,text:"Tablero financiero Looker Studio",        note:"",                            col:"extra",       cat:"sistemas",   icon:"📊",deadline:"",         urgente:false,importante:false},
+  {id:34,text:"Contactar la del año de lavados gratis",  note:"",                            col:"extra",       cat:"estrategia", icon:"📞",deadline:"",         urgente:false,importante:false},
+  {id:35,text:"Marketing para lavar más coches/día",     note:"",                            col:"extra",       cat:"mktg",       icon:"📈",deadline:"",         urgente:false,importante:false},
+  {id:40,text:"Apertura LA LOMA – licenciamiento Josh",  note:"",                            col:"done",        cat:"josh",       icon:"🏁",deadline:"",         urgente:null, importante:null},
+  {id:41,text:"Correr a Bruno + regreso Hugo",           note:"",                            col:"done",        cat:"operacion",  icon:"✔️",deadline:"",         urgente:null, importante:null},
+  {id:42,text:"Impresión de menús",                      note:"",                            col:"done",        cat:"operacion",  icon:"✔️",deadline:"",         urgente:null, importante:null},
+  {id:43,text:"Conseguir operador/a food",               note:"",                            col:"done",        cat:"operacion",  icon:"✔️",deadline:"",         urgente:null, importante:null},
+];
+
+let items   = JSON.parse(localStorage.getItem('mf_v2')||'null') || SEED;
+let nextId  = Math.max(...items.map(i=>i.id),0)+1;
+let activeTab = 'dash', movingId = null, editingId = null;
+function save(){localStorage.setItem('mf_v2',JSON.stringify(items))}
+function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+// ── EISENHOWER HELPERS ──────────────────────────
+function getQuadrant(item){
+  if(item.urgente===null||item.importante===null) return null;
+  if(item.urgente===true  && item.importante===true)  return 'q1';
+  if(item.urgente===false && item.importante===true)  return 'q2';
+  if(item.urgente===true  && item.importante===false) return 'q3';
+  if(item.urgente===false && item.importante===false) return 'q4';
+  return null;
+}
+
+function eisBadgeHTML(item){
+  const q = getQuadrant(item);
+  if(!q) return '';
+  // show individual tags if only one dimension set
+  let parts=[];
+  if(item.urgente!==null)    parts.push(`<span class="eis-badge ${q}">${item.urgente?'⚡ Urgente':'💤 No urgente'}</span>`);
+  if(item.importante!==null) parts.push(`<span class="eis-badge ${q}">${item.importante?'⭐ Importante':'➖ No importante'}</span>`);
+  return parts.join('');
+}
+
+// ── EISENHOWER TOGGLE UI ────────────────────────
+function toggleEis(prefix,key){
+  const pairs = {urgente:'no_urgente', no_urgente:'urgente', importante:'no_importante', no_importante:'importante'};
+  const dim   = key.startsWith('no_') ? key.slice(3) : key;   // 'urgente' or 'importante'
+  const cur   = eisState[prefix][dim];
+  const val   = key.startsWith('no_') ? false : true;
+  eisState[prefix][dim] = (cur === val) ? null : val;          // toggle off if same
+  refreshEisUI(prefix);
+}
+
+function refreshEisUI(prefix){
+  const dims = {urgente:['urgente','no_urgente'], importante:['importante','no_importante']};
+  for(const [dim,[keyT,keyF]] of Object.entries(dims)){
+    const val = eisState[prefix][dim];
+    const btnT = document.getElementById(`${prefix}-${keyT}`);
+    const btnF = document.getElementById(`${prefix}-${keyF}`);
+    if(!btnT||!btnF) continue;
+    btnT.className = 'eis-toggle' + (val===true  ? ` sel-${keyT}` : '');
+    btnF.className = 'eis-toggle' + (val===false ? ` sel-${keyF}` : '');
+  }
+}
+
+function setEisUI(prefix, urgente, importante){
+  eisState[prefix].urgente    = urgente===undefined ? null : urgente;
+  eisState[prefix].importante = importante===undefined ? null : importante;
+  refreshEisUI(prefix);
+}
+
+// ── OPERAR / CONSTRUIR ──────────────────────────
+let ocState={add:null, edit:null};
+function toggleOC(prefix, val){
+  ocState[prefix] = ocState[prefix]===val ? null : val;
+  refreshOC(prefix);
+}
+function refreshOC(prefix){
+  const btnO=document.getElementById(`${prefix}-oc-operar`);
+  const btnC=document.getElementById(`${prefix}-oc-construir`);
+  if(!btnO||!btnC) return;
+  btnO.className='oc-toggle'+(ocState[prefix]==='operar'?' sel-operar':'');
+  btnC.className='oc-toggle'+(ocState[prefix]==='construir'?' sel-construir':'');
+}
+function setOC(prefix, val){
+  ocState[prefix]=val||null;
+  refreshOC(prefix);
+}
+
+// ── SCHEDULED DATE HELPERS ──────────────────────
+function schedFmt(d){
+  if(!d) return '';
+  const t=todayStr();
+  const dt=new Date(d+'T12:00:00');
+  if(d===t) return 'Hoy';
+  const diff=Math.round((new Date(d)-new Date(t))/86400000);
+  if(diff===1) return 'Mañana';
+  if(diff===-1) return 'Ayer';
+  return dt.toLocaleDateString('es-MX',{weekday:'short',day:'numeric',month:'short'});
+}
+
+// ── EIS DETAIL MODAL ────────────────────────────
+function openEisDetail(q){
+  const labels={q1:'🔴 Hacer ya — Urgente e Importante',q2:'🔵 Agendar — No urgente pero Importante',q3:'🟡 Delegar — Urgente pero No importante',q4:'⚫ Eliminar — Ni urgente ni importante'};
+  const borderColors={q1:'#ef4444',q2:'#3b82f6',q3:'#f59e0b',q4:'#94a3b8'};
+  document.getElementById('eis-detail-title').textContent=labels[q]||q;
+  const list=items.filter(i=>i.col!=='done'&&getQuadrant(i)===q);
+  const el=document.getElementById('eis-detail-list');
+  if(!list.length){
+    el.innerHTML='<div class="empty-msg" style="padding:20px 0">Sin tareas en este cuadrante 🎉</div>';
+  } else {
+    el.innerHTML=list.map(item=>{
+      const [label]=CAT[item.cat]||['?'];
+      const sched=item.scheduledDate?`<span style="color:#7c3aed">📆 ${schedFmt(item.scheduledDate)}</span>  `:''
+      const dl=item.deadline?`⏰ ${dlFmt(item.deadline)}  `:'';
+      return `<div class="eis-detail-item" style="border-color:${borderColors[q]}" onclick="closeModal('eis-detail-modal');setTimeout(()=>openEditModal(${item.id}),120)">
+        <div class="eis-detail-icon">${item.icon||'📌'}</div>
+        <div class="eis-detail-info">
+          <div class="eis-detail-title">${h(item.text)}</div>
+          <div class="eis-detail-meta">${sched}${dl}${label}</div>
+        </div>
+        <div class="eis-detail-arrow">›</div>
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('eis-detail-modal').classList.add('open');
+}
+
+// ── DEADLINE HELPERS ────────────────────────────
+function todayStr(){return new Date().toISOString().slice(0,10)}
+function dlStatus(dl){
+  if(!dl) return null;
+  const t=todayStr();
+  if(dl<t) return 'overdue';
+  if(dl===t) return 'today';
+  const diff=(new Date(dl)-new Date(t))/86400000;
+  return diff<=7?'soon':'future';
+}
+function dlBadgeHTML(dl){
+  const s=dlStatus(dl); if(!s) return '';
+  const d=new Date(dl+'T12:00:00');
+  const fmt=d.toLocaleDateString('es-MX',{day:'numeric',month:'short'});
+  const map={overdue:['dl-overdue','Vencido'],today:['dl-today','Hoy'],soon:['dl-soon',fmt],future:['dl-future',fmt]};
+  const [cls,lbl]=map[s];
+  return `<span class="card-deadline ${cls}">📅 ${lbl}</span>`;
+}
+function dlFmt(dl){
+  if(!dl) return '';
+  return new Date(dl+'T12:00:00').toLocaleDateString('es-MX',{day:'numeric',month:'short'});
+}
+
+// ── ICON HELPERS ────────────────────────────────
+function updatePreview(inputId,prevId){
+  const v=document.getElementById(inputId).value.trim();
+  document.getElementById(prevId).textContent=v||'✨';
+}
+function setIcon(inputId,prevId,emoji){
+  document.getElementById(inputId).value=emoji;
+  document.getElementById(prevId).textContent=emoji||'✨';
+}
+
+// ── CARD HTML ───────────────────────────────────
+function cardHTML(item){
+  const [label,cls]=CAT[item.cat]||['?','sistemas'];
+  const isDone=item.col==='done';
+  const iconH=item.icon?`<div class="card-custom-icon">${h(item.icon)}</div>`:'';
+  const noteH=item.note?`<div class="card-note">${h(item.note)}</div>`:'';
+  const schedH=item.scheduledDate?`<span class="card-sched">📆 ${schedFmt(item.scheduledDate)}</span>`:'';
+  const delegH=item.delegadoA?`<span class="delegate-badge">👤 ${DELEGATE_NAMES[item.delegadoA]||item.delegadoA}</span>`:'';
+  const badges=[eisBadgeHTML(item), (!isDone&&item.deadline)?dlBadgeHTML(item.deadline):'', schedH, delegH].filter(Boolean);
+  const badgesH=badges.length?`<div class="card-badges">${badges.join('')}</div>`:'';
+  const dragH=!isDone?`<div class="drag-handle" ontouchstart="startDrag(event,${item.id})" onmousedown="startMouseDrag(event,${item.id})" title="Arrastra a otra pestaña">⠿</div>`:'';
+  const subs=item.subtasks||[];
+  const prog=getItemProgress(item);
+  const progH=subs.length?`<div class="card-progress">
+    <div class="card-prog-bar"><div class="card-prog-fill" style="width:${prog}%"></div></div>
+    <div class="card-prog-label">${prog}%</div>
+  </div>
+  <div class="subtask-list">${subs.map(st=>`<div class="subtask-row">
+    <div class="subtask-cb${st.done?' checked':''}" onclick="checkSubtask(${item.id},${st.id})">${st.done?'✓':''}</div>
+    <div class="subtask-txt${st.done?' checked':''}">${h(st.text)}</div>
+  </div>`).join('')}</div>`:'';
+  return `<div class="card bc-${cls}${isDone?' done-card':''}" id="card-${item.id}">
+    <div class="card-top">
+      ${dragH}
+      ${iconH}
+      <div class="card-text-wrap">
+        <div class="card-text">${h(item.text)}</div>
+        ${noteH}
+        ${badgesH}
+      </div>
+    </div>
+    ${progH}
+    <div class="card-row">
+      <span class="cat-pill pc-${cls}">${label}</span>
+      <div class="card-actions">
+        ${!isDone?`<button class="action-btn btn-done" onclick="markDone(${item.id})">✓</button>`:''}
+        <button class="action-btn btn-edit" onclick="openEditModal(${item.id})">✏️</button>
+        <button class="action-btn btn-move" onclick="startMove(${item.id})">→</button>
+        <button class="action-btn btn-del"  onclick="delItem(${item.id})">✕</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── DASHBOARD ───────────────────────────────────
+function renderDash(){
+  const panel=document.getElementById('panel-dash');
+  const total=items.filter(i=>i.col!=='done').length;
+  const done =items.filter(i=>i.col==='done').length;
+  const pct  =total+done>0?Math.round(done/(total+done)*100):0;
+  const now=new Date();
+  const dayName=now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+  const greet=now.getHours()<12?'Buenos días':now.getHours()<19?'Buenas tardes':'Buenas noches';
+
+  // KPIs
+  const overdue=items.filter(i=>i.deadline&&i.col!=='done'&&dlStatus(i.deadline)==='overdue').length;
+  const delegated=items.filter(i=>i.delegadoA&&i.col!=='done').length;
+
+  // Operar vs Construir — usa campo .oc si está definido, si no cae en columna por defecto
+  const getOC=i=>i.oc||((['todo','compromisos'].includes(i.col))?'operar':(['proyectos','extra'].includes(i.col))?'construir':null);
+  const operarN=items.filter(i=>i.col!=='done'&&getOC(i)==='operar').length;
+  const construirN=items.filter(i=>i.col!=='done'&&getOC(i)==='construir').length;
+  const totalOC=operarN+construirN||1;
+  const operarPct=Math.round(operarN/totalOC*100);
+  const construirPct=100-operarPct;
+  const balanced=operarPct<=60;
+
+  // Top urgent (operar)
+  const urgentTasks=items
+    .filter(i=>i.col!=='done'&&getOC(i)==='operar')
+    .sort((a,b)=>{
+      const rank=s=>s==='overdue'?0:s==='today'?1:s==='soon'?2:3;
+      return rank(dlStatus(a.deadline))-rank(dlStatus(b.deadline));
+    }).slice(0,3);
+
+  // Proyectos estratégicos (construir)
+  const projects=items.filter(i=>i.col!=='done'&&getOC(i)==='construir').slice(0,3);
+
+  // Eisenhower counts
+  const active=items.filter(i=>i.col!=='done');
+  const qCount={q1:0,q2:0,q3:0,q4:0};
+  active.forEach(i=>{const q=getQuadrant(i);if(q)qCount[q]++;});
+
+  // Deadlines
+  const dlItems=items
+    .filter(i=>i.deadline&&i.col!=='done')
+    .map(i=>({...i,st:dlStatus(i.deadline)}))
+    .filter(i=>i.st&&i.st!=='future'||(new Date(i.deadline)-new Date(todayStr()))/86400000<=30)
+    .sort((a,b)=>a.deadline.localeCompare(b.deadline))
+    .slice(0,10);
+  const dlBadge=s=>{const m={overdue:['badge-overdue','Vencido'],today:['badge-today','Hoy'],soon:['badge-soon','Pronto'],future:['badge-soon','Próx.']}; const[c,l]=m[s]||['badge-soon',''];return`<span class="dl-badge ${c}">${l}</span>`;};
+
+  const urgentRow=s=>{
+    if(s==='overdue') return`<span style="font-size:.58rem;font-weight:700;background:#fee2e2;color:#dc2626;padding:2px 7px;border-radius:999px;flex-shrink:0">Vencida</span>`;
+    if(s==='today')   return`<span style="font-size:.58rem;font-weight:700;background:#fef3c7;color:#d97706;padding:2px 7px;border-radius:999px;flex-shrink:0">Hoy</span>`;
+    if(s==='soon')    return`<span style="font-size:.58rem;font-weight:700;background:#dbeafe;color:#1e40af;padding:2px 7px;border-radius:999px;flex-shrink:0">Pronto</span>`;
+    return'';
+  };
+
+  panel.innerHTML=`
+  <div style="background:linear-gradient(135deg,#3d5218 0%,#5e7226 100%);padding:16px 16px 16px;padding-top:calc(16px + var(--safe-t));color:white;margin:-16px -14px 0">
+    <div style="font-size:.65rem;opacity:.55;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Patio Cinco · Panel ejecutivo</div>
+    <div style="font-size:1.1rem;font-weight:900;margin-bottom:12px">${greet}, Montse 👋</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
+      <div style="background:rgba(255,255,255,.13);border-radius:11px;padding:8px 6px;text-align:center">
+        <div style="font-size:1.4rem;font-weight:900;line-height:1">${pct}%</div>
+        <div style="font-size:.58rem;opacity:.75;text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Avance</div>
+      </div>
+      <div style="background:rgba(255,255,255,.13);border-radius:11px;padding:8px 6px;text-align:center">
+        <div style="font-size:1.4rem;font-weight:900;line-height:1;color:${overdue>0?'#fca5a5':'white'}">${overdue}</div>
+        <div style="font-size:.58rem;opacity:.75;text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Vencidas</div>
+      </div>
+      <div style="background:rgba(255,255,255,.13);border-radius:11px;padding:8px 6px;text-align:center">
+        <div style="font-size:1.4rem;font-weight:900;line-height:1">${total}</div>
+        <div style="font-size:.58rem;opacity:.75;text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Pendientes</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:14px 14px 0">
+
+    <div style="background:var(--card);border-radius:14px;padding:13px 14px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:14px">
+      <div style="font-size:.68rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">¿Dónde va tu energía?</div>
+      <div style="display:flex;justify-content:space-between;font-size:.72rem;font-weight:700;margin-bottom:5px">
+        <span style="color:#92400e">⚙️ Operar ${operarPct}%</span>
+        <span style="color:#3d5218">🏗️ Construir ${construirPct}%</span>
+      </div>
+      <div style="height:11px;background:#f3f4f6;border-radius:999px;overflow:hidden;display:flex;margin-bottom:7px">
+        <div style="width:${operarPct}%;background:#f59e0b;border-radius:999px 0 0 999px"></div>
+        <div style="width:${construirPct}%;background:#5e7226;border-radius:0 999px 999px 0"></div>
+      </div>
+      <div style="font-size:.68rem;padding:5px 9px;border-radius:8px;background:${balanced?'#eef3d6':'#fef3c7'};color:${balanced?'#3d5218':'#92400e'}">
+        ${balanced?'✅ Buen balance entre operar y construir':'💡 Delega más operación para liberar tiempo estratégico'}
+      </div>
+    </div>
+
+    <div style="font-size:.68rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">⚙️ Operar — lo urgente de hoy</div>
+    <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+      ${urgentTasks.length?urgentTasks.map(item=>{
+        const st=dlStatus(item.deadline);
+        const bc=st==='overdue'?'#ef4444':st==='today'?'#f59e0b':st==='soon'?'#3b82f6':'#5e7226';
+        const delBadge=item.delegadoA?`<span style="font-size:.58rem;font-weight:700;background:#cffafe;color:#0e7490;padding:2px 7px;border-radius:999px;flex-shrink:0;margin-left:4px">👤 ${DELEGATE_NAMES[item.delegadoA]||item.delegadoA}</span>`:'';
+        return`<div style="background:var(--card);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;border-left:3px solid ${bc};box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:pointer" onclick="openEditModal(${item.id})">
+          <div style="font-size:1.1rem;flex-shrink:0">${item.icon||'📌'}</div>
+          <div style="flex:1;min-width:0;font-size:.86rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h(item.text)}</div>
+          ${urgentRow(st)}${delBadge}
+        </div>`;
+      }).join(''):`<div style="text-align:center;color:#cbd5e1;font-size:.8rem;padding:10px 0">¡Sin urgentes! 🎉</div>`}
+    </div>
+
+    <div style="font-size:.68rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">🏗️ Construir — proyectos estratégicos</div>
+    <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
+      ${projects.length?projects.map(item=>{
+        const prog=getItemProgress(item);
+        return`<div style="background:var(--card);border-radius:12px;padding:10px 13px;box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:pointer;border-left:3px solid #5e7226" onclick="openEditModal(${item.id})">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+            <div style="font-size:.86rem;font-weight:700;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.icon||'🏗️'} ${h(item.text)}</div>
+            <div style="font-size:.75rem;font-weight:800;color:#5e7226;flex-shrink:0;margin-left:8px">${prog}%</div>
+          </div>
+          <div style="height:6px;background:#eef3d6;border-radius:999px;overflow:hidden">
+            <div style="width:${prog}%;height:100%;background:linear-gradient(90deg,#3d5218,#7a9232);border-radius:999px;transition:width .4s ease"></div>
+          </div>
+          ${item.deadline?`<div style="font-size:.65rem;color:var(--text2);margin-top:4px">📅 ${dlFmt(item.deadline)}</div>`:''}
+        </div>`;
+      }).join(''):`<div style="text-align:center;color:#cbd5e1;font-size:.8rem;padding:10px 0">Agrega proyectos en la pestaña 🚀</div>`}
+    </div>
+
+    <div style="font-size:.68rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">🧭 Matriz Eisenhower — toca para ver tareas</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px">
+      <div class="eis-quad q1" onclick="openEisDetail('q1')"><div class="eis-quad-label">🔴 Hacer ya</div><div class="eis-quad-count">${qCount.q1}</div></div>
+      <div class="eis-quad q2" onclick="openEisDetail('q2')"><div class="eis-quad-label">🔵 Agendar</div><div class="eis-quad-count">${qCount.q2}</div></div>
+      <div class="eis-quad q3" onclick="openEisDetail('q3')"><div class="eis-quad-label">🟡 Delegar</div><div class="eis-quad-count">${qCount.q3}</div></div>
+      <div class="eis-quad q4" onclick="openEisDetail('q4')"><div class="eis-quad-label">⚫ Eliminar</div><div class="eis-quad-count">${qCount.q4}</div></div>
+    </div>
+
+    ${dlItems.length?`
+    <div style="font-size:.68rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">⏰ Fechas límite próximas</div>
+    ${dlItems.map(i=>`
+    <div class="deadline-chip">
+      <div class="dl-icon">${i.icon||'📌'}</div>
+      <div class="dl-info"><div class="dl-text">${h(i.text)}</div><div class="dl-date">${dlFmt(i.deadline)}</div></div>
+      ${dlBadge(i.st)}
+    </div>`).join('')}`:''}
+
+  </div>`;
+}
+
+// ── RENDER ──────────────────────────────────────
+function render(){
+  renderDash();
+  ['todo','compromisos','proyectos','extra','done'].forEach(col=>{
+    const ci=items.filter(i=>i.col===col);
+    const panel=document.getElementById('panel-'+col);
+    if(!panel) return;
+    const m=TYPE_META[col];
+    panel.innerHTML=`<div class="type-header ${m.cls}"><div class="th-icon">${m.icon}</div><div><div class="th-title">${m.label}</div><div class="th-desc">${m.desc}</div></div></div>`
+      +(ci.length?ci.map(cardHTML).join(''):'<div class="empty-msg">¡Todo en orden! 🎉</div>');
+    const tc=document.getElementById('tc-'+col);
+    if(tc) tc.textContent=ci.length>0?ci.length:'';
+  });
+}
+
+// ── NAV ─────────────────────────────────────────
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('panel-'+tab).classList.add('active');
+  activeTab=tab; window.scrollTo(0,0);
+}
+
+// ── ADD ─────────────────────────────────────────
+function openAddModal(){
+  const cap=document.getElementById('cap-input').value.trim();
+  document.getElementById('add-text').value=cap;
+  document.getElementById('add-icon').value='';
+  document.getElementById('add-prev').textContent='✨';
+  document.getElementById('add-deadline').value='';
+  document.getElementById('add-scheduled').value='';
+  document.getElementById('add-delegate').value='';
+  setOC('add',null);
+  setEisUI('add',null,null);
+  document.getElementById('add-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('cap-input').blur(),50);
+}
+
+function confirmAdd(){
+  const text=(document.getElementById('add-text').value||document.getElementById('cap-input').value).trim();
+  if(!text){closeModal('add-modal');return}
+  items.unshift({
+    id:nextId++, text, note:'',
+    col:document.getElementById('add-col').value,
+    cat:document.getElementById('add-cat').value,
+    icon:document.getElementById('add-icon').value.trim(),
+    deadline:document.getElementById('add-deadline').value,
+    scheduledDate:document.getElementById('add-scheduled').value,
+    delegadoA:document.getElementById('add-delegate').value,
+    oc:ocState.add,
+    urgente:eisState.add.urgente,
+    importante:eisState.add.importante,
+  });
+  document.getElementById('cap-input').value='';
+  document.getElementById('add-text').value='';
+  save();render();
+  closeModal('add-modal');
+  switchTab(document.getElementById('add-col').value);
+}
+
+// ── SUBTASKS ────────────────────────────────────
+let editingSubtasks=[];
+
+function renderSubtaskEditor(){
+  const list=document.getElementById('st-edit-list');
+  if(!list) return;
+  if(!editingSubtasks.length){list.innerHTML='<div style="color:#9ca3af;font-size:.8rem;padding:4px 0">Sin acciones aún — agrega la primera arriba</div>';return;}
+  list.innerHTML=editingSubtasks.map((st,i)=>`
+    <div class="st-edit-row">
+      <div class="st-edit-cb${st.done?' checked':''}" onclick="toggleEditSubtask(${i})">${st.done?'✓':''}</div>
+      <div class="st-edit-txt${st.done?' checked':''}">${h(st.text)}</div>
+      <button class="st-del" onclick="removeSubtask(${i})" title="Eliminar">✕</button>
+    </div>`).join('');
+}
+
+function addSubtask(){
+  const inp=document.getElementById('st-edit-input');
+  const txt=inp.value.trim(); if(!txt) return;
+  editingSubtasks.push({id:Date.now()+(Math.random()*100|0),text:txt,done:false});
+  inp.value=''; renderSubtaskEditor();
+  inp.focus();
+}
+
+function toggleEditSubtask(i){
+  if(editingSubtasks[i]) editingSubtasks[i].done=!editingSubtasks[i].done;
+  renderSubtaskEditor();
+}
+
+function removeSubtask(i){
+  editingSubtasks.splice(i,1);
+  renderSubtaskEditor();
+}
+
+function getItemProgress(item){
+  const st=item.subtasks||[];
+  if(!st.length) return 0;
+  return Math.round(st.filter(s=>s.done).length/st.length*100);
+}
+
+function checkSubtask(itemId,stId){
+  const item=items.find(i=>i.id===itemId); if(!item||!item.subtasks) return;
+  const st=item.subtasks.find(s=>s.id===stId); if(!st) return;
+  st.done=!st.done;
+  save(); render();
+}
+
+// ── EDIT ────────────────────────────────────────
+function openEditModal(id){
+  editingId=id;
+  const item=items.find(i=>i.id===id); if(!item) return;
+  document.getElementById('edit-text').value=item.text;
+  document.getElementById('edit-icon').value=item.icon||'';
+  document.getElementById('edit-prev').textContent=item.icon||'✨';
+  document.getElementById('edit-deadline').value=item.deadline||'';
+  document.getElementById('edit-scheduled').value=item.scheduledDate||'';
+  document.getElementById('edit-delegate').value=item.delegadoA||'';
+  setOC('edit', item.oc||null);
+  editingSubtasks=JSON.parse(JSON.stringify(item.subtasks||[]));
+  renderSubtaskEditor();
+  document.getElementById('st-edit-input').value='';
+  document.getElementById('edit-note').value=item.note||'';
+  document.getElementById('edit-cat').value=item.cat;
+  setEisUI('edit', item.urgente===undefined?null:item.urgente, item.importante===undefined?null:item.importante);
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function confirmEdit(){
+  const item=items.find(i=>i.id===editingId); if(!item){closeModal('edit-modal');return}
+  item.text    =document.getElementById('edit-text').value.trim()||item.text;
+  item.icon    =document.getElementById('edit-icon').value.trim();
+  item.deadline=document.getElementById('edit-deadline').value;
+  item.scheduledDate=document.getElementById('edit-scheduled').value;
+  item.delegadoA=document.getElementById('edit-delegate').value;
+  item.oc=ocState.edit;
+  item.subtasks=JSON.parse(JSON.stringify(editingSubtasks));
+  item.progress=getItemProgress(item);
+  item.note    =document.getElementById('edit-note').value.trim();
+  item.cat     =document.getElementById('edit-cat').value;
+  item.urgente   =eisState.edit.urgente;
+  item.importante=eisState.edit.importante;
+  editingId=null; save();render(); closeModal('edit-modal');
+}
+
+// ── ACTIONS ─────────────────────────────────────
+function markDone(id){const i=items.find(x=>x.id===id);if(i)i.col='done';save();render()}
+function startMove(id){movingId=id;document.getElementById('move-modal').classList.add('open')}
+function doMove(col){
+  const i=items.find(x=>x.id===movingId);if(i)i.col=col;
+  movingId=null;save();render();closeModal('move-modal');switchTab(col);
+}
+function delItem(id){
+  if(!confirm('¿Eliminar esta tarea?')) return;
+  items=items.filter(i=>i.id!==id);save();render();
+}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+
+document.getElementById('cap-input').addEventListener('keydown',e=>{if(e.key==='Enter')openAddModal()});
+render();
+</script>
+</body>
+</html>
