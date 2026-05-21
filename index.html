@@ -267,13 +267,68 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .modal-option{padding:14px 12px;border-radius:10px;font-size:.95rem;font-weight:500;cursor:pointer;margin-bottom:6px;transition:background .12s}
 .modal-option:hover,.modal-option:active{background:#f1f5f9}
 .modal-cancel{text-align:center;padding:14px;color:var(--purple);font-weight:600;cursor:pointer;font-size:.95rem;margin-top:4px}
+
+/* ── LOGO ── */
+.logo-wrap{display:flex;align-items:center;gap:9px}
+.logo-icon{width:34px;height:34px;flex-shrink:0}
+.logo-text{font-size:1.15rem;font-weight:900;letter-spacing:-.03em;line-height:1}
+.logo-text span{opacity:.65;font-weight:400}
+.notif-btn{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);border-radius:9px;color:white;font-size:.8rem;padding:5px 10px;cursor:pointer;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.notif-btn.active{background:rgba(255,255,255,.3);border-color:white}
+
+/* ── Q1 FIRE BANNER ── */
+.q1-banner{background:white;border:2px solid #ef4444;border-radius:14px;padding:12px 14px;margin-bottom:14px;position:relative}
+.q1-banner-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#dc2626;margin-bottom:8px}
+.q1-banner-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:#fff5f5;border:1.5px solid #fecaca;border-radius:10px;margin-bottom:5px;cursor:pointer}
+.q1-banner-item:last-child{margin-bottom:0}
+.q1-banner-item-text{flex:1;font-size:.86rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.q1-done-btn{background:white;border:1.5px solid #ef4444;border-radius:8px;color:#dc2626;font-size:.82rem;font-weight:800;padding:5px 10px;cursor:pointer;flex-shrink:0;transition:all .15s}
+.q1-done-btn:active{background:#ef4444;color:white;transform:scale(.95)}
+
+/* ── DASHBOARD DONE BTN ── */
+.dash-done-btn{background:transparent;border:1.5px solid #d1d5db;border-radius:8px;color:#9ca3af;font-size:.8rem;font-weight:700;padding:4px 8px;cursor:pointer;flex-shrink:0;transition:all .15s;min-width:32px}
+.dash-done-btn:active{background:#22c55e;border-color:#22c55e;color:white;transform:scale(.95)}
+
+/* ── KPI MODAL ── */
+.kpi-modal-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:12px;margin-bottom:6px;background:var(--card);border-left:3px solid #ef4444;box-shadow:0 1px 3px rgba(0,0,0,.06);cursor:pointer}
+.kpi-modal-item.pending{border-color:#5e7226}
+.kpi-modal-item-text{flex:1;font-size:.86rem;font-weight:700;color:var(--text);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kpi-done-btn{background:#f0fdf4;border:1.5px solid #22c55e;border-radius:8px;color:#15803d;font-size:.8rem;font-weight:800;padding:5px 10px;cursor:pointer;flex-shrink:0}
+.kpi-done-btn:active{background:#22c55e;color:white}
+
+/* ── SEMANA / CALENDARIO ── */
+.semana-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.semana-nav{background:white;border:1.5px solid var(--border);border-radius:10px;padding:7px 12px;font-size:.8rem;font-weight:700;color:var(--purple);cursor:pointer}
+.semana-title{font-size:.85rem;font-weight:800;color:var(--text);text-transform:capitalize}
+.semana-day{background:var(--card);border-radius:14px;margin-bottom:8px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.semana-day-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border)}
+.semana-day-name{font-size:.78rem;font-weight:800;color:var(--text);text-transform:capitalize}
+.semana-day-date{font-size:.72rem;color:var(--text2)}
+.semana-day.today .semana-day-header{background:var(--purple-light)}
+.semana-day.today .semana-day-name{color:var(--purple)}
+.semana-day-tasks{padding:8px 10px;display:flex;flex-direction:column;gap:5px}
+.semana-task{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:#f9fafb;cursor:pointer}
+.semana-task-icon{font-size:.95rem;flex-shrink:0}
+.semana-task-text{flex:1;font-size:.82rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.semana-task-done{background:transparent;border:1.5px solid #d1d5db;border-radius:7px;color:#9ca3af;font-size:.75rem;padding:3px 8px;cursor:pointer;flex-shrink:0}
+.semana-task-done:active{background:#22c55e;border-color:#22c55e;color:white}
+.semana-empty{text-align:center;color:#cbd5e1;font-size:.8rem;padding:12px 0}
 </style>
 </head>
 <body>
 
 <div class="app-header">
   <div class="header-top">
-    <h1>✨ Montse<span>'s Flow</span></h1>
+    <div class="logo-wrap">
+      <svg class="logo-icon" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="34" height="34" rx="9" fill="rgba(255,255,255,0.18)"/>
+        <path d="M7 11 L7 23 L10.5 23 L10.5 15.5 L14 20 L17 20 L20.5 15.5 L20.5 23 L24 23 L24 11 L20.5 11 L15.5 17.5 L10.5 11 Z" fill="white"/>
+        <circle cx="27" cy="9" r="3.5" fill="#fbbf24"/>
+        <path d="M25.5 9 Q27 5 28.5 9" stroke="white" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      </svg>
+      <div class="logo-text">Montse<span>'s Flow</span></div>
+    </div>
+    <button class="notif-btn" id="notif-btn" onclick="toggleNotifs()">🔔 Alertas</button>
   </div>
   <div class="capture-row">
     <input type="text" id="cap-input" placeholder="Captura rápida…" autocomplete="off"/>
@@ -283,6 +338,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <div class="content">
   <div id="panel-dash"        class="tab-panel active"></div>
+  <div id="panel-semana"      class="tab-panel"></div>
   <div id="panel-todo"        class="tab-panel"></div>
   <div id="panel-compromisos" class="tab-panel"></div>
   <div id="panel-proyectos"   class="tab-panel"></div>
@@ -293,6 +349,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div class="tab-bar" id="tab-bar">
   <div class="tab active" id="tab-dash" data-col="dash" onclick="switchTab('dash')">
     <div class="tab-icon-wrap"><div class="tab-icon">🏠</div></div><div class="tab-label">Inicio</div>
+  </div>
+  <div class="tab" id="tab-semana" data-col="semana" onclick="switchTab('semana')">
+    <div class="tab-icon-wrap"><div class="tab-icon">📅</div></div><div class="tab-label">Semana</div>
   </div>
   <div class="tab" id="tab-todo" data-col="todo" onclick="switchTab('todo')">
     <div class="tab-icon-wrap"><div class="tab-icon">⚡</div></div><div class="tab-label">To Do</div>
@@ -313,6 +372,15 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <div class="tab" id="tab-done" data-col="done" onclick="switchTab('done')">
     <div class="tab-icon-wrap"><div class="tab-icon">✅</div></div><div class="tab-label">Hechos</div>
     <div class="tab-count" id="tc-done" style="background:#22c55e"></div>
+  </div>
+</div>
+
+<!-- KPI MODAL -->
+<div class="modal-overlay" id="kpi-modal" onclick="closeModal('kpi-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-title" id="kpi-modal-title"></div>
+    <div id="kpi-modal-body" style="max-height:60vh;overflow-y:auto"></div>
+    <div class="modal-cancel" onclick="closeModal('kpi-modal')">Cerrar</div>
   </div>
 </div>
 
@@ -381,7 +449,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="modal-field">
       <label>👤 Delegar a (opcional)</label>
       <select id="add-delegate">
-        <option value="">— Yo misma —</option>
+        <option value="">— Chingona (yo) 👑 —</option>
         <option value="benji">Benji</option>
         <option value="dani">Dani</option>
         <option value="bren">Bren</option>
@@ -476,7 +544,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="modal-field">
       <label>👤 Delegar a</label>
       <select id="edit-delegate">
-        <option value="">— Yo misma —</option>
+        <option value="">— Chingona (yo) 👑 —</option>
         <option value="benji">Benji</option>
         <option value="dani">Dani</option>
         <option value="bren">Bren</option>
@@ -935,8 +1003,7 @@ function renderDash(){
   const overdue=items.filter(i=>i.deadline&&i.col!=='done'&&dlStatus(i.deadline)==='overdue').length;
   const delegated=items.filter(i=>i.delegadoA&&i.col!=='done').length;
 
-  // Operar vs Construir — usa campo .oc si está definido, si no cae en columna por defecto
-  const getOC=i=>i.oc||((['todo','compromisos'].includes(i.col))?'operar':(['proyectos','extra'].includes(i.col))?'construir':null);
+  // Operar vs Construir — usa getOC global
   const operarN=items.filter(i=>i.col!=='done'&&getOC(i)==='operar').length;
   const construirN=items.filter(i=>i.col!=='done'&&getOC(i)==='construir').length;
   const totalOC=operarN+construirN||1;
@@ -976,6 +1043,10 @@ function renderDash(){
     return'';
   };
 
+  // Q1 items for fire banner
+  const t=todayStr();
+  const q1Items=items.filter(i=>i.col!=='done'&&i.urgente===true&&i.importante===true&&(i.scheduledDate===t||i.deadline===t)).sort((a,b)=>cardPriority(b)-cardPriority(a)).slice(0,5);
+
   panel.innerHTML=`
   <div style="background:linear-gradient(135deg,#3d5218 0%,#5e7226 100%);padding:16px 16px 16px;padding-top:calc(16px + var(--safe-t));color:white;margin:-16px -14px 0">
     <div style="font-size:.65rem;opacity:.55;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Patio Cinco · Panel ejecutivo</div>
@@ -985,18 +1056,28 @@ function renderDash(){
         <div style="font-size:1.4rem;font-weight:900;line-height:1">${pct}%</div>
         <div style="font-size:.58rem;opacity:.75;text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Avance</div>
       </div>
-      <div style="background:rgba(255,255,255,.13);border-radius:11px;padding:8px 6px;text-align:center">
+      <div style="background:rgba(255,255,255,.13);border-radius:11px;padding:8px 6px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="openKPIModal('vencidas')">
         <div style="font-size:1.4rem;font-weight:900;line-height:1;color:${overdue>0?'#fca5a5':'white'}">${overdue}</div>
-        <div style="font-size:.58rem;opacity:.75;text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Vencidas</div>
+        <div style="font-size:.58rem;opacity:.75;text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Vencidas ›</div>
       </div>
-      <div style="background:rgba(255,255,255,.13);border-radius:11px;padding:8px 6px;text-align:center">
+      <div style="background:rgba(255,255,255,.13);border-radius:11px;padding:8px 6px;text-align:center;cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="openKPIModal('pendientes')">
         <div style="font-size:1.4rem;font-weight:900;line-height:1">${total}</div>
-        <div style="font-size:.58rem;opacity:.75;text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Pendientes</div>
+        <div style="font-size:.58rem;opacity:.75;text-transform:uppercase;letter-spacing:.05em;margin-top:2px">Pendientes ›</div>
       </div>
     </div>
   </div>
 
   <div style="padding:14px 14px 0">
+  ${q1Items.length?`
+  <div class="q1-banner">
+    <div class="q1-banner-title">🔴 Para hacer HOY — urgente e importante</div>
+    ${q1Items.map(item=>`
+    <div class="q1-banner-item" onclick="openEditModal(${item.id})">
+      <div style="font-size:1rem;flex-shrink:0">${item.icon||'📌'}</div>
+      <div class="q1-banner-item-text">${h(item.text)}</div>
+      <button class="q1-done-btn" onclick="event.stopPropagation();markDone(${item.id})">✓ Hecho</button>
+    </div>`).join('')}
+  </div>`:''}
 
     <div style="background:var(--card);border-radius:14px;padding:13px 14px;box-shadow:0 1px 4px rgba(0,0,0,.06);margin-bottom:14px">
       <div style="font-size:.68rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">¿Dónde va tu energía?</div>
@@ -1019,10 +1100,11 @@ function renderDash(){
         const st=dlStatus(item.deadline);
         const bc=st==='overdue'?'#ef4444':st==='today'?'#f59e0b':st==='soon'?'#3b82f6':'#5e7226';
         const delBadge=item.delegadoA?`<span style="font-size:.58rem;font-weight:700;background:#cffafe;color:#0e7490;padding:2px 7px;border-radius:999px;flex-shrink:0;margin-left:4px">👤 ${DELEGATE_NAMES[item.delegadoA]||item.delegadoA}</span>`:'';
-        return`<div style="background:var(--card);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;border-left:3px solid ${bc};box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:pointer" onclick="openEditModal(${item.id})">
-          <div style="font-size:1.1rem;flex-shrink:0">${item.icon||'📌'}</div>
-          <div style="flex:1;min-width:0;font-size:.86rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h(item.text)}</div>
+        return`<div style="background:var(--card);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:8px;border-left:3px solid ${bc};box-shadow:0 1px 3px rgba(0,0,0,.05)">
+          <div style="font-size:1.1rem;flex-shrink:0;cursor:pointer" onclick="openEditModal(${item.id})">${item.icon||'📌'}</div>
+          <div style="flex:1;min-width:0;font-size:.86rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer" onclick="openEditModal(${item.id})">${h(item.text)}</div>
           ${urgentRow(st)}${delBadge}
+          <button class="dash-done-btn" onclick="markDone(${item.id})">✓</button>
         </div>`;
       }).join(''):`<div style="text-align:center;color:#cbd5e1;font-size:.8rem;padding:10px 0">¡Sin urgentes! 🎉</div>`}
     </div>
@@ -1031,10 +1113,13 @@ function renderDash(){
     <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:14px">
       ${projects.length?projects.map(item=>{
         const prog=getItemProgress(item);
-        return`<div style="background:var(--card);border-radius:12px;padding:10px 13px;box-shadow:0 1px 3px rgba(0,0,0,.05);cursor:pointer;border-left:3px solid #5e7226" onclick="openEditModal(${item.id})">
+        return`<div style="background:var(--card);border-radius:12px;padding:10px 13px;box-shadow:0 1px 3px rgba(0,0,0,.05);border-left:3px solid #5e7226">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-            <div style="font-size:.86rem;font-weight:700;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.icon||'🏗️'} ${h(item.text)}</div>
-            <div style="font-size:.75rem;font-weight:800;color:#5e7226;flex-shrink:0;margin-left:8px">${prog}%</div>
+            <div style="font-size:.86rem;font-weight:700;color:var(--text);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer" onclick="openEditModal(${item.id})">${item.icon||'🏗️'} ${h(item.text)}</div>
+            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;margin-left:6px">
+              <div style="font-size:.75rem;font-weight:800;color:#5e7226">${prog}%</div>
+              <button class="dash-done-btn" onclick="markDone(${item.id})">✓</button>
+            </div>
           </div>
           <div style="height:6px;background:#eef3d6;border-radius:999px;overflow:hidden">
             <div style="width:${prog}%;height:100%;background:linear-gradient(90deg,#3d5218,#7a9232);border-radius:999px;transition:width .4s ease"></div>
@@ -1063,6 +1148,9 @@ function renderDash(){
 
   </div>`;
 }
+
+// ── HELPERS ─────────────────────────────────────
+function getOC(i){return i.oc||((['todo','compromisos'].includes(i.col))?'operar':(['proyectos','extra'].includes(i.col))?'construir':null)}
 
 // ── PRIORITY SORT ───────────────────────────────
 function cardPriority(item){
@@ -1095,6 +1183,7 @@ function cardPriority(item){
 // ── RENDER ──────────────────────────────────────
 function render(){
   renderDash();
+  if(activeTab==='semana') renderSemana();
   ['todo','compromisos','proyectos','extra','done'].forEach(col=>{
     const ci=items.filter(i=>i.col===col)
       .sort((a,b)=>cardPriority(b)-cardPriority(a));
@@ -1108,6 +1197,103 @@ function render(){
   });
 }
 
+// ── KPI MODAL ───────────────────────────────────
+function openKPIModal(type){
+  const title=document.getElementById('kpi-modal-title');
+  const body=document.getElementById('kpi-modal-body');
+  let list, titleTxt;
+  if(type==='vencidas'){
+    list=items.filter(i=>i.col!=='done'&&i.deadline&&dlStatus(i.deadline)==='overdue').sort((a,b)=>a.deadline.localeCompare(b.deadline));
+    titleTxt='⏰ Tareas Vencidas ('+list.length+')';
+  } else {
+    list=items.filter(i=>i.col!=='done').sort((a,b)=>cardPriority(b)-cardPriority(a));
+    titleTxt='📋 Pendientes ('+list.length+')';
+  }
+  title.textContent=titleTxt;
+  body.innerHTML=list.length?list.map(item=>{
+    const bc=item.deadline&&dlStatus(item.deadline)==='overdue'?'overdue':'pending';
+    return`<div class="kpi-modal-item ${bc}">
+      <div style="font-size:1.1rem;flex-shrink:0">${item.icon||'📌'}</div>
+      <div class="kpi-modal-item-text" onclick="closeModal('kpi-modal');setTimeout(()=>openEditModal(${item.id}),120)">${h(item.text)}</div>
+      ${item.deadline?`<span style="font-size:.62rem;color:#6b7280;flex-shrink:0">${dlFmt(item.deadline)}</span>`:''}
+      <button class="kpi-done-btn" onclick="markDone(${item.id});openKPIModal('${type}')">✓</button>
+    </div>`;
+  }).join(''):`<div style="text-align:center;color:#9ca3af;padding:20px 0;font-size:.9rem">¡Todo en orden! 🎉</div>`;
+  document.getElementById('kpi-modal').classList.add('open');
+}
+
+// ── SEMANA / CALENDARIO ─────────────────────────
+let semanaOffset=0;
+function renderSemana(){
+  const panel=document.getElementById('panel-semana');
+  if(!panel) return;
+  const today=new Date(); today.setHours(0,0,0,0);
+  const dayOfWeek=today.getDay(); // 0=sun
+  const monOffset=(dayOfWeek===0?-6:1-dayOfWeek);
+  const weekStart=new Date(today); weekStart.setDate(today.getDate()+monOffset+semanaOffset*7);
+  const weekEnd=new Date(weekStart); weekEnd.setDate(weekStart.getDate()+6);
+  const fmtLong=d=>d.toLocaleDateString('es-MX',{day:'numeric',month:'long'});
+  const fmtShort=d=>d.toLocaleDateString('es-MX',{weekday:'long'});
+  const isoDay=d=>{const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return`${y}-${m}-${dd}`};
+  const days=[];
+  for(let i=0;i<7;i++){const d=new Date(weekStart);d.setDate(weekStart.getDate()+i);days.push(d);}
+  panel.innerHTML=`
+  <div class="semana-header">
+    <button class="semana-nav" onclick="semanaOffset--;renderSemana()">‹ Anterior</button>
+    <div class="semana-title">${semanaOffset===0?'Esta semana':semanaOffset===-1?'Semana pasada':semanaOffset===1?'Próxima semana':fmtLong(weekStart)+' – '+fmtLong(weekEnd)}</div>
+    <button class="semana-nav" onclick="semanaOffset++;renderSemana()">Siguiente ›</button>
+  </div>
+  ${days.map(d=>{
+    const iso=isoDay(d);
+    const isToday=iso===todayStr();
+    const dayItems=items.filter(i=>i.col!=='done'&&(i.scheduledDate===iso||(!i.scheduledDate&&i.deadline===iso)));
+    return`<div class="semana-day${isToday?' today':''}">
+      <div class="semana-day-header">
+        <span class="semana-day-name">${fmtShort(d)}</span>
+        <span class="semana-day-date">${d.getDate()} ${d.toLocaleDateString('es-MX',{month:'short'})}</span>
+      </div>
+      <div class="semana-day-tasks">
+        ${dayItems.length?dayItems.map(item=>`
+        <div class="semana-task">
+          <div class="semana-task-icon">${item.icon||'📌'}</div>
+          <div class="semana-task-text" onclick="closeModal('kpi-modal');setTimeout(()=>openEditModal(${item.id}),80)">${h(item.text)}</div>
+          <button class="semana-task-done" onclick="markDone(${item.id});renderSemana()">✓</button>
+        </div>`).join(''):`<div class="semana-empty">Libre 🌿</div>`}
+      </div>
+    </div>`;
+  }).join('')}`;
+}
+
+// ── NOTIFICATIONS ────────────────────────────────
+let notifsOn=false;
+function toggleNotifs(){
+  if(!('Notification' in window)){alert('Tu navegador no soporta notificaciones.');return;}
+  if(Notification.permission==='denied'){alert('Bloqueaste las notificaciones. Actívalas en ajustes del navegador.');return;}
+  if(!notifsOn){
+    Notification.requestPermission().then(p=>{
+      if(p==='granted'){
+        notifsOn=true;
+        document.getElementById('notif-btn').classList.add('active');
+        document.getElementById('notif-btn').textContent='🔔 Alertas ON';
+        checkTodayNotifs();
+        localStorage.setItem('mf_notifs','1');
+      }
+    });
+  } else {
+    notifsOn=false;
+    document.getElementById('notif-btn').classList.remove('active');
+    document.getElementById('notif-btn').textContent='🔔 Alertas';
+    localStorage.removeItem('mf_notifs');
+  }
+}
+function checkTodayNotifs(){
+  if(!notifsOn||Notification.permission!=='granted') return;
+  const overdue=items.filter(i=>i.col!=='done'&&i.deadline&&dlStatus(i.deadline)==='overdue');
+  const todayItems=items.filter(i=>i.col!=='done'&&i.deadline&&dlStatus(i.deadline)==='today');
+  if(overdue.length>0) new Notification('⏰ Montse\'s Flow',{body:`Tienes ${overdue.length} tarea(s) vencida(s). ¡Hay que resolverlas!`,icon:'',tag:'overdue'});
+  if(todayItems.length>0) new Notification('📅 Para hoy',{body:todayItems.map(i=>i.text).join(', '),icon:'',tag:'today'});
+}
+
 // ── NAV ─────────────────────────────────────────
 function switchTab(tab){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -1115,6 +1301,7 @@ function switchTab(tab){
   document.getElementById('tab-'+tab).classList.add('active');
   document.getElementById('panel-'+tab).classList.add('active');
   activeTab=tab; window.scrollTo(0,0);
+  if(tab==='semana') renderSemana();
 }
 
 // ── ADD ─────────────────────────────────────────
@@ -1289,6 +1476,13 @@ function closeModal(id){document.getElementById(id).classList.remove('open')}
 
 document.getElementById('cap-input').addEventListener('keydown',e=>{if(e.key==='Enter')openAddModal()});
 render();
+// Restore notification state
+if(localStorage.getItem('mf_notifs')==='1'&&Notification.permission==='granted'){
+  notifsOn=true;
+  document.getElementById('notif-btn').classList.add('active');
+  document.getElementById('notif-btn').textContent='🔔 Alertas ON';
+  setTimeout(checkTodayNotifs, 2000);
+}
 </script>
 </body>
 </html>
