@@ -313,6 +313,24 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .semana-task-done{background:transparent;border:1.5px solid #d1d5db;border-radius:7px;color:#9ca3af;font-size:.75rem;padding:3px 8px;cursor:pointer;flex-shrink:0}
 .semana-task-done:active{background:#22c55e;border-color:#22c55e;color:white}
 .semana-empty{text-align:center;color:#cbd5e1;font-size:.8rem;padding:12px 0}
+
+/* ── TODO + SEMANA SPLIT ── */
+.todo-week-strip{background:var(--card);border-radius:14px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.todo-week-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px;border-bottom:1px solid var(--border)}
+.todo-week-title{font-size:.72rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em}
+.todo-week-nav{display:flex;gap:6px}
+.todo-week-nav button{background:none;border:1.5px solid var(--border);border-radius:7px;padding:3px 9px;font-size:.78rem;font-weight:700;color:var(--purple);cursor:pointer}
+.todo-days-scroll{display:flex;overflow-x:auto;gap:0;padding:0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.todo-days-scroll::-webkit-scrollbar{display:none}
+.todo-day-col{flex:0 0 calc(100%/4);min-width:80px;border-right:1px solid var(--border);padding:8px 6px}
+.todo-day-col:last-child{border-right:none}
+.todo-day-col.today-col .todo-day-name{color:var(--purple);font-weight:900}
+.todo-day-col.drag-over-day{background:var(--purple-light)!important}
+.todo-day-name{font-size:.68rem;font-weight:700;color:var(--text2);text-transform:capitalize;text-align:center;margin-bottom:2px}
+.todo-day-date{font-size:.72rem;font-weight:900;color:var(--text);text-align:center;margin-bottom:6px}
+.todo-day-task{background:#f9fafb;border-radius:7px;padding:4px 6px;margin-bottom:3px;font-size:.68rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;border-left:2px solid var(--purple)}
+.todo-day-empty{text-align:center;color:#d1d5db;font-size:.7rem;padding:4px 0;min-height:24px}
+.todo-section-label{font-size:.65rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin:10px 0 6px;padding:0 2px}
 </style>
 </head>
 <body>
@@ -955,7 +973,7 @@ function cardHTML(item){
   const recurH=item.recur?`<span style="font-size:.6rem;font-weight:700;background:#ede9fe;color:#6d28d9;padding:2px 7px;border-radius:999px">🔁 ${RECUR_LABELS[item.recur]||''}</span>`:'';
   const badges=[eisBadgeHTML(item), (!isDone&&item.deadline)?dlBadgeHTML(item.deadline):'', schedH, delegH, recurH].filter(Boolean);
   const badgesH=badges.length?`<div class="card-badges">${badges.join('')}</div>`:'';
-  const dragH=!isDone?`<div class="drag-handle" ontouchstart="startDrag(event,${item.id})" onmousedown="startMouseDrag(event,${item.id})" title="Arrastra a otra pestaña">⠿</div>`:'';
+  const dragH=!isDone?`<div class="drag-handle" ontouchstart="startDrag(event,${item.id})" onmousedown="startMouseDrag(event,${item.id})" draggable="true" ondragstart="event.dataTransfer.setData('text/plain','${item.id}')" title="Arrastra a otro día o pestaña">⠿</div>`:'';
   const subs=item.subtasks||[];
   const prog=getItemProgress(item);
   const progH=subs.length?`<div class="card-progress">
@@ -1045,7 +1063,7 @@ function renderDash(){
 
   // Q1 items for fire banner
   const t=todayStr();
-  const q1Items=items.filter(i=>i.col!=='done'&&i.urgente===true&&i.importante===true&&(i.scheduledDate===t||i.deadline===t)).sort((a,b)=>cardPriority(b)-cardPriority(a)).slice(0,5);
+  const q1Items=items.filter(i=>i.col!=='done'&&(i.scheduledDate===t||(i.deadline===t&&!i.scheduledDate)||(i.deadline&&dlStatus(i.deadline)==='overdue'))).sort((a,b)=>cardPriority(b)-cardPriority(a)).slice(0,7);
 
   panel.innerHTML=`
   <div style="background:linear-gradient(135deg,#3d5218 0%,#5e7226 100%);padding:16px 16px 16px;padding-top:calc(16px + var(--safe-t));color:white;margin:-16px -14px 0">
@@ -1070,7 +1088,7 @@ function renderDash(){
   <div style="padding:14px 14px 0">
   ${q1Items.length?`
   <div class="q1-banner">
-    <div class="q1-banner-title">🔴 Para hacer HOY — urgente e importante</div>
+    <div class="q1-banner-title">🔴 Para hacer HOY — agendadas o vencidas</div>
     ${q1Items.map(item=>`
     <div class="q1-banner-item" onclick="openEditModal(${item.id})">
       <div style="font-size:1rem;flex-shrink:0">${item.icon||'📌'}</div>
@@ -1180,6 +1198,57 @@ function cardPriority(item){
   return score;
 }
 
+// ── TODO WEEK STRIP ─────────────────────────────
+let todoWeekOffset=0;
+function renderTodoWeekStrip(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const dow=today.getDay();
+  const monOff=(dow===0?-6:1-dow);
+  const weekStart=new Date(today); weekStart.setDate(today.getDate()+monOff+todoWeekOffset*7);
+  const isoDay=d=>{const y=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return`${y}-${mo}-${dd}`};
+  const days=[];
+  for(let i=0;i<7;i++){const d=new Date(weekStart);d.setDate(weekStart.getDate()+i);days.push(d);}
+  const weekLabel=todoWeekOffset===0?'Esta semana':todoWeekOffset===-1?'Sem. pasada':'Próx. semana';
+  return`<div class="todo-week-strip">
+    <div class="todo-week-header">
+      <span class="todo-week-title">📅 ${weekLabel}</span>
+      <div class="todo-week-nav">
+        <button onclick="todoWeekOffset--;render()">‹</button>
+        <button onclick="todoWeekOffset=0;render()">Hoy</button>
+        <button onclick="todoWeekOffset++;render()">›</button>
+      </div>
+    </div>
+    <div class="todo-days-scroll">
+      ${days.map(d=>{
+        const iso=isoDay(d);
+        const isToday=iso===todayStr();
+        const dayItems=items.filter(i=>i.col!=='done'&&i.scheduledDate===iso);
+        return`<div class="todo-day-col${isToday?' today-col':''}" data-drop-date="${iso}">
+          <div class="todo-day-name">${d.toLocaleDateString('es-MX',{weekday:'short'})}</div>
+          <div class="todo-day-date">${d.getDate()}</div>
+          ${dayItems.length?dayItems.map(i=>`<div class="todo-day-task" onclick="openEditModal(${i.id})">${i.icon||''}${h(i.text)}</div>`).join(''):'<div class="todo-day-empty">—</div>'}
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+
+function bindTodoDayDropZones(){
+  document.querySelectorAll('.todo-day-col[data-drop-date]').forEach(zone=>{
+    const date=zone.dataset.dropDate;
+    // Touch drag drop
+    zone.addEventListener('touchover',e=>e.preventDefault(),{passive:false});
+    // Mouse drag drop
+    zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over-day')});
+    zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over-day'));
+    zone.addEventListener('drop',e=>{
+      e.preventDefault(); zone.classList.remove('drag-over-day');
+      const id=parseInt(e.dataTransfer?.getData('text/plain'));
+      if(id){const item=items.find(i=>i.id===id);if(item){item.scheduledDate=date;save();render();}}
+    });
+  });
+}
+
 // ── RENDER ──────────────────────────────────────
 function render(){
   renderDash();
@@ -1190,8 +1259,16 @@ function render(){
     const panel=document.getElementById('panel-'+col);
     if(!panel) return;
     const m=TYPE_META[col];
-    panel.innerHTML=`<div class="type-header ${m.cls}"><div class="th-icon">${m.icon}</div><div><div class="th-title">${m.label}</div><div class="th-desc">${m.desc}</div></div></div>`
-      +(ci.length?ci.map(cardHTML).join(''):'<div class="empty-msg">¡Todo en orden! 🎉</div>');
+    if(col==='todo'){
+      panel.innerHTML=renderTodoWeekStrip()+
+        `<div class="type-header ${m.cls}"><div class="th-icon">${m.icon}</div><div><div class="th-title">${m.label}</div><div class="th-desc">${m.desc}</div></div></div>`+
+        `<div class="todo-section-label">📋 Sin fecha asignada — arrastra al día que la harás</div>`+
+        (ci.filter(i=>!i.scheduledDate).length?ci.filter(i=>!i.scheduledDate).map(cardHTML).join(''):'<div class="empty-msg">¡Todo agendado! 🎉</div>');
+      bindTodoDayDropZones();
+    } else {
+      panel.innerHTML=`<div class="type-header ${m.cls}"><div class="th-icon">${m.icon}</div><div><div class="th-title">${m.label}</div><div class="th-desc">${m.desc}</div></div></div>`
+        +(ci.length?ci.map(cardHTML).join(''):'<div class="empty-msg">¡Todo en orden! 🎉</div>');
+    }
     const tc=document.getElementById('tc-'+col);
     if(tc) tc.textContent=ci.length>0?ci.length:'';
   });
@@ -1266,17 +1343,33 @@ function renderSemana(){
 
 // ── NOTIFICATIONS ────────────────────────────────
 let notifsOn=false;
+const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+const isStandalone=window.navigator.standalone===true||window.matchMedia('(display-mode: standalone)').matches;
+
 function toggleNotifs(){
-  if(!('Notification' in window)){alert('Tu navegador no soporta notificaciones.');return;}
-  if(Notification.permission==='denied'){alert('Bloqueaste las notificaciones. Actívalas en ajustes del navegador.');return;}
+  // iOS Safari (no PWA): notificaciones no disponibles
+  if(isIOS && !isStandalone){
+    showNotifModal('ios-browser');
+    return;
+  }
+  if(!('Notification' in window)){
+    showNotifModal('unsupported');
+    return;
+  }
+  if(Notification.permission==='denied'){
+    showNotifModal('denied');
+    return;
+  }
   if(!notifsOn){
     Notification.requestPermission().then(p=>{
       if(p==='granted'){
         notifsOn=true;
         document.getElementById('notif-btn').classList.add('active');
-        document.getElementById('notif-btn').textContent='🔔 Alertas ON';
+        document.getElementById('notif-btn').textContent='🔔 ON';
         checkTodayNotifs();
         localStorage.setItem('mf_notifs','1');
+      } else if(p==='denied'){
+        showNotifModal('denied');
       }
     });
   } else {
@@ -1286,12 +1379,42 @@ function toggleNotifs(){
     localStorage.removeItem('mf_notifs');
   }
 }
+
+function showNotifModal(type){
+  const msgs={
+    'ios-browser':{
+      title:'📱 Alertas en iPhone',
+      body:`Para recibir notificaciones en tu iPhone tienes que agregar la app a tu pantalla de inicio:<br><br>
+      <b>1.</b> Toca el ícono <b>compartir</b> (□↑) en Safari<br>
+      <b>2.</b> Selecciona <b>"Agregar a pantalla de inicio"</b><br>
+      <b>3.</b> Abre la app desde tu pantalla de inicio<br>
+      <b>4.</b> Regresa aquí y activa las alertas<br><br>
+      <span style="font-size:.8rem;color:#6b7280">Requiere iOS 16.4 o superior</span>`
+    },
+    'denied':{
+      title:'🔕 Notificaciones bloqueadas',
+      body:`Para desbloquear:<br><br>
+      <b>iPhone:</b> Ajustes → Safari → Notificaciones → busca este sitio → Permitir<br><br>
+      <b>Mac/Chrome:</b> Clic en el 🔒 junto a la URL → Notificaciones → Permitir<br><br>
+      Después recarga la página y activa las alertas.`
+    },
+    'unsupported':{
+      title:'🔔 No disponible',
+      body:'Tu navegador no soporta notificaciones. Prueba abriendo esta app desde Chrome o Safari (iOS 16.4+).'
+    }
+  };
+  const m=msgs[type]||msgs['unsupported'];
+  document.getElementById('kpi-modal-title').textContent=m.title;
+  document.getElementById('kpi-modal-body').innerHTML=`<div style="font-size:.88rem;line-height:1.7;color:var(--text);padding:4px 0">${m.body}</div>`;
+  document.getElementById('kpi-modal').classList.add('open');
+}
+
 function checkTodayNotifs(){
   if(!notifsOn||Notification.permission!=='granted') return;
   const overdue=items.filter(i=>i.col!=='done'&&i.deadline&&dlStatus(i.deadline)==='overdue');
-  const todayItems=items.filter(i=>i.col!=='done'&&i.deadline&&dlStatus(i.deadline)==='today');
-  if(overdue.length>0) new Notification('⏰ Montse\'s Flow',{body:`Tienes ${overdue.length} tarea(s) vencida(s). ¡Hay que resolverlas!`,icon:'',tag:'overdue'});
-  if(todayItems.length>0) new Notification('📅 Para hoy',{body:todayItems.map(i=>i.text).join(', '),icon:'',tag:'today'});
+  const todayItems=items.filter(i=>i.col!=='done'&&(i.scheduledDate===todayStr()||(i.deadline&&dlStatus(i.deadline)==='today')));
+  if(overdue.length>0) new Notification('⏰ Montse\'s Flow',{body:`${overdue.length} tarea(s) vencida(s). ¡A resolverlas!`,tag:'overdue'});
+  if(todayItems.length>0) new Notification('📅 Para hoy',{body:todayItems.map(i=>i.text).slice(0,3).join(', '),tag:'today'});
 }
 
 // ── NAV ─────────────────────────────────────────
