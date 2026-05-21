@@ -456,6 +456,11 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
   <div class="menu-item" onclick="closeMenu();exportICS()"><span class="menu-item-icon">📥</span>Exportar .ics (sin sync)</div>
   <div class="menu-divider"></div>
   <div class="menu-item" onclick="closeMenu();switchTab('cats')"><span class="menu-item-icon">🏷️</span>Categorías</div>
+  <div class="menu-divider"></div>
+  <div style="padding:4px 0 8px;display:flex;gap:8px">
+    <button onclick="exportData()" style="flex:1;background:var(--purple-light);color:var(--purple-dark);border:none;border-radius:9px;padding:9px 10px;font-size:.8rem;font-weight:700;cursor:pointer">📤 Exportar</button>
+    <label style="flex:1;background:var(--purple-light);color:var(--purple-dark);border-radius:9px;padding:9px 10px;font-size:.8rem;font-weight:700;cursor:pointer;text-align:center;display:block">📥 Importar<input type="file" accept=".json" style="display:none" onchange="importData(event)"/></label>
+  </div>
 </div>
 
 <!-- CATS EDIT MODAL -->
@@ -483,27 +488,7 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
   <div class="header-top">
     <div style="display:flex;align-items:center;gap:9px">
       <button class="hamburger" onclick="openMenu()">☰</button>
-      <svg viewBox="0 0 218 84" height="48" xmlns="http://www.w3.org/2000/svg" style="display:block;flex-shrink:0" aria-label="Montse's Flow">
-        <!-- Entry stroke: bottom-left sweeping up to first arch peak -->
-        <path d="M 10,74 C 4,48 12,8 27,4"
-              stroke="#e8d6ae" stroke-width="8" fill="none" stroke-linecap="round"/>
-        <!-- First arch: peak to right side descending to valley -->
-        <path d="M 27,4 C 44,0 66,28 68,70"
-              stroke="#e8d6ae" stroke-width="8" fill="none" stroke-linecap="round"/>
-        <!-- Valley through second arch -->
-        <path d="M 68,70 C 72,78 88,6 112,4"
-              stroke="#e8d6ae" stroke-width="8" fill="none" stroke-linecap="round"/>
-        <!-- Second arch right side descending -->
-        <path d="M 112,4 C 130,2 144,22 146,42"
-              stroke="#e8d6ae" stroke-width="8" fill="none" stroke-linecap="round"/>
-        <!-- Long graceful tail sweeping right with slight upswing -->
-        <path d="M 146,42 C 148,54 174,46 210,32"
-              stroke="#e8d6ae" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- Gold dot: upper right, above the tail -->
-        <circle cx="168" cy="9" r="11" fill="#d4a843"/>
-        <!-- MONTSE'S FLOW wordmark -->
-        <text x="109" y="82" font-family="Georgia,'Times New Roman',serif" font-size="9" font-weight="400" fill="#e8d6ae" letter-spacing="3.2" text-anchor="middle">MONTSE&#x2019;S FLOW</text>
-      </svg>
+      <img src="data:image/png;base64,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" height="48" style="display:block;flex-shrink:0" alt="Montse's Flow"/>
     </div>
     <div style="display:flex;align-items:center;gap:6px">
       <span id="gcal-sync-badge" style="display:none;font-size:.65rem;background:rgba(255,255,255,.2);color:white;padding:3px 8px;border-radius:999px;font-weight:700">📅 ↕</span>
@@ -542,6 +527,7 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
     <div class="tab-icon-wrap"><div class="tab-icon">🎯</div></div><div class="tab-label">Compromisos</div>
     <div class="tab-count" id="tc-compromisos"></div>
   </div>
+
 </div>
 
 <!-- GCAL SETUP MODAL -->
@@ -1023,6 +1009,30 @@ let items   = JSON.parse(localStorage.getItem('mf_v2')||'null') || SEED;
 let nextId  = Math.max(...items.map(i=>i.id),0)+1;
 let activeTab = 'dash', movingId = null, editingId = null;
 function save(){localStorage.setItem('mf_v2',JSON.stringify(items))}
+function exportData(){
+  const blob=new Blob([JSON.stringify({v:'mf_v2',ts:Date.now(),items},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='montses_flow_backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();closeMenu();
+}
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      const imported=d.items||d;
+      if(!Array.isArray(imported))throw new Error('invalid');
+      if(confirm('¿Reemplazar todos los datos actuales con el archivo importado? ('+imported.length+' tareas)')){
+        items=imported;
+        nextId=Math.max(...items.map(i=>i.id),0)+1;
+        save();render();closeMenu();
+        alert('✓ Datos importados correctamente');
+      }
+    }catch(err){alert('Error al importar: el archivo no es válido');}
+  };
+  reader.readAsText(file);
+}
 function h(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
 // ── EISENHOWER HELPERS ──────────────────────────
@@ -1281,7 +1291,7 @@ function renderDash(){
   const q1Items=items.filter(i=>i.col!=='done'&&(i.scheduledDate===t||(i.deadline===t&&!i.scheduledDate)||(i.deadline&&dlStatus(i.deadline)==='overdue'))).sort((a,b)=>cardPriority(b)-cardPriority(a)).slice(0,7);
 
   panel.innerHTML=`
-  <div style="background:linear-gradient(135deg,#3d5218 0%,#5e7226 100%);padding:16px 16px 16px;padding-top:calc(16px + var(--safe-t));color:white;margin:-16px -14px 0">
+  <div style="background:linear-gradient(135deg,#3d5218 0%,#5e7226 100%);padding:12px 16px 16px;color:white;margin:-16px -14px 0">
     <div style="font-size:.65rem;opacity:.55;text-transform:uppercase;letter-spacing:.1em;margin-bottom:2px">Patio Cinco · Panel ejecutivo</div>
     <div style="font-size:1.1rem;font-weight:900;margin-bottom:12px">${greet}, Montse 👋</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
