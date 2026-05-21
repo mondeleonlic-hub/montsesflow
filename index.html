@@ -399,7 +399,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <div class="menu-item" onclick="closeMenu();switchTab('extra')"><span class="menu-item-icon">⭐</span>Extra<span class="menu-item-count" id="mc-extra"></span></div>
   <div class="menu-item" onclick="closeMenu();switchTab('done')"><span class="menu-item-icon">✅</span>Hechos<span class="menu-item-count" id="mc-done" style="background:#dcfce7;color:#15803d"></span></div>
   <div class="menu-divider"></div>
-  <div class="menu-item" onclick="closeMenu();exportICS()"><span class="menu-item-icon">📥</span>Exportar a Calendario (.ics)</div>
+  <div class="menu-item" id="gcal-menu-item" onclick="closeMenu();openGCalConnect()"><span class="menu-item-icon">📅</span>Conectar Google Calendar</div>
+  <div id="gcal-menu-status" style="padding:4px 16px 8px;font-size:.72rem;color:#9ca3af;display:none"></div>
+  <div class="menu-item" onclick="closeMenu();exportICS()"><span class="menu-item-icon">📥</span>Exportar .ics (sin sync)</div>
   <div class="menu-divider"></div>
   <div class="menu-section-title">Categorías</div>
   <div id="menu-cats-list"></div>
@@ -443,7 +445,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
         <text x="4" y="50" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="7.5" font-weight="800" fill="rgba(255,255,255,.88)" letter-spacing="1.8">MONTSE'S FLOW</text>
       </svg>
     </div>
-    <button class="notif-btn" id="notif-btn" onclick="toggleNotifs()">🔔 Alertas</button>
+    <div style="display:flex;align-items:center;gap:6px">
+      <span id="gcal-sync-badge" style="display:none;font-size:.65rem;background:rgba(255,255,255,.2);color:white;padding:3px 8px;border-radius:999px;font-weight:700">📅 ↕</span>
+      <button class="notif-btn" id="notif-btn" onclick="toggleNotifs()">🔔 Alertas</button>
+    </div>
   </div>
   <div class="capture-row">
     <input type="text" id="cap-input" placeholder="Captura rápida…" autocomplete="off"/>
@@ -475,6 +480,31 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <div class="tab" id="tab-compromisos" data-col="compromisos" onclick="switchTab('compromisos')">
     <div class="tab-icon-wrap"><div class="tab-icon">🎯</div></div><div class="tab-label">Compromisos</div>
     <div class="tab-count" id="tc-compromisos"></div>
+  </div>
+</div>
+
+<!-- GCAL SETUP MODAL -->
+<div class="modal-overlay" id="gcal-setup-modal" onclick="closeModal('gcal-setup-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-title">📅 Conectar Google Calendar</div>
+    <div style="background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:13px 14px;margin-bottom:14px;font-size:.82rem;line-height:1.6;color:#14532d">
+      <strong>Necesitas un Client ID de Google.</strong> Sigue estos pasos (≈ 5 min):<br>
+      <ol style="margin:8px 0 0 16px;display:flex;flex-direction:column;gap:4px">
+        <li>Ve a <strong>console.cloud.google.com</strong></li>
+        <li>Crea proyecto → nombre: <strong>MontsesFlow</strong></li>
+        <li>APIs y Servicios → Biblioteca → <strong>Google Calendar API</strong> → Habilitar</li>
+        <li>Credenciales → Crear → <strong>ID de cliente OAuth 2.0</strong></li>
+        <li>Tipo: <strong>Aplicación web</strong>. Orígenes autorizados:<br><code style="background:#dcfce7;padding:2px 5px;border-radius:4px;font-size:.74rem;word-break:break-all">https://mondeleonlic-hub.github.io</code></li>
+        <li>Copia el <strong>ID de cliente</strong> y pégalo aquí:</li>
+      </ol>
+    </div>
+    <div class="modal-field">
+      <label>Client ID de Google</label>
+      <input type="text" id="gcal-client-id-input" placeholder="xxxxxxx.apps.googleusercontent.com" style="font-size:.78rem"/>
+    </div>
+    <button class="modal-btn-primary" onclick="saveGCalClientId()">🔗 Conectar con Google</button>
+    <div id="gcal-status-msg" style="text-align:center;font-size:.78rem;color:#6b7280;margin-top:8px"></div>
+    <div class="modal-cancel" onclick="closeModal('gcal-setup-modal')">Cancelar</div>
   </div>
 </div>
 
@@ -799,7 +829,12 @@ function _dropOnDayCol(x, y) {
   const col = el && el.closest('.todo-day-col[data-drop-date]');
   if(col && dragId) {
     const item = items.find(i=>i.id===dragId);
-    if(item) { item.scheduledDate=col.dataset.dropDate; save(); renderTodo(); return true; }
+    if(item) {
+      item.scheduledDate=col.dataset.dropDate;
+      save(); renderTodo();
+      queueGCalSync(item.id);
+      return true;
+    }
   }
   return false;
 }
@@ -1645,6 +1680,7 @@ function confirmAdd(){
   document.getElementById('cap-input').value='';
   document.getElementById('add-text').value='';
   save();render();
+  queueGCalSync(items[0].id);
   closeModal('add-modal');
   switchTab(document.getElementById('add-col').value);
 }
@@ -1731,7 +1767,9 @@ function confirmEdit(){
   item.urgente   =eisState.edit.urgente;
   item.importante=eisState.edit.importante;
   item.recur   =document.getElementById('edit-recur').value;
-  editingId=null; save();render(); closeModal('edit-modal');
+  const syncId=editingId; editingId=null; save();render();
+  queueGCalSync(syncId);
+  closeModal('edit-modal');
 }
 
 // ── RECURRENCE ──────────────────────────────────
@@ -1750,6 +1788,7 @@ function nextDate(dateStr,recur){
 // ── ACTIONS ─────────────────────────────────────
 function markDone(id){
   const i=items.find(x=>x.id===id); if(!i) return;
+  deleteFromGCal(i); // fire-and-forget: removes event from calendar
   const origCol=i.col;
   i.col='done';
   if(i.recur){
@@ -1775,6 +1814,8 @@ function doMove(col){
 }
 function delItem(id){
   if(!confirm('¿Eliminar esta tarea?')) return;
+  const gone=items.find(i=>i.id===id);
+  if(gone) deleteFromGCal(gone); // fire-and-forget
   items=items.filter(i=>i.id!==id);save();render();
 }
 function closeModal(id){document.getElementById(id).classList.remove('open')}
@@ -1893,6 +1934,224 @@ function reorderCard(id,dir){
   [items[idxA],items[idxB]]=[items[idxB],items[idxA]];
   // Set sort to 'newest' so swapped order is maintained via id or just keep as-is
   save(); render();
+}
+
+// ── GOOGLE CALENDAR SYNC ────────────────────────
+const GCAL_API='https://www.googleapis.com/calendar/v3/calendars/primary/events';
+let gcalToken=null, gcalConnected=false, gcalPollTimer=null;
+let GCAL_CLIENT_ID=localStorage.getItem('mf_gcal_client_id')||'';
+let _tokenClient=null;
+let _gcalQ=new Set(), _gcalQTimer=null;
+
+// Load Google Identity Services on demand
+function _loadGIS(){
+  return new Promise(res=>{
+    if(window.google?.accounts?.oauth2){res();return;}
+    const s=document.createElement('script');
+    s.src='https://accounts.google.com/gsi/client';
+    s.onload=res; s.onerror=res;
+    document.head.appendChild(s);
+  });
+}
+
+// Open the right dialog depending on state
+async function openGCalConnect(){
+  if(!GCAL_CLIENT_ID){openGCalSetup();return;}
+  if(gcalConnected){
+    if(confirm('¿Desconectar Google Calendar?')) disconnectGCal();
+    return;
+  }
+  await _doOAuthConnect();
+}
+
+function openGCalSetup(){
+  if(GCAL_CLIENT_ID) document.getElementById('gcal-client-id-input').value=GCAL_CLIENT_ID;
+  document.getElementById('gcal-setup-modal').classList.add('open');
+}
+
+function saveGCalClientId(){
+  const val=document.getElementById('gcal-client-id-input').value.trim();
+  if(!val){document.getElementById('gcal-status-msg').textContent='⚠️ Pega tu Client ID';return;}
+  GCAL_CLIENT_ID=val;
+  localStorage.setItem('mf_gcal_client_id',val);
+  document.getElementById('gcal-status-msg').textContent='⏳ Conectando…';
+  _doOAuthConnect().then(()=>closeModal('gcal-setup-modal'));
+}
+
+async function _doOAuthConnect(){
+  await _loadGIS();
+  if(!window.google?.accounts?.oauth2){alert('No se cargó Google. Revisa tu conexión.');return;}
+  _tokenClient=google.accounts.oauth2.initTokenClient({
+    client_id:GCAL_CLIENT_ID,
+    scope:'https://www.googleapis.com/auth/calendar',
+    callback(resp){
+      if(resp.error){console.error('GCal OAuth error:',resp);return;}
+      gcalToken=resp.access_token;
+      gcalConnected=true;
+      localStorage.setItem('mf_gcal_connected','1');
+      _updateGCalUI();
+      syncAllToGCal();
+      if(gcalPollTimer) clearInterval(gcalPollTimer);
+      gcalPollTimer=setInterval(pullFromGCal,5*60*1000);
+    }
+  });
+  _tokenClient.requestAccessToken({prompt:gcalToken?'':'select_account'});
+}
+
+function disconnectGCal(){
+  if(gcalToken&&window.google?.accounts?.oauth2) google.accounts.oauth2.revoke(gcalToken,()=>{});
+  gcalToken=null; gcalConnected=false;
+  localStorage.removeItem('mf_gcal_connected');
+  if(gcalPollTimer){clearInterval(gcalPollTimer);gcalPollTimer=null;}
+  _updateGCalUI();
+}
+
+function _updateGCalUI(){
+  const mi=document.getElementById('gcal-menu-item');
+  const ms=document.getElementById('gcal-menu-status');
+  const badge=document.getElementById('gcal-sync-badge');
+  if(gcalConnected){
+    if(mi) mi.innerHTML='<span class="menu-item-icon">📅</span>Google Calendar ✅ Conectado';
+    if(ms){ms.textContent='Sync cada 5 min · Toca para desconectar';ms.style.display='block';}
+    if(badge) badge.style.display='none';
+  } else {
+    if(mi) mi.innerHTML='<span class="menu-item-icon">📅</span>Conectar Google Calendar';
+    if(ms) ms.style.display='none';
+    if(badge) badge.style.display='none';
+  }
+}
+
+// Build a GCal event object from a task item
+function _itemToEvent(item){
+  const d=item.scheduledDate||item.deadline; if(!d) return null;
+  const endD=new Date(d+'T12:00:00'); endD.setDate(endD.getDate()+1);
+  const colorId=(item.urgente&&item.importante)?'11':(item.urgente)?'6':(item.importante)?'9':'1';
+  const desc=[item.note,item.cat&&CAT[item.cat]?'Cat: '+CAT[item.cat][0]:'',
+    item.deadline&&item.scheduledDate&&item.deadline!==item.scheduledDate?'Deadline: '+item.deadline:'',
+    item.delegadoA?'Delegado a: '+(DELEGATE_NAMES[item.delegadoA]||item.delegadoA):'',
+  ].filter(Boolean).join('\n');
+  return{
+    summary:(item.icon?item.icon+' ':'')+item.text,
+    description:desc||undefined,
+    start:{date:d},
+    end:{date:endD.toISOString().slice(0,10)},
+    colorId,
+    extendedProperties:{private:{mf_id:String(item.id),mf_app:'montsesflow'}}
+  };
+}
+
+// Queue a single item to sync (debounced)
+function queueGCalSync(id){
+  if(!gcalConnected||!gcalToken) return;
+  _gcalQ.add(id);
+  clearTimeout(_gcalQTimer);
+  _gcalQTimer=setTimeout(_flushQueue,700);
+}
+async function _flushQueue(){
+  const ids=[..._gcalQ]; _gcalQ.clear();
+  let dirty=false;
+  for(const id of ids){
+    const item=items.find(i=>i.id===id);
+    if(item){await _pushItem(item);dirty=true;}
+  }
+  if(dirty){save();_showSyncPulse();}
+}
+
+// Push one item to GCal (create or update)
+async function _pushItem(item){
+  if(!gcalToken) return;
+  const ev=_itemToEvent(item); if(!ev) return;
+  try{
+    if(item.gcalId){
+      const r=await fetch(`${GCAL_API}/${item.gcalId}`,{method:'PATCH',
+        headers:{Authorization:'Bearer '+gcalToken,'Content-Type':'application/json'},
+        body:JSON.stringify(ev)});
+      if(r.status===401){gcalToken=null;gcalConnected=false;_updateGCalUI();return;}
+      if(r.status===404||r.status===410){item.gcalId=null;await _pushItem(item);}
+    } else {
+      const r=await fetch(GCAL_API,{method:'POST',
+        headers:{Authorization:'Bearer '+gcalToken,'Content-Type':'application/json'},
+        body:JSON.stringify(ev)});
+      if(r.status===401){gcalToken=null;gcalConnected=false;_updateGCalUI();return;}
+      const d=await r.json();
+      if(d.id) item.gcalId=d.id;
+    }
+  }catch(e){console.warn('GCal push error',e);}
+}
+
+// Delete one item from GCal (fire-and-forget)
+async function deleteFromGCal(item){
+  if(!gcalConnected||!gcalToken||!item.gcalId) return;
+  try{
+    await fetch(`${GCAL_API}/${item.gcalId}`,{method:'DELETE',
+      headers:{Authorization:'Bearer '+gcalToken}});
+    item.gcalId=null;
+  }catch(e){console.warn('GCal delete error',e);}
+}
+
+// Initial full sync on first connect
+async function syncAllToGCal(){
+  if(!gcalToken) return;
+  const toSync=items.filter(i=>i.col!=='done'&&(i.scheduledDate||i.deadline));
+  for(const item of toSync) await _pushItem(item);
+  save(); _showSyncPulse();
+  const ms=document.getElementById('gcal-menu-status');
+  if(ms) ms.textContent=`Sync cada 5 min · ${toSync.length} tareas enviadas · Toca para desconectar`;
+}
+
+// Pull changes from GCal (runs every 5 min + on connect)
+async function pullFromGCal(){
+  if(!gcalToken) return;
+  try{
+    const since=localStorage.getItem('mf_gcal_last_pull')||new Date(Date.now()-14*86400000).toISOString();
+    const url=`${GCAL_API}?updatedMin=${encodeURIComponent(since)}&singleEvents=true&showDeleted=true&maxResults=500&privateExtendedProperty=mf_app%3Dmontsesflow`;
+    const r=await fetch(url,{headers:{Authorization:'Bearer '+gcalToken}});
+    if(r.status===401){gcalToken=null;gcalConnected=false;_updateGCalUI();return;}
+    const data=await r.json();
+    if(!data.items?.length){localStorage.setItem('mf_gcal_last_pull',new Date().toISOString());return;}
+    let changed=false;
+    data.items.forEach(ev=>{
+      const mfId=ev.extendedProperties?.private?.mf_id; if(!mfId) return;
+      const item=items.find(i=>String(i.id)===mfId); if(!item||item.col==='done') return;
+      if(ev.status==='cancelled'){item.gcalId=null;changed=true;return;}
+      // Sync date changes (highest priority)
+      const d=ev.start?.date||ev.start?.dateTime?.slice(0,10);
+      if(d&&item.scheduledDate!==d){item.scheduledDate=d;item.gcalId=ev.id;changed=true;}
+      else item.gcalId=ev.id;
+      // Sync title if changed in GCal
+      const rawTitle=(ev.summary||'').replace(/^[\p{Emoji}\s]+/u,'').trim();
+      if(rawTitle&&rawTitle!==item.text){item.text=rawTitle;changed=true;}
+    });
+    localStorage.setItem('mf_gcal_last_pull',new Date().toISOString());
+    if(changed){save();render();_showSyncPulse();}
+  }catch(e){console.warn('GCal pull error',e);}
+}
+
+function _showSyncPulse(){
+  const b=document.getElementById('gcal-sync-badge'); if(!b) return;
+  b.style.display='block'; b.textContent='📅 ↕ Sincronizado';
+  setTimeout(()=>{b.style.display='none';},3500);
+}
+
+// Auto-reconnect silently if user was previously connected
+if(localStorage.getItem('mf_gcal_connected')==='1'&&GCAL_CLIENT_ID){
+  setTimeout(async()=>{
+    await _loadGIS();
+    if(!window.google?.accounts?.oauth2) return;
+    _tokenClient=google.accounts.oauth2.initTokenClient({
+      client_id:GCAL_CLIENT_ID,
+      scope:'https://www.googleapis.com/auth/calendar',
+      callback(resp){
+        if(resp.error) return;
+        gcalToken=resp.access_token; gcalConnected=true;
+        _updateGCalUI();
+        pullFromGCal(); // immediate pull
+        if(gcalPollTimer) clearInterval(gcalPollTimer);
+        gcalPollTimer=setInterval(pullFromGCal,5*60*1000);
+      }
+    });
+    _tokenClient.requestAccessToken({prompt:''}); // silent — no popup if still authorized
+  },800);
 }
 
 // ── ICAL EXPORT ─────────────────────────────────
