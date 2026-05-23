@@ -26,7 +26,8 @@
   --q4-bg:#f1f5f9;--q4-b:#94a3b8;--q4-t:#475569;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overscroll-behavior:none}
+html{overflow-x:hidden;max-width:100vw}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overscroll-behavior:none;overflow-x:hidden;max-width:100vw}
 
 /* ── HEADER ── */
 .app-header{background:linear-gradient(135deg,#3d5218 0%,#5e7226 100%);color:white;padding:14px 16px 12px;padding-top:calc(14px + var(--safe-t));position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(62,82,24,.3)}
@@ -451,6 +452,7 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
   <div class="menu-item" onclick="closeMenu();switchTab('extra')"><span class="menu-item-icon">⭐</span>Extra<span class="menu-item-count" id="mc-extra"></span></div>
   <div class="menu-item" onclick="closeMenu();switchTab('done')"><span class="menu-item-icon">✅</span>Hechos<span class="menu-item-count" id="mc-done" style="background:#dcfce7;color:#15803d"></span></div>
   <div class="menu-divider"></div>
+  <div class="menu-item" id="fb-menu-item" onclick="closeMenu();openFbModal()"><span class="menu-item-icon">☁️</span>Sincronización en la nube</div>
   <div class="menu-item" id="gcal-menu-item" onclick="closeMenu();openGCalConnect()"><span class="menu-item-icon">📅</span>Conectar Google Calendar</div>
   <div id="gcal-menu-status" style="padding:4px 16px 8px;font-size:.72rem;color:#9ca3af;display:none"></div>
   <div class="menu-item" onclick="closeMenu();exportICS()"><span class="menu-item-icon">📥</span>Exportar .ics (sin sync)</div>
@@ -488,10 +490,11 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
   <div class="header-top">
     <div style="display:flex;align-items:center;gap:9px">
       <button class="hamburger" onclick="openMenu()">☰</button>
-      <img src="data:image/png;base64,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" height="48" style="display:block;flex-shrink:0" alt="Montse's Flow"/>
+      <img src="data:image/png;base64,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" height="68" style="display:block;flex-shrink:0" alt="Montse's Flow"/>
     </div>
     <div style="display:flex;align-items:center;gap:6px">
       <span id="gcal-sync-badge" style="display:none;font-size:.65rem;background:rgba(255,255,255,.2);color:white;padding:3px 8px;border-radius:999px;font-weight:700">📅 ↕</span>
+      <span id="fb-sync-badge" style="display:none;font-size:.65rem;background:rgba(255,255,255,.2);color:white;padding:3px 8px;border-radius:999px;font-weight:700;cursor:pointer" onclick="openFbModal()">☁️ ✓</span>
       <button class="notif-btn" id="notif-btn" onclick="toggleNotifs()">🔔 Alertas</button>
     </div>
   </div>
@@ -528,6 +531,30 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
     <div class="tab-count" id="tc-compromisos"></div>
   </div>
 
+</div>
+
+<!-- FIREBASE SYNC MODAL -->
+<div class="modal-overlay" id="fb-modal" onclick="closeModal('fb-modal')">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <div class="modal-title" id="fb-modal-title">☁️ Sincronización en la nube</div>
+    <div id="fb-status-banner" style="display:none;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:.83rem;line-height:1.5"></div>
+    <div id="fb-config-form">
+      <div style="background:#eff6ff;border:1.5px solid #bae6fd;border-radius:12px;padding:13px 14px;margin-bottom:14px;font-size:.82rem;line-height:1.6;color:#1e40af">
+        <strong>Pega aquí tu configuración de Firebase.</strong><br>
+        Ve a <strong>console.firebase.google.com</strong> → tu proyecto → ⚙️ Configuración → "Tu app web" → copia el objeto <code>firebaseConfig</code> y pégalo abajo.
+      </div>
+      <div class="modal-field">
+        <label>Configuración Firebase (pega el objeto completo)</label>
+        <textarea id="fb-config-input" rows="7" style="font-size:.72rem;font-family:monospace;resize:vertical" placeholder='{\n  apiKey: "AIza...",\n  authDomain: "...",\n  projectId: "...",\n  ...\n}'></textarea>
+      </div>
+      <button class="modal-btn-primary" onclick="saveFbConfig()">☁️ Conectar y sincronizar</button>
+    </div>
+    <div id="fb-connected-actions" style="display:none">
+      <button onclick="forceFbSync()" style="width:100%;background:#eff6ff;color:#1d4ed8;border:1.5px solid #bae6fd;border-radius:12px;padding:12px;font-size:.9rem;font-weight:700;cursor:pointer;margin-bottom:8px">🔄 Sincronizar ahora</button>
+      <button onclick="disconnectFb()" style="width:100%;background:#fff1f2;color:#dc2626;border:1.5px solid #fecaca;border-radius:12px;padding:12px;font-size:.9rem;font-weight:700;cursor:pointer">🔌 Desconectar</button>
+    </div>
+    <div class="modal-cancel" onclick="closeModal('fb-modal')">Cerrar</div>
+  </div>
 </div>
 
 <!-- GCAL SETUP MODAL -->
@@ -673,16 +700,7 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
     </div>
     <div class="modal-field">
       <label>Categoría</label>
-      <select id="add-cat">
-        <option value="operacion">🟨 Operación</option>
-        <option value="estrategia">🚀 Estrategia</option>
-        <option value="sistemas">🧠 Sistemas</option>
-        <option value="rh">🩵 RH</option>
-        <option value="mktg">💗 Marketing</option>
-        <option value="josh">🟠 Josh</option>
-        <option value="tres">💜 Tres Media</option>
-        <option value="personal">⭐ Personal</option>
-      </select>
+      <select id="add-cat"></select>
     </div>
     <div class="modal-field">
       <label>Tipo</label>
@@ -780,16 +798,7 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
     </div>
     <div class="modal-field">
       <label>Categoría</label>
-      <select id="edit-cat">
-        <option value="operacion">🟨 Operación</option>
-        <option value="estrategia">🚀 Estrategia</option>
-        <option value="sistemas">🧠 Sistemas</option>
-        <option value="rh">🩵 RH</option>
-        <option value="mktg">💗 Marketing</option>
-        <option value="josh">🟠 Josh</option>
-        <option value="tres">💜 Tres Media</option>
-        <option value="personal">⭐ Personal</option>
-      </select>
+      <select id="edit-cat"></select>
     </div>
     <button class="modal-btn-primary" onclick="confirmEdit()">✓ Guardar cambios</button>
     <div class="modal-cancel" onclick="closeModal('edit-modal')">Cancelar</div>
@@ -839,6 +848,43 @@ function pickEmoji(emoji) {
 
 // ── DRAG (touch + mouse) ────────────────────────
 let dragId=null, dragGhost=null, dragOrigCard=null;
+let _reorderTarget=null, _reorderPos=null;
+
+function _clearCardReorderHighlight(){
+  document.querySelectorAll('.card.drag-reorder-above,.card.drag-reorder-below').forEach(c=>{
+    c.classList.remove('drag-reorder-above','drag-reorder-below');
+  });
+  _reorderTarget=null; _reorderPos=null;
+}
+function _highlightCardReorder(x, y){
+  _clearCardReorderHighlight();
+  const el=document.elementFromPoint(x, y);
+  const targetCard=el && el.closest('.card[id]');
+  if(!targetCard) return;
+  const targetId=parseInt(targetCard.id.replace('card-',''));
+  if(!targetId || targetId===dragId) return;
+  const dragItem=items.find(i=>i.id===dragId);
+  const targetItem=items.find(i=>i.id===targetId);
+  if(!dragItem || !targetItem || dragItem.col!==targetItem.col) return;
+  const rect=targetCard.getBoundingClientRect();
+  const pos= y < rect.top + rect.height/2 ? 'above' : 'below';
+  targetCard.classList.add(pos==='above'?'drag-reorder-above':'drag-reorder-below');
+  _reorderTarget=targetId; _reorderPos=pos;
+}
+function _dropOnCardReorder(){
+  if(!_reorderTarget || !dragId) return false;
+  const dragItem=items.find(i=>i.id===dragId);
+  const targetItem=items.find(i=>i.id===_reorderTarget);
+  if(!dragItem || !targetItem || dragItem.col!==targetItem.col) return false;
+  const dragIdx=items.findIndex(i=>i.id===dragId);
+  const [removed]=items.splice(dragIdx,1);
+  let targetIdx=items.findIndex(i=>i.id===_reorderTarget);
+  if(_reorderPos==='below') targetIdx++;
+  items.splice(targetIdx,0,removed);
+  _clearCardReorderHighlight();
+  save(); render();
+  return true;
+}
 
 function _createGhost(card, x, y) {
   const rect = card.getBoundingClientRect();
@@ -886,6 +932,7 @@ function _dropOnDayCol(x, y) {
   return false;
 }
 function _endDrag() {
+  _clearCardReorderHighlight();
   if(dragGhost) { dragGhost.remove(); dragGhost=null; }
   if(dragOrigCard) { dragOrigCard.classList.remove('dragging'); dragOrigCard=null; }
   dragId=null;
@@ -911,12 +958,13 @@ function onDragMove(e) {
   dragGhost.style.left = `${t.clientX - dragGhost.offsetWidth/2}px`;
   _highlightTab(t.clientX, t.clientY);
   _highlightDayCol(t.clientX, t.clientY);
+  _highlightCardReorder(t.clientX, t.clientY);
 }
 function onDragEnd(e) {
   document.removeEventListener('touchmove', onDragMove);
   document.removeEventListener('touchend', onDragEnd);
   const t = e.changedTouches[0];
-  if(!_dropOnDayCol(t.clientX, t.clientY)) _dropOnTab(t.clientX, t.clientY);
+  if(!_dropOnCardReorder() && !_dropOnDayCol(t.clientX, t.clientY)) _dropOnTab(t.clientX, t.clientY);
   _endDrag();
 }
 
@@ -937,11 +985,12 @@ function onMouseDragMove(e) {
   dragGhost.style.left = `${e.clientX - dragGhost.offsetWidth/2}px`;
   _highlightTab(e.clientX, e.clientY);
   _highlightDayCol(e.clientX, e.clientY);
+  _highlightCardReorder(e.clientX, e.clientY);
 }
 function onMouseDragEnd(e) {
   document.removeEventListener('mousemove', onMouseDragMove);
   document.removeEventListener('mouseup', onMouseDragEnd);
-  if(!_dropOnDayCol(e.clientX, e.clientY)) _dropOnTab(e.clientX, e.clientY);
+  if(!_dropOnCardReorder() && !_dropOnDayCol(e.clientX, e.clientY)) _dropOnTab(e.clientX, e.clientY);
   _endDrag();
 }
 
@@ -1815,6 +1864,7 @@ function openAddModal(){
   document.getElementById('add-recur').value='';
   setOC('add',null);
   setEisUI('add',null,null);
+  populateCatSelects('operacion');
   openModalFixed('add-modal');
   setTimeout(()=>document.getElementById('cap-input').blur(),50);
 }
@@ -1909,6 +1959,7 @@ function openEditModal(id){
   document.getElementById('st-edit-input').value='';
   document.getElementById('edit-recur').value=item.recur||'';
   document.getElementById('edit-note').value=item.note||'';
+  populateCatSelects(item.cat);
   document.getElementById('edit-cat').value=item.cat;
   setEisUI('edit', item.urgente===undefined?null:item.urgente, item.importante===undefined?null:item.importante);
   openModalFixed('edit-modal');
@@ -1967,13 +2018,20 @@ function markDone(id){
   i.origCol=origCol; // save original column for restore
   i.col='done';
   if(i.recur){
+    // Base date: use scheduledDate if exists, otherwise today
+    const today=new Date().toISOString().slice(0,10);
+    const baseDate=i.scheduledDate||today;
+    // If scheduled date is in the past or today, advance from that date
+    // so weekly tasks keep their original weekday pattern
+    const nextSched=nextDate(baseDate, i.recur);
+    const nextDeadline=i.deadline ? nextDate(i.deadline, i.recur) : '';
     items.push({
       id:Date.now()+(Math.random()*999|0),
       text:i.text, icon:i.icon||'', note:i.note||'',
       col:origCol, cat:i.cat,
       urgente:i.urgente, importante:i.importante,
-      deadline:nextDate(i.deadline,i.recur),
-      scheduledDate:nextDate(i.scheduledDate,i.recur),
+      deadline:nextDeadline,
+      scheduledDate:nextSched,
       delegadoA:i.delegadoA||'', oc:i.oc||null,
       recur:i.recur,
       subtasks:(i.subtasks||[]).map(s=>({...s,done:false})),
@@ -2008,8 +2066,11 @@ function openModalFixed(id){
   _openModals++;
   if(_openModals===1){
     _scrollY=window.scrollY;
+    document.documentElement.style.overflow='hidden';
     document.body.style.position='fixed';
     document.body.style.top=`-${_scrollY}px`;
+    document.body.style.left='0';
+    document.body.style.right='0';
     document.body.style.width='100%';
   }
   document.getElementById(id).classList.add('open');
@@ -2018,8 +2079,11 @@ function closeModal(id){
   document.getElementById(id).classList.remove('open');
   _openModals=Math.max(0,_openModals-1);
   if(_openModals===0){
+    document.documentElement.style.overflow='';
     document.body.style.position='';
     document.body.style.top='';
+    document.body.style.left='';
+    document.body.style.right='';
     document.body.style.width='';
     window.scrollTo(0,_scrollY);
   }
@@ -2053,6 +2117,14 @@ const DEFAULT_CATS=[
   {key:'personal',  emoji:'⭐',label:'Personal',   brand:'personal'},
 ];
 function getDynamicCats(){return JSON.parse(localStorage.getItem('mf_cats')||'null')||DEFAULT_CATS;}
+function populateCatSelects(selectedVal){
+  const opts=getDynamicCats().map(c=>`<option value="${c.key}">${c.emoji} ${c.label}</option>`).join('');
+  ['add-cat','edit-cat'].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    el.innerHTML=opts;
+    if(selectedVal) el.value=selectedVal;
+  });
+}
 function refreshCATMap(){
   getDynamicCats().forEach(c=>{CAT[c.key]=[`${c.emoji} ${c.label}`,c.key];});
 }
@@ -2405,6 +2477,177 @@ if(localStorage.getItem('mf_notifs')==='1'&&Notification.permission==='granted')
   document.getElementById('notif-btn').textContent='🔔 Alertas ON';
   setTimeout(checkTodayNotifs, 2000);
 }
+
+// ── FIREBASE CLOUD SYNC ──────────────────────────
+// Config precargada — no necesitas pegar nada
+const _FB_PRELOADED_CONFIG = {
+  apiKey: "AIzaSyDXwdUwNo2_3LG9d5Kg9-AtPQR8fXzV-X8",
+  authDomain: "montseflow.firebaseapp.com",
+  projectId: "montseflow",
+  storageBucket: "montseflow.firebasestorage.app",
+  messagingSenderId: "249314346746",
+  appId: "1:249314346746:web:0d39b74f90dad6eff22b43",
+  measurementId: "G-ZKCKVCT22Q"
+};
+// Guarda automáticamente si no había config previa
+if(!localStorage.getItem('mf_firebase_config')){
+  localStorage.setItem('mf_firebase_config', JSON.stringify(_FB_PRELOADED_CONFIG));
+}
+
+let _fbDb=null, _fbUnsub=null, _fbReady=false, _fbWriting=false, _fbSaveTimer=null;
+
+function _loadScript(src){
+  return new Promise((res,rej)=>{
+    if(document.querySelector(`script[src="${src}"]`)){res();return;}
+    const s=document.createElement('script');
+    s.src=src; s.onload=res; s.onerror=rej;
+    document.head.appendChild(s);
+  });
+}
+
+function getFbConfig(){
+  const raw=localStorage.getItem('mf_firebase_config');
+  if(!raw) return null;
+  try{return JSON.parse(raw);}catch(e){return null;}
+}
+
+async function initFirebase(){
+  const cfg=getFbConfig(); if(!cfg) return;
+  try{
+    await _loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js');
+    await _loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js');
+    const app=firebase.apps.length?firebase.app():firebase.initializeApp(cfg);
+    _fbDb=firebase.firestore();
+    _fbDb.enablePersistence({synchronizeTabs:true}).catch(()=>{});
+    _fbReady=true;
+    _startFbListener();
+    _setFbUI(true);
+  }catch(e){
+    console.error('Firebase init error:',e);
+    _setFbUI(false,'Error al conectar: '+e.message);
+  }
+}
+
+function _startFbListener(){
+  if(!_fbDb||_fbUnsub) return;
+  const ref=_fbDb.collection('mf_data').doc('main');
+  _fbUnsub=ref.onSnapshot(snap=>{
+    if(_fbWriting||!snap.exists) return;
+    const data=snap.data();
+    if(!data||!data.items) return;
+    // Solo actualiza si los datos son diferentes (evita eco de escritura propia)
+    const incoming=JSON.stringify(data.items);
+    const current=JSON.stringify(items);
+    if(incoming===current) return;
+    items=data.items;
+    nextId=Math.max(...items.map(i=>i.id),0)+1;
+    localStorage.setItem('mf_v2',JSON.stringify(items));
+    if(data.cats){localStorage.setItem('mf_cats',JSON.stringify(data.cats));refreshCATMap();}
+    render();
+  },err=>console.error('FB listener:',err));
+}
+
+function _saveToFb(){
+  if(!_fbDb||!_fbReady) return;
+  clearTimeout(_fbSaveTimer);
+  _fbSaveTimer=setTimeout(()=>{
+    _fbWriting=true;
+    _fbDb.collection('mf_data').doc('main').set({
+      items:items,
+      cats:getDynamicCats(),
+      updatedAt:new Date().toISOString()
+    }).then(()=>{setTimeout(()=>{_fbWriting=false;},800);})
+    .catch(e=>{console.error('FB save:',e);_fbWriting=false;});
+  },700);
+}
+
+function _setFbUI(connected, msg){
+  const badge=document.getElementById('fb-sync-badge');
+  const menuItem=document.getElementById('fb-menu-item');
+  const banner=document.getElementById('fb-status-banner');
+  const form=document.getElementById('fb-config-form');
+  const actions=document.getElementById('fb-connected-actions');
+  if(badge){badge.style.display=connected?'inline-block':'none';}
+  if(menuItem) menuItem.querySelector('.menu-item-icon').nextSibling.textContent=connected?' Sync activo ✓':' Sincronización en la nube';
+  if(banner&&msg){
+    banner.style.display='block';
+    banner.style.background=connected?'#f0fdf4':'#fff1f2';
+    banner.style.borderColor=connected?'#86efac':'#fecaca';
+    banner.style.color=connected?'#14532d':'#dc2626';
+    banner.textContent=msg;
+  }
+  if(form) form.style.display=connected?'none':'block';
+  if(actions) actions.style.display=connected?'block':'none';
+}
+
+function openFbModal(){
+  const cfg=getFbConfig();
+  const banner=document.getElementById('fb-status-banner');
+  if(cfg&&_fbReady){
+    _setFbUI(true,'✅ Sincronización activa. Tus tareas se guardan en la nube automáticamente.');
+  } else if(cfg&&!_fbReady){
+    _setFbUI(false,'⚠️ Config guardada pero sin conexión activa.');
+    if(banner){banner.style.display='block';}
+  } else {
+    if(banner){banner.style.display='none';}
+    document.getElementById('fb-config-form').style.display='block';
+    document.getElementById('fb-connected-actions').style.display='none';
+  }
+  openModalFixed('fb-modal');
+}
+
+function saveFbConfig(){
+  let raw=document.getElementById('fb-config-input').value.trim();
+  // Acepta tanto el objeto JS como JSON puro
+  try{
+    // Intenta parsear como JSON directo
+    raw=raw.replace(/,\s*}/g,'}').replace(/,\s*]/g,']'); // limpia trailing commas
+    // Convierte claves sin comillas a JSON válido
+    raw=raw.replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\s*):/g,'$1"$2"$3:');
+    const cfg=JSON.parse(raw);
+    if(!cfg.apiKey||!cfg.projectId){
+      alert('⚠️ Faltan campos. Asegúrate de pegar el objeto firebaseConfig completo.');
+      return;
+    }
+    localStorage.setItem('mf_firebase_config',JSON.stringify(cfg));
+    const banner=document.getElementById('fb-status-banner');
+    if(banner){banner.style.display='block';banner.style.background='#eff6ff';banner.style.borderColor='#bae6fd';banner.style.color='#1e40af';banner.style.border='1.5px solid';banner.style.borderRadius='10px';banner.style.padding='10px 12px';banner.textContent='⏳ Conectando con Firebase…';}
+    initFirebase().then(()=>{
+      if(_fbReady){
+        _setFbUI(true,'✅ ¡Conectado! Tus tareas ahora se sincronizan entre todos tus dispositivos.');
+        _saveToFb(); // sube datos locales al conectar
+      }
+    });
+  }catch(e){
+    alert('⚠️ No pude leer la configuración. Asegúrate de copiar solo el objeto { apiKey: ... }');
+  }
+}
+
+function forceFbSync(){
+  if(!_fbDb||!_fbReady){alert('No hay conexión activa.');return;}
+  _saveToFb();
+  const banner=document.getElementById('fb-status-banner');
+  if(banner){banner.style.display='block';banner.style.background='#f0fdf4';banner.style.color='#14532d';banner.textContent='✅ Sincronizando…';}
+}
+
+function disconnectFb(){
+  if(!confirm('¿Desconectar la sincronización en la nube?')) return;
+  if(_fbUnsub){_fbUnsub();_fbUnsub=null;}
+  _fbDb=null; _fbReady=false;
+  localStorage.removeItem('mf_firebase_config');
+  _setFbUI(false);
+  closeModal('fb-modal');
+}
+
+// Sobreescribir save() para incluir Firestore
+const _origSave=save;
+function save(){
+  localStorage.setItem('mf_v2',JSON.stringify(items));
+  _saveToFb();
+}
+
+// Inicializar Firebase al cargar si ya tiene config
+initFirebase();
 </script>
 </body>
 </html>
