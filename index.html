@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Montse's Flow">
@@ -26,8 +26,8 @@
   --q4-bg:#f1f5f9;--q4-b:#94a3b8;--q4-t:#475569;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{overflow-x:hidden}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;overscroll-behavior:contain;overflow-x:hidden}
+html{overflow-x:hidden;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
 
 /* ── HEADER ── */
 .app-header{background:linear-gradient(135deg,#3d5218 0%,#5e7226 100%);color:white;padding:10px 16px 10px;padding-top:calc(10px + var(--safe-t));position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(62,82,24,.3)}
@@ -35,7 +35,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .app-header h1{font-size:1.1rem;font-weight:900;letter-spacing:-.03em}
 .app-header h1 span{opacity:.65;font-weight:400}
 .capture-row{display:flex;gap:8px}
-.capture-row input{flex:1;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);border-radius:10px;padding:9px 14px;color:white;font-size:.88rem;outline:none}
+.capture-row input{flex:1;background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.25);border-radius:10px;padding:9px 14px;color:white;font-size:1rem;outline:none}
 .capture-row input::placeholder{color:rgba(255,255,255,.6)}
 .capture-row input:focus{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5)}
 .add-btn{background:white;color:var(--purple-dark);border:none;border-radius:10px;padding:9px 15px;font-size:.88rem;font-weight:700;cursor:pointer;white-space:nowrap}
@@ -238,7 +238,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .modal-title{font-size:.8rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:18px}
 .modal-field{margin-bottom:13px}
 .modal-field label{display:block;font-size:.68rem;font-weight:700;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
-.modal-field input,.modal-field select,.modal-field textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;color:var(--text);background:white;outline:none;font-family:inherit}
+.modal-field input,.modal-field select,.modal-field textarea{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:1rem;color:var(--text);background:white;outline:none;font-family:inherit}
 .modal-field input:focus,.modal-field select:focus,.modal-field textarea:focus{border-color:var(--purple)}
 
 /* operar/construir toggle */
@@ -1508,12 +1508,14 @@ function isoDay(d){const y=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,
 function renderTodoWeekStrip(){
   const today=new Date(); today.setHours(0,0,0,0);
   const todayISO=todayStr();
-  // Start from yesterday (today - 1) + any week offset
-  const weekStart=new Date(today); weekStart.setDate(today.getDate()-1+todoWeekOffset*7);
+  // Start from Monday of current week (aligned with Semana calendar)
+  const dayOfWeek=today.getDay(); // 0=sun
+  const monOffset=(dayOfWeek===0?-6:1-dayOfWeek);
+  const weekStart=new Date(today); weekStart.setDate(today.getDate()+monOffset+todoWeekOffset*7);
   const days=[];
   for(let i=0;i<7;i++){const d=new Date(weekStart);d.setDate(weekStart.getDate()+i);days.push(d);}
   const stripStart=isoDay(days[0]); const stripEnd=isoDay(days[6]);
-  const weekLabel=todoWeekOffset===0?'Ayer → próx.':todoWeekOffset<0?`${todoWeekOffset} sem.`:`+${todoWeekOffset} sem.`;
+  const weekLabel=todoWeekOffset===0?'Esta semana':todoWeekOffset<0?`${todoWeekOffset} sem.`:`+${todoWeekOffset} sem.`;
   return`<div class="todo-week-strip">
     <div class="todo-week-header">
       <span class="todo-week-title">📅 ${weekLabel}</span>
@@ -2090,18 +2092,24 @@ function delItem(id){
   items=items.filter(i=>i.id!==id);save();render();
 }
 
-// ── MODAL SCROLL LOCK (iOS fix) ──────────────────
+// ── MODAL SCROLL LOCK ────────────────────────────
+// iOS: position:fixed trick (only way to prevent bounce scroll)
+// Desktop/Android: simple overflow:hidden on body
 let _scrollY=0, _openModals=0;
 function openModalFixed(id){
   _openModals++;
   if(_openModals===1){
     _scrollY=window.scrollY;
-    document.documentElement.style.overflow='hidden';
-    document.body.style.position='fixed';
-    document.body.style.top=`-${_scrollY}px`;
-    document.body.style.left='0';
-    document.body.style.right='0';
-    document.body.style.width='100%';
+    if(isIOS){
+      document.documentElement.style.overflow='hidden';
+      document.body.style.position='fixed';
+      document.body.style.top=`-${_scrollY}px`;
+      document.body.style.left='0';
+      document.body.style.right='0';
+      document.body.style.width='100%';
+    } else {
+      document.body.style.overflow='hidden';
+    }
   }
   document.getElementById(id).classList.add('open');
 }
@@ -2109,13 +2117,17 @@ function closeModal(id){
   document.getElementById(id).classList.remove('open');
   _openModals=Math.max(0,_openModals-1);
   if(_openModals===0){
-    document.documentElement.style.overflow='';
-    document.body.style.position='';
-    document.body.style.top='';
-    document.body.style.left='';
-    document.body.style.right='';
-    document.body.style.width='';
-    window.scrollTo(0,_scrollY);
+    if(isIOS){
+      document.documentElement.style.overflow='';
+      document.body.style.position='';
+      document.body.style.top='';
+      document.body.style.left='';
+      document.body.style.right='';
+      document.body.style.width='';
+      window.scrollTo(0,_scrollY);
+    } else {
+      document.body.style.overflow='';
+    }
   }
 }
 // Prevent background touchmove scroll while any modal is open (mobile only)
