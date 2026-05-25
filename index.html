@@ -58,8 +58,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 /* ── DRAG ── */
 .card.dragging{opacity:.25;transform:scale(.97)}
-.drag-handle{display:flex;align-items:center;justify-content:center;padding:4px 2px 4px 6px;color:#d1d5db;cursor:grab;font-size:1rem;flex-shrink:0;touch-action:none}
+.drag-handle{display:flex;align-items:center;justify-content:center;padding:4px 2px 4px 6px;color:#d1d5db;cursor:grab;font-size:1rem;flex-shrink:0;touch-action:none;transition:color .15s}
 .drag-handle:active{cursor:grabbing;color:var(--purple)}
+.card:hover .drag-handle{color:#9ca3af}
 
 /* ── DELEGATE BADGE ── */
 .delegate-badge{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:999px;display:inline-block;background:#cffafe;color:#0e7490}
@@ -925,6 +926,8 @@ function _dropOnCardReorder(){
   if(_reorderPos==='below') targetIdx++;
   items.splice(targetIdx,0,removed);
   _clearCardReorderHighlight();
+  // Auto-switch to manual order so the drag position is respected
+  colSort[dragItem.col]='manual';
   save(); render();
   return true;
 }
@@ -1584,6 +1587,7 @@ function bindTodoDayDropZones(){
 let colSort={todo:'priority',compromisos:'priority',proyectos:'priority',extra:'priority',done:'priority'};
 function applyColSort(col, itemList){
   const s=colSort[col]||'priority';
+  if(s==='manual') return [...itemList]; // preserve array order (set by drag)
   if(s==='priority') return [...itemList].sort((a,b)=>cardPriority(b)-cardPriority(a));
   if(s==='deadline_asc') return [...itemList].sort((a,b)=>{if(!a.deadline&&!b.deadline)return 0;if(!a.deadline)return 1;if(!b.deadline)return -1;return a.deadline.localeCompare(b.deadline)});
   if(s==='deadline_desc') return [...itemList].sort((a,b)=>{if(!a.deadline&&!b.deadline)return 0;if(!a.deadline)return 1;if(!b.deadline)return -1;return b.deadline.localeCompare(a.deadline)});
@@ -1596,7 +1600,7 @@ function applyColSort(col, itemList){
 function filterBarHTML(col){
   const s=colSort[col]||'priority';
   const opts=[
-    ['priority','⭐ Prioridad'],['deadline_asc','📅 Fecha ↑'],['deadline_desc','📅 Fecha ↓'],
+    ['manual','✋ Mi orden'],['priority','⭐ Prioridad'],['deadline_asc','📅 Fecha ↑'],['deadline_desc','📅 Fecha ↓'],
     ['urgente','⚡ Urgente'],['importante','🌟 Importante'],['newest','🆕 Reciente'],['oldest','📜 Antigua'],
   ];
   const renderFn=col==='todo'?'renderTodo()':'renderCol(\''+col+'\')';
