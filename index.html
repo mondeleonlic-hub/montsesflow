@@ -309,12 +309,21 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .semana-day.today .semana-day-header{background:var(--purple-light)}
 .semana-day.today .semana-day-name{color:var(--purple)}
 .semana-day-tasks{padding:8px 10px;display:flex;flex-direction:column;gap:5px}
-.semana-task{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:#f9fafb;cursor:pointer}
+.semana-task{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:9px;background:#f9fafb;cursor:pointer;transition:opacity .15s,border .1s}
 .semana-task-icon{font-size:.95rem;flex-shrink:0}
 .semana-task-text{flex:1;font-size:.82rem;font-weight:600;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .semana-task-done{background:transparent;border:1.5px solid #d1d5db;border-radius:7px;color:#9ca3af;font-size:.75rem;padding:3px 8px;cursor:pointer;flex-shrink:0}
 .semana-task-done:active{background:#22c55e;border-color:#22c55e;color:white}
 .semana-empty{text-align:center;color:#cbd5e1;font-size:.8rem;padding:12px 0}
+/* semana drag */
+.semana-drag-handle{display:flex;align-items:center;justify-content:center;padding:4px 4px 4px 2px;color:#d1d5db;cursor:grab;font-size:.9rem;flex-shrink:0;touch-action:none;transition:color .12s}
+.semana-drag-handle:active{cursor:grabbing;color:var(--purple)}
+.semana-task:hover .semana-drag-handle{color:#9ca3af}
+.semana-task.sdrag-ghost{opacity:.25}
+.semana-task.sdrag-above{border-top:2.5px solid var(--purple);border-radius:0 0 9px 9px}
+.semana-task.sdrag-below{border-bottom:2.5px solid var(--purple);border-radius:9px 9px 0 0}
+.semana-day.sdrag-over{background:var(--purple-light);border:2px dashed var(--purple);border-radius:14px}
+.semana-day-tasks.sdrag-empty-over{background:var(--purple-light);border-radius:10px;border:2px dashed var(--purple);min-height:44px}
 
 /* ── TODO + SEMANA SPLIT ── */
 .todo-week-strip{background:var(--card);border-radius:14px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
@@ -1053,6 +1062,113 @@ function onMouseDragEnd(e) {
   _endDrag();
 }
 
+// ── SEMANA DRAG (touch + mouse) ─────────────────
+let _sDragId=null, _sDragGhost=null, _sDragOrig=null;
+let _sDrop=null, _sDropPos=null;
+
+function _clearSemanaHL(){
+  document.querySelectorAll('.semana-task.sdrag-above,.semana-task.sdrag-below').forEach(el=>el.classList.remove('sdrag-above','sdrag-below'));
+  document.querySelectorAll('.semana-day.sdrag-over').forEach(el=>el.classList.remove('sdrag-over'));
+  _sDrop=null; _sDropPos=null;
+}
+function _highlightSemana(x,y){
+  _clearSemanaHL();
+  const el=document.elementFromPoint(x,y);
+  // Check task target first
+  const tTask=el&&el.closest('.semana-task[id]');
+  if(tTask){
+    const tId=parseInt(tTask.dataset.id);
+    if(tId&&tId!==_sDragId){
+      const rect=tTask.getBoundingClientRect();
+      const pos=y<rect.top+rect.height/2?'above':'below';
+      tTask.classList.add(pos==='above'?'sdrag-above':'sdrag-below');
+      _sDrop={type:'task',id:tId,date:tTask.dataset.date};
+      _sDropPos=pos;
+      return;
+    }
+  }
+  // Check day target (empty day or between tasks)
+  const tDay=el&&el.closest('.semana-day[data-date]');
+  if(tDay){
+    tDay.classList.add('sdrag-over');
+    _sDrop={type:'day',date:tDay.dataset.date};
+  }
+}
+function _makeSemanaGhost(task,x,y){
+  const rect=task.getBoundingClientRect();
+  const g=task.cloneNode(true);
+  g.removeAttribute('id');
+  g.style.cssText=`position:fixed;z-index:9999;opacity:.88;pointer-events:none;width:${rect.width}px;left:${rect.left}px;top:${y-18}px;transform:scale(1.03) rotate(.6deg);box-shadow:0 8px 28px rgba(0,0,0,.18);border-radius:9px;margin:0;transition:none`;
+  document.body.appendChild(g);
+  return g;
+}
+function _applySemanaDrop(){
+  if(!_sDragId||!_sDrop) return;
+  const item=items.find(i=>i.id===_sDragId);
+  if(!item) return;
+  if(_sDrop.type==='task'){
+    const tItem=items.find(i=>i.id===_sDrop.id);
+    if(!tItem) return;
+    // Update scheduledDate to target's day
+    item.scheduledDate=_sDrop.date;
+    // Reorder in array
+    const dIdx=items.findIndex(i=>i.id===_sDragId);
+    const [rem]=items.splice(dIdx,1);
+    let tIdx=items.findIndex(i=>i.id===_sDrop.id);
+    if(_sDropPos==='below') tIdx++;
+    items.splice(tIdx,0,rem);
+  } else if(_sDrop.type==='day'){
+    item.scheduledDate=_sDrop.date;
+  }
+  save(); renderSemana();
+}
+function _endSemanaDrag(){
+  _clearSemanaHL();
+  if(_sDragGhost){_sDragGhost.remove();_sDragGhost=null;}
+  if(_sDragOrig){_sDragOrig.style.opacity='';_sDragOrig=null;}
+  _sDragId=null;
+}
+function startSemanaDrag(e,id){
+  e.preventDefault(); e.stopPropagation();
+  _sDragId=id;
+  const task=document.getElementById('stask-'+id); if(!task) return;
+  _sDragOrig=task; task.style.opacity='0.3';
+  const t=e.touches[0];
+  _sDragGhost=_makeSemanaGhost(task,t.clientX,t.clientY);
+  document.addEventListener('touchmove',_onSTouchMove,{passive:false});
+  document.addEventListener('touchend',_onSTouchEnd);
+}
+function startSemanaMouseDrag(e,id){
+  if(e.button!==0) return;
+  e.preventDefault(); e.stopPropagation();
+  _sDragId=id;
+  const task=document.getElementById('stask-'+id); if(!task) return;
+  _sDragOrig=task; task.style.opacity='0.3';
+  _sDragGhost=_makeSemanaGhost(task,e.clientX,e.clientY);
+  document.addEventListener('mousemove',_onSMouseMove);
+  document.addEventListener('mouseup',_onSMouseEnd);
+}
+function _onSTouchMove(e){
+  e.preventDefault();
+  const t=e.touches[0];
+  if(_sDragGhost){_sDragGhost.style.top=(t.clientY-18)+'px';_sDragGhost.style.left=(t.clientX-_sDragGhost.offsetWidth/2)+'px';}
+  _highlightSemana(t.clientX,t.clientY);
+}
+function _onSMouseMove(e){
+  if(_sDragGhost){_sDragGhost.style.top=(e.clientY-18)+'px';_sDragGhost.style.left=(e.clientX-_sDragGhost.offsetWidth/2)+'px';}
+  _highlightSemana(e.clientX,e.clientY);
+}
+function _onSTouchEnd(e){
+  document.removeEventListener('touchmove',_onSTouchMove);
+  document.removeEventListener('touchend',_onSTouchEnd);
+  _applySemanaDrop(); _endSemanaDrag();
+}
+function _onSMouseEnd(e){
+  document.removeEventListener('mousemove',_onSMouseMove);
+  document.removeEventListener('mouseup',_onSMouseEnd);
+  _applySemanaDrop(); _endSemanaDrag();
+}
+
 // ── DATA ────────────────────────────────────────
 const CAT = {
   operacion:['🟨 Operación','operacion'], sistemas:['🧠 Sistemas','sistemas'],
@@ -1772,18 +1888,19 @@ function renderSemana(){
     const iso=isoDay(d);
     const isToday=iso===todayStr();
     const dayItems=items.filter(i=>i.col!=='done'&&(i.scheduledDate===iso||(!i.scheduledDate&&i.deadline===iso)));
-    return`<div class="semana-day${isToday?' today':''}">
+    return`<div class="semana-day${isToday?' today':''}" id="sday-${iso}" data-date="${iso}">
       <div class="semana-day-header">
         <span class="semana-day-name">${fmtShort(d)}</span>
         <span class="semana-day-date">${d.getDate()} ${d.toLocaleDateString('es-MX',{month:'short'})}</span>
       </div>
-      <div class="semana-day-tasks">
+      <div class="semana-day-tasks" data-date="${iso}">
         ${dayItems.length?dayItems.map(item=>`
-        <div class="semana-task">
+        <div class="semana-task" id="stask-${item.id}" data-date="${iso}" data-id="${item.id}">
+          <div class="semana-drag-handle" ontouchstart="startSemanaDrag(event,${item.id})" onmousedown="startSemanaMouseDrag(event,${item.id})">⠿</div>
           <div class="semana-task-icon">${item.icon||'📌'}</div>
-          <div class="semana-task-text" onclick="closeModal('kpi-modal');setTimeout(()=>openEditModal(${item.id}),80)">${h(item.text)}</div>
-          <button class="semana-task-done" onclick="markDone(${item.id});renderSemana()">✓</button>
-        </div>`).join(''):`<div class="semana-empty">Libre 🌿</div>`}
+          <div class="semana-task-text" onclick="setTimeout(()=>openEditModal(${item.id}),80)">${h(item.text)}</div>
+          <button class="semana-task-done" onclick="event.stopPropagation();markDone(${item.id});renderSemana()">✓</button>
+        </div>`).join(''):`<div class="semana-empty sdrag-empty-zone" data-date="${iso}">Libre 🌿</div>`}
       </div>
     </div>`;
   }).join('')}`;
