@@ -670,7 +670,10 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
       <div class="chat-header-info">
         <div class="chat-header-name">Asistente Montse's Flow</div>
       </div>
-      <button onclick="closeModal('chat-modal')" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--text2);padding:4px 6px">✕</button>
+      <div style="display:flex;align-items:center;gap:4px">
+        <button onclick="changeAiProvider()" title="Cambiar IA" style="background:none;border:1px solid var(--border);border-radius:8px;font-size:.68rem;font-weight:700;cursor:pointer;color:var(--text2);padding:3px 8px;line-height:1.4">🔄 IA</button>
+        <button onclick="closeModal('chat-modal')" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--text2);padding:4px 6px">✕</button>
+      </div>
     </div>
     <div class="chat-messages" id="chat-messages"></div>
     <div class="chat-quick-btns" id="chat-quick-btns">
@@ -3122,6 +3125,20 @@ function saveAiKey(provider) {
 }
 // Legacy alias
 function saveGeminiKey() { saveAiKey('gemini'); }
+
+function changeAiProvider() {
+  // Clear all keys and show picker
+  _geminiKey = ''; _openaiKey = ''; _aiProvider = '';
+  localStorage.removeItem('mf_gemini_key');
+  localStorage.removeItem('mf_openai_key');
+  localStorage.removeItem('mf_ai_provider');
+  _chatHistory = [];
+  const msgs = document.getElementById('chat-messages');
+  if (msgs) msgs.innerHTML = '';
+  const qb = document.getElementById('chat-quick-btns');
+  if (qb) qb.style.display = 'none';
+  _showGeminiSetup();
+}
 
 function _switchToGemini() {
   _openaiKey = ''; _aiProvider = '';
