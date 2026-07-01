@@ -2,6 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -2993,7 +2996,9 @@ async function _callAI(userText) {
     // Models to try in order (cached working model stored in _geminiModel)
     const MODELS = [
       { v:'v1beta', m:'gemini-1.5-flash' },
+      { v:'v1',     m:'gemini-1.5-flash' },
       { v:'v1beta', m:'gemini-1.5-flash-latest' },
+      { v:'v1',     m:'gemini-1.5-flash-latest' },
       { v:'v1beta', m:'gemini-pro' },
       { v:'v1',     m:'gemini-pro' },
     ];
@@ -3113,10 +3118,11 @@ function _showGeminiSetup(provider) {
         <div style="font-size:1.8rem;margin-bottom:8px">🆓</div>
         <div style="font-size:.92rem;font-weight:800;margin-bottom:8px;color:var(--text)">Google Gemini (gratis)</div>
         <div style="font-size:.79rem;color:var(--text2);margin-bottom:14px;line-height:1.7">
-          1. Ve a <strong>aistudio.google.com</strong><br>
+          1. Ve a <strong>aistudio.google.com/app/apikey</strong><br>
           2. Inicia sesión con tu cuenta de Google<br>
-          3. Clic en <strong>"Get API Key"</strong> → <strong>"Create API Key"</strong><br>
-          4. Copia y pega aquí 👇
+          3. Toca <strong>"Create API key"</strong><br>
+          4. Elige <strong>"Create API key in new project"</strong><br>
+          5. Copia la key (empieza con AIzaSy…) y pégala aquí 👇
         </div>
         <input class="chat-api-input" id="ai-key-input" type="password" placeholder="AIzaSy…" autocomplete="off"/>
         <button class="modal-btn-primary" onclick="saveAiKey('gemini')">✓ Activar Gemini</button>
