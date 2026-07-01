@@ -2998,8 +2998,9 @@ async function _callAI(userText) {
       { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body) }
     );
     const data = await res.json();
-    if (data.error) throw new Error(data.error.message);
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || '(sin respuesta)';
+    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+    if (!data.candidates?.length) throw new Error(JSON.stringify(data).slice(0,200));
+    return data.candidates[0]?.content?.parts?.[0]?.text || '(sin respuesta)';
   }
 }
 // Alias for backwards compat with mission/project suggest
@@ -3203,11 +3204,15 @@ async function sendChat() {
     const isLocal = location.protocol === 'file:';
     if (isLocal) {
       _appendBubble('bot', '🌐 <strong>La IA necesita estar en línea.</strong><br><br>Abre la app desde tu URL de GitHub Pages:<br><a href="https://mondeleonlic-hub.github.io/montsesflow/" target="_blank" style="color:var(--purple-dark);font-weight:700">mondeleonlic-hub.github.io/montsesflow/</a><br><br><span style="font-size:.76rem;color:#9ca3af">Desde un archivo local el navegador bloquea las llamadas a la IA por seguridad.</span>');
-    } else if (msg.includes('quota') || msg.includes('billing') || msg.includes('insufficient') || msg.includes('429')) {
+    } else if (msg.includes('quota') || msg.includes('billing') || msg.includes('insufficient') || msg.includes('429') || msg.includes('rate') || msg.includes('limit')) {
       const btnStyle = 'display:inline-block;margin:5px 4px 0;padding:7px 14px;border-radius:10px;font-size:.78rem;font-weight:800;cursor:pointer;border:none';
-      _appendBubble('bot', `💳 <strong>Sin crédito en OpenAI</strong><br><br>Tu cuenta de ChatGPT no tiene saldo. Puedes:<br><br>
-        <a href="https://platform.openai.com/billing" target="_blank" style="${btnStyle};background:#f0f4ff;color:#1e1b4b;border:1.5px solid #818cf8">💬 Agregar crédito (desde $5)</a>
-        <button onclick="_switchToGemini()" style="${btnStyle};background:#f0fdf4;color:#166534;border:1.5px solid #4ade80">🆓 Cambiar a Gemini (gratis)</button>`);
+      if (_aiProvider === 'gemini') {
+        _appendBubble('bot', `⏱️ <strong>Límite de Gemini</strong><br><br>Tu key de Gemini alcanzó el límite temporal (se reinicia por minuto). Espera un momento e intenta de nuevo.<br><br><span style="font-size:.72rem;color:#9ca3af">${msg}</span><br><br><button onclick="changeAiProvider()" style="${btnStyle};background:#f0fdf4;color:#166534;border:1.5px solid #4ade80">🔄 Cambiar key</button>`);
+      } else {
+        _appendBubble('bot', `💳 <strong>Sin crédito en OpenAI</strong><br><br>Tu cuenta de ChatGPT no tiene saldo. Puedes:<br><br>
+          <a href="https://platform.openai.com/billing" target="_blank" style="${btnStyle};background:#f0f4ff;color:#1e1b4b;border:1.5px solid #818cf8">💬 Agregar crédito (desde $5)</a>
+          <button onclick="_switchToGemini()" style="${btnStyle};background:#f0fdf4;color:#166534;border:1.5px solid #4ade80">🆓 Cambiar a Gemini (gratis)</button>`);
+      }
     } else if (msg.includes('401') || msg.includes('403') || msg.includes('API_KEY') || msg.includes('Incorrect API key') || msg.includes('invalid_api_key')) {
       _appendBubble('bot', '🔑 La API Key no es válida. <button onclick="_showGeminiSetup()" style="background:var(--purple-light);border:1px solid var(--purple);border-radius:7px;padding:2px 9px;font-size:.75rem;font-weight:700;color:var(--purple-dark);cursor:pointer">Cambiar key</button>');
       _geminiKey = ''; _openaiKey = ''; _aiProvider = '';
