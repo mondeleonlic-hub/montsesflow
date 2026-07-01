@@ -3024,10 +3024,7 @@ async function _callAI(userText) {
           // v1/gemini-pro: no systemInstruction, inject context as first turn
           const ctx = buildChatContext();
           const v1hist = [
-            { role:'user', parts:[{text:'Eres un asistente. Contexto:
-'+ctx+'
-
-Responde: "Entendido, lista para ayudarte."'}] },
+            { role:'user', parts:[{text:'Eres un asistente. Contexto:\n'+ctx+'\n\nResponde: Entendido, lista para ayudarte.'}] },
             { role:'model', parts:[{text:'Entendido, lista para ayudarte.'}] },
             ...gemHist
           ];
