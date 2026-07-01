@@ -2924,6 +2924,7 @@ let _chatBusy    = false;
 let _geminiKey   = localStorage.getItem('mf_gemini_key') || '';
 let _openaiKey   = localStorage.getItem('mf_openai_key') || '';
 let _aiProvider  = localStorage.getItem('mf_ai_provider') || '';   // 'gemini' | 'openai' | ''
+let _geminiModel = localStorage.getItem('mf_gemini_model') || '';  // cached working model
 function _hasAiKey(){ return (_aiProvider==='gemini' && _geminiKey) || (_aiProvider==='openai' && _openaiKey); }
 
 // ── Contexto de tareas para el sistema ──
@@ -2984,23 +2985,60 @@ async function _callAI(userText) {
     if (data.error) throw new Error(data.error.message);
     return data.choices?.[0]?.message?.content || '(sin respuesta)';
   } else {
-    // Gemini
+    // Gemini — cascade through models until one works
     const gemHist = [];
     for (const h of _chatHistory) gemHist.push({ role: h.role==='assistant'?'model':'user', parts:[{text:h.content}] });
     gemHist.push({ role:'user', parts:[{text:userText}] });
-    const body = {
-      systemInstruction: { parts:[{text:buildChatContext()}] },
-      contents: gemHist,
-      generationConfig: { maxOutputTokens:700, temperature:0.75 }
-    };
-    const res = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+_geminiKey,
-      { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body) }
-    );
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
-    if (!data.candidates?.length) throw new Error(JSON.stringify(data).slice(0,200));
-    return data.candidates[0]?.content?.parts?.[0]?.text || '(sin respuesta)';
+
+    // Models to try in order (cached working model stored in _geminiModel)
+    const MODELS = [
+      { v:'v1beta', m:'gemini-1.5-flash' },
+      { v:'v1beta', m:'gemini-1.5-flash-latest' },
+      { v:'v1beta', m:'gemini-pro' },
+      { v:'v1',     m:'gemini-pro' },
+    ];
+
+    // Start from last known working model
+    const startIdx = MODELS.findIndex(x => x.m === (_geminiModel||''));
+    const order = startIdx >= 0
+      ? [...MODELS.slice(startIdx), ...MODELS.slice(0,startIdx)]
+      : MODELS;
+
+    let lastErr = '';
+    for (const { v, m } of order) {
+      try {
+        let body, url;
+        if (v === 'v1beta') {
+          body = {
+            systemInstruction: { parts:[{text:buildChatContext()}] },
+            contents: gemHist,
+            generationConfig: { maxOutputTokens:700, temperature:0.75 }
+          };
+          url = `https://generativelanguage.googleapis.com/${v}/models/${m}:generateContent?key=${_geminiKey}`;
+        } else {
+          // v1/gemini-pro: no systemInstruction, inject context as first turn
+          const ctx = buildChatContext();
+          const v1hist = [
+            { role:'user', parts:[{text:'Eres un asistente. Contexto:
+'+ctx+'
+
+Responde: "Entendido, lista para ayudarte."'}] },
+            { role:'model', parts:[{text:'Entendido, lista para ayudarte.'}] },
+            ...gemHist
+          ];
+          body = { contents: v1hist, generationConfig: { maxOutputTokens:700, temperature:0.75 } };
+          url = `https://generativelanguage.googleapis.com/${v}/models/${m}:generateContent?key=${_geminiKey}`;
+        }
+        const res = await fetch(url, { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body) });
+        const data = await res.json();
+        if (data.error) { lastErr = data.error.message || JSON.stringify(data.error); continue; }
+        if (!data.candidates?.length) { lastErr = JSON.stringify(data).slice(0,200); continue; }
+        _geminiModel = m; // cache working model
+        localStorage.setItem('mf_gemini_model', m);
+        return data.candidates[0]?.content?.parts?.[0]?.text || '(sin respuesta)';
+      } catch(e) { lastErr = e.message; continue; }
+    }
+    throw new Error(lastErr || 'No Gemini model available');
   }
 }
 // Alias for backwards compat with mission/project suggest
@@ -3129,10 +3167,11 @@ function saveGeminiKey() { saveAiKey('gemini'); }
 
 function changeAiProvider() {
   // Clear all keys and show picker
-  _geminiKey = ''; _openaiKey = ''; _aiProvider = '';
+  _geminiKey = ''; _openaiKey = ''; _aiProvider = ''; _geminiModel = '';
   localStorage.removeItem('mf_gemini_key');
   localStorage.removeItem('mf_openai_key');
   localStorage.removeItem('mf_ai_provider');
+  localStorage.removeItem('mf_gemini_model');
   _chatHistory = [];
   const msgs = document.getElementById('chat-messages');
   if (msgs) msgs.innerHTML = '';
