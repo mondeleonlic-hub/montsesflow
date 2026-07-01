@@ -3174,12 +3174,15 @@ async function sendChat() {
   } catch(err) {
     if (typing) typing.remove();
     const msg = err.message || '';
-    if (msg.includes('API_KEY') || msg.includes('key') || msg.includes('403')) {
-      _appendBubble('bot', '🔑 Tu API Key no es válida. <button onclick="_showGeminiSetup()" style="background:var(--purple-light);border:1px solid var(--purple);border-radius:7px;padding:2px 9px;font-size:.75rem;font-weight:700;color:var(--purple-dark);cursor:pointer">Cambiar key</button>');
+    const isLocal = location.protocol === 'file:';
+    if (isLocal) {
+      _appendBubble('bot', '🌐 <strong>La IA necesita estar en línea.</strong><br><br>Abre la app desde tu URL de GitHub Pages:<br><a href="https://mondeleonlic-hub.github.io/montsesflow/" target="_blank" style="color:var(--purple-dark);font-weight:700">mondeleonlic-hub.github.io/montsesflow/</a><br><br><span style="font-size:.76rem;color:#9ca3af">Desde un archivo local el navegador bloquea las llamadas a la IA por seguridad.</span>');
+    } else if (msg.includes('401') || msg.includes('403') || msg.includes('API_KEY') || msg.includes('Incorrect API key') || msg.includes('invalid_api_key')) {
+      _appendBubble('bot', '🔑 La API Key no es válida o no tiene crédito. <button onclick="_showGeminiSetup()" style="background:var(--purple-light);border:1px solid var(--purple);border-radius:7px;padding:2px 9px;font-size:.75rem;font-weight:700;color:var(--purple-dark);cursor:pointer">Cambiar key</button>');
       _geminiKey = ''; _openaiKey = ''; _aiProvider = '';
       localStorage.removeItem('mf_gemini_key'); localStorage.removeItem('mf_openai_key'); localStorage.removeItem('mf_ai_provider');
     } else {
-      _appendBubble('bot', '⚠️ Error de conexión. Revisa tu internet e intenta de nuevo.');
+      _appendBubble('bot', '⚠️ Error de conexión. Revisa tu internet e intenta de nuevo.<br><span style="font-size:.72rem;color:#9ca3af">' + (msg||'') + '</span>');
     }
   }
 
