@@ -2928,7 +2928,8 @@ let _geminiKey   = localStorage.getItem('mf_gemini_key') || '';
 let _openaiKey   = localStorage.getItem('mf_openai_key') || '';
 let _aiProvider  = localStorage.getItem('mf_ai_provider') || '';   // 'gemini' | 'openai' | ''
 let _geminiModel = localStorage.getItem('mf_gemini_model') || '';  // cached working model
-function _hasAiKey(){ return (_aiProvider==='gemini' && _geminiKey) || (_aiProvider==='openai' && _openaiKey); }
+let _groqKey     = localStorage.getItem('mf_groq_key') || '';
+function _hasAiKey(){ return (_aiProvider==='gemini' && _geminiKey) || (_aiProvider==='openai' && _openaiKey) || (_aiProvider==='groq' && _groqKey); }
 
 // ── Contexto de tareas para el sistema ──
 function buildChatContext() {
@@ -2975,7 +2976,19 @@ INSTRUCCIONES:
 
 // ── Llama a la IA (Gemini o OpenAI) ──
 async function _callAI(userText) {
-  if (_aiProvider === 'openai') {
+  if (_aiProvider === 'groq') {
+    const msgs = [{ role:'system', content: buildChatContext() }];
+    for (const h of _chatHistory) msgs.push({ role: h.role==='assistant'?'assistant':'user', content: h.content });
+    msgs.push({ role:'user', content: userText });
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+_groqKey },
+      body: JSON.stringify({ model:'llama-3.1-8b-instant', messages: msgs, max_tokens:700, temperature:0.75 })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
+    return data.choices?.[0]?.message?.content || '(sin respuesta)';
+  } else if (_aiProvider === 'openai') {
     const msgs = [{ role:'system', content: buildChatContext() }];
     for (const h of _chatHistory) msgs.push({ role: h.role==='assistant'?'assistant':'user', content: h.content });
     msgs.push({ role:'user', content: userText });
@@ -3091,25 +3104,48 @@ function _showGeminiSetup(provider) {
         <div style="font-size:2rem;margin-bottom:8px">🤖</div>
         <div style="font-size:.95rem;font-weight:800;margin-bottom:6px;color:var(--text)">Activa la Inteligencia Artificial</div>
         <div style="font-size:.78rem;color:var(--text2);margin-bottom:18px;line-height:1.6">Elige con qué IA quieres que funcione el chat:</div>
-        <button onclick="_showGeminiSetup('gemini')" style="width:100%;margin-bottom:10px;padding:14px 16px;background:#f0fdf4;border:2px solid #4ade80;border-radius:14px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px">
-          <span style="font-size:1.6rem">🆓</span>
+        <button onclick="_showGeminiSetup('groq')" style="width:100%;margin-bottom:10px;padding:14px 16px;background:#f0fdf4;border:2px solid #4ade80;border-radius:14px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px">
+          <span style="font-size:1.6rem">⚡</span>
           <div>
-            <div style="font-weight:800;font-size:.88rem;color:#166534">Google Gemini</div>
-            <div style="font-size:.73rem;color:#4b7a58">Gratis · Solo necesitas tu cuenta de Google</div>
+            <div style="font-weight:800;font-size:.88rem;color:#166534">Groq — Llama 3 (Recomendado)</div>
+            <div style="font-size:.73rem;color:#4b7a58">100% Gratis · Sin tarjeta · Muy rápido</div>
           </div>
         </button>
-        <button onclick="_showGeminiSetup('openai')" style="width:100%;padding:14px 16px;background:#f0f4ff;border:2px solid #818cf8;border-radius:14px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px">
+        <button onclick="_showGeminiSetup('gemini')" style="width:100%;margin-bottom:10px;padding:14px 16px;background:#f8fafc;border:2px solid #d1d5db;border-radius:14px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px">
+          <span style="font-size:1.6rem">🔵</span>
+          <div>
+            <div style="font-weight:800;font-size:.88rem;color:#374151">Google Gemini</div>
+            <div style="font-size:.73rem;color:#6b7280">Gratis · Requiere key de AI Studio</div>
+          </div>
+        </button>
+        <button onclick="_showGeminiSetup('openai')" style="width:100%;padding:14px 16px;background:#f8fafc;border:2px solid #d1d5db;border-radius:14px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px">
           <span style="font-size:1.6rem">💬</span>
           <div>
-            <div style="font-weight:800;font-size:.88rem;color:#1e1b4b">ChatGPT (OpenAI)</div>
-            <div style="font-size:.73rem;color:#4b5899">Requiere tarjeta · Muy barato (~$0.01/mes)</div>
+            <div style="font-weight:800;font-size:.88rem;color:#374151">ChatGPT (OpenAI)</div>
+            <div style="font-size:.73rem;color:#6b7280">Requiere tarjeta · ~$0.01/mes</div>
           </div>
         </button>
         <div style="font-size:.65rem;color:#d1d5db;margin-top:14px">Tu key se guarda solo en este dispositivo</div>
       </div>`;
     return;
   }
-  if (provider === 'gemini') {
+  if (provider === 'groq') {
+    msgs.innerHTML = `
+      <div class="chat-api-box">
+        <div style="font-size:1.8rem;margin-bottom:8px">⚡</div>
+        <div style="font-size:.92rem;font-weight:800;margin-bottom:8px;color:var(--text)">Groq — 100% Gratis</div>
+        <div style="font-size:.79rem;color:var(--text2);margin-bottom:14px;line-height:1.7">
+          1. Ve a <strong>console.groq.com</strong><br>
+          2. Crea cuenta con tu Gmail (sin tarjeta)<br>
+          3. Ve a <strong>API Keys</strong> → <strong>"Create API Key"</strong><br>
+          4. Copia y pega aquí 👇
+        </div>
+        <input class="chat-api-input" id="ai-key-input" type="password" placeholder="gsk_…" autocomplete="off"/>
+        <button class="modal-btn-primary" onclick="saveAiKey('groq')">✓ Activar Groq IA</button>
+        <button onclick="_showGeminiSetup()" style="margin-top:8px;background:none;border:none;font-size:.75rem;color:#9ca3af;cursor:pointer">← Volver</button>
+      </div>`;
+    setTimeout(() => { const i = document.getElementById('ai-key-input'); if(i) i.focus(); }, 100);
+  } else if (provider === 'gemini') {
     msgs.innerHTML = `
       <div class="chat-api-box">
         <div style="font-size:1.8rem;margin-bottom:8px">🆓</div>
@@ -3152,6 +3188,9 @@ function saveAiKey(provider) {
   if (provider === 'openai') {
     _openaiKey = key; _aiProvider = 'openai';
     localStorage.setItem('mf_openai_key', key);
+  } else if (provider === 'groq') {
+    _groqKey = key; _aiProvider = 'groq';
+    localStorage.setItem('mf_groq_key', key);
   } else {
     _geminiKey = key; _aiProvider = 'gemini';
     localStorage.setItem('mf_gemini_key', key);
@@ -3170,9 +3209,10 @@ function saveGeminiKey() { saveAiKey('gemini'); }
 
 function changeAiProvider() {
   // Clear all keys and show picker
-  _geminiKey = ''; _openaiKey = ''; _aiProvider = ''; _geminiModel = '';
+  _geminiKey = ''; _openaiKey = ''; _groqKey = ''; _aiProvider = ''; _geminiModel = '';
   localStorage.removeItem('mf_gemini_key');
   localStorage.removeItem('mf_openai_key');
+  localStorage.removeItem('mf_groq_key');
   localStorage.removeItem('mf_ai_provider');
   localStorage.removeItem('mf_gemini_model');
   _chatHistory = [];
