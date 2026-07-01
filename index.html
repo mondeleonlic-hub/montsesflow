@@ -348,6 +348,34 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 /* ── HAMBURGER + DRAWER ── */
 .hamburger{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.28);border-radius:9px;color:white;font-size:1.2rem;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .search-btn{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.28);border-radius:9px;color:white;font-size:1.1rem;width:38px;height:38px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ── CHAT AI ── */
+.chat-fab{position:fixed;bottom:calc(var(--tab-h) + var(--safe-b) + 14px);right:16px;z-index:150;background:rgba(255,255,255,0.18);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1.5px solid rgba(62,82,24,.35);border-radius:24px;padding:0 16px 0 12px;height:44px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 12px rgba(62,82,24,.18);cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s}
+.chat-fab:active{transform:scale(.95);background:rgba(62,82,24,.15)}
+.chat-fab-icon{width:22px;height:22px;flex-shrink:0}
+.chat-fab-label{color:var(--purple-dark);font-size:.78rem;font-weight:800;white-space:nowrap;letter-spacing:.01em}
+.chat-sheet{max-height:88vh;display:flex;flex-direction:column;padding:0!important}
+.chat-header-bar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+.chat-header-info{display:flex;align-items:center;gap:10px}
+.chat-header-name{font-size:.88rem;font-weight:800;color:var(--text)}
+.chat-header-sub{font-size:.7rem;color:var(--text2)}
+.chat-messages{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-height:140px}
+.chat-bubble{max-width:84%;padding:10px 14px;border-radius:14px;font-size:.84rem;line-height:1.55}
+.chat-bubble.user{background:var(--purple);color:white;align-self:flex-end;border-radius:14px 14px 4px 14px;font-weight:600}
+.chat-bubble.bot{background:#f1f5f9;color:var(--text);align-self:flex-start;border-radius:14px 14px 14px 4px}
+.chat-bubble.typing{background:#f1f5f9;color:var(--text2);align-self:flex-start;border-radius:14px 14px 14px 4px;font-style:italic;letter-spacing:.08em}
+.chat-quick-btns{display:flex;flex-wrap:wrap;gap:6px;padding:8px 16px;border-top:1px solid var(--border);flex-shrink:0}
+.chat-quick{border:1.5px solid var(--border);border-radius:20px;padding:6px 13px;font-size:.72rem;font-weight:700;background:white;color:var(--purple-dark);cursor:pointer;white-space:nowrap;transition:background .12s}
+.chat-quick:active{background:var(--purple-light)}
+.chat-input-area{display:flex;gap:8px;padding:10px 14px;padding-bottom:calc(10px + var(--safe-b));border-top:1px solid var(--border);flex-shrink:0;align-items:center}
+.chat-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:22px;font-size:1rem;outline:none;font-family:inherit}
+.chat-input:focus{border-color:var(--purple)}
+.chat-send{width:40px;height:40px;background:var(--purple);border:none;border-radius:50%;color:white;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s,transform .1s}
+.chat-send:active{background:var(--purple-dark);transform:scale(.92)}
+.chat-send:disabled{background:#d1d5db;cursor:not-allowed}
+.chat-api-box{padding:24px 18px;text-align:center}
+.chat-api-input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:1rem;outline:none;margin:10px 0 8px;font-family:inherit}
+.chat-api-input:focus{border-color:var(--purple)}
 .search-input-wrap{display:flex;gap:8px;margin-bottom:14px}
 .search-input{flex:1;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:1rem;outline:none;font-family:inherit}
 .search-input:focus{border-color:var(--purple)}
@@ -632,6 +660,31 @@ body.modal-open{overflow:hidden;position:fixed;width:100%}
     </div>
     <div class="search-results" id="search-results"></div>
     <div class="modal-cancel" onclick="closeModal('search-modal')">Cerrar</div>
+  </div>
+</div>
+
+<!-- CHAT AI MODAL -->
+<div class="modal-overlay" id="chat-modal" onclick="if(event.target===this)closeModal('chat-modal')">
+  <div class="modal-sheet chat-sheet" onclick="event.stopPropagation()">
+    <div class="chat-header-bar">
+      <div class="chat-header-info">
+        <div class="chat-header-name">Asistente Montse's Flow</div>
+      </div>
+      <button onclick="closeModal('chat-modal')" style="background:none;border:none;font-size:1.1rem;cursor:pointer;color:var(--text2);padding:4px 6px">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-quick-btns" id="chat-quick-btns">
+      <button class="chat-quick" onclick="sendQuick('¿Qué tengo que hacer hoy?')">📅 ¿Qué hago hoy?</button>
+      <button class="chat-quick" onclick="sendQuick('¿Cuáles son mis tareas más urgentes e importantes?')">⚡ Urgentes</button>
+      <button class="chat-quick" onclick="sendQuick('¿Tengo tareas vencidas o con fecha límite próxima?')">⏰ ¿Algo vencido?</button>
+      <button class="chat-quick" onclick="sendQuick('Dame un resumen de todo lo que tengo pendiente')">📋 Resumen</button>
+      <button class="chat-quick" onclick="sendQuick('¿En qué proyecto debería enfocarme primero?')">🚀 ¿Qué proyecto primero?</button>
+      <button class="chat-quick" onclick="sendQuick('Sugiéreme tareas nuevas')">💡 Sugerirme tareas</button>
+    </div>
+    <div class="chat-input-area">
+      <input class="chat-input" id="chat-input" type="text" placeholder="Pregúntame algo sobre tus tareas…" onkeydown="if(event.key==='Enter')sendChat()" autocomplete="off"/>
+      <button class="chat-send" id="chat-send-btn" onclick="sendChat()">↑</button>
+    </div>
   </div>
 </div>
 
@@ -2862,9 +2915,422 @@ function save(){
   _saveToFb();
 }
 
+// ── CHAT AI (local, sin API) ─────────────────────
+let _chatHistory=[];
+let _chatBusy=false;
+
+// ── Normaliza texto para comparación ──
+function _norm(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[¿¡]/g,'');
+}
+
+// ── Detecta intención — muy flexible ──
+function _detectIntent(q){
+  const n=_norm(q);
+  // today
+  if(/(hoy|dia de hoy|hacer hoy|toca hoy|agendado hoy|pendiente hoy|debo hacer|que me toca|que tengo que|que hago|por donde empiezo|como empiezo|arrancar|arranco)/.test(n)) return 'today';
+  // overdue
+  if(/(vencid|atrasad|retraso|tarde|fecha.*pas|pas.*fecha|sin hacer|me debi|deberia haber|olvi|no he hecho|no he terminado)/.test(n)) return 'overdue';
+  // urgent / priority
+  if(/(urgent|priorit|mas import|lo mas|primero|enfoca|priorid|que es lo|primordial|critico|critica|clave)/.test(n)) return 'urgent';
+  // summary
+  if(/(resumen|cuantas|cuanto|cuantos|panorama|estado|overview|tengo en total|todo lo que|dame un|muestra todo|lista.*todo|todo.*lista|mis tarea|mis pendiente|que hay)/.test(n)) return 'summary';
+  // projects
+  if(/(proyecto|proyect)/.test(n)) return 'projects';
+  // compromisos
+  if(/(compromiso|compromi|acuerdo|prometi|pendiente.*reunion|reunion.*pendiente)/.test(n)) return 'compromisos';
+  // week
+  if(/(semana|lunes|martes|miercoles|jueves|viernes|sabado|domingo|proximos dias|esta semana|la semana|agenda.*semana|semana.*agenda)/.test(n)) return 'week';
+  // motivation
+  if(/(motiva|anima|animo|ayuda.*empez|como empez|no se por donde|perdida|perdido|agobiada|agobiado|estresada|estresado|mucho.*pendiente|help|auxilio)/.test(n)) return 'motivation';
+  // extra
+  if(/(extra|adicional|otras tarea|otras cosa)/.test(n)) return 'extra';
+  // done
+  if(/(hecho|complet|termin|listo|logr|cerre|cerr|acab|cuanto.*hech|hech.*cuanto)/.test(n)) return 'done';
+  // suggest
+  if(/(sugier|recomiend|agreg|nueva tarea|tarea nueva|falta|que mas|anadir|idea|propone|proponer|deberia agreg)/.test(n)) return 'suggest';
+  // fallback: try to match partial words to today (most common)
+  if(/(hoy|dia|toca|hacer|debo|mañana|ahora)/.test(n)) return 'today';
+  if(/(venci|atras|tarde|olvi)/.test(n)) return 'overdue';
+  if(/(urgen|import|prime|enfo)/.test(n)) return 'urgent';
+  return 'general';
+}
+
+// ── Formatea una lista de items ──
+function _fmtList(arr, max=6){
+  const show=arr.slice(0,max);
+  const lines=show.map(i=>{
+    let s=`• ${i.icon||'📌'} <strong>${h(i.text)}</strong>`;
+    if(i.deadline&&i.deadline<todayStr()) s+=` <span style="color:#ef4444;font-size:.75rem">[vencida ${i.deadline}]</span>`;
+    else if(i.deadline) s+=` <span style="color:#6b7280;font-size:.75rem">[límite ${i.deadline}]</span>`;
+    return s;
+  }).join('<br>');
+  const extra=arr.length>max?`<br><span style="color:#6b7280;font-size:.78rem">…y ${arr.length-max} más</span>`:'';
+  return lines+extra;
+}
+
+// ── Motor de respuestas ──
+function _buildReply(intent, q){
+  const today=todayStr();
+  const now=new Date();
+  const dayName=now.toLocaleDateString('es-MX',{weekday:'long'});
+
+  const todayItems  =items.filter(i=>i.col!=='done'&&(i.scheduledDate===today||(!i.scheduledDate&&i.deadline===today)));
+  const overdueItems=items.filter(i=>i.col!=='done'&&i.deadline&&i.deadline<today);
+  const q1Items     =items.filter(i=>i.col!=='done'&&i.urgente&&i.importante);
+  const todoItems   =items.filter(i=>i.col==='todo');
+  const compItems   =items.filter(i=>i.col==='compromisos');
+  const projItems   =items.filter(i=>i.col==='proyectos');
+  const extrItems   =items.filter(i=>i.col==='extra');
+  const doneItems   =items.filter(i=>i.col==='done');
+  const allPending  =items.filter(i=>i.col!=='done');
+
+  switch(intent){
+
+    case 'today': {
+      if(!todayItems.length&&!overdueItems.length)
+        return `¡Hoy tienes el camino libre! 🌿<br>No hay tareas agendadas ni vencidas para este ${dayName}.<br><br>Puedes aprovechar para avanzar en proyectos o compromisos pendientes.`;
+      let r='';
+      if(overdueItems.length){
+        r+=`⚠️ <strong>Primero atiende estas ${overdueItems.length} vencidas:</strong><br>${_fmtList(overdueItems)}<br><br>`;
+      }
+      if(todayItems.length){
+        r+=`📅 <strong>Para hoy (${dayName}):</strong><br>${_fmtList(todayItems)}`;
+      }
+      return r;
+    }
+
+    case 'overdue': {
+      if(!overdueItems.length) return '✅ ¡Sin tareas vencidas! Estás al día, Montse.';
+      const sorted=[...overdueItems].sort((a,b)=>a.deadline.localeCompare(b.deadline));
+      return `⏰ <strong>Tienes ${sorted.length} tarea${sorted.length>1?'s':''} vencida${sorted.length>1?'s':''}:</strong><br>${_fmtList(sorted)}<br><br>Te recomiendo empezar por la más antigua.`;
+    }
+
+    case 'urgent': {
+      if(overdueItems.length){
+        return `🚨 <strong>Lo más urgente ahora mismo son las vencidas (${overdueItems.length}):</strong><br>${_fmtList(overdueItems,4)}<br><br>${q1Items.length?`Después, tus Q1 urgentes+importantes:<br>${_fmtList(q1Items,3)}`:''}`;
+      }
+      if(q1Items.length){
+        return `⚡ <strong>Tus tareas más urgentes e importantes:</strong><br>${_fmtList(q1Items)}<br><br>Empieza por la primera y avanza de una en una.`;
+      }
+      if(todayItems.length){
+        return `📅 <strong>Hoy tienes ${todayItems.length} tarea${todayItems.length>1?'s':''} agendada${todayItems.length>1?'s':''}:</strong><br>${_fmtList(todayItems)}<br><br>No hay marcadas como urgentes, así que estas son tu foco.`;
+      }
+      return `🌿 No tienes tareas marcadas como urgentes ahora mismo. ¡Buen momento para avanzar en proyectos!`;
+    }
+
+    case 'summary': {
+      const total=allPending.length;
+      if(!total) return '🎉 ¡Increíble! No tienes pendientes. Todo está completado.';
+      let r=`📋 <strong>Tienes ${total} tarea${total>1?'s':''} pendiente${total>1?'s':''}:</strong><br><br>`;
+      if(overdueItems.length) r+=`• ⏰ ${overdueItems.length} vencida${overdueItems.length>1?'s':''}<br>`;
+      if(todayItems.length)   r+=`• 📅 ${todayItems.length} para hoy<br>`;
+      if(todoItems.length)    r+=`• ⚡ ${todoItems.length} en To Do<br>`;
+      if(compItems.length)    r+=`• 🎯 ${compItems.length} Compromisos<br>`;
+      if(projItems.length)    r+=`• 🚀 ${projItems.length} en Proyectos<br>`;
+      if(extrItems.length)    r+=`• ⭐ ${extrItems.length} Extra<br>`;
+      if(doneItems.length)    r+=`<br>✅ Ya completaste ${doneItems.length} tarea${doneItems.length>1?'s':''}. ¡Bien hecho!`;
+      return r;
+    }
+
+    case 'projects': {
+      if(!projItems.length) return '🚀 No tienes proyectos pendientes actualmente.';
+      const top=projItems.filter(i=>i.urgente||i.importante).slice(0,3);
+      let r=`🚀 <strong>Tienes ${projItems.length} proyecto${projItems.length>1?'s':''} activo${projItems.length>1?'s':''}:</strong><br>${_fmtList(projItems)}`;
+      if(top.length) r+=`<br><br>💡 Te sugiero empezar por: <strong>${h(top[0].text)}</strong>`;
+      return r;
+    }
+
+    case 'compromisos': {
+      if(!compItems.length) return '🎯 No tienes compromisos pendientes.';
+      const withDl=compItems.filter(i=>i.deadline).sort((a,b)=>a.deadline.localeCompare(b.deadline));
+      let r=`🎯 <strong>Tus ${compItems.length} compromiso${compItems.length>1?'s':''}:</strong><br>${_fmtList(compItems)}`;
+      if(withDl.length) r+=`<br><br>⏰ El más próximo: <strong>${h(withDl[0].text)}</strong> — ${withDl[0].deadline}`;
+      return r;
+    }
+
+    case 'week': {
+      const days=[];
+      for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()+i);days.push(d);}
+      const lines=days.map(d=>{
+        const iso=d.toISOString().slice(0,10);
+        const dayI=items.filter(x=>x.col!=='done'&&(x.scheduledDate===iso||(!x.scheduledDate&&x.deadline===iso)));
+        if(!dayI.length) return null;
+        const dn=d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'short'});
+        return `<strong>${dn}:</strong> ${dayI.map(x=>`${x.icon||'📌'} ${h(x.text)}`).join(', ')}`;
+      }).filter(Boolean);
+      if(!lines.length) return '📅 No tienes nada agendado para esta semana. ¡Semana libre!';
+      return `📅 <strong>Tu semana:</strong><br><br>${lines.join('<br>')}`;
+    }
+
+    case 'motivation': {
+      const done=doneItems.length;
+      const pend=allPending.length;
+      const msgs=[
+        `💪 ¡Tú puedes, Montse! Tienes ${pend} tarea${pend>1?'s':''} por delante — una a la vez y llegas.`,
+        `🌟 Cada tarea completada te acerca a donde quieres estar. ¡Empieza con la más pequeña!`,
+        `🚀 ${done>0?`Ya completaste ${done} tarea${done>1?'s':''}. `:''}El momento perfecto para empezar es ahora.`,
+        `🎯 Enfócate en una sola cosa a la vez. ¿Cuál es la más importante hoy?`
+      ];
+      const m=msgs[Math.floor(Math.random()*msgs.length)];
+      if(q1Items.length) return m+`<br><br>Te sugiero empezar con: <strong>${h(q1Items[0].text)}</strong>`;
+      if(todayItems.length) return m+`<br><br>Hoy tienes agendada: <strong>${h(todayItems[0].text)}</strong>`;
+      return m;
+    }
+
+    case 'extra': {
+      if(!extrItems.length) return '⭐ No tienes tareas extra pendientes.';
+      return `⭐ <strong>Tareas Extra (${extrItems.length}):</strong><br>${_fmtList(extrItems)}`;
+    }
+
+    case 'done': {
+      if(!doneItems.length) return '📋 Aún no has marcado tareas como completadas en esta sesión.';
+      return `✅ <strong>Has completado ${doneItems.length} tarea${doneItems.length>1?'s':''}.</strong> ¡Excelente trabajo, Montse! 🎉`;
+    }
+
+    case 'suggest': {
+      // Interactive: pick a project or type a mission
+      window._chatSuggestions=[];
+      const btnStyle='display:inline-flex;align-items:center;gap:5px;margin:4px 4px 0 0;padding:7px 12px;background:#f8fafc;border:1.5px solid var(--border);border-radius:20px;font-size:.75rem;font-weight:700;color:var(--text);cursor:pointer;transition:background .12s';
+      let r=`💡 <strong>¿De qué quieres sugerencias?</strong><br><br>`;
+      r+=`<div style="margin-bottom:12px">
+        <div style="font-size:.76rem;font-weight:700;color:var(--text2);margin-bottom:5px">ESCRIBE UNA MISIÓN U OBJETIVO</div>
+        <div style="display:flex;gap:6px">
+          <input id="mission-input" type="text" placeholder="Ej: mejorar atención al cliente…"
+            style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.85rem;outline:none;font-family:inherit"
+            onkeydown="if(event.key==='Enter')chatMissionSuggest()" autocomplete="off"/>
+          <button onclick="chatMissionSuggest()" style="background:var(--purple);color:white;border:none;border-radius:10px;padding:8px 14px;font-size:.82rem;font-weight:800;cursor:pointer">Ir →</button>
+        </div>
+      </div>`;
+      if(projItems.length){
+        r+=`<div style="font-size:.76rem;font-weight:700;color:var(--text2);margin-bottom:5px">O ELIGE UN PROYECTO TUYO</div>`;
+        r+=projItems.slice(0,7).map(p=>
+          `<button onclick="chatProjectSuggest(${p.id})" style="${btnStyle}">${p.icon||'🚀'} ${h(p.text.length>26?p.text.slice(0,26)+'…':p.text)}</button>`
+        ).join('');
+      }
+      return r;
+    }
+
+    default: {
+      // Show today/overdue info + suggest buttons
+      let r='';
+      if(overdueItems.length) r+=`⚠️ Tienes <strong>${overdueItems.length} vencida${overdueItems.length>1?'s':''}</strong>. `;
+      if(todayItems.length) r+=`📅 Hoy tienes <strong>${todayItems.length} tarea${todayItems.length>1?'s':''}</strong>. `;
+      r+='<br><br>Puedes preguntarme:<br>• "¿qué hago hoy?"<br>• "¿tengo algo vencido?"<br>• "dame un resumen"<br>• "urgentes"<br>• "proyectos"<br>• "esta semana"<br>• "sugiéreme tareas"';
+      return r;
+    }
+  }
+}
+
+function openChat(){
+  _chatHistory=[];
+  const msgs=document.getElementById('chat-messages');
+  if(msgs) msgs.innerHTML='';
+  const qb=document.getElementById('chat-quick-btns');
+  if(qb) qb.style.display='';
+  const tod=todayStr();
+  const overdueItems=items.filter(i=>i.col!=='done'&&i.deadline&&i.deadline<tod).sort((a,b)=>a.deadline.localeCompare(b.deadline));
+  const todayItems=items.filter(i=>i.col!=='done'&&(i.scheduledDate===tod||(!i.scheduledDate&&i.deadline===tod)));
+  const q1Items=items.filter(i=>i.col!=='done'&&i.urgente&&i.importante&&!overdueItems.find(x=>x.id===i.id)&&!todayItems.find(x=>x.id===i.id));
+  const fmt=arr=>arr.slice(0,4).map(i=>`• ${i.icon||'📌'} <strong>${h(i.text)}</strong>${i.deadline&&i.deadline<tod?' <span style="color:#ef4444;font-size:.73rem">[vencida]</span>':i.deadline?' <span style="color:#9ca3af;font-size:.73rem">['+i.deadline+']</span>':''}`).join('<br>');
+  let msg='';
+  if(overdueItems.length){
+    msg+=`⚠️ <strong>${overdueItems.length} tarea${overdueItems.length>1?'s':''} vencida${overdueItems.length>1?'s':''}:</strong><br>${fmt(overdueItems)}<br><br>`;
+  }
+  if(todayItems.length){
+    msg+=`📅 <strong>Para hoy:</strong><br>${fmt(todayItems)}<br><br>`;
+  }
+  if(!overdueItems.length&&!todayItems.length&&q1Items.length){
+    msg+=`⚡ <strong>Tus más urgentes:</strong><br>${fmt(q1Items)}<br><br>`;
+  }
+  if(!overdueItems.length&&!todayItems.length&&!q1Items.length){
+    msg+='🌿 <strong>Hoy tienes el camino despejado.</strong><br><br>';
+  }
+  msg+='<span style="font-size:.78rem;color:#6b7280">Usa los botones o pregúntame lo que necesites 👇</span>';
+  _appendBubble('bot', msg);
+  openModalFixed('chat-modal');
+  setTimeout(()=>{const i=document.getElementById('chat-input');if(i)i.focus();},300);
+}
+
+function _appendBubble(role, html){
+  const msgs=document.getElementById('chat-messages');
+  if(!msgs) return null;
+  const div=document.createElement('div');
+  div.className='chat-bubble '+role;
+  div.innerHTML=html;
+  msgs.appendChild(div);
+  msgs.scrollTop=msgs.scrollHeight;
+  return div;
+}
+
+// ── Agrega una tarea sugerida ──
+function chatSuggestAdd(idx){
+  const s=(window._chatSuggestions||[])[idx];
+  if(!s) return;
+  items.unshift({
+    id:nextId++,text:s.text,note:s.note||'',col:s.col||'todo',
+    cat:s.cat||'operacion',icon:s.icon||'📌',
+    deadline:'',scheduledDate:'',delegadoA:'',
+    oc:'operar',urgente:false,importante:false,recur:'',
+    subtasks:[],progress:0
+  });
+  save();render();
+  // Mark button as done inline
+  const btns=document.querySelectorAll('.chat-add-btn[data-idx="'+idx+'"]');
+  btns.forEach(b=>{b.textContent='✓ Agregada';b.style.background='#dcfce7';b.style.borderColor='#22c55e';b.style.color='#15803d';b.disabled=true;});
+}
+
+// ── Renderiza lista de sugerencias en el chat ──
+function _renderSuggestions(list, title){
+  window._chatSuggestions=list;
+  const btnStyle='font-size:.7rem;background:var(--purple-light);border:1.5px solid var(--purple);border-radius:8px;padding:3px 9px;color:var(--purple-dark);cursor:pointer;font-weight:700;flex-shrink:0;white-space:nowrap';
+  let r=`${title}<br><br>`;
+  r+=list.map((s,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f3f4f6">
+      <span style="font-size:1rem;flex-shrink:0">${s.icon||'📌'}</span>
+      <span style="flex:1;font-size:.82rem;color:var(--text)">${h(s.text)}</span>
+      <button class="chat-add-btn" data-idx="${i}" onclick="chatSuggestAdd(${i})" style="${btnStyle}">+ Agregar</button>
+    </div>`).join('');
+  r+=`<br><span style="font-size:.74rem;color:var(--text2)">Agrega las que te sirvan. ¿Quieres ajustar alguna?</span>`;
+  _appendBubble('bot', r);
+}
+
+// ── Genera tareas desde una misión libre ──
+function chatMissionSuggest(){
+  const inp=document.getElementById('mission-input');
+  if(!inp) return;
+  const mission=inp.value.trim();
+  if(!mission){inp.focus();return;}
+  _appendBubble('user', h(mission));
+  const n=_norm(mission);
+  const tasks=[];
+  // Base: 3 tareas estructurales siempre
+  tasks.push({icon:'🔍',text:`Diagnóstico: ${mission}`,note:'Levantamiento inicial',col:'proyectos'});
+  tasks.push({icon:'📋',text:`Plan de acción: ${mission}`,note:'Definir pasos concretos',col:'proyectos'});
+  tasks.push({icon:'✅',text:`Revisar avances: ${mission}`,note:'Seguimiento semanal',col:'compromisos'});
+  // Keyword-based additions
+  if(/(cliente|servicio|atencion|experiencia)/.test(n)){
+    tasks.push({icon:'⭐',text:'Encuesta de satisfacción a clientes',col:'todo'});
+    tasks.push({icon:'📞',text:'Llamadas de seguimiento a clientes clave',col:'compromisos'});
+  }
+  if(/(precio|tarifa|costo|cobro|venta|ingreso)/.test(n)){
+    tasks.push({icon:'💰',text:'Análisis de precios vs. competencia',col:'proyectos'});
+    tasks.push({icon:'📊',text:'Actualizar lista de precios',col:'todo'});
+  }
+  if(/(equipo|personal|staff|empleado|rh|recurso humano|contrat)/.test(n)){
+    tasks.push({icon:'👥',text:'Reunión de alineación con el equipo',col:'compromisos'});
+    tasks.push({icon:'📝',text:'Definir roles y responsabilidades',col:'proyectos'});
+    tasks.push({icon:'🎯',text:'Evaluar desempeño del equipo',col:'compromisos'});
+  }
+  if(/(marketing|marca|redes|instagram|contenido|publicidad|promoc)/.test(n)){
+    tasks.push({icon:'📲',text:'Calendario de contenido mensual',col:'proyectos'});
+    tasks.push({icon:'📸',text:'Sesión de fotos/video para redes',col:'todo'});
+    tasks.push({icon:'📣',text:'Definir mensaje clave de la campaña',col:'proyectos'});
+  }
+  if(/(proceso|operacion|sistema|flujo|eficienci|procedimiento)/.test(n)){
+    tasks.push({icon:'⚙️',text:'Mapear el proceso actual',col:'proyectos'});
+    tasks.push({icon:'📄',text:'Documentar procedimiento estándar',col:'proyectos'});
+    tasks.push({icon:'🔧',text:'Identificar cuellos de botella',col:'todo'});
+  }
+  if(/(comida|food|menu|cocina|proveedor|restaurante)/.test(n)){
+    tasks.push({icon:'🍽️',text:'Actualizar menú y precios',col:'todo'});
+    tasks.push({icon:'📦',text:'Revisar y negociar con proveedores',col:'compromisos'});
+    tasks.push({icon:'🧹',text:'Checklist de operación semanal',col:'todo'});
+  }
+  if(/(finanza|contabilidad|declaracion|fiscal|impuesto|flujo.*caja|caja)/.test(n)){
+    tasks.push({icon:'📈',text:'Revisión de estado financiero',col:'proyectos'});
+    tasks.push({icon:'🧾',text:'Conciliación de cuentas',col:'todo'});
+  }
+  const show=tasks.slice(0,6);
+  _renderSuggestions(show, `💡 <strong>Tareas para: "${h(mission)}"</strong>`);
+}
+
+// ── Genera tareas desde un proyecto existente ──
+function chatProjectSuggest(projId){
+  const proj=items.find(i=>i.id===projId);
+  if(!proj) return;
+  _appendBubble('user', `${proj.icon||'🚀'} ${h(proj.text)}`);
+  const n=_norm(proj.text+' '+(proj.note||''));
+  const tasks=[];
+  // Always: next-action tasks for any project
+  tasks.push({icon:'📋',text:`Definir siguiente paso: ${proj.text}`,note:'',col:'todo'});
+  tasks.push({icon:'🗓️',text:`Agendar bloque de trabajo — ${proj.text}`,note:'',col:'todo'});
+  tasks.push({icon:'✅',text:`Revisión de avance: ${proj.text}`,note:'',col:'compromisos'});
+  // Based on project keywords
+  if(/(precio|tarifa|venta|membresia|cobro)/.test(n)){
+    tasks.push({icon:'💰',text:`Actualizar precios — ${proj.text}`,col:'todo'});
+    tasks.push({icon:'📊',text:`Análisis de resultados de ventas`,col:'proyectos'});
+  }
+  if(/(food|comida|menu|restaurante|cocina)/.test(n)){
+    tasks.push({icon:'🍽️',text:`Actualizar menú — ${proj.text}`,col:'todo'});
+    tasks.push({icon:'📦',text:`Revisar inventario y proveedores`,col:'compromisos'});
+    tasks.push({icon:'📋',text:`Checklist de operación — ${proj.text}`,col:'todo'});
+  }
+  if(/(re-estructura|restructura|estructura|reorganiz)/.test(n)){
+    tasks.push({icon:'🔍',text:`Diagnóstico de operación actual`,col:'todo'});
+    tasks.push({icon:'📝',text:`Definir nueva estructura`,col:'proyectos'});
+    tasks.push({icon:'👥',text:`Presentar plan al equipo`,col:'compromisos'});
+  }
+  if(/(manual|proceso|procedimiento|operacion)/.test(n)){
+    tasks.push({icon:'📄',text:`Redactar sección del manual`,col:'todo'});
+    tasks.push({icon:'🔧',text:`Validar procesos con el equipo`,col:'compromisos'});
+  }
+  if(/(comunicacion|canal|sistema|plataforma|app|digital)/.test(n)){
+    tasks.push({icon:'💬',text:`Definir protocolo de comunicación`,col:'proyectos'});
+    tasks.push({icon:'📲',text:`Configurar la plataforma/herramienta`,col:'todo'});
+    tasks.push({icon:'👥',text:`Capacitar al equipo en el nuevo sistema`,col:'compromisos'});
+  }
+  if(/(membresia|suscripcion|cliente|plan|venta)/.test(n)){
+    tasks.push({icon:'🎫',text:`Crear script de venta`,col:'proyectos'});
+    tasks.push({icon:'📞',text:`Contactar clientes potenciales`,col:'compromisos'});
+    tasks.push({icon:'📊',text:`Seguimiento de conversiones`,col:'todo'});
+  }
+  const show=tasks.slice(0,5);
+  _renderSuggestions(show, `💡 <strong>Tareas para "${h(proj.text)}":</strong>`);
+}
+
+function sendQuick(text){
+  document.getElementById('chat-input').value=text;
+  sendChat();
+}
+
+function sendChat(){
+  if(_chatBusy) return;
+  const inp=document.getElementById('chat-input');
+  if(!inp) return;
+  const text=inp.value.trim();
+  if(!text) return;
+  inp.value='';
+  const qb=document.getElementById('chat-quick-btns');
+  if(qb) qb.style.display='none';
+  _appendBubble('user', h(text));
+  const intent=_detectIntent(text);
+  const reply=_buildReply(intent, text);
+  // Small delay to feel natural
+  _chatBusy=true;
+  const btn=document.getElementById('chat-send-btn');
+  if(btn) btn.disabled=true;
+  const typing=_appendBubble('typing','● &nbsp; ● &nbsp; ●');
+  setTimeout(()=>{
+    if(typing) typing.remove();
+    _appendBubble('bot', reply);
+    _chatBusy=false;
+    if(btn) btn.disabled=false;
+    inp.focus();
+  }, 420);
+}
+
 // Inicializar Firebase al cargar si ya tiene config
 initFirebase();
 </script>
+
+<!-- CHAT FAB -->
+<button class="chat-fab" onclick="openChat()" aria-label="Abrir asistente">
+  <svg class="chat-fab-icon" viewBox="0 0 24 24" fill="none" stroke="var(--purple-dark)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+  <span class="chat-fab-label">Te ayudo</span>
+</button>
 </div><!-- /app-root -->
 </body>
 </html>
