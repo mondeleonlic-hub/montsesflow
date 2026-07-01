@@ -2915,411 +2915,420 @@ function save(){
   _saveToFb();
 }
 
-// ── CHAT AI (local, sin API) ─────────────────────
-let _chatHistory=[];
-let _chatBusy=false;
+// ── CHAT AI — Gemini + fallback local ───────────────
+let _chatHistory = [];
+let _chatBusy    = false;
+let _geminiKey   = localStorage.getItem('mf_gemini_key') || '';
+let _openaiKey   = localStorage.getItem('mf_openai_key') || '';
+let _aiProvider  = localStorage.getItem('mf_ai_provider') || '';   // 'gemini' | 'openai' | ''
+function _hasAiKey(){ return (_aiProvider==='gemini' && _geminiKey) || (_aiProvider==='openai' && _openaiKey); }
 
-// ── Normaliza texto para comparación ──
-function _norm(s){
-  return s.toLowerCase()
-    .normalize('NFD').replace(/[̀-ͯ]/g,'')
-    .replace(/[¿¡]/g,'');
+// ── Contexto de tareas para el sistema ──
+function buildChatContext() {
+  const today = todayStr();
+  const now   = new Date();
+  const dateLabel = now.toLocaleDateString('es-MX', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  const todayI   = items.filter(i => i.col !== 'done' && (i.scheduledDate === today || (!i.scheduledDate && i.deadline === today)));
+  const overdueI = items.filter(i => i.col !== 'done' && i.deadline && i.deadline < today);
+  const todoI    = items.filter(i => i.col === 'todo');
+  const compI    = items.filter(i => i.col === 'compromisos');
+  const projI    = items.filter(i => i.col === 'proyectos');
+  const extrI    = items.filter(i => i.col === 'extra');
+  const fmt = arr => arr.length
+    ? arr.map(i => `• ${i.icon||'📌'} ${i.text}${i.note?' ('+i.note+')':''}${i.deadline?' [límite: '+i.deadline+']':''}${i.scheduledDate?' [agendada: '+i.scheduledDate+']':''}`).join('\n')
+    : '  (ninguna)';
+  return `Eres la asistente personal de Montse dentro de "Montse's Flow", su app de gestión de tareas. Hoy es ${dateLabel}.
+
+PARA HOY (${todayI.length}):
+${fmt(todayI)}
+
+VENCIDAS (${overdueI.length}):
+${fmt(overdueI)}
+
+TO DO (${todoI.length}):
+${fmt(todoI)}
+
+COMPROMISOS (${compI.length}):
+${fmt(compI)}
+
+PROYECTOS (${projI.length}):
+${fmt(projI)}
+
+EXTRA (${extrI.length}):
+${fmt(extrI)}
+
+INSTRUCCIONES:
+- Responde siempre en español, de forma cálida, directa y concisa.
+- Cuando sugiera tareas nuevas, propón cosas concretas y accionables basadas en los proyectos y contexto de Montse.
+- Prioriza: vencidas > agendadas hoy > urgentes > importantes.
+- Sé motivadora y humana. Máximo 4-5 puntos a la vez.
+- Puedes sugerir tareas completamente nuevas que no estén en la lista, basadas en lo que ves en sus proyectos y compromisos.
+- Usa emojis con moderación para hacer las respuestas más legibles.`;
 }
 
-// ── Detecta intención — muy flexible ──
-function _detectIntent(q){
-  const n=_norm(q);
-  // today
-  if(/(hoy|dia de hoy|hacer hoy|toca hoy|agendado hoy|pendiente hoy|debo hacer|que me toca|que tengo que|que hago|por donde empiezo|como empiezo|arrancar|arranco)/.test(n)) return 'today';
-  // overdue
-  if(/(vencid|atrasad|retraso|tarde|fecha.*pas|pas.*fecha|sin hacer|me debi|deberia haber|olvi|no he hecho|no he terminado)/.test(n)) return 'overdue';
-  // urgent / priority
-  if(/(urgent|priorit|mas import|lo mas|primero|enfoca|priorid|que es lo|primordial|critico|critica|clave)/.test(n)) return 'urgent';
-  // summary
-  if(/(resumen|cuantas|cuanto|cuantos|panorama|estado|overview|tengo en total|todo lo que|dame un|muestra todo|lista.*todo|todo.*lista|mis tarea|mis pendiente|que hay)/.test(n)) return 'summary';
-  // projects
-  if(/(proyecto|proyect)/.test(n)) return 'projects';
-  // compromisos
-  if(/(compromiso|compromi|acuerdo|prometi|pendiente.*reunion|reunion.*pendiente)/.test(n)) return 'compromisos';
-  // week
-  if(/(semana|lunes|martes|miercoles|jueves|viernes|sabado|domingo|proximos dias|esta semana|la semana|agenda.*semana|semana.*agenda)/.test(n)) return 'week';
-  // motivation
-  if(/(motiva|anima|animo|ayuda.*empez|como empez|no se por donde|perdida|perdido|agobiada|agobiado|estresada|estresado|mucho.*pendiente|help|auxilio)/.test(n)) return 'motivation';
-  // extra
-  if(/(extra|adicional|otras tarea|otras cosa)/.test(n)) return 'extra';
-  // done
-  if(/(hecho|complet|termin|listo|logr|cerre|cerr|acab|cuanto.*hech|hech.*cuanto)/.test(n)) return 'done';
-  // suggest
-  if(/(sugier|recomiend|agreg|nueva tarea|tarea nueva|falta|que mas|anadir|idea|propone|proponer|deberia agreg)/.test(n)) return 'suggest';
-  // fallback: try to match partial words to today (most common)
-  if(/(hoy|dia|toca|hacer|debo|mañana|ahora)/.test(n)) return 'today';
-  if(/(venci|atras|tarde|olvi)/.test(n)) return 'overdue';
-  if(/(urgen|import|prime|enfo)/.test(n)) return 'urgent';
-  return 'general';
-}
-
-// ── Formatea una lista de items ──
-function _fmtList(arr, max=6){
-  const show=arr.slice(0,max);
-  const lines=show.map(i=>{
-    let s=`• ${i.icon||'📌'} <strong>${h(i.text)}</strong>`;
-    if(i.deadline&&i.deadline<todayStr()) s+=` <span style="color:#ef4444;font-size:.75rem">[vencida ${i.deadline}]</span>`;
-    else if(i.deadline) s+=` <span style="color:#6b7280;font-size:.75rem">[límite ${i.deadline}]</span>`;
-    return s;
-  }).join('<br>');
-  const extra=arr.length>max?`<br><span style="color:#6b7280;font-size:.78rem">…y ${arr.length-max} más</span>`:'';
-  return lines+extra;
-}
-
-// ── Motor de respuestas ──
-function _buildReply(intent, q){
-  const today=todayStr();
-  const now=new Date();
-  const dayName=now.toLocaleDateString('es-MX',{weekday:'long'});
-
-  const todayItems  =items.filter(i=>i.col!=='done'&&(i.scheduledDate===today||(!i.scheduledDate&&i.deadline===today)));
-  const overdueItems=items.filter(i=>i.col!=='done'&&i.deadline&&i.deadline<today);
-  const q1Items     =items.filter(i=>i.col!=='done'&&i.urgente&&i.importante);
-  const todoItems   =items.filter(i=>i.col==='todo');
-  const compItems   =items.filter(i=>i.col==='compromisos');
-  const projItems   =items.filter(i=>i.col==='proyectos');
-  const extrItems   =items.filter(i=>i.col==='extra');
-  const doneItems   =items.filter(i=>i.col==='done');
-  const allPending  =items.filter(i=>i.col!=='done');
-
-  switch(intent){
-
-    case 'today': {
-      if(!todayItems.length&&!overdueItems.length)
-        return `¡Hoy tienes el camino libre! 🌿<br>No hay tareas agendadas ni vencidas para este ${dayName}.<br><br>Puedes aprovechar para avanzar en proyectos o compromisos pendientes.`;
-      let r='';
-      if(overdueItems.length){
-        r+=`⚠️ <strong>Primero atiende estas ${overdueItems.length} vencidas:</strong><br>${_fmtList(overdueItems)}<br><br>`;
-      }
-      if(todayItems.length){
-        r+=`📅 <strong>Para hoy (${dayName}):</strong><br>${_fmtList(todayItems)}`;
-      }
-      return r;
-    }
-
-    case 'overdue': {
-      if(!overdueItems.length) return '✅ ¡Sin tareas vencidas! Estás al día, Montse.';
-      const sorted=[...overdueItems].sort((a,b)=>a.deadline.localeCompare(b.deadline));
-      return `⏰ <strong>Tienes ${sorted.length} tarea${sorted.length>1?'s':''} vencida${sorted.length>1?'s':''}:</strong><br>${_fmtList(sorted)}<br><br>Te recomiendo empezar por la más antigua.`;
-    }
-
-    case 'urgent': {
-      if(overdueItems.length){
-        return `🚨 <strong>Lo más urgente ahora mismo son las vencidas (${overdueItems.length}):</strong><br>${_fmtList(overdueItems,4)}<br><br>${q1Items.length?`Después, tus Q1 urgentes+importantes:<br>${_fmtList(q1Items,3)}`:''}`;
-      }
-      if(q1Items.length){
-        return `⚡ <strong>Tus tareas más urgentes e importantes:</strong><br>${_fmtList(q1Items)}<br><br>Empieza por la primera y avanza de una en una.`;
-      }
-      if(todayItems.length){
-        return `📅 <strong>Hoy tienes ${todayItems.length} tarea${todayItems.length>1?'s':''} agendada${todayItems.length>1?'s':''}:</strong><br>${_fmtList(todayItems)}<br><br>No hay marcadas como urgentes, así que estas son tu foco.`;
-      }
-      return `🌿 No tienes tareas marcadas como urgentes ahora mismo. ¡Buen momento para avanzar en proyectos!`;
-    }
-
-    case 'summary': {
-      const total=allPending.length;
-      if(!total) return '🎉 ¡Increíble! No tienes pendientes. Todo está completado.';
-      let r=`📋 <strong>Tienes ${total} tarea${total>1?'s':''} pendiente${total>1?'s':''}:</strong><br><br>`;
-      if(overdueItems.length) r+=`• ⏰ ${overdueItems.length} vencida${overdueItems.length>1?'s':''}<br>`;
-      if(todayItems.length)   r+=`• 📅 ${todayItems.length} para hoy<br>`;
-      if(todoItems.length)    r+=`• ⚡ ${todoItems.length} en To Do<br>`;
-      if(compItems.length)    r+=`• 🎯 ${compItems.length} Compromisos<br>`;
-      if(projItems.length)    r+=`• 🚀 ${projItems.length} en Proyectos<br>`;
-      if(extrItems.length)    r+=`• ⭐ ${extrItems.length} Extra<br>`;
-      if(doneItems.length)    r+=`<br>✅ Ya completaste ${doneItems.length} tarea${doneItems.length>1?'s':''}. ¡Bien hecho!`;
-      return r;
-    }
-
-    case 'projects': {
-      if(!projItems.length) return '🚀 No tienes proyectos pendientes actualmente.';
-      const top=projItems.filter(i=>i.urgente||i.importante).slice(0,3);
-      let r=`🚀 <strong>Tienes ${projItems.length} proyecto${projItems.length>1?'s':''} activo${projItems.length>1?'s':''}:</strong><br>${_fmtList(projItems)}`;
-      if(top.length) r+=`<br><br>💡 Te sugiero empezar por: <strong>${h(top[0].text)}</strong>`;
-      return r;
-    }
-
-    case 'compromisos': {
-      if(!compItems.length) return '🎯 No tienes compromisos pendientes.';
-      const withDl=compItems.filter(i=>i.deadline).sort((a,b)=>a.deadline.localeCompare(b.deadline));
-      let r=`🎯 <strong>Tus ${compItems.length} compromiso${compItems.length>1?'s':''}:</strong><br>${_fmtList(compItems)}`;
-      if(withDl.length) r+=`<br><br>⏰ El más próximo: <strong>${h(withDl[0].text)}</strong> — ${withDl[0].deadline}`;
-      return r;
-    }
-
-    case 'week': {
-      const days=[];
-      for(let i=0;i<7;i++){const d=new Date();d.setDate(d.getDate()+i);days.push(d);}
-      const lines=days.map(d=>{
-        const iso=d.toISOString().slice(0,10);
-        const dayI=items.filter(x=>x.col!=='done'&&(x.scheduledDate===iso||(!x.scheduledDate&&x.deadline===iso)));
-        if(!dayI.length) return null;
-        const dn=d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'short'});
-        return `<strong>${dn}:</strong> ${dayI.map(x=>`${x.icon||'📌'} ${h(x.text)}`).join(', ')}`;
-      }).filter(Boolean);
-      if(!lines.length) return '📅 No tienes nada agendado para esta semana. ¡Semana libre!';
-      return `📅 <strong>Tu semana:</strong><br><br>${lines.join('<br>')}`;
-    }
-
-    case 'motivation': {
-      const done=doneItems.length;
-      const pend=allPending.length;
-      const msgs=[
-        `💪 ¡Tú puedes, Montse! Tienes ${pend} tarea${pend>1?'s':''} por delante — una a la vez y llegas.`,
-        `🌟 Cada tarea completada te acerca a donde quieres estar. ¡Empieza con la más pequeña!`,
-        `🚀 ${done>0?`Ya completaste ${done} tarea${done>1?'s':''}. `:''}El momento perfecto para empezar es ahora.`,
-        `🎯 Enfócate en una sola cosa a la vez. ¿Cuál es la más importante hoy?`
-      ];
-      const m=msgs[Math.floor(Math.random()*msgs.length)];
-      if(q1Items.length) return m+`<br><br>Te sugiero empezar con: <strong>${h(q1Items[0].text)}</strong>`;
-      if(todayItems.length) return m+`<br><br>Hoy tienes agendada: <strong>${h(todayItems[0].text)}</strong>`;
-      return m;
-    }
-
-    case 'extra': {
-      if(!extrItems.length) return '⭐ No tienes tareas extra pendientes.';
-      return `⭐ <strong>Tareas Extra (${extrItems.length}):</strong><br>${_fmtList(extrItems)}`;
-    }
-
-    case 'done': {
-      if(!doneItems.length) return '📋 Aún no has marcado tareas como completadas en esta sesión.';
-      return `✅ <strong>Has completado ${doneItems.length} tarea${doneItems.length>1?'s':''}.</strong> ¡Excelente trabajo, Montse! 🎉`;
-    }
-
-    case 'suggest': {
-      // Interactive: pick a project or type a mission
-      window._chatSuggestions=[];
-      const btnStyle='display:inline-flex;align-items:center;gap:5px;margin:4px 4px 0 0;padding:7px 12px;background:#f8fafc;border:1.5px solid var(--border);border-radius:20px;font-size:.75rem;font-weight:700;color:var(--text);cursor:pointer;transition:background .12s';
-      let r=`💡 <strong>¿De qué quieres sugerencias?</strong><br><br>`;
-      r+=`<div style="margin-bottom:12px">
-        <div style="font-size:.76rem;font-weight:700;color:var(--text2);margin-bottom:5px">ESCRIBE UNA MISIÓN U OBJETIVO</div>
-        <div style="display:flex;gap:6px">
-          <input id="mission-input" type="text" placeholder="Ej: mejorar atención al cliente…"
-            style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.85rem;outline:none;font-family:inherit"
-            onkeydown="if(event.key==='Enter')chatMissionSuggest()" autocomplete="off"/>
-          <button onclick="chatMissionSuggest()" style="background:var(--purple);color:white;border:none;border-radius:10px;padding:8px 14px;font-size:.82rem;font-weight:800;cursor:pointer">Ir →</button>
-        </div>
-      </div>`;
-      if(projItems.length){
-        r+=`<div style="font-size:.76rem;font-weight:700;color:var(--text2);margin-bottom:5px">O ELIGE UN PROYECTO TUYO</div>`;
-        r+=projItems.slice(0,7).map(p=>
-          `<button onclick="chatProjectSuggest(${p.id})" style="${btnStyle}">${p.icon||'🚀'} ${h(p.text.length>26?p.text.slice(0,26)+'…':p.text)}</button>`
-        ).join('');
-      }
-      return r;
-    }
-
-    default: {
-      // Show today/overdue info + suggest buttons
-      let r='';
-      if(overdueItems.length) r+=`⚠️ Tienes <strong>${overdueItems.length} vencida${overdueItems.length>1?'s':''}</strong>. `;
-      if(todayItems.length) r+=`📅 Hoy tienes <strong>${todayItems.length} tarea${todayItems.length>1?'s':''}</strong>. `;
-      r+='<br><br>Puedes preguntarme:<br>• "¿qué hago hoy?"<br>• "¿tengo algo vencido?"<br>• "dame un resumen"<br>• "urgentes"<br>• "proyectos"<br>• "esta semana"<br>• "sugiéreme tareas"';
-      return r;
-    }
+// ── Llama a la IA (Gemini o OpenAI) ──
+async function _callAI(userText) {
+  if (_aiProvider === 'openai') {
+    const msgs = [{ role:'system', content: buildChatContext() }];
+    for (const h of _chatHistory) msgs.push({ role: h.role==='assistant'?'assistant':'user', content: h.content });
+    msgs.push({ role:'user', content: userText });
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+_openaiKey },
+      body: JSON.stringify({ model:'gpt-4o-mini', messages: msgs, max_tokens:700, temperature:0.75 })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    return data.choices?.[0]?.message?.content || '(sin respuesta)';
+  } else {
+    // Gemini
+    const gemHist = [];
+    for (const h of _chatHistory) gemHist.push({ role: h.role==='assistant'?'model':'user', parts:[{text:h.content}] });
+    gemHist.push({ role:'user', parts:[{text:userText}] });
+    const body = {
+      systemInstruction: { parts:[{text:buildChatContext()}] },
+      contents: gemHist,
+      generationConfig: { maxOutputTokens:700, temperature:0.75 }
+    };
+    const res = await fetch(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+_geminiKey,
+      { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body) }
+    );
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || '(sin respuesta)';
   }
 }
+// Alias for backwards compat with mission/project suggest
+async function _callGemini(userText){ return _callAI(userText); }
 
-function openChat(){
-  _chatHistory=[];
-  const msgs=document.getElementById('chat-messages');
-  if(msgs) msgs.innerHTML='';
-  const qb=document.getElementById('chat-quick-btns');
-  if(qb) qb.style.display='';
-  const tod=todayStr();
-  const overdueItems=items.filter(i=>i.col!=='done'&&i.deadline&&i.deadline<tod).sort((a,b)=>a.deadline.localeCompare(b.deadline));
-  const todayItems=items.filter(i=>i.col!=='done'&&(i.scheduledDate===tod||(!i.scheduledDate&&i.deadline===tod)));
-  const q1Items=items.filter(i=>i.col!=='done'&&i.urgente&&i.importante&&!overdueItems.find(x=>x.id===i.id)&&!todayItems.find(x=>x.id===i.id));
-  const fmt=arr=>arr.slice(0,4).map(i=>`• ${i.icon||'📌'} <strong>${h(i.text)}</strong>${i.deadline&&i.deadline<tod?' <span style="color:#ef4444;font-size:.73rem">[vencida]</span>':i.deadline?' <span style="color:#9ca3af;font-size:.73rem">['+i.deadline+']</span>':''}`).join('<br>');
-  let msg='';
-  if(overdueItems.length){
-    msg+=`⚠️ <strong>${overdueItems.length} tarea${overdueItems.length>1?'s':''} vencida${overdueItems.length>1?'s':''}:</strong><br>${fmt(overdueItems)}<br><br>`;
+// ── Abre el chat ──
+function openChat() {
+  _chatHistory = [];
+  const msgs = document.getElementById('chat-messages');
+  if (msgs) msgs.innerHTML = '';
+  const qb = document.getElementById('chat-quick-btns');
+  if (qb) qb.style.display = '';
+
+  if (!_hasAiKey()) {
+    _showGeminiSetup();
+    openModalFixed('chat-modal');
+    return;
   }
-  if(todayItems.length){
-    msg+=`📅 <strong>Para hoy:</strong><br>${fmt(todayItems)}<br><br>`;
-  }
-  if(!overdueItems.length&&!todayItems.length&&q1Items.length){
-    msg+=`⚡ <strong>Tus más urgentes:</strong><br>${fmt(q1Items)}<br><br>`;
-  }
-  if(!overdueItems.length&&!todayItems.length&&!q1Items.length){
-    msg+='🌿 <strong>Hoy tienes el camino despejado.</strong><br><br>';
-  }
-  msg+='<span style="font-size:.78rem;color:#6b7280">Usa los botones o pregúntame lo que necesites 👇</span>';
+
+  // Greeting automático con situación actual
+  const tod = todayStr();
+  const overdueI = items.filter(i => i.col !== 'done' && i.deadline && i.deadline < tod).sort((a,b) => a.deadline.localeCompare(b.deadline));
+  const todayI   = items.filter(i => i.col !== 'done' && (i.scheduledDate === tod || (!i.scheduledDate && i.deadline === tod)));
+  const q1I      = items.filter(i => i.col !== 'done' && i.urgente && i.importante);
+  const fmt = arr => arr.slice(0,4).map(i => `• ${i.icon||'📌'} <strong>${h(i.text)}</strong>${i.deadline&&i.deadline<tod?' <span style="color:#ef4444;font-size:.72rem">[vencida]</span>':''}`).join('<br>');
+  let msg = '';
+  if (overdueI.length) msg += `⚠️ <strong>${overdueI.length} vencida${overdueI.length>1?'s':''}:</strong><br>${fmt(overdueI)}<br><br>`;
+  if (todayI.length)   msg += `📅 <strong>Para hoy:</strong><br>${fmt(todayI)}<br><br>`;
+  if (!overdueI.length && !todayI.length && q1I.length) msg += `⚡ <strong>Más urgentes:</strong><br>${fmt(q1I)}<br><br>`;
+  if (!overdueI.length && !todayI.length && !q1I.length) msg += '🌿 <strong>Hoy tienes el camino libre.</strong><br><br>';
+  msg += '<span style="font-size:.78rem;color:#6b7280">Usa los botones o escríbeme lo que necesites 👇</span>';
   _appendBubble('bot', msg);
+
   openModalFixed('chat-modal');
-  setTimeout(()=>{const i=document.getElementById('chat-input');if(i)i.focus();},300);
+  setTimeout(() => { const i = document.getElementById('chat-input'); if(i) i.focus(); }, 300);
 }
 
-function _appendBubble(role, html){
-  const msgs=document.getElementById('chat-messages');
-  if(!msgs) return null;
-  const div=document.createElement('div');
-  div.className='chat-bubble '+role;
-  div.innerHTML=html;
+// ── Pantalla de configuración Gemini ──
+function _showGeminiSetup(provider) {
+  const msgs = document.getElementById('chat-messages');
+  if (!msgs) return;
+  const qb = document.getElementById('chat-quick-btns');
+  if (qb) qb.style.display = 'none';
+  if (!provider) {
+    // Step 1: pick provider
+    msgs.innerHTML = `
+      <div class="chat-api-box">
+        <div style="font-size:2rem;margin-bottom:8px">🤖</div>
+        <div style="font-size:.95rem;font-weight:800;margin-bottom:6px;color:var(--text)">Activa la Inteligencia Artificial</div>
+        <div style="font-size:.78rem;color:var(--text2);margin-bottom:18px;line-height:1.6">Elige con qué IA quieres que funcione el chat:</div>
+        <button onclick="_showGeminiSetup('gemini')" style="width:100%;margin-bottom:10px;padding:14px 16px;background:#f0fdf4;border:2px solid #4ade80;border-radius:14px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px">
+          <span style="font-size:1.6rem">🆓</span>
+          <div>
+            <div style="font-weight:800;font-size:.88rem;color:#166534">Google Gemini</div>
+            <div style="font-size:.73rem;color:#4b7a58">Gratis · Solo necesitas tu cuenta de Google</div>
+          </div>
+        </button>
+        <button onclick="_showGeminiSetup('openai')" style="width:100%;padding:14px 16px;background:#f0f4ff;border:2px solid #818cf8;border-radius:14px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:12px">
+          <span style="font-size:1.6rem">💬</span>
+          <div>
+            <div style="font-weight:800;font-size:.88rem;color:#1e1b4b">ChatGPT (OpenAI)</div>
+            <div style="font-size:.73rem;color:#4b5899">Requiere tarjeta · Muy barato (~$0.01/mes)</div>
+          </div>
+        </button>
+        <div style="font-size:.65rem;color:#d1d5db;margin-top:14px">Tu key se guarda solo en este dispositivo</div>
+      </div>`;
+    return;
+  }
+  if (provider === 'gemini') {
+    msgs.innerHTML = `
+      <div class="chat-api-box">
+        <div style="font-size:1.8rem;margin-bottom:8px">🆓</div>
+        <div style="font-size:.92rem;font-weight:800;margin-bottom:8px;color:var(--text)">Google Gemini (gratis)</div>
+        <div style="font-size:.79rem;color:var(--text2);margin-bottom:14px;line-height:1.7">
+          1. Ve a <strong>aistudio.google.com</strong><br>
+          2. Inicia sesión con tu cuenta de Google<br>
+          3. Clic en <strong>"Get API Key"</strong> → <strong>"Create API Key"</strong><br>
+          4. Copia y pega aquí 👇
+        </div>
+        <input class="chat-api-input" id="ai-key-input" type="password" placeholder="AIzaSy…" autocomplete="off"/>
+        <button class="modal-btn-primary" onclick="saveAiKey('gemini')">✓ Activar Gemini</button>
+        <button onclick="_showGeminiSetup()" style="margin-top:8px;background:none;border:none;font-size:.75rem;color:#9ca3af;cursor:pointer">← Volver</button>
+      </div>`;
+    setTimeout(() => { const i = document.getElementById('ai-key-input'); if(i) i.focus(); }, 100);
+  } else {
+    msgs.innerHTML = `
+      <div class="chat-api-box">
+        <div style="font-size:1.8rem;margin-bottom:8px">💬</div>
+        <div style="font-size:.92rem;font-weight:800;margin-bottom:8px;color:var(--text)">ChatGPT (OpenAI)</div>
+        <div style="font-size:.79rem;color:var(--text2);margin-bottom:14px;line-height:1.7">
+          1. Ve a <strong>platform.openai.com/api-keys</strong><br>
+          2. Inicia sesión y toca <strong>"Create new secret key"</strong><br>
+          3. Copia y pega aquí 👇<br>
+          <span style="color:#f59e0b;font-size:.72rem">⚠ Requiere agregar crédito (desde $5 USD)</span>
+        </div>
+        <input class="chat-api-input" id="ai-key-input" type="password" placeholder="sk-proj-…" autocomplete="off"/>
+        <button class="modal-btn-primary" onclick="saveAiKey('openai')">✓ Activar ChatGPT</button>
+        <button onclick="_showGeminiSetup()" style="margin-top:8px;background:none;border:none;font-size:.75rem;color:#9ca3af;cursor:pointer">← Volver</button>
+      </div>`;
+    setTimeout(() => { const i = document.getElementById('ai-key-input'); if(i) i.focus(); }, 100);
+  }
+}
+
+function saveAiKey(provider) {
+  const inp = document.getElementById('ai-key-input');
+  if (!inp || !inp.value.trim()) return;
+  const key = inp.value.trim();
+  if (provider === 'openai') {
+    _openaiKey = key; _aiProvider = 'openai';
+    localStorage.setItem('mf_openai_key', key);
+  } else {
+    _geminiKey = key; _aiProvider = 'gemini';
+    localStorage.setItem('mf_gemini_key', key);
+  }
+  localStorage.setItem('mf_ai_provider', _aiProvider);
+  const msgs = document.getElementById('chat-messages');
+  if (msgs) msgs.innerHTML = '';
+  const qb = document.getElementById('chat-quick-btns');
+  if (qb) qb.style.display = '';
+  const name = provider === 'openai' ? 'ChatGPT' : 'Google Gemini';
+  _appendBubble('bot', `🎉 ¡IA activada con <strong>${name}</strong>! Ahora puedo ayudarte de verdad con tus tareas reales. ¿Qué necesitas?`);
+  setTimeout(() => { const i = document.getElementById('chat-input'); if(i) i.focus(); }, 200);
+}
+// Legacy alias
+function saveGeminiKey() { saveAiKey('gemini'); }
+
+function _appendBubble(role, html) {
+  const msgs = document.getElementById('chat-messages');
+  if (!msgs) return null;
+  const div = document.createElement('div');
+  div.className = 'chat-bubble ' + role;
+  div.innerHTML = html;
   msgs.appendChild(div);
-  msgs.scrollTop=msgs.scrollHeight;
+  msgs.scrollTop = msgs.scrollHeight;
   return div;
 }
 
-// ── Agrega una tarea sugerida ──
-function chatSuggestAdd(idx){
-  const s=(window._chatSuggestions||[])[idx];
-  if(!s) return;
-  items.unshift({
-    id:nextId++,text:s.text,note:s.note||'',col:s.col||'todo',
-    cat:s.cat||'operacion',icon:s.icon||'📌',
-    deadline:'',scheduledDate:'',delegadoA:'',
-    oc:'operar',urgente:false,importante:false,recur:'',
-    subtasks:[],progress:0
-  });
-  save();render();
-  // Mark button as done inline
-  const btns=document.querySelectorAll('.chat-add-btn[data-idx="'+idx+'"]');
-  btns.forEach(b=>{b.textContent='✓ Agregada';b.style.background='#dcfce7';b.style.borderColor='#22c55e';b.style.color='#15803d';b.disabled=true;});
-}
-
-// ── Renderiza lista de sugerencias en el chat ──
-function _renderSuggestions(list, title){
-  window._chatSuggestions=list;
-  const btnStyle='font-size:.7rem;background:var(--purple-light);border:1.5px solid var(--purple);border-radius:8px;padding:3px 9px;color:var(--purple-dark);cursor:pointer;font-weight:700;flex-shrink:0;white-space:nowrap';
-  let r=`${title}<br><br>`;
-  r+=list.map((s,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #f3f4f6">
-      <span style="font-size:1rem;flex-shrink:0">${s.icon||'📌'}</span>
-      <span style="flex:1;font-size:.82rem;color:var(--text)">${h(s.text)}</span>
-      <button class="chat-add-btn" data-idx="${i}" onclick="chatSuggestAdd(${i})" style="${btnStyle}">+ Agregar</button>
-    </div>`).join('');
-  r+=`<br><span style="font-size:.74rem;color:var(--text2)">Agrega las que te sirvan. ¿Quieres ajustar alguna?</span>`;
-  _appendBubble('bot', r);
-}
-
-// ── Genera tareas desde una misión libre ──
-function chatMissionSuggest(){
-  const inp=document.getElementById('mission-input');
-  if(!inp) return;
-  const mission=inp.value.trim();
-  if(!mission){inp.focus();return;}
-  _appendBubble('user', h(mission));
-  const n=_norm(mission);
-  const tasks=[];
-  // Base: 3 tareas estructurales siempre
-  tasks.push({icon:'🔍',text:`Diagnóstico: ${mission}`,note:'Levantamiento inicial',col:'proyectos'});
-  tasks.push({icon:'📋',text:`Plan de acción: ${mission}`,note:'Definir pasos concretos',col:'proyectos'});
-  tasks.push({icon:'✅',text:`Revisar avances: ${mission}`,note:'Seguimiento semanal',col:'compromisos'});
-  // Keyword-based additions
-  if(/(cliente|servicio|atencion|experiencia)/.test(n)){
-    tasks.push({icon:'⭐',text:'Encuesta de satisfacción a clientes',col:'todo'});
-    tasks.push({icon:'📞',text:'Llamadas de seguimiento a clientes clave',col:'compromisos'});
-  }
-  if(/(precio|tarifa|costo|cobro|venta|ingreso)/.test(n)){
-    tasks.push({icon:'💰',text:'Análisis de precios vs. competencia',col:'proyectos'});
-    tasks.push({icon:'📊',text:'Actualizar lista de precios',col:'todo'});
-  }
-  if(/(equipo|personal|staff|empleado|rh|recurso humano|contrat)/.test(n)){
-    tasks.push({icon:'👥',text:'Reunión de alineación con el equipo',col:'compromisos'});
-    tasks.push({icon:'📝',text:'Definir roles y responsabilidades',col:'proyectos'});
-    tasks.push({icon:'🎯',text:'Evaluar desempeño del equipo',col:'compromisos'});
-  }
-  if(/(marketing|marca|redes|instagram|contenido|publicidad|promoc)/.test(n)){
-    tasks.push({icon:'📲',text:'Calendario de contenido mensual',col:'proyectos'});
-    tasks.push({icon:'📸',text:'Sesión de fotos/video para redes',col:'todo'});
-    tasks.push({icon:'📣',text:'Definir mensaje clave de la campaña',col:'proyectos'});
-  }
-  if(/(proceso|operacion|sistema|flujo|eficienci|procedimiento)/.test(n)){
-    tasks.push({icon:'⚙️',text:'Mapear el proceso actual',col:'proyectos'});
-    tasks.push({icon:'📄',text:'Documentar procedimiento estándar',col:'proyectos'});
-    tasks.push({icon:'🔧',text:'Identificar cuellos de botella',col:'todo'});
-  }
-  if(/(comida|food|menu|cocina|proveedor|restaurante)/.test(n)){
-    tasks.push({icon:'🍽️',text:'Actualizar menú y precios',col:'todo'});
-    tasks.push({icon:'📦',text:'Revisar y negociar con proveedores',col:'compromisos'});
-    tasks.push({icon:'🧹',text:'Checklist de operación semanal',col:'todo'});
-  }
-  if(/(finanza|contabilidad|declaracion|fiscal|impuesto|flujo.*caja|caja)/.test(n)){
-    tasks.push({icon:'📈',text:'Revisión de estado financiero',col:'proyectos'});
-    tasks.push({icon:'🧾',text:'Conciliación de cuentas',col:'todo'});
-  }
-  const show=tasks.slice(0,6);
-  _renderSuggestions(show, `💡 <strong>Tareas para: "${h(mission)}"</strong>`);
-}
-
-// ── Genera tareas desde un proyecto existente ──
-function chatProjectSuggest(projId){
-  const proj=items.find(i=>i.id===projId);
-  if(!proj) return;
-  _appendBubble('user', `${proj.icon||'🚀'} ${h(proj.text)}`);
-  const n=_norm(proj.text+' '+(proj.note||''));
-  const tasks=[];
-  // Always: next-action tasks for any project
-  tasks.push({icon:'📋',text:`Definir siguiente paso: ${proj.text}`,note:'',col:'todo'});
-  tasks.push({icon:'🗓️',text:`Agendar bloque de trabajo — ${proj.text}`,note:'',col:'todo'});
-  tasks.push({icon:'✅',text:`Revisión de avance: ${proj.text}`,note:'',col:'compromisos'});
-  // Based on project keywords
-  if(/(precio|tarifa|venta|membresia|cobro)/.test(n)){
-    tasks.push({icon:'💰',text:`Actualizar precios — ${proj.text}`,col:'todo'});
-    tasks.push({icon:'📊',text:`Análisis de resultados de ventas`,col:'proyectos'});
-  }
-  if(/(food|comida|menu|restaurante|cocina)/.test(n)){
-    tasks.push({icon:'🍽️',text:`Actualizar menú — ${proj.text}`,col:'todo'});
-    tasks.push({icon:'📦',text:`Revisar inventario y proveedores`,col:'compromisos'});
-    tasks.push({icon:'📋',text:`Checklist de operación — ${proj.text}`,col:'todo'});
-  }
-  if(/(re-estructura|restructura|estructura|reorganiz)/.test(n)){
-    tasks.push({icon:'🔍',text:`Diagnóstico de operación actual`,col:'todo'});
-    tasks.push({icon:'📝',text:`Definir nueva estructura`,col:'proyectos'});
-    tasks.push({icon:'👥',text:`Presentar plan al equipo`,col:'compromisos'});
-  }
-  if(/(manual|proceso|procedimiento|operacion)/.test(n)){
-    tasks.push({icon:'📄',text:`Redactar sección del manual`,col:'todo'});
-    tasks.push({icon:'🔧',text:`Validar procesos con el equipo`,col:'compromisos'});
-  }
-  if(/(comunicacion|canal|sistema|plataforma|app|digital)/.test(n)){
-    tasks.push({icon:'💬',text:`Definir protocolo de comunicación`,col:'proyectos'});
-    tasks.push({icon:'📲',text:`Configurar la plataforma/herramienta`,col:'todo'});
-    tasks.push({icon:'👥',text:`Capacitar al equipo en el nuevo sistema`,col:'compromisos'});
-  }
-  if(/(membresia|suscripcion|cliente|plan|venta)/.test(n)){
-    tasks.push({icon:'🎫',text:`Crear script de venta`,col:'proyectos'});
-    tasks.push({icon:'📞',text:`Contactar clientes potenciales`,col:'compromisos'});
-    tasks.push({icon:'📊',text:`Seguimiento de conversiones`,col:'todo'});
-  }
-  const show=tasks.slice(0,5);
-  _renderSuggestions(show, `💡 <strong>Tareas para "${h(proj.text)}":</strong>`);
-}
-
-function sendQuick(text){
-  document.getElementById('chat-input').value=text;
+function sendQuick(text) {
+  document.getElementById('chat-input').value = text;
   sendChat();
 }
 
-function sendChat(){
-  if(_chatBusy) return;
-  const inp=document.getElementById('chat-input');
-  if(!inp) return;
-  const text=inp.value.trim();
-  if(!text) return;
-  inp.value='';
-  const qb=document.getElementById('chat-quick-btns');
-  if(qb) qb.style.display='none';
+async function sendChat() {
+  if (_chatBusy) return;
+  const inp = document.getElementById('chat-input');
+  if (!inp) return;
+  const text = inp.value.trim();
+  if (!text) return;
+
+  // No key → show setup
+  if (!_hasAiKey()) { _showGeminiSetup(); return; }
+
+  inp.value = '';
+  _chatBusy = true;
+  const btn = document.getElementById('chat-send-btn');
+  if (btn) btn.disabled = true;
+  const qb = document.getElementById('chat-quick-btns');
+  if (qb) qb.style.display = 'none';
+
   _appendBubble('user', h(text));
-  const intent=_detectIntent(text);
-  const reply=_buildReply(intent, text);
-  // Small delay to feel natural
-  _chatBusy=true;
-  const btn=document.getElementById('chat-send-btn');
-  if(btn) btn.disabled=true;
-  const typing=_appendBubble('typing','● &nbsp; ● &nbsp; ●');
-  setTimeout(()=>{
-    if(typing) typing.remove();
-    _appendBubble('bot', reply);
-    _chatBusy=false;
-    if(btn) btn.disabled=false;
-    inp.focus();
-  }, 420);
+  _chatHistory.push({ role: 'user', content: text });
+
+  const typing = _appendBubble('typing', '● &nbsp; ● &nbsp; ●');
+
+  try {
+    const reply = await _callAI(text);
+    if (typing) typing.remove();
+    _chatHistory.push({ role: 'assistant', content: reply });
+    const formatted = reply
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n\n/g, '<br><br>')
+      .replace(/\n/g, '<br>');
+    _appendBubble('bot', formatted);
+  } catch(err) {
+    if (typing) typing.remove();
+    const msg = err.message || '';
+    if (msg.includes('API_KEY') || msg.includes('key') || msg.includes('403')) {
+      _appendBubble('bot', '🔑 Tu API Key no es válida. <button onclick="_showGeminiSetup()" style="background:var(--purple-light);border:1px solid var(--purple);border-radius:7px;padding:2px 9px;font-size:.75rem;font-weight:700;color:var(--purple-dark);cursor:pointer">Cambiar key</button>');
+      _geminiKey = ''; _openaiKey = ''; _aiProvider = '';
+      localStorage.removeItem('mf_gemini_key'); localStorage.removeItem('mf_openai_key'); localStorage.removeItem('mf_ai_provider');
+    } else {
+      _appendBubble('bot', '⚠️ Error de conexión. Revisa tu internet e intenta de nuevo.');
+    }
+  }
+
+  _chatBusy = false;
+  if (btn) btn.disabled = false;
+  inp.focus();
+}
+
+// ── Normaliza texto ──
+function _norm(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[¿¡]/g,'');
+}
+
+// ── Renderiza lista de sugerencias (para botones del chat) ──
+function _renderSuggestions(list, title) {
+  window._chatSuggestions = list.map(s => Object.assign({}, s));
+  const addStyle = 'font-size:.7rem;background:var(--purple-light);border:1.5px solid var(--purple);border-radius:8px;padding:3px 9px;color:var(--purple-dark);cursor:pointer;font-weight:700;flex-shrink:0;white-space:nowrap';
+  const editStyle = 'font-size:.75rem;background:none;border:none;cursor:pointer;color:#9ca3af;padding:2px 4px;flex-shrink:0';
+  let r = `${title}<br><br>`;
+  r += list.map((s,i) => `
+    <div style="display:flex;align-items:center;gap:6px;padding:7px 0;border-bottom:1px solid #f3f4f6" id="sugg-row-${i}">
+      <span style="font-size:1rem;flex-shrink:0">${s.icon||'📌'}</span>
+      <span id="sugg-text-${i}" style="flex:1;font-size:.82rem;color:var(--text)">${h(s.text)}</span>
+      <button onclick="chatEditSugg(${i})" style="${editStyle}" title="Editar">✏️</button>
+      <button class="chat-add-btn" data-idx="${i}" onclick="chatSuggestAdd(${i})" style="${addStyle}">+ Agregar</button>
+    </div>`).join('');
+  r += `<br><span style="font-size:.74rem;color:var(--text2)">Toca ✏️ para editar antes de agregar.</span>`;
+  _appendBubble('bot', r);
+  setTimeout(() => { const ci = document.getElementById('chat-input'); if(ci) ci.focus(); }, 150);
+}
+
+function chatEditSugg(idx) {
+  const textEl = document.getElementById('sugg-text-' + idx);
+  if (!textEl) return;
+  const current = (window._chatSuggestions[idx] || {}).text || '';
+  textEl.innerHTML = `<input type="text" id="sugg-edit-${idx}"
+    value="${current.replace(/"/g,'&quot;')}"
+    style="width:100%;padding:4px 8px;border:1.5px solid var(--purple);border-radius:7px;font-size:.82rem;outline:none;font-family:inherit"
+    onkeydown="if(event.key==='Enter')chatConfirmEdit(${idx})"
+    onblur="chatConfirmEdit(${idx})"/>`;
+  setTimeout(() => { const inp = document.getElementById('sugg-edit-'+idx); if(inp){inp.focus();inp.select();} }, 40);
+}
+
+function chatConfirmEdit(idx) {
+  const inp = document.getElementById('sugg-edit-' + idx);
+  if (!inp) return;
+  const newText = inp.value.trim();
+  if (!newText) return;
+  if (window._chatSuggestions[idx]) window._chatSuggestions[idx].text = newText;
+  const textEl = document.getElementById('sugg-text-' + idx);
+  if (textEl) textEl.innerHTML = h(newText);
+}
+
+// ── Agrega sugerencia ──
+function chatSuggestAdd(idx) {
+  chatConfirmEdit(idx);
+  const s = (window._chatSuggestions || [])[idx];
+  if (!s) return;
+  items.unshift({
+    id: nextId++, text: s.text, note: s.note||'', col: s.col||'todo',
+    cat: s.cat||'operacion', icon: s.icon||'📌',
+    deadline:'', scheduledDate:'', delegadoA:'',
+    oc:'operar', urgente:false, importante:false, recur:'',
+    subtasks:[], progress:0
+  });
+  save(); render();
+  const btns = document.querySelectorAll('.chat-add-btn[data-idx="'+idx+'"]');
+  btns.forEach(b => { b.textContent='✓ Agregada'; b.style.background='#dcfce7'; b.style.borderColor='#22c55e'; b.style.color='#15803d'; b.disabled=true; });
+}
+
+// ── Selector de proyecto/misión para sugerencias ──
+function _showSuggestPicker() {
+  const projI = items.filter(i => i.col === 'proyectos');
+  const btnStyle = 'display:inline-flex;align-items:center;gap:5px;margin:4px 4px 0 0;padding:7px 12px;background:#f8fafc;border:1.5px solid var(--border);border-radius:20px;font-size:.75rem;font-weight:700;color:var(--text);cursor:pointer';
+  let r = `💡 <strong>¿Basado en qué quieres sugerencias?</strong><br><br>`;
+  r += `<div style="margin-bottom:12px">
+    <div style="font-size:.76rem;font-weight:700;color:var(--text2);margin-bottom:5px">ESCRIBE UNA MISIÓN U OBJETIVO</div>
+    <div style="display:flex;gap:6px">
+      <input id="mission-input" type="text" placeholder="Ej: mejorar atención al cliente…"
+        style="flex:1;padding:8px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.85rem;outline:none;font-family:inherit"
+        onkeydown="if(event.key==='Enter')chatMissionSuggest()" autocomplete="off"/>
+      <button onclick="chatMissionSuggest()" style="background:var(--purple);color:white;border:none;border-radius:10px;padding:8px 14px;font-size:.82rem;font-weight:800;cursor:pointer">Ir →</button>
+    </div>
+  </div>`;
+  if (projI.length) {
+    r += `<div style="font-size:.76rem;font-weight:700;color:var(--text2);margin-bottom:5px">O ELIGE UN PROYECTO TUYO</div>`;
+    r += projI.slice(0,7).map(p =>
+      `<button onclick="chatProjectSuggest(${p.id})" style="${btnStyle}">${p.icon||'🚀'} ${h(p.text.length>26?p.text.slice(0,26)+'…':p.text)}</button>`
+    ).join('');
+  }
+  _appendBubble('bot', r);
+  setTimeout(() => { const ci = document.getElementById('chat-input'); if(ci) ci.focus(); }, 150);
+}
+
+async function chatMissionSuggest() {
+  const inp = document.getElementById('mission-input');
+  if (!inp) return;
+  const mission = inp.value.trim();
+  if (!mission) { inp.focus(); return; }
+  _appendBubble('user', h(mission));
+  const typing = _appendBubble('typing', '● &nbsp; ● &nbsp; ●');
+  try {
+    const prompt = `Dame exactamente 5 tareas concretas y accionables para lograr este objetivo: "${mission}". 
+Contexto de los proyectos actuales de Montse: ${items.filter(i=>i.col==='proyectos').map(i=>i.text).join(', ')||'ninguno'}.
+Responde SOLO con una lista numerada simple, sin explicaciones extra. Ejemplo:
+1. Hacer X
+2. Revisar Y
+3. Contactar Z`;
+    const res = await _callGemini(prompt);
+    if (typing) typing.remove();
+    // Parse numbered list into task objects
+    const lines = res.split('\n').filter(l => /^\d+\./.test(l.trim())).map(l => l.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
+    const icons = ['🎯','📋','⚙️','✅','📞','🔍','💡','📊','👥','🗓️'];
+    const tasks = lines.slice(0,6).map((t,i) => ({ icon: icons[i%icons.length], text: t, col:'todo' }));
+    if (tasks.length) {
+      _renderSuggestions(tasks, `💡 <strong>Tareas para: "${h(mission)}"</strong>`);
+    } else {
+      _appendBubble('bot', res.replace(/\n/g,'<br>'));
+    }
+  } catch(e) {
+    if (typing) typing.remove();
+    _appendBubble('bot', '⚠️ No pude conectarme. Revisa tu internet.');
+  }
+}
+
+async function chatProjectSuggest(projId) {
+  const proj = items.find(i => i.id === projId);
+  if (!proj) return;
+  _appendBubble('user', `${proj.icon||'🚀'} ${h(proj.text)}`);
+  const typing = _appendBubble('typing', '● &nbsp; ● &nbsp; ●');
+  try {
+    const prompt = `Para el proyecto "${proj.text}"${proj.note?' ('+proj.note+')':''}, dame exactamente 5 tareas concretas y accionables que Montse debería hacer para avanzarlo.
+Responde SOLO con una lista numerada simple. Ejemplo:
+1. Hacer X
+2. Revisar Y`;
+    const res = await _callGemini(prompt);
+    if (typing) typing.remove();
+    const lines = res.split('\n').filter(l => /^\d+\./.test(l.trim())).map(l => l.replace(/^\d+\.\s*/, '').trim()).filter(Boolean);
+    const icons = ['🎯','📋','⚙️','✅','📞','🔍','💡','📊','👥','🗓️'];
+    const tasks = lines.slice(0,5).map((t,i) => ({ icon: icons[i%icons.length], text: t, col:'todo', note:`Proyecto: ${proj.text}` }));
+    if (tasks.length) {
+      _renderSuggestions(tasks, `💡 <strong>Tareas para "${h(proj.text)}":</strong>`);
+    } else {
+      _appendBubble('bot', res.replace(/\n/g,'<br>'));
+    }
+  } catch(e) {
+    if (typing) typing.remove();
+    _appendBubble('bot', '⚠️ No pude conectarme. Revisa tu internet.');
+  }
 }
 
 // Inicializar Firebase al cargar si ya tiene config
