@@ -2994,7 +2994,7 @@ async function _callAI(userText) {
       generationConfig: { maxOutputTokens:700, temperature:0.75 }
     };
     const res = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+_geminiKey,
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key='+_geminiKey,
       { method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body) }
     );
     const data = await res.json();
