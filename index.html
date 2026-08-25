@@ -645,7 +645,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
   </div>
 </div>
-================================================
+
+<script>
+
+// ============================================================
 // DATA
 // ============================================================
 let items = [];
@@ -862,7 +865,8 @@ function renderCurrent() {
   else renderPanel(activeTab);
   updateSidebarBadges();
 }
-===========================================================
+
+// ============================================================
 // DASHBOARD
 // ============================================================
 function renderDash() {
@@ -877,104 +881,764 @@ function renderDash() {
   const overdue = items.filter(i=>!i.done && !i.archived && i.date && i.date < today);
   const totalPend = pending.length;
   const pct = doneAll+totalPend>0 ? Math.round(doneAll/(doneAll+totalPend)*100) : 0;
+
+  // Gauge SVG
   const r=54, cx=64, cy=64, circ=2*Math.PI*r;
   const dash = circ*(pct/100), gap = circ - dash;
-  const gaugeSvg = `<svg width="128" height="90" viewBox="0 0 128 128"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ede9fe" stroke-width="12"/><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#7c3aed" stroke-width="12" stroke-dasharray="${dash} ${gap}" stroke-dashoffset="${circ*0.25}" stroke-linecap="round"/><text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="22" font-weight="900" fill="#1e1b4b">${pct}%</text></svg>`;
+  const gaugeSvg = `<svg width="128" height="90" viewBox="0 0 128 128">
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ede9fe" stroke-width="12"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#7c3aed" stroke-width="12"
+      stroke-dasharray="${dash} ${gap}" stroke-dashoffset="${circ*0.25}" stroke-linecap="round"/>
+    <text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="22" font-weight="900" fill="#1e1b4b">${pct}%</text>
+  </svg>`;
+
+  // Focus rows (top 5 priority)
   const focus = pending.sort((a,b)=>a.priority-b.priority).slice(0,5);
-  const focusRows = focus.length ? focus.map(item => { const cat = getCat(item.cat); return `<div class="focus-row" onclick="openEditModal(${item.id})"><div class="focus-dot" style="background:${priorityColor(item.priority)}"></div><div class="focus-text">${h(item.text)}</div><div class="focus-cat">${cat.icon} ${h(cat.name)}</div></div>`; }).join('') : `<div class="empty-state"><div class="es-icon">🎉</div><p>¡Todo al día!</p></div>`;
+  const focusRows = focus.length ? focus.map(item => {
+    const cat = getCat(item.cat);
+    return `<div class="focus-row" onclick="openEditModal(${item.id})">
+      <div class="focus-dot" style="background:${priorityColor(item.priority)}"></div>
+      <div class="focus-text">${h(item.text)}</div>
+      <div class="focus-cat">${cat.icon} ${h(cat.name)}</div>
+    </div>`;
+  }).join('') : `<div class="empty-state"><div class="es-icon">🎉</div><p>¡Todo al día!</p></div>`;
+
+  // Projects list
   const projItems = items.filter(i=>i.cat_key==='proyectos' && !i.done && !i.archived).slice(0,4);
-  el.innerHTML = `<div style="margin-bottom:18px"><div style="font-size:1.25rem;font-weight:900;color:var(--text)">${G}, Montse</div><div style="font-size:.8rem;color:var(--text2);margin-top:2px">${now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div></div><div class="stats-row"><div class="stat-card"><div class="stat-num" style="color:var(--accent)">${totalPend}</div><div class="stat-lbl">Pendientes</div></div><div class="stat-card"><div class="stat-num" style="color:#22c55e">${doneToday.length}</div><div class="stat-lbl">Hechas hoy</div></div><div class="stat-card"><div class="stat-num" style="color:#ef4444">${overdue.length}</div><div class="stat-lbl">Vencidas</div></div><div class="stat-card"><div class="stat-num" style="color:#f97316">${goals.length}</div><div class="stat-lbl">Metas</div></div></div><div class="overview-grid"><div><div class="focus-card"><div class="focus-title">🎯 En qué enfocarte ahora</div>${focusRows}</div>${projItems.length?`<div style="margin-top:16px"><div class="section-hd">Proyectos activos</div>${projItems.map(p=>`<div onclick="openEditModal(${p.id})" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border-radius:13px;margin-bottom:8px;border:1px solid var(--border);cursor:pointer"><span>${p.icon||'🚀'}</span><div style="flex:1;min-width:0"><div style="font-size:.83rem;font-weight:700">${h(p.text)}</div>${p.note?`<div style="font-size:.68rem;color:var(--text2)">${h(p.note)}</div>":""}</div><span>→</span></div>`).join('')}</div>`:""}</div><div><div class="heading-card"><div class="heading-card-title">📊 Cómo vas</div><div class="gauge-wrap">${gaugeSvg}</div><div style="font-size:.7rem;color:var(--text2);text-align:center;margin-bottom:12px">${totalPend} pendientes · ${doneAll} hechas</div>${goals.length?`<div style="margin-top:8px">${goals.slice(0,3).map(g=>{const pct2=Math.min(_metaPct(g),100);return `<div class="heading-item"><div class="heading-dot" style="background:${g.color||'#7c3aed'}"></div><span class="heading-item-text">${h(g.title)}</span><span class="heading-item-tag">${pct2}%</span></div>`;}).join('')}</div>`:""}<button onclick="switchTab('metas')" style="width:100%;margin-top:14px;padding:9px;background:var(--accent-light);color:var(--accent);border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer">Ver metas →</button></div>${overdue.length?`<div class="heading-card" style="margin-top:12px"><div class="heading-card-title" style="color:#ef4444">⚠️ Vencidas</div>${overdue.slice(0,3).map(i=>`<div class="heading-item" style="cursor:pointer" onclick="openEditModal(${i.id})"><div class="heading-dot" style="background:#ef4444"></div><span class="heading-item-text">${h(i.text)}</span><span style="font-size:.68rem;color:#ef4444">${fmtDate(i.date)}</span></div>`).join('')}</div>`:""}</div></div>`;
+
+  el.innerHTML = `
+    <div style="margin-bottom:18px">
+      <div style="font-size:1.25rem;font-weight:900;color:var(--text)">${G}, Montse</div>
+      <div style="font-size:.8rem;color:var(--text2);margin-top:2px">${now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--accent)">${totalPend}</div>
+        <div class="stat-lbl">Pendientes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#22c55e">${doneToday.length}</div>
+        <div class="stat-lbl">Hechas hoy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#ef4444">${overdue.length}</div>
+        <div class="stat-lbl">Vencidas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:#f97316">${goals.length}</div>
+        <div class="stat-lbl">Metas</div>
+      </div>
+    </div>
+    <div class="overview-grid">
+      <div>
+        <div class="focus-card">
+          <div class="focus-title">🎯 En qué enfocarte ahora</div>
+          ${focusRows}
+        </div>
+        ${projItems.length ? `
+        <div style="margin-top:16px">
+          <div class="section-hd">Proyectos activos</div>
+          ${projItems.map(p=>`
+            <div onclick="openEditModal(${p.id})" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border-radius:13px;margin-bottom:8px;border:1px solid var(--border);cursor:pointer;transition:box-shadow .15s" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow=''">
+              <span>${p.icon||'🚀'}</span>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:.83rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h(p.text)}</div>
+                ${p.note?`<div style="font-size:.68rem;color:var(--text2)">${h(p.note)}</div>`:''}
+              </div>
+              <span style="color:var(--text2)">→</span>
+            </div>
+          `).join('')}
+        </div>` : ''}
+      </div>
+      <div>
+        <div class="heading-card">
+          <div class="heading-card-title">📊 Cómo vas</div>
+          <div class="gauge-wrap">${gaugeSvg}</div>
+          <div style="font-size:.7rem;color:var(--text2);text-align:center;margin-bottom:12px">${totalPend} pendientes · ${doneAll} hechas</div>
+          ${goals.length ? `<div style="margin-top:8px">${goals.slice(0,3).map(g=>{
+            const pct2=Math.min(_metaPct(g),100);
+            return `<div class="heading-item">
+              <div class="heading-dot" style="background:${g.color||'#7c3aed'}"></div>
+              <span class="heading-item-text">${h(g.title)}</span>
+              <span class="heading-item-tag">${pct2}%</span></div>`;
+          }).join('')}</div>` : ''}
+          <button onclick="switchTab('metas')" style="width:100%;margin-top:14px;padding:9px;background:var(--accent-light);color:var(--accent);border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer">Ver metas →</button>
+        </div>
+        ${overdue.length ? `
+        <div class="heading-card" style="margin-top:12px">
+          <div class="heading-card-title" style="color:#ef4444">⚠️ Vencidas</div>
+          ${overdue.slice(0,3).map(i=>`
+            <div class="heading-item" style="cursor:pointer" onclick="openEditModal(${i.id})">
+              <div class="heading-dot" style="background:#ef4444"></div>
+              <span class="heading-item-text">${h(i.text)}</span>
+              <span style="font-size:.68rem;color:#ef4444">${fmtDate(i.date)}</span>
+            </div>
+          `).join('')}
+        </div>` : ''}
+      </div>
+    </div>`;
 }
 
+// ============================================================
+// LOG DIARIO
+// ============================================================
 function renderLogDiario() {
   const el = document.getElementById('panel-log');
   if (!el) return;
   const today = todayStr();
   if (!activeLogDate) activeLogDate = today;
+  // Build 7 days
   const days = [];
-  for (let i=6;i>=0;i--) { const d = new Date(); d.setDate(d.getDate()-i); const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); days.push({ds,d}); }
-  const dateCards = days.map(({ds,d})=>`<div class="log-date-card${activeLogDate===ds?' active':''}" onclick="selectLogDay('${ds}')"><div class="ld-day">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div><div class="ld-num">${d.getDate()}</div></div>`).join('');
+  for (let i=6;i>=0;i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    days.push({ ds, d });
+  }
+  const dateCards = days.map(({ds,d})=>`
+    <div class="log-date-card${activeLogDate===ds?' active':''}" onclick="selectLogDay('${ds}')">
+      <div class="ld-day">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
+      <div class="ld-num">${d.getDate()}</div>
+    </div>`).join('');
+  
   const dayItems = items.filter(i=>!i.archived && (i.date===activeLogDate || i.doneDate===activeLogDate));
-  const entries = dayItems.length ? dayItems.map(i=>`<div class="log-entry${i.done?' done-item':''}"><div class="log-check${i.done?' checked':''}" onclick="toggleDone(${i.id})">${i.done?'✓':''}</div><div style="flex:1;min-width:0"><div style="font-size:.85rem;font-weight:600">${h(i.text)}</div>${i.note?`<div style="font-size:.72rem;color:var(--text2)">${h(i.note)}</div>":""}</div><div class="focus-cat">${getCat(i.cat).icon} ${h(getCat(i.cat).name)}</div></div>`).join('') : `<div class="empty-state"><div class="es-icon">📋</div><p>Sin tareas para este día</p></div>`;
+  const entries = dayItems.length ? dayItems.map(i=>`
+    <div class="log-entry${i.done?' done-item':''}">
+      <div class="log-check${i.done?' checked':''}" onclick="toggleDone(${i.id})">${i.done?'✓':''}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:.85rem;font-weight:600;color:var(--text)">${h(i.text)}</div>
+        ${i.note?`<div style="font-size:.72rem;color:var(--text2)">${h(i.note)}</div>`:''}
+      </div>
+      <div class="focus-cat">${getCat(i.cat).icon} ${h(getCat(i.cat).name)}</div>
+    </div>`).join('') :
+    `<div class="empty-state"><div class="es-icon">📋</div><p>Sin tareas para este día</p></div>`;
+  
   const d = new Date(activeLogDate+'T12:00:00');
-  el.innerHTML = `<div class="log-dates">${dateCards}</div><div class="card"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div style="font-weight:800;font-size:.95rem">${d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div><button class="btn-sm" onclick="openAddModalWithDate('${activeLogDate}')">+ Agregar</button></div>${entries}</div>`;
+  el.innerHTML = `
+    <div class="log-dates">${dateCards}</div>
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-weight:800;font-size:.95rem">${d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
+        <button class="btn-sm" onclick="openAddModalWithDate('${activeLogDate}')">+ Agregar</button>
+      </div>
+      ${entries}
+    </div>`;
 }
 
-function selectLogDay(ds){activeLogDate=ds;renderLogDiario();}
-function openAddModalWithDate(date){openAddModal();setTimeout(()=>{const el=document.getElementById('add-date');if(el)el.value=date;},50);}
-
-function renderSemana(){
-  const el=document.getElementById('panel-semana');if(!el)return;
-  const today=todayStr(),now=new Date(),dow=now.getDay(),days=[];
-  for(let i=0;i<7;i++){const d=new Date(now);d.setDate(now.getDate()-dow+i);const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');days.push({d,ds});}
-  const cols=days.map(({d,ds})=>{const dayItems=items.filter(i=>i.date===ds&&!i.archived);const isToday=ds===today;return `<div class="day-col${isToday?' today':''}"><div class="day-name">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div><div class="day-num">${d.getDate()}</div>${dayItems.map(i=>`<div class="day-task${i.done?' done-t':''}" onclick="openEditModal(${i.id})">${h(i.text)}</div>`).join('')}<div onclick="openAddModalWithDate('${ds}')" style="font-size:.65rem;color:var(--accent);cursor:pointer;margin-top:6px;text-align:center">+ agregar</div></div>`;}).join('');
-  el.innerHTML=`<div class="week-grid">${cols}</div>`;
+function selectLogDay(ds) {
+  activeLogDate = ds;
+  renderLogDiario();
 }
 
-function renderPanel(cat_key){
-  const el=document.getElementById('panel-'+cat_key);if(!el)return;
-  const list=items.filter(i=>i.cat_key===cat_key&&!i.done&&!i.archived);list.sort((a,b)=>a.priority-b.priority);
-  if(!list.length){el.innerHTML=`<div class="empty-state"><div class="es-icon">✨</div><p>Sin tareas pendientes</p><p style="margin-top:8px"><button class="btn-sm" onclick="openAddModal()">+ Nueva tarea</button></p></div>`;return;}
-  el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:.85rem;color:var(--text2)">${list.length} pendiente${list.length!==1?'s':''}</div><button class="btn-sm" onclick="openAddModal()">+ Agregar</button></div>${list.map(i=>taskCard(i)).join('')}`;
+function openAddModalWithDate(date) {
+  openAddModal();
+  setTimeout(()=>{ const el=document.getElementById('add-date'); if(el) el.value=date; },50);
 }
 
-function renderDone(){
-  const el=document.getElementById('panel-done');if(!el)return;
-  const list=items.filter(i=>i.done).sort((a,b)=>(b.doneDate||'').localeCompare(a.doneDate||''));
-  if(!list.length){el.innerHTML=`<div class="empty-state"><div class="es-icon">✅</div><p>Nada completado aún</p></div>`;return;}
-  el.innerHTML=`<div>${list.map(i=>taskCard(i,true)).join('')}</div>`;
+// ============================================================
+// SEMANA
+// ============================================================
+function renderSemana() {
+  const el = document.getElementById('panel-semana');
+  if (!el) return;
+  const today = todayStr();
+  const now = new Date();
+  const dow = now.getDay();
+  const days = [];
+  for (let i=0;i<7;i++) {
+    const d = new Date(now);
+    d.setDate(now.getDate() - dow + i);
+    const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    days.push({d,ds});
+  }
+  const cols = days.map(({d,ds})=>{
+    const dayItems = items.filter(i=>i.date===ds && !i.archived);
+    const isToday = ds===today;
+    return `<div class="day-col${isToday?' today':''}">
+      <div class="day-name">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
+      <div class="day-num">${d.getDate()}</div>
+      ${dayItems.map(i=>`<div class="day-task${i.done?' done-t':''}" onclick="openEditModal(${i.id})" title="${h(i.text)}">${h(i.text)}</div>`).join('')}
+      <div onclick="openAddModalWithDate('${ds}')" style="font-size:.65rem;color:var(--accent);cursor:pointer;margin-top:6px;text-align:center">+ agregar</div>
+    </div>`;
+  }).join('');
+  el.innerHTML = `<div class="week-grid">${cols}</div>`;
 }
 
-function taskCard(item,showDone=false){
-  const cat=getCat(item.cat);
+// ============================================================
+// TASK PANELS
+// ============================================================
+function renderPanel(cat_key) {
+  const el = document.getElementById('panel-'+cat_key);
+  if (!el) return;
+  const list = items.filter(i=>i.cat_key===cat_key && !i.done && !i.archived);
+  list.sort((a,b)=>a.priority-b.priority);
+  if (!list.length) {
+    el.innerHTML = `<div class="empty-state"><div class="es-icon">✨</div><p>Sin tareas pendientes</p><p style="margin-top:8px"><button class="btn-sm" onclick="openAddModal()">+ Nueva tarea</button></p></div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:.85rem;color:var(--text2)">${list.length} pendiente${list.length!==1?'s':''}</div>
+      <button class="btn-sm" onclick="openAddModal()">+ Agregar</button>
+    </div>
+    ${list.map(i=>taskCard(i)).join('')}`;
+}
+
+function renderDone() {
+  const el = document.getElementById('panel-done');
+  if (!el) return;
+  const list = items.filter(i=>i.done).sort((a,b)=>(b.doneDate||'').localeCompare(a.doneDate||''));
+  if (!list.length) {
+    el.innerHTML = `<div class="empty-state"><div class="es-icon">✅</div><p>Nada completado aún</p></div>`;
+    return;
+  }
+  el.innerHTML = `<div>${list.map(i=>taskCard(i,true)).join('')}</div>`;
+}
+
+function taskCard(item, showDone=false) {
+  const cat = getCat(item.cat);
   return `<div class="task-item${item.done?' is-done':''}">
     <div class="task-check${item.done?' done':''}" onclick="toggleDone(${item.id})">${item.done?'✓':''}</div>
     <div class="priority-dot p${item.priority||3}"></div>
-    <div style="flex:1;min-width:0" onclick="openEditModal(${item.id})"><div class="task-text">${h(item.text)}</div>${item.note?`<div class="task-note">${h(item.note)}</div>":""}</div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0"><div class="task-cat">${cat.icon} ${h(cat.name)}</div>${item.date?`<div style="font-size:.65rem;color:var(--text2)">${fmtDate(item.date)}</div>":""}</div>
+    <div style="flex:1;min-width:0" onclick="openEditModal(${item.id})">
+      <div class="task-text">${h(item.text)}</div>
+      ${item.note?`<div class="task-note">${h(item.note)}</div>`:''}
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
+      <div class="task-cat">${cat.icon} ${h(cat.name)}</div>
+      ${item.date?`<div style="font-size:.65rem;color:var(--text2)">${fmtDate(item.date)}</div>`:''}
+    </div>
   </div>`;
 }
 
-function _metaPct(g){if(g.pct!==undefined&&g.pct!==null)return Number(g.pct);if(!g.milestones||!g.milestones.length)return 0;return Math.round(g.milestones.filter(m=>m.done).length/g.milestones.length*100);}
-function renderMetas(){const el=document.getElementById('panel-metas');if(!el)return;const now=new Date();const start=new Date(now.getFullYear(),0,1);const end=new Date(now.getFullYear(),11,31);const yearPct=Math.round((now-start)/(end-start)*100);const avgMeta=goals.length?Math.round(goals.reduce((s,g)=>s+_metaPct(g),0)/goals.length):0;el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><div style="font-size:1rem;font-weight:900">⭐ Metas 2025</div><button class="btn-sm" onclick="openMetaModal()">+ Nueva meta</button></div><div class="timeline-bar-wrap"><div class="timeline-label"><span>Año ${now.getFullYear()}</span><span>${yearPct}% del año transcurrido · ${avgMeta}% progreso metas</span></div><div class="timeline-track"><div class="timeline-fill" style="width:${yearPct}%"></div></div><div style="display:flex;justify-content:space-between;font-size:.65rem;color:var(--text2);margin-top:5px"><span>Ene</span><span>Mar</span><span>Jun</span><span>Sep</span><span>Dic</span></div></div>${goals.length?`<div class="goals-grid">${goals.map(g=>goalCard(g)).join('')}</div>`:'<div class="empty-state"><div class="es-icon">⭐</div><p>Sin metas aún. ¡Agrega tu primera!</p></div>'}`;
+// ============================================================
+// METAS
+// ============================================================
+function _metaPct(g) {
+  if (g.pct !== undefined && g.pct !== null) return Number(g.pct);
+  if (!g.milestones || !g.milestones.length) return 0;
+  return Math.round(g.milestones.filter(m=>m.done).length/g.milestones.length*100);
 }
-function goalCard(g){const pct=Math.min(_metaPct(g),100);const typeEmoji={personal:'👤',profesional:'💼',salud:'💪',finanzas:'💰'}[g.type]||'🎯';return `<div class="goal-card"><div class="goal-card-header"><div class="goal-icon">${g.icon||typeEmoji}</div><div class="goal-title">${h(g.title)}</div><div class="goal-tag">${typeEmoji} ${h(g.type||'personal')}</div></div>${g.note?`<div class="goal-note">${h(g.note)}</div>":""}<div class="goal-progress-track"><div class="goal-progress-fill" style="width:${pct}%;background:${g.color||'#7c3aed'}"></div></div><div class="goal-progress-label"><span>${pct}%</span><span>${g.due?fmtDate(g.due):''}</span></div>${g.milestones&&g.milestones.length?`<div class="goal-milestones">${g.milestones.map(m=>`<div class="goal-milestone${m.done?' done':''}" onclick="toggleMilestone(${g.id},${m.id})"><div class="ms-dot"></div><span>${h(m.text)}</span></div>`).join('')}</div>":""}<div style="display:flex;gap:6px;margin-top:12px"><button onclick="openMetaModal(${g.id})" style="flex:1;padding:7px;background:var(--accent-light);color:var(--accent);border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer">Editar</button></div></div>`;}
-function openMetaModal(id){const delBtn=document.getElementById('meta-delete-btn');if(id){const g=goals.find(g=>g.id===id);if(!g)return;document.getElementById('meta-modal-title').textContent='Editar meta';document.getElementById('meta-id').value=id;document.getElementById('meta-icon').value=g.icon||'';document.getElementById('meta-color').value=g.color||'#7c3aed';document.getElementById('meta-title').value=g.title||'';document.getElementById('meta-type').value=g.type||'personal';document.getElementById('meta-note').value=g.note||'';document.getElementById('meta-pct').value=g.pct||0;document.getElementById('meta-due').value=g.due||'';delBtn.style.display='';}else{document.getElementById('meta-modal-title').textContent='Nueva meta';document.getElementById('meta-id').value='';document.getElementById('meta-icon').value='';document.getElementById('meta-color').value='#7c3aed';document.getElementById('meta-title').value='';document.getElementById('meta-type').value='personal';document.getElementById('meta-note').value='';document.getElementById('meta-pct').value=0;document.getElementById('meta-due').value='';delBtn.style.display='none';}openModal('meta-modal');}
-function saveMeta(){const title=document.getElementById('meta-title').value.trim();if(!title){showToast('Ingresa un título');return;}const id=document.getElementById('meta-id').value;const data={title,icon:document.getElementById('meta-icon').value||'🎯',color:document.getElementById('meta-color').value||'#7c3aed',type:document.getElementById('meta-type').value,note:document.getElementById('meta-note').value.trim(),pct:Number(document.getElementById('meta-pct').value)||0,due:document.getElementById('meta-due').value};if(id){const idx=goals.findIndex(g=>g.id===Number(id));if(idx>=0)Object.assign(goals[idx],data);}else{data.id=Date.now();data.milestones=[];goals.push(data);}save();closeModal('meta-modal');renderMetas();showToast(id?'Meta actualizada':'Meta creada ✓');}
-function deleteMeta(){const id=Number(document.getElementById('meta-id').value);goals=goals.filter(g=>g.id!==id);save();closeModal('meta-modal');renderMetas();showToast('Meta eliminada');}
-function toggleMilestone(goalId,msId){const g=goals.find(g=>g.id===goalId);if(!g||!g.milestones)return;const ms=g.milestones.find(m=>m.id===msId);if(ms){ms.done=!ms.done;save();renderMetas();}}
-function renderCatsPanel(){const el=document.getElementById('panel-cats');if(!el)return;el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><div style="font-size:1rem;font-weight:900">Categorías</div><button class="btn-sm" onclick="addCatPrompt()">+ Nueva</button></div><div class="cat-grid">${cats.map(c=>`<div class="cat-card"><div class="cat-header"><div class="cat-color-dot" style="background:${c.color}"></div><div class="cat-name">${c.icon||''} ${h(c.name)}</div></div><div style="font-size:.75rem;color:var(--text2)">${items.filter(i=>i.cat===c.id&&!i.done&&!i.archived).length} pendientes</div></div>`).join('')}</div>`;}
-function addCatPrompt(){const name=prompt('Nombre de la categoría:');if(!name)return;const icon=prompt('Emoji (opcional):','📌')||'📌';cats.push({id:nextCatId++,name:name.trim(),icon,color:'#7c3aed'});save();renderCatsPanel();}
-function renderSettings(){const el=document.getElementById('panel-settings');if(!el)return;const providerName={groq:'Groq (gratis)',openai:'ChatGPT/OpenAI',gemini:'Google Gemini','':'No configurado'}[_aiProvider]||_aiProvider;el.innerHTML=`<div class="settings-section"><div class="settings-title">✨ Asistente IA</div><div class="settings-row"><label>Proveedor activo</label><span style="font-size:.82rem;font-weight:700;color:var(--accent)">${providerName}</span></div><button class="btn-sm" onclick="openModal('ai-setup-modal');renderAISetup()">Configurar IA</button></div><div class="settings-section"><div class="settings-title">🔥 Firebase Sync</div><div class="settings-row"><label>Estado</label><span style="font-size:.82rem;font-weight:700;color:${_fbKey?'var(--accent)':'var(--text2)'}">${_fbKey?'Configurado':'Sin configurar'}</span></div><button class="btn-sm" onclick="openModal('fb-modal')">Configurar Firebase</button></div><div class="settings-section"><div class="settings-title">💾 Datos locales</div><div class="settings-row"><label>Tareas guardadas</label><span style="font-size:.82rem">${items.length} tareas</span></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn-sm" onclick="exportData()">Exportar JSON</button><button class="btn-sm" style="background:#ef4444" onclick="clearAllData()">Borrar todo</button></div></div>`;document.getElementById('fb-key').value=_fbKey;document.getElementById('fb-proj').value=_fbProj;}
-function exportData(){const d=JSON.stringify({items,goals,cats},null,2);const a=document.createElement('a');a.href='data:application/json;charset=utf-8,'+encodeURIComponent(d);a.download='montse-flow-backup.json';a.click();}
-function clearAllData(){if(!confirm('¿Borrar todas las tareas? Esto no se puede deshacer.'))return;items=[];goals=[];nextId=1;save();renderCurrent();showToast('Datos borrados');}
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-function openAddModal(){populateCatSelect('add-cat');document.getElementById('add-text').value='';document.getElementById('add-note').value='';document.getElementById('add-date').value='';document.getElementById('add-priority').value='3';openModal('add-modal');setTimeout(()=>document.getElementById('add-text').focus(),100);}
-function addItem(){const text=document.getElementById('add-text').value.trim();if(!text){showToast('Escribe algo primero');return;}const catId=Number(document.getElementById('add-cat').value);const cat_key=catKeyFromId(catId);const item={id:nextId++,text,cat:catId,cat_key,priority:Number(document.getElementById('add-priority').value)||3,date:document.getElementById('add-date').value,note:document.getElementById('add-note').value.trim(),done:false,archived:false,created:new Date().toISOString()};items.unshift(item);save();closeModal('add-modal');renderCurrent();showToast('Tarea agregada ✓');}
-function catKeyFromId(id){const c=cats.find(c=>c.id===id);if(!c)return 'todo';const name=c.name.toLowerCase();if(name.includes('compromi'))return 'compromisos';if(name.includes('proy'))return 'proyectos';if(name.includes('extra')||name.includes('idea'))return 'extra';return 'todo';}
-function openEditModal(id){const item=items.find(i=>i.id===id);if(!item)return;populateCatSelect('edit-cat',item.cat);document.getElementById('edit-id').value=id;document.getElementById('edit-text').value=item.text||'';document.getElementById('edit-note').value=item.note||'';document.getElementById('edit-date').value=item.date||'';document.getElementById('edit-priority').value=item.priority||3;openModal('edit-modal');}
-function saveEdit(){const id=Number(document.getElementById('edit-id').value);const item=items.find(i=>i.id===id);if(!item)return;item.text=document.getElementById('edit-text').value.trim()||item.text;item.cat=Number(document.getElementById('edit-cat').value);item.cat_key=catKeyFromId(item.cat);item.priority=Number(document.getElementById('edit-priority').value)||3;item.date=document.getElementById('edit-date').value;item.note=document.getElementById('edit-note').value.trim();save();closeModal('edit-modal');renderCurrent();showToast('Guardado ✓');}
-function deleteItem(){const id=Number(document.getElementById('edit-id').value);if(!confirm('¿Eliminar esta tarea?'))return;items=items.filter(i=>i.id!==id);save();closeModal('edit-modal');renderCurrent();showToast('Tarea eliminada');}
-function toggleDone(id){const item=items.find(i=>i.id===id);if(!item)return;item.done=!item.done;item.doneDate=item.done?todayStr():null;save();renderCurrent();}
-function quickCapture(){const inp=document.getElementById('cap-input');const text=inp.value.trim();if(!text)return;const item={id:nextId++,text,cat:cats[0]?.id||1,cat_key:'todo',priority:3,done:false,archived:false,created:new Date().toISOString()};items.unshift(item);inp.value='';save();renderCurrent();showToast('Capturado ✓');}
-function populateCatSelect(selId,selected){const sel=document.getElementById(selId);if(!sel)return;sel.innerHTML=cats.map(c=>`<option value="${c.id}"${c.id===selected?' selected':''}>${c.icon||''} ${h(c.name)}</option>`).join('');}
-function _hasAiKey(){return(_aiProvider==='groq'&&_groqKey)||(_aiProvider==='openai'&&_openaiKey)||(_aiProvider==='gemini'&&_geminiKey);}
-function buildChatContext(){const pending=items.filter(i=>!i.done&&!i.archived);const done=items.filter(i=>i.done).length;const today=todayStr();const todayItems=items.filter(i=>i.date===today&&!i.done&&!i.archived);return `Eres el asistente personal de Montse, una persona organizada que usa "Montse's Flow" para manejar sus tareas.
+
+function renderMetas() {
+  const el = document.getElementById('panel-metas');
+  if (!el) return;
+  const now = new Date();
+  const start = new Date(now.getFullYear(),0,1);
+  const end = new Date(now.getFullYear(),11,31);
+  const yearPct = Math.round((now-start)/(end-start)*100);
+
+  const avgMeta = goals.length ? Math.round(goals.reduce((s,g)=>s+_metaPct(g),0)/goals.length) : 0;
+
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:1rem;font-weight:900">⭐ Metas 2025</div>
+      <button class="btn-sm" onclick="openMetaModal()">+ Nueva meta</button>
+    </div>
+    <div class="timeline-bar-wrap">
+      <div class="timeline-label">
+        <span>Año ${now.getFullYear()}</span>
+        <span>${yearPct}% del año transcurrido · ${avgMeta}% progreso metas</span>
+      </div>
+      <div class="timeline-track">
+        <div class="timeline-fill" style="width:${yearPct}%"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.65rem;color:var(--text2);margin-top:5px">
+        <span>Ene</span><span>Mar</span><span>Jun</span><span>Sep</span><span>Dic</span>
+      </div>
+    </div>
+    ${goals.length ? `<div class="goals-grid">${goals.map(g=>goalCard(g)).join('')}</div>` :
+      `<div class="empty-state"><div class="es-icon">⭐</div><p>Sin metas aún. ¡Agrega tu primera!</p></div>`}`;
+}
+
+function goalCard(g) {
+  const pct = Math.min(_metaPct(g), 100);
+  const typeEmoji = {personal:'👤',profesional:'💼',salud:'💪',finanzas:'💰'}[g.type]||'🎯';
+  return `<div class="goal-card">
+    <div class="goal-card-header">
+      <div class="goal-icon">${g.icon||typeEmoji}</div>
+      <div class="goal-title">${h(g.title)}</div>
+      <div class="goal-tag">${typeEmoji} ${h(g.type||'personal')}</div>
+    </div>
+    ${g.note?`<div class="goal-note">${h(g.note)}</div>`:''}
+    <div class="goal-progress-track">
+      <div class="goal-progress-fill" style="width:${pct}%;background:${g.color||'#7c3aed'}"></div>
+    </div>
+    <div class="goal-progress-label"><span>${pct}%</span><span>${g.due?fmtDate(g.due):''}</span></div>
+    ${g.milestones&&g.milestones.length?`<div class="goal-milestones">${g.milestones.map(m=>`
+      <div class="goal-milestone${m.done?' done':''}" onclick="toggleMilestone(${g.id},${m.id})">
+        <div class="ms-dot"></div><span>${h(m.text)}</span>
+      </div>`).join('')}</div>`:''}
+    <div style="display:flex;gap:6px;margin-top:12px">
+      <button onclick="openMetaModal(${g.id})" style="flex:1;padding:7px;background:var(--accent-light);color:var(--accent);border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer">Editar</button>
+    </div>
+  </div>`;
+}
+
+function openMetaModal(id) {
+  const modal = document.getElementById('meta-modal');
+  const delBtn = document.getElementById('meta-delete-btn');
+  if (id) {
+    const g = goals.find(g=>g.id===id);
+    if (!g) return;
+    document.getElementById('meta-modal-title').textContent = 'Editar meta';
+    document.getElementById('meta-id').value = id;
+    document.getElementById('meta-icon').value = g.icon||'';
+    document.getElementById('meta-color').value = g.color||'#7c3aed';
+    document.getElementById('meta-title').value = g.title||'';
+    document.getElementById('meta-type').value = g.type||'personal';
+    document.getElementById('meta-note').value = g.note||'';
+    document.getElementById('meta-pct').value = g.pct||0;
+    document.getElementById('meta-due').value = g.due||'';
+    delBtn.style.display = '';
+  } else {
+    document.getElementById('meta-modal-title').textContent = 'Nueva meta';
+    document.getElementById('meta-id').value = '';
+    document.getElementById('meta-icon').value = '';
+    document.getElementById('meta-color').value = '#7c3aed';
+    document.getElementById('meta-title').value = '';
+    document.getElementById('meta-type').value = 'personal';
+    document.getElementById('meta-note').value = '';
+    document.getElementById('meta-pct').value = 0;
+    document.getElementById('meta-due').value = '';
+    delBtn.style.display = 'none';
+  }
+  openModal('meta-modal');
+}
+
+function saveMeta() {
+  const title = document.getElementById('meta-title').value.trim();
+  if (!title) { showToast('Ingresa un título'); return; }
+  const id = document.getElementById('meta-id').value;
+  const data = {
+    title,
+    icon: document.getElementById('meta-icon').value||'🎯',
+    color: document.getElementById('meta-color').value||'#7c3aed',
+    type: document.getElementById('meta-type').value,
+    note: document.getElementById('meta-note').value.trim(),
+    pct: Number(document.getElementById('meta-pct').value)||0,
+    due: document.getElementById('meta-due').value,
+  };
+  if (id) {
+    const idx = goals.findIndex(g=>g.id===Number(id));
+    if (idx>=0) Object.assign(goals[idx], data);
+  } else {
+    data.id = Date.now();
+    data.milestones = [];
+    goals.push(data);
+  }
+  save();
+  closeModal('meta-modal');
+  renderMetas();
+  showToast(id?'Meta actualizada':'Meta creada ✓');
+}
+
+function deleteMeta() {
+  const id = Number(document.getElementById('meta-id').value);
+  goals = goals.filter(g=>g.id!==id);
+  save();
+  closeModal('meta-modal');
+  renderMetas();
+  showToast('Meta eliminada');
+}
+
+function toggleMilestone(goalId, msId) {
+  const g = goals.find(g=>g.id===goalId);
+  if (!g||!g.milestones) return;
+  const ms = g.milestones.find(m=>m.id===msId);
+  if (ms) { ms.done = !ms.done; save(); renderMetas(); }
+}
+
+// ============================================================
+// CATS PANEL
+// ============================================================
+function renderCatsPanel() {
+  const el = document.getElementById('panel-cats');
+  if (!el) return;
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div style="font-size:1rem;font-weight:900">Categorías</div>
+      <button class="btn-sm" onclick="addCatPrompt()">+ Nueva</button>
+    </div>
+    <div class="cat-grid">
+      ${cats.map(c=>`
+        <div class="cat-card">
+          <div class="cat-header">
+            <div class="cat-color-dot" style="background:${c.color}"></div>
+            <div class="cat-name">${c.icon||''} ${h(c.name)}</div>
+          </div>
+          <div style="font-size:.75rem;color:var(--text2)">${items.filter(i=>i.cat===c.id&&!i.done&&!i.archived).length} pendientes</div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function addCatPrompt() {
+  const name = prompt('Nombre de la categoría:');
+  if (!name) return;
+  const icon = prompt('Emoji (opcional):', '📌') || '📌';
+  cats.push({id:nextCatId++, name:name.trim(), icon, color:'#7c3aed'});
+  save();
+  renderCatsPanel();
+}
+
+// ============================================================
+// SETTINGS
+// ============================================================
+function renderSettings() {
+  const el = document.getElementById('panel-settings');
+  if (!el) return;
+  const providerName = {groq:'Groq (gratis)',openai:'ChatGPT/OpenAI',gemini:'Google Gemini','':'No configurado'}[_aiProvider]||_aiProvider;
+  el.innerHTML = `
+    <div class="settings-section">
+      <div class="settings-title">✨ Asistente IA</div>
+      <div class="settings-row">
+        <label>Proveedor activo</label>
+        <span style="font-size:.82rem;font-weight:700;color:var(--accent)">${providerName}</span>
+      </div>
+      <button class="btn-sm" onclick="openModal('ai-setup-modal');renderAISetup()">Configurar IA</button>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">🔥 Firebase Sync</div>
+      <div class="settings-row">
+        <label>Estado</label>
+        <span style="font-size:.82rem;font-weight:700;color:${_fbKey?'var(--accent)':'var(--text2)'}">${_fbKey?'Configurado':'Sin configurar'}</span>
+      </div>
+      <button class="btn-sm" onclick="openModal('fb-modal')">Configurar Firebase</button>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">💾 Datos locales</div>
+      <div class="settings-row">
+        <label>Tareas guardadas</label>
+        <span style="font-size:.82rem">${items.length} tareas</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-sm" onclick="exportData()">Exportar JSON</button>
+        <button class="btn-sm" style="background:#ef4444" onclick="clearAllData()">Borrar todo</button>
+      </div>
+    </div>`;
+  document.getElementById('fb-key').value = _fbKey;
+  document.getElementById('fb-proj').value = _fbProj;
+}
+
+function exportData() {
+  const d = JSON.stringify({items,goals,cats}, null, 2);
+  const a = document.createElement('a');
+  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(d);
+  a.download = 'montse-flow-backup.json';
+  a.click();
+}
+
+function clearAllData() {
+  if (!confirm('¿Borrar todas las tareas? Esto no se puede deshacer.')) return;
+  items = []; goals = []; nextId = 1;
+  save(); renderCurrent(); showToast('Datos borrados');
+}
+
+// ============================================================
+// MODAL HELPERS
+// ============================================================
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+// ============================================================
+// ADD / EDIT / DELETE
+// ============================================================
+function openAddModal() {
+  populateCatSelect('add-cat');
+  document.getElementById('add-text').value = '';
+  document.getElementById('add-note').value = '';
+  document.getElementById('add-date').value = '';
+  document.getElementById('add-priority').value = '3';
+  openModal('add-modal');
+  setTimeout(()=>document.getElementById('add-text').focus(),100);
+}
+
+function addItem() {
+  const text = document.getElementById('add-text').value.trim();
+  if (!text) { showToast('Escribe algo primero'); return; }
+  const catId = Number(document.getElementById('add-cat').value);
+  const cat = cats.find(c=>c.id===catId);
+  const cat_key = catKeyFromId(catId);
+  const item = {
+    id: nextId++,
+    text, cat: catId, cat_key,
+    priority: Number(document.getElementById('add-priority').value)||3,
+    date: document.getElementById('add-date').value,
+    note: document.getElementById('add-note').value.trim(),
+    done: false, archived: false,
+    created: new Date().toISOString(),
+  };
+  items.unshift(item);
+  save();
+  closeModal('add-modal');
+  renderCurrent();
+  showToast('Tarea agregada ✓');
+}
+
+function catKeyFromId(id) {
+  const c = cats.find(c=>c.id===id);
+  if (!c) return 'todo';
+  const name = c.name.toLowerCase();
+  if (name.includes('compromi')) return 'compromisos';
+  if (name.includes('proy')) return 'proyectos';
+  if (name.includes('extra') || name.includes('idea')) return 'extra';
+  return 'todo';
+}
+
+function openEditModal(id) {
+  const item = items.find(i=>i.id===id);
+  if (!item) return;
+  populateCatSelect('edit-cat', item.cat);
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-text').value = item.text||'';
+  document.getElementById('edit-note').value = item.note||'';
+  document.getElementById('edit-date').value = item.date||'';
+  document.getElementById('edit-priority').value = item.priority||3;
+  openModal('edit-modal');
+}
+
+function saveEdit() {
+  const id = Number(document.getElementById('edit-id').value);
+  const item = items.find(i=>i.id===id);
+  if (!item) return;
+  item.text = document.getElementById('edit-text').value.trim() || item.text;
+  item.cat = Number(document.getElementById('edit-cat').value);
+  item.cat_key = catKeyFromId(item.cat);
+  item.priority = Number(document.getElementById('edit-priority').value)||3;
+  item.date = document.getElementById('edit-date').value;
+  item.note = document.getElementById('edit-note').value.trim();
+  save();
+  closeModal('edit-modal');
+  renderCurrent();
+  showToast('Guardado ✓');
+}
+
+function deleteItem() {
+  const id = Number(document.getElementById('edit-id').value);
+  if (!confirm('¿Eliminar esta tarea?')) return;
+  items = items.filter(i=>i.id!==id);
+  save();
+  closeModal('edit-modal');
+  renderCurrent();
+  showToast('Tarea eliminada');
+}
+
+function toggleDone(id) {
+  const item = items.find(i=>i.id===id);
+  if (!item) return;
+  item.done = !item.done;
+  item.doneDate = item.done ? todayStr() : null;
+  save();
+  renderCurrent();
+}
+
+function quickCapture() {
+  const inp = document.getElementById('cap-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  const item = {
+    id: nextId++, text,
+    cat: cats[0]?.id||1, cat_key:'todo',
+    priority:3, done:false, archived:false,
+    created: new Date().toISOString(),
+  };
+  items.unshift(item);
+  inp.value = '';
+  save();
+  renderCurrent();
+  showToast('Capturado ✓');
+}
+
+function populateCatSelect(selId, selected) {
+  const sel = document.getElementById(selId);
+  if (!sel) return;
+  sel.innerHTML = cats.map(c=>`<option value="${c.id}"${c.id===selected?' selected':''}>${c.icon||''} ${h(c.name)}</option>`).join('');
+}
+
+// ============================================================
+// AI
+// ============================================================
+function _hasAiKey() {
+  return (_aiProvider==='groq'&&_groqKey) || (_aiProvider==='openai'&&_openaiKey) || (_aiProvider==='gemini'&&_geminiKey);
+}
+
+function buildChatContext() {
+  const pending = items.filter(i=>!i.done&&!i.archived);
+  const done = items.filter(i=>i.done).length;
+  const today = todayStr();
+  const todayItems = items.filter(i=>i.date===today&&!i.done&&!i.archived);
+  return `Eres el asistente personal de Montse, una persona organizada que usa "Montse's Flow" para manejar sus tareas.
 Hablas en español, eres amable, concisa y directa.
 Hoy es ${today}.
 Tareas pendientes (${pending.length}): ${pending.slice(0,20).map(i=>`"${i.text}"[p${i.priority}]`).join(', ')||'ninguna'}.
 Tareas para hoy: ${todayItems.map(i=>`"${i.text}"`).join(', ')||'ninguna'}.
 Tareas completadas: ${done}.
-Metas: ${goals.map(g=>`"${g.title}"(${_metaPct(g)}%)`).join(', ')||'ninguna'}.`;}
-async function _callAI(userText){if(_aiProvider==='groq'){const msgs=[{role:'system',content:buildChatContext()}];for(const hh of _chatHistory)msgs.push({role:hh.role==='assistant'?'assistant':'user',content:hh.content});msgs.push({role:'user',content:userText});const res=await fetch('https://api.groq.com/openai/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+_groqKey},body:JSON.stringify({model:'llama-3.1-8b-instant',messages:msgs,max_tokens:700,temperature:0.75})});const data=await res.json();if(data.error)throw new Error(data.error.message||JSON.stringify(data.error));return data.choices?.[0]?.message?.content||'(sin respuesta)';}else if(_aiProvider==='openai'){const msgs=[{role:'system',content:buildChatContext()}];for(const hh of _chatHistory)msgs.push({role:hh.role==='assistant'?'assistant':'user',content:hh.content});msgs.push({role:'user',content:userText});const res=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+_openaiKey},body:JSON.stringify({model:'gpt-4o-mini',messages:msgs,max_tokens:700})});const data=await res.json();if(data.error)throw new Error(data.error.message||JSON.stringify(data.error));return data.choices?.[0]?.message?.content||'(sin respuesta)';}else if(_aiProvider==='gemini'){const MODELS=[{v:'v1beta',m:'gemini-1.5-flash'},{v:'v1',m:'gemini-1.5-flash'},{v:'v1beta',m:'gemini-1.5-flash-latest'},{v:'v1',m:'gemini-1.5-flash-latest'},{v:'v1beta',m:'gemini-pro'},{v:'v1',m:'gemini-pro'}];const tryModels=_geminiModel?[{v:'v1beta',m:_geminiModel},...MODELS]:MODELS;for(const{v,m}of tryModels){try{const ctx=buildChatContext();const contents=_chatHistory.map(hh=>({role:hh.role==='assistant'?'model':'user',parts:[{text:hh.content}]}));contents.push({role:'user',parts:[{text:userText}]});const url=`https://generativelanguage.googleapis.com/${v}/models/${m}:generateContent?key=${_geminiKey}`;const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({systemInstruction:{parts:[{text:ctx}]},contents})});const data=await res.json();if(data.error)continue;const text=data.candidates?.[0]?.content?.parts?.[0]?.text;if(text){_geminiModel=m;localStorage.setItem('mf_gemini_model',m);return text;}}catch(e){continue;}}throw new Error('Ningún modelo Gemini disponible. Prueba Groq (gratis).');}
-throw new Error('No hay IA configurada.');}
-function toggleAI(){const panel=document.getElementById('ai-panel');_aiPanel=!_aiPanel;panel.classList.toggle('open',_aiPanel);if(_aiPanel&&document.getElementById('ai-messages').children.length===0){addAIMsg('bot',_hasAiKey()?'¡Hola Montse! ¿En qué te ayudo hoy? 😊':'¡Hola! Configura tu clave IA. <a href="#" onclick="openModal(\'ai-setup-modal\');renderAISetup();return false" style="color:var(--accent)">Configurar →</a>');}}
-function addAIMsg(role,content){const el=document.getElementById('ai-messages');const div=document.createElement('div');div.className='ai-msg '+role;div.innerHTML=content;el.appendChild(div);el.scrollTop=el.scrollHeight;}
-async function sendAI(){const inp=document.getElementById('ai-input');const text=inp.value.trim();if(!text)return;if(!_hasAiKey()){openModal('ai-setup-modal');renderAISetup();return;}inp.value='';addAIMsg('user',h(text));_chatHistory.push({role:'user',content:text});const thinking=document.createElement('div');thinking.className='ai-msg bot';thinking.textContent='…';document.getElementById('ai-messages').appendChild(thinking);try{const reply=await _callAI(text);thinking.textContent=reply;_chatHistory.push({role:'assistant',content:reply});if(_chatHistory.length>20)_chatHistory=_chatHistory.slice(-20);}catch(e){thinking.innerHTML='<span style="color:#ef4444">Error: '+h(e.message)+'</span>';}}
-function renderAISetup(){const prov=document.getElementById('ai-provider-sel').value;const body=document.getElementById('ai-setup-body');if(!body)return;if(prov==='groq'){body.innerHTML=`<div style="background:var(--accent-light);border-radius:10px;padding:12px 14px;font-size:.8rem;color:var(--accent);margin-bottom:10px">⚡ Groq es gratis. Crea tu cuenta en <strong>console.groq.com</strong> → API Keys → Create key</div><label class="modal-label">API Key de Groq</label><input class="modal-input" id="setup-key" placeholder="gsk_…" value="${_groqKey}"/>`;}else if(prov==='openai'){body.innerHTML=`<div style="background:#fef3c7;border-radius:10px;padding:12px 14px;font-size:.8rem;color:#92400e;margin-bottom:10px">💳 ChatGPT requiere crédito en platform.openai.com</div><label class="modal-label">API Key de OpenAI</label><input class="modal-input" id="setup-key" placeholder="sk-…" value="${_openaiKey}"/>`;}else if(prov==='gemini'){body.innerHTML=`<div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:.8rem;color:#166534;margin-bottom:10px">💎 Crea tu clave en <strong>aistudio.google.com</strong></div><label class="modal-label">API Key de Gemini</label><input class="modal-input" id="setup-key" placeholder="AIza…" value="${_geminiKey}"/>`;}else{body.innerHTML='';}}
-function saveAISetup(){const prov=document.getElementById('ai-provider-sel').value;if(!prov){showToast('Elige un proveedor');return;}const key=document.getElementById('setup-key')?.value.trim();if(!key){showToast('Ingresa tu API key');return;}_aiProvider=prov;localStorage.setItem('mf_ai_provider',prov);if(prov==='groq'){_groqKey=key;localStorage.setItem('mf_groq_key',key);}else if(prov==='openai'){_openaiKey=key;localStorage.setItem('mf_openai_key',key);}else if(prov==='gemini'){_geminiKey=key;localStorage.setItem('mf_gemini_key',key);_geminiModel='';}closeModal('ai-setup-modal');showToast('IA configurada ✓');}
-window.addEventListener('DOMContentLoaded',()=>{load();updateSidebarBadges();renderDash();if(_aiProvider)document.getElementById('ai-provider-sel').value=_aiProvider;if(_fbKey&&_fbProj){document.getElementById('fb-key').value=_fbKey;document.getElementById('fb-proj').value=_fbProj;pullFirebase().then(()=>{setSyncStatus('ok');renderCurrent();}).catch(()=>setSyncStatus('error'));}document.querySelectorAll('.modal-overlay').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');});});});
+Metas: ${goals.map(g=>`"${g.title}"(${_metaPct(g)}%)`).join(', ')||'ninguna'}.`;
+}
+
+async function _callAI(userText) {
+  if (_aiProvider==='groq') {
+    const msgs = [{role:'system',content:buildChatContext()}];
+    for (const h of _chatHistory) msgs.push({role:h.role==='assistant'?'assistant':'user',content:h.content});
+    msgs.push({role:'user',content:userText});
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+_groqKey},
+      body:JSON.stringify({model:'llama-3.1-8b-instant',messages:msgs,max_tokens:700,temperature:0.75})
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+    return data.choices?.[0]?.message?.content || '(sin respuesta)';
+  } else if (_aiProvider==='openai') {
+    const msgs = [{role:'system',content:buildChatContext()}];
+    for (const h of _chatHistory) msgs.push({role:h.role==='assistant'?'assistant':'user',content:h.content});
+    msgs.push({role:'user',content:userText});
+    const res = await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+_openaiKey},
+      body:JSON.stringify({model:'gpt-4o-mini',messages:msgs,max_tokens:700})
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message||JSON.stringify(data.error));
+    return data.choices?.[0]?.message?.content || '(sin respuesta)';
+  } else if (_aiProvider==='gemini') {
+    const MODELS = [
+      {v:'v1beta',m:'gemini-1.5-flash'},{v:'v1',m:'gemini-1.5-flash'},
+      {v:'v1beta',m:'gemini-1.5-flash-latest'},{v:'v1',m:'gemini-1.5-flash-latest'},
+      {v:'v1beta',m:'gemini-pro'},{v:'v1',m:'gemini-pro'},
+    ];
+    const tryModels = _geminiModel ? [{v:'v1beta',m:_geminiModel},...MODELS] : MODELS;
+    for (const {v,m} of tryModels) {
+      try {
+        const ctx = buildChatContext();
+        const contents = _chatHistory.map(h=>({role:h.role==='assistant'?'model':'user',parts:[{text:h.content}]}));
+        contents.push({role:'user',parts:[{text:userText}]});
+        const url = `https://generativelanguage.googleapis.com/${v}/models/${m}:generateContent?key=${_geminiKey}`;
+        const res = await fetch(url,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({systemInstruction:{parts:[{text:ctx}]},contents})
+        });
+        const data = await res.json();
+        if (data.error) continue;
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (text) { _geminiModel=m; localStorage.setItem('mf_gemini_model',m); return text; }
+      } catch(e){ continue; }
+    }
+    throw new Error('Ningún modelo Gemini disponible. Prueba Groq (gratis).');
+  }
+  throw new Error('No hay IA configurada. Haz clic en "✨ Asistente" → configurar.');
+}
+
+function toggleAI() {
+  const panel = document.getElementById('ai-panel');
+  _aiPanel = !_aiPanel;
+  panel.classList.toggle('open', _aiPanel);
+  if (_aiPanel && document.getElementById('ai-messages').children.length===0) {
+    addAIMsg('bot', _hasAiKey() ? '¡Hola Montse! ¿En qué te ayudo hoy? 😊' : '¡Hola! Para usar el asistente, configura tu clave de IA. <a href="#" onclick="openModal(\'ai-setup-modal\');renderAISetup();return false" style="color:var(--accent)">Configurar ahora →</a>');
+  }
+}
+
+function addAIMsg(role, content) {
+  const el = document.getElementById('ai-messages');
+  const div = document.createElement('div');
+  div.className = 'ai-msg ' + role;
+  div.innerHTML = content;
+  el.appendChild(div);
+  el.scrollTop = el.scrollHeight;
+}
+
+async function sendAI() {
+  const inp = document.getElementById('ai-input');
+  const text = inp.value.trim();
+  if (!text) return;
+  if (!_hasAiKey()) {
+    openModal('ai-setup-modal'); renderAISetup(); return;
+  }
+  inp.value = '';
+  addAIMsg('user', h(text));
+  _chatHistory.push({role:'user',content:text});
+  const thinking = document.createElement('div');
+  thinking.className = 'ai-msg bot';
+  thinking.textContent = '…';
+  document.getElementById('ai-messages').appendChild(thinking);
+  try {
+    const reply = await _callAI(text);
+    thinking.textContent = reply;
+    _chatHistory.push({role:'assistant',content:reply});
+    if (_chatHistory.length>20) _chatHistory = _chatHistory.slice(-20);
+  } catch(e) {
+    thinking.innerHTML = '<span style="color:#ef4444">Error: ' + h(e.message) + '</span>';
+  }
+}
+
+// AI SETUP
+function renderAISetup() {
+  const prov = document.getElementById('ai-provider-sel').value;
+  const body = document.getElementById('ai-setup-body');
+  if (!body) return;
+  if (prov==='groq') {
+    body.innerHTML = `
+      <div style="background:var(--accent-light);border-radius:10px;padding:12px 14px;font-size:.8rem;color:var(--accent);margin-bottom:10px">
+        ⚡ Groq es gratis y muy rápido. Crea tu cuenta en <strong>console.groq.com</strong> → API Keys → Create key
+      </div>
+      <label class="modal-label">API Key de Groq</label>
+      <input class="modal-input" id="setup-key" placeholder="gsk_…" value="${_groqKey}"/>`;
+  } else if (prov==='openai') {
+    body.innerHTML = `
+      <div style="background:#fef3c7;border-radius:10px;padding:12px 14px;font-size:.8rem;color:#92400e;margin-bottom:10px">
+        💳 ChatGPT requiere crédito en platform.openai.com → API keys
+      </div>
+      <label class="modal-label">API Key de OpenAI</label>
+      <input class="modal-input" id="setup-key" placeholder="sk-…" value="${_openaiKey}"/>`;
+  } else if (prov==='gemini') {
+    body.innerHTML = `
+      <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:.8rem;color:#166534;margin-bottom:10px">
+        💎 Crea tu clave en <strong>aistudio.google.com</strong> (no Google Cloud Console)
+      </div>
+      <label class="modal-label">API Key de Gemini</label>
+      <input class="modal-input" id="setup-key" placeholder="AIza…" value="${_geminiKey}"/>`;
+  } else {
+    body.innerHTML = '';
+  }
+}
+
+function saveAISetup() {
+  const prov = document.getElementById('ai-provider-sel').value;
+  if (!prov) { showToast('Elige un proveedor'); return; }
+  const key = document.getElementById('setup-key')?.value.trim();
+  if (!key) { showToast('Ingresa tu API key'); return; }
+  _aiProvider = prov;
+  localStorage.setItem('mf_ai_provider', prov);
+  if (prov==='groq') { _groqKey=key; localStorage.setItem('mf_groq_key',key); }
+  else if (prov==='openai') { _openaiKey=key; localStorage.setItem('mf_openai_key',key); }
+  else if (prov==='gemini') { _geminiKey=key; localStorage.setItem('mf_gemini_key',key); _geminiModel=''; }
+  closeModal('ai-setup-modal');
+  showToast('IA configurada ✓');
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  load();
+  updateSidebarBadges();
+  renderDash();
+  if (_aiProvider) document.getElementById('ai-provider-sel').value = _aiProvider;
+  // Restore Firebase
+  if (_fbKey && _fbProj) {
+    document.getElementById('fb-key').value = _fbKey;
+    document.getElementById('fb-proj').value = _fbProj;
+    pullFirebase().then(()=>{ setSyncStatus('ok'); renderCurrent(); }).catch(()=>setSyncStatus('error'));
+  }
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(m=>{
+    m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('open'); });
+  });
+});
 
 </script>
 
