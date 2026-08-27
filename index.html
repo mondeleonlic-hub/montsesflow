@@ -30,6 +30,7 @@
 .eis-chip{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:.75rem;font-weight:700;cursor:pointer;color:var(--text2);transition:all .15s}
 .eis-chip.active-i{background:#fff3cd;border-color:#d4a017;color:#8a6200}
 .eis-chip.active-u{background:#fde8e8;border-color:#e05050;color:#a03030}
+.eis-chip.active-no{background:#f3f4f6;border-color:#9ca3af;color:#374151}
 .eis-badge{display:inline-flex;gap:4px;align-items:center;margin-top:3px}
 .eis-tag{font-size:.6rem;font-weight:800;padding:1px 5px;border-radius:4px}
 .eis-tag.i{background:#fff3cd;color:#8a6200}
@@ -42,6 +43,12 @@
 .jam-header{background:var(--accent-light);border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
 .jam-time{font-size:1.6rem;font-weight:900;color:var(--accent);font-variant-numeric:tabular-nums}
 .jam-task{font-size:.8rem;font-weight:600;color:var(--text);flex:1}
+/* ---- Drag & Drop ---- */
+.task-item[draggable]{cursor:grab}
+.task-item[draggable]:active{cursor:grabbing}
+.task-item.dragging{opacity:.3;pointer-events:none}
+.drop-zone-active{outline:2px dashed var(--accent)!important;background:var(--accent-light)!important;border-radius:var(--radius)}
+.day-col.drop-zone-active,.log-date-card.drop-zone-active{outline:2px dashed var(--accent);background:var(--accent-light)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--main-bg);color:var(--text);min-height:100vh}
 
@@ -533,8 +540,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div>
         <label class="modal-label">Clasificación (Eisenhower)</label>
         <div class="eis-row">
-          <button class="eis-chip" id="add-chip-i" type="button" onclick="toggleEis('add','i')">⭐ Importante</button>
-          <button class="eis-chip" id="add-chip-u" type="button" onclick="toggleEis('add','u')">🔥 Urgente</button>
+          <button class="eis-chip" id="add-chip-i"  type="button" onclick="setEis('add','i',true)">⭐ Importante</button>
+          <button class="eis-chip" id="add-chip-ni" type="button" onclick="setEis('add','i',false)">— No importante</button>
+          <button class="eis-chip" id="add-chip-u"  type="button" onclick="setEis('add','u',true)">🔥 Urgente</button>
+          <button class="eis-chip" id="add-chip-nu" type="button" onclick="setEis('add','u',false)">— No urgente</button>
         </div>
       </div>
       <div class="modal-row">
@@ -611,8 +620,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div>
         <label class="modal-label">Clasificación (Eisenhower)</label>
         <div class="eis-row">
-          <button class="eis-chip" id="edit-chip-i" type="button" onclick="toggleEis('edit','i')">⭐ Importante</button>
-          <button class="eis-chip" id="edit-chip-u" type="button" onclick="toggleEis('edit','u')">🔥 Urgente</button>
+          <button class="eis-chip" id="edit-chip-i"  type="button" onclick="setEis('edit','i',true)">⭐ Importante</button>
+          <button class="eis-chip" id="edit-chip-ni" type="button" onclick="setEis('edit','i',false)">— No importante</button>
+          <button class="eis-chip" id="edit-chip-u"  type="button" onclick="setEis('edit','u',true)">🔥 Urgente</button>
+          <button class="eis-chip" id="edit-chip-nu" type="button" onclick="setEis('edit','u',false)">— No urgente</button>
         </div>
       </div>
       <div class="modal-row">
@@ -1107,7 +1118,7 @@ function renderLogDiario() {
     days.push({ ds, d });
   }
   const dateCards = days.map(({ds,d})=>`
-    <div class="log-date-card${activeLogDate===ds?' active':''}" onclick="selectLogDay('${ds}')">
+    <div class="log-date-card${activeLogDate===ds?' active':''}" onclick="selectLogDay('${ds}')" ondragover="event.preventDefault();this.classList.add('drop-zone-active')" ondragleave="this.classList.remove('drop-zone-active')" ondrop="this.classList.remove('drop-zone-active');dropOnDay(event,'${ds}');selectLogDay('${ds}')">
       <div class="ld-day">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
       <div class="ld-num">${d.getDate()}</div>
     </div>`).join('');
@@ -1183,10 +1194,10 @@ function renderSemana() {
   const cols = days.map(({d,ds})=>{
     const dayItems = items.filter(i=>i.date===ds && !i.archived);
     const isToday = ds===today;
-    return `<div class="day-col${isToday?' today':''}">
+    return `<div class="day-col${isToday?' today':''}" ondragover="event.preventDefault();this.classList.add('drop-zone-active')" ondragleave="this.classList.remove('drop-zone-active')" ondrop="this.classList.remove('drop-zone-active');dropOnDay(event,'${ds}')">
       <div class="day-name">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
       <div class="day-num">${d.getDate()}</div>
-      ${dayItems.map(i=>`<div class="day-task${i.done?' done-t':''}" onclick="openEditModal(${i.id})" title="${h(i.text)}">${h(i.text)}</div>`).join('')}
+      ${dayItems.map(i=>`<div class="day-task${i.done?' done-t':''}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})" title="${h(i.text)}">${h(i.text)}</div>`).join('')}
       <div onclick="openAddModalWithDate('${ds}')" style="font-size:.65rem;color:var(--accent);cursor:pointer;margin-top:6px;text-align:center">+ agregar</div>
     </div>`;
   }).join('');
@@ -1199,6 +1210,9 @@ function renderSemana() {
 function renderPanel(cat_key) {
   const el = document.getElementById('panel-'+cat_key);
   if (!el) return;
+  el.ondragover = e=>{ e.preventDefault(); el.classList.add('drop-zone-active'); };
+  el.ondragleave = e=>{ if(!el.contains(e.relatedTarget)) el.classList.remove('drop-zone-active'); };
+  el.ondrop = e=>{ e.preventDefault(); el.classList.remove('drop-zone-active'); dropOnPanel(e,cat_key); };
   const list = items.filter(i=>i.cat_key===cat_key && !i.done && !i.archived);
   list.sort((a,b)=>a.priority-b.priority);
   if (!list.length) {
@@ -1226,12 +1240,13 @@ function renderDone() {
 
 function taskCard(item, showDone=false) {
   const cat = getCat(item.cat);
-  const eisBadge = (item.important||item.urgent) ? `<div class="eis-badge">
-    ${item.important?'<span class="eis-tag i">⭐ IMP</span>':''}
-    ${item.urgent?'<span class="eis-tag u">🔥 URG</span>':''}
+  const hasEis = item.important!==null&&item.important!==undefined || item.urgent!==null&&item.urgent!==undefined;
+  const eisBadge = hasEis ? `<div class="eis-badge">
+    ${item.important===true?'<span class="eis-tag i">⭐ IMP</span>':item.important===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">— NI</span>':''}
+    ${item.urgent===true?'<span class="eis-tag u">🔥 URG</span>':item.urgent===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">— NU</span>':''}
   </div>` : '';
   const isJamActive = window._jam && window._jam.id===item.id;
-  return `<div class="task-item${item.done?' is-done':''}">
+  return `<div class="task-item${item.done?' is-done':''}" draggable="true" data-id="${item.id}" ondragstart="dragStart(event,${item.id})" ondragend="dragEnd(event)">
     <div class="task-check${item.done?' done':''}" onclick="toggleDone(${item.id})">${item.done?'✓':''}</div>
     <div class="priority-dot p${item.priority||3}"></div>
     <div style="flex:1;min-width:0" onclick="openEditModal(${item.id})">
@@ -1493,8 +1508,7 @@ function openAddModal() {
   document.getElementById('add-priority').value = '3';
   document.getElementById('add-tipo').value = 'todo';
   document.getElementById('add-recur').value = '';
-  document.getElementById('add-chip-i').className = 'eis-chip';
-  document.getElementById('add-chip-u').className = 'eis-chip';
+  ['add-chip-i','add-chip-ni','add-chip-u','add-chip-nu'].forEach(id=>{ document.getElementById(id).className='eis-chip'; });
   openModal('add-modal');
   setTimeout(()=>document.getElementById('add-text').focus(),100);
 }
@@ -1512,8 +1526,8 @@ function addItem() {
     deadline: document.getElementById('add-deadline').value,
     delegado: document.getElementById('add-delegado').value.trim(),
     recur: document.getElementById('add-recur').value,
-    important: document.getElementById('add-chip-i').classList.contains('active-i'),
-    urgent: document.getElementById('add-chip-u').classList.contains('active-u'),
+    important: document.getElementById('add-chip-i').classList.contains('active-i') ? true : document.getElementById('add-chip-ni').classList.contains('active-no') ? false : null,
+    urgent: document.getElementById('add-chip-u').classList.contains('active-u') ? true : document.getElementById('add-chip-nu').classList.contains('active-no') ? false : null,
     note: document.getElementById('add-note').value.trim(),
     done: false, archived: false,
     created: new Date().toISOString(),
@@ -1548,8 +1562,11 @@ function openEditModal(id) {
   document.getElementById('edit-priority').value = item.priority||3;
   document.getElementById('edit-tipo').value = item.cat_key||'todo';
   document.getElementById('edit-recur').value = item.recur||'';
-  document.getElementById('edit-chip-i').className = 'eis-chip'+(item.important?' active-i':'');
-  document.getElementById('edit-chip-u').className = 'eis-chip'+(item.urgent?' active-u':'');
+  ['edit-chip-i','edit-chip-ni','edit-chip-u','edit-chip-nu'].forEach(id=>{ document.getElementById(id).className='eis-chip'; });
+  if (item.important===true)  document.getElementById('edit-chip-i').classList.add('active-i');
+  else if (item.important===false) document.getElementById('edit-chip-ni').classList.add('active-no');
+  if (item.urgent===true)  document.getElementById('edit-chip-u').classList.add('active-u');
+  else if (item.urgent===false) document.getElementById('edit-chip-nu').classList.add('active-no');
   openModal('edit-modal');
 }
 
@@ -1565,8 +1582,8 @@ function saveEdit() {
   item.deadline = document.getElementById('edit-deadline').value;
   item.delegado = document.getElementById('edit-delegado').value.trim();
   item.recur = document.getElementById('edit-recur').value;
-  item.important = document.getElementById('edit-chip-i').classList.contains('active-i');
-  item.urgent = document.getElementById('edit-chip-u').classList.contains('active-u');
+  item.important = document.getElementById('edit-chip-i').classList.contains('active-i') ? true : document.getElementById('edit-chip-ni').classList.contains('active-no') ? false : null;
+  item.urgent = document.getElementById('edit-chip-u').classList.contains('active-u') ? true : document.getElementById('edit-chip-nu').classList.contains('active-no') ? false : null;
   item.note = document.getElementById('edit-note').value.trim();
   save();
   closeModal('edit-modal');
@@ -1584,10 +1601,56 @@ function deleteItem() {
   showToast('Tarea eliminada');
 }
 
-function toggleEis(prefix, type) {
-  const chip = document.getElementById(prefix+'-chip-'+type);
-  const cls = type==='i'?'active-i':'active-u';
-  chip.classList.toggle(cls);
+function setEis(prefix, axis, val) {
+  const yesId = prefix+'-chip-'+axis;          // e.g. add-chip-i
+  const noId  = prefix+'-chip-n'+axis;         // e.g. add-chip-ni
+  const yesEl = document.getElementById(yesId);
+  const noEl  = document.getElementById(noId);
+  const activeClass = axis==='i' ? 'active-i' : 'active-u';
+  yesEl.classList.remove(activeClass);
+  noEl.classList.remove('active-no');
+  if (val) yesEl.classList.add(activeClass);
+  else     noEl.classList.add('active-no');
+}
+
+// ---- Drag & Drop ----
+let _dragId = null;
+
+function dragStart(e, id) {
+  _dragId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', String(id));
+  setTimeout(()=>{
+    const el = document.querySelector('[data-id="'+id+'"]');
+    if (el) el.classList.add('dragging');
+  }, 0);
+}
+
+function dragEnd(e) {
+  document.querySelectorAll('.dragging').forEach(el=>el.classList.remove('dragging'));
+}
+
+function dropOnPanel(e, cat_key) {
+  if (_dragId === null) return;
+  const item = items.find(i=>i.id===_dragId);
+  if (item && item.cat_key !== cat_key) {
+    item.cat_key = cat_key;
+    save(); renderCurrent();
+    const names = {todo:'To Do',compromisos:'Compromisos',proyectos:'Proyectos',extra:'Extra',semana:'Semana'};
+    showToast('Movida a '+( names[cat_key]||cat_key)+' ✓');
+  }
+  _dragId = null;
+}
+
+function dropOnDay(e, ds) {
+  if (_dragId === null) return;
+  const item = items.find(i=>i.id===_dragId);
+  if (item && item.date !== ds) {
+    item.date = ds;
+    save(); renderCurrent();
+    showToast('Fecha → '+fmtDate(ds)+' ✓');
+  }
+  _dragId = null;
 }
 
 // ---- JAM SESH ----
