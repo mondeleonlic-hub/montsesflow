@@ -25,6 +25,23 @@
   --radius:10px;
   --shadow:0 1px 6px rgba(107,122,78,.09);
 }
+/* ---- Eisenhower chips ---- */
+.eis-row{display:flex;gap:8px;margin-top:2px;flex-wrap:wrap}
+.eis-chip{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:.75rem;font-weight:700;cursor:pointer;color:var(--text2);transition:all .15s}
+.eis-chip.active-i{background:#fff3cd;border-color:#d4a017;color:#8a6200}
+.eis-chip.active-u{background:#fde8e8;border-color:#e05050;color:#a03030}
+.eis-badge{display:inline-flex;gap:4px;align-items:center;margin-top:3px}
+.eis-tag{font-size:.6rem;font-weight:800;padding:1px 5px;border-radius:4px}
+.eis-tag.i{background:#fff3cd;color:#8a6200}
+.eis-tag.u{background:#fde8e8;color:#a03030}
+/* ---- JAM SESH ---- */
+.jam-btn{padding:3px 9px;font-size:.65rem;font-weight:800;border:none;border-radius:6px;background:var(--accent-light);color:var(--accent);cursor:pointer;transition:background .15s}
+.jam-btn:hover,.jam-btn.active{background:var(--accent);color:#fff}
+.jam-bar-wrap{background:#eef2e6;border-radius:8px;overflow:hidden;height:8px;margin:10px 0 4px}
+.jam-bar-fill{height:100%;background:var(--accent);transition:width 1s linear}
+.jam-header{background:var(--accent-light);border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.jam-time{font-size:1.6rem;font-weight:900;color:var(--accent);font-variant-numeric:tabular-nums}
+.jam-task{font-size:.8rem;font-weight:600;color:var(--text);flex:1}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--main-bg);color:var(--text);min-height:100vh}
 
@@ -484,6 +501,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <select class="modal-select" id="add-cat"></select>
         </div>
         <div>
+          <label class="modal-label">Tipo de tarea</label>
+          <select class="modal-select" id="add-tipo">
+            <option value="todo">📝 To Do</option>
+            <option value="compromisos">🤝 Compromisos</option>
+            <option value="proyectos">🚀 Proyectos</option>
+            <option value="extra">💡 Extra</option>
+            <option value="semana">📅 Semana</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div>
           <label class="modal-label">Prioridad</label>
           <select class="modal-select" id="add-priority">
             <option value="1">🔴 Alta</option>
@@ -492,10 +521,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <option value="4">⚪ Baja</option>
           </select>
         </div>
+        <div>
+          <label class="modal-label">Recurrencia</label>
+          <select class="modal-select" id="add-recur">
+            <option value="">Sin recurrencia</option>
+            <option value="daily">Diario</option>
+            <option value="weekly">Semanal</option>
+          </select>
+        </div>
       </div>
       <div>
-        <label class="modal-label">Fecha (opcional)</label>
-        <input class="modal-input" type="date" id="add-date"/>
+        <label class="modal-label">Clasificación (Eisenhower)</label>
+        <div class="eis-row">
+          <button class="eis-chip" id="add-chip-i" type="button" onclick="toggleEis('add','i')">⭐ Importante</button>
+          <button class="eis-chip" id="add-chip-u" type="button" onclick="toggleEis('add','u')">🔥 Urgente</button>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div>
+          <label class="modal-label">Fecha programada</label>
+          <input class="modal-input" type="date" id="add-date"/>
+        </div>
+        <div>
+          <label class="modal-label">Deadline</label>
+          <input class="modal-input" type="date" id="add-deadline"/>
+        </div>
+      </div>
+      <div>
+        <label class="modal-label">Delegado a (opcional)</label>
+        <input class="modal-input" id="add-delegado" placeholder="Nombre o equipo…"/>
       </div>
       <div>
         <label class="modal-label">Nota</label>
@@ -525,6 +579,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <select class="modal-select" id="edit-cat"></select>
         </div>
         <div>
+          <label class="modal-label">Tipo de tarea</label>
+          <select class="modal-select" id="edit-tipo">
+            <option value="todo">📝 To Do</option>
+            <option value="compromisos">🤝 Compromisos</option>
+            <option value="proyectos">🚀 Proyectos</option>
+            <option value="extra">💡 Extra</option>
+            <option value="semana">📅 Semana</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div>
           <label class="modal-label">Prioridad</label>
           <select class="modal-select" id="edit-priority">
             <option value="1">🔴 Alta</option>
@@ -533,10 +599,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <option value="4">⚪ Baja</option>
           </select>
         </div>
+        <div>
+          <label class="modal-label">Recurrencia</label>
+          <select class="modal-select" id="edit-recur">
+            <option value="">Sin recurrencia</option>
+            <option value="daily">Diario</option>
+            <option value="weekly">Semanal</option>
+          </select>
+        </div>
       </div>
       <div>
-        <label class="modal-label">Fecha</label>
-        <input class="modal-input" type="date" id="edit-date"/>
+        <label class="modal-label">Clasificación (Eisenhower)</label>
+        <div class="eis-row">
+          <button class="eis-chip" id="edit-chip-i" type="button" onclick="toggleEis('edit','i')">⭐ Importante</button>
+          <button class="eis-chip" id="edit-chip-u" type="button" onclick="toggleEis('edit','u')">🔥 Urgente</button>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div>
+          <label class="modal-label">Fecha programada</label>
+          <input class="modal-input" type="date" id="edit-date"/>
+        </div>
+        <div>
+          <label class="modal-label">Deadline</label>
+          <input class="modal-input" type="date" id="edit-deadline"/>
+        </div>
+      </div>
+      <div>
+        <label class="modal-label">Delegado a (opcional)</label>
+        <input class="modal-input" id="edit-delegado" placeholder="Nombre o equipo…"/>
       </div>
       <div>
         <label class="modal-label">Nota</label>
@@ -544,6 +635,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <button class="modal-btn primary" onclick="saveEdit()">Guardar cambios</button>
       <button class="modal-btn danger" onclick="deleteItem()">Eliminar tarea</button>
+    </div>
+  </div>
+</div>
+
+<!-- JAM SESH MODAL -->
+<div class="modal-overlay" id="jam-modal">
+  <div class="modal-box" style="max-width:340px;text-align:center">
+    <div class="modal-header">
+      <div class="modal-title">⚡ JAM SESH</div>
+      <button class="modal-close" onclick="closeModal('jam-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="jam-task-id"/>
+      <div id="jam-task-label" style="font-size:.82rem;color:var(--text2);margin-bottom:16px;font-weight:600"></div>
+      <div style="font-size:.8rem;color:var(--text2);margin-bottom:10px">Elige la duración del bloque:</div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px">
+        <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(30)">30 min</button>
+        <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(60)">60 min</button>
+        <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(90)">90 min</button>
+      </div>
+      <button class="modal-btn danger" onclick="closeModal('jam-modal')">Cancelar</button>
     </div>
   </div>
 </div>
@@ -1013,8 +1125,26 @@ function renderLogDiario() {
     `<div class="empty-state"><div class="es-icon">📋</div><p>Sin tareas para este día</p></div>`;
   
   const d = new Date(activeLogDate+'T12:00:00');
+  const jam = window._jam;
+  let jamHtml = '';
+  if (jam) {
+    const remaining = Math.max(0, Math.ceil((jam.endTime - Date.now())/1000));
+    const pct = Math.round(remaining / (jam.totalSecs) * 100);
+    const mins = Math.floor(remaining/60), secs = remaining%60;
+    const jamTask = items.find(i=>i.id===jam.id);
+    jamHtml = `<div class="jam-header">
+      <div>
+        <div style="font-size:.65rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.05em">⚡ JAM SESH ACTIVO</div>
+        <div class="jam-task">${jamTask?h(jamTask.text):'Tarea'}</div>
+      </div>
+      <div class="jam-time">${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</div>
+      <button class="jam-btn" onclick="stopJamSesh()" style="background:var(--red);color:#fff">✕</button>
+    </div>
+    <div class="jam-bar-wrap"><div class="jam-bar-fill" id="jam-bar-fill" style="width:${pct}%"></div></div>`;
+  }
   el.innerHTML = `
     <div class="log-dates">${dateCards}</div>
+    ${jamHtml}
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
         <div style="font-weight:800;font-size:.95rem">${d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
@@ -1096,16 +1226,23 @@ function renderDone() {
 
 function taskCard(item, showDone=false) {
   const cat = getCat(item.cat);
+  const eisBadge = (item.important||item.urgent) ? `<div class="eis-badge">
+    ${item.important?'<span class="eis-tag i">⭐ IMP</span>':''}
+    ${item.urgent?'<span class="eis-tag u">🔥 URG</span>':''}
+  </div>` : '';
+  const isJamActive = window._jam && window._jam.id===item.id;
   return `<div class="task-item${item.done?' is-done':''}">
     <div class="task-check${item.done?' done':''}" onclick="toggleDone(${item.id})">${item.done?'✓':''}</div>
     <div class="priority-dot p${item.priority||3}"></div>
     <div style="flex:1;min-width:0" onclick="openEditModal(${item.id})">
       <div class="task-text">${h(item.text)}</div>
       ${item.note?`<div class="task-note">${h(item.note)}</div>`:''}
+      ${eisBadge}
     </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
       <div class="task-cat">${cat.icon} ${h(cat.name)}</div>
       ${item.date?`<div style="font-size:.65rem;color:var(--text2)">${fmtDate(item.date)}</div>`:''}
+      ${!item.done?`<button class="jam-btn${isJamActive?' active':''}" onclick="event.stopPropagation();openJamModal(${item.id})">⚡ JAM</button>`:''}
     </div>
   </div>`;
 }
@@ -1351,7 +1488,13 @@ function openAddModal() {
   document.getElementById('add-text').value = '';
   document.getElementById('add-note').value = '';
   document.getElementById('add-date').value = '';
+  document.getElementById('add-deadline').value = '';
+  document.getElementById('add-delegado').value = '';
   document.getElementById('add-priority').value = '3';
+  document.getElementById('add-tipo').value = 'todo';
+  document.getElementById('add-recur').value = '';
+  document.getElementById('add-chip-i').className = 'eis-chip';
+  document.getElementById('add-chip-u').className = 'eis-chip';
   openModal('add-modal');
   setTimeout(()=>document.getElementById('add-text').focus(),100);
 }
@@ -1360,13 +1503,17 @@ function addItem() {
   const text = document.getElementById('add-text').value.trim();
   if (!text) { showToast('Escribe algo primero'); return; }
   const catId = Number(document.getElementById('add-cat').value);
-  const cat = cats.find(c=>c.id===catId);
-  const cat_key = catKeyFromId(catId);
+  const cat_key = document.getElementById('add-tipo').value || 'todo';
   const item = {
     id: nextId++,
     text, cat: catId, cat_key,
     priority: Number(document.getElementById('add-priority').value)||3,
     date: document.getElementById('add-date').value,
+    deadline: document.getElementById('add-deadline').value,
+    delegado: document.getElementById('add-delegado').value.trim(),
+    recur: document.getElementById('add-recur').value,
+    important: document.getElementById('add-chip-i').classList.contains('active-i'),
+    urgent: document.getElementById('add-chip-u').classList.contains('active-u'),
     note: document.getElementById('add-note').value.trim(),
     done: false, archived: false,
     created: new Date().toISOString(),
@@ -1396,7 +1543,13 @@ function openEditModal(id) {
   document.getElementById('edit-text').value = item.text||'';
   document.getElementById('edit-note').value = item.note||'';
   document.getElementById('edit-date').value = item.date||'';
+  document.getElementById('edit-deadline').value = item.deadline||'';
+  document.getElementById('edit-delegado').value = item.delegado||'';
   document.getElementById('edit-priority').value = item.priority||3;
+  document.getElementById('edit-tipo').value = item.cat_key||'todo';
+  document.getElementById('edit-recur').value = item.recur||'';
+  document.getElementById('edit-chip-i').className = 'eis-chip'+(item.important?' active-i':'');
+  document.getElementById('edit-chip-u').className = 'eis-chip'+(item.urgent?' active-u':'');
   openModal('edit-modal');
 }
 
@@ -1406,9 +1559,14 @@ function saveEdit() {
   if (!item) return;
   item.text = document.getElementById('edit-text').value.trim() || item.text;
   item.cat = Number(document.getElementById('edit-cat').value);
-  item.cat_key = catKeyFromId(item.cat);
+  item.cat_key = document.getElementById('edit-tipo').value || item.cat_key || 'todo';
   item.priority = Number(document.getElementById('edit-priority').value)||3;
   item.date = document.getElementById('edit-date').value;
+  item.deadline = document.getElementById('edit-deadline').value;
+  item.delegado = document.getElementById('edit-delegado').value.trim();
+  item.recur = document.getElementById('edit-recur').value;
+  item.important = document.getElementById('edit-chip-i').classList.contains('active-i');
+  item.urgent = document.getElementById('edit-chip-u').classList.contains('active-u');
   item.note = document.getElementById('edit-note').value.trim();
   save();
   closeModal('edit-modal');
@@ -1424,6 +1582,62 @@ function deleteItem() {
   closeModal('edit-modal');
   renderCurrent();
   showToast('Tarea eliminada');
+}
+
+function toggleEis(prefix, type) {
+  const chip = document.getElementById(prefix+'-chip-'+type);
+  const cls = type==='i'?'active-i':'active-u';
+  chip.classList.toggle(cls);
+}
+
+// ---- JAM SESH ----
+window._jam = null;
+
+function openJamModal(id) {
+  const item = items.find(i=>i.id===id);
+  if (!item) return;
+  document.getElementById('jam-task-id').value = id;
+  document.getElementById('jam-task-label').textContent = item.text;
+  openModal('jam-modal');
+}
+
+function startJamSesh(mins) {
+  const id = Number(document.getElementById('jam-task-id').value);
+  closeModal('jam-modal');
+  if (window._jam && window._jam.interval) clearInterval(window._jam.interval);
+  const totalSecs = mins * 60;
+  window._jam = {
+    id, mins, totalSecs,
+    endTime: Date.now() + totalSecs * 1000,
+    interval: null
+  };
+  // Switch to Log Diario
+  switchTab('log');
+  renderLogDiario();
+  // Start tick
+  window._jam.interval = setInterval(()=>{
+    const remaining = Math.max(0, Math.ceil((window._jam.endTime - Date.now())/1000));
+    const pct = Math.round(remaining / window._jam.totalSecs * 100);
+    const bar = document.getElementById('jam-bar-fill');
+    const timeEl = document.querySelector('.jam-time');
+    if (bar) bar.style.width = pct + '%';
+    if (timeEl) {
+      const m = Math.floor(remaining/60), s = remaining%60;
+      timeEl.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    }
+    if (remaining <= 0) {
+      stopJamSesh();
+      showToast('⚡ ¡JAM SESH terminado!');
+    }
+  }, 1000);
+  showToast('⚡ JAM SESH iniciado — '+mins+' min');
+}
+
+function stopJamSesh() {
+  if (window._jam && window._jam.interval) clearInterval(window._jam.interval);
+  window._jam = null;
+  renderLogDiario();
+  renderCurrent();
 }
 
 function toggleDone(id) {
