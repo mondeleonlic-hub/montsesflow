@@ -153,6 +153,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .focus-row:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
 .focus-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .focus-text{font-size:.84rem;font-weight:600;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.focus-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all .15s;font-size:.7rem}
+.focus-check:hover{border-color:var(--accent);background:var(--accent-light)}
+/* ---- Subtasks ---- */
+.sub-list{margin-top:6px;display:flex;flex-direction:column;gap:3px}
+.sub-row{display:flex;align-items:center;gap:7px;font-size:.76rem;color:var(--text2);padding:3px 0}
+.sub-check{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border);background:#fff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;transition:all .15s}
+.sub-check:hover{border-color:var(--accent)}
+.sub-check.done{background:var(--accent);border-color:var(--accent);color:#fff}
+.sub-text.done{text-decoration:line-through;color:var(--text2)}
+.sub-inp-row{display:flex;gap:6px;margin-top:8px}
+.sub-inp-row input{flex:1;padding:6px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.8rem;outline:none}
+.sub-inp-row input:focus{border-color:var(--accent)}
+.sub-inp-row button{padding:6px 12px;background:var(--accent-light);color:var(--accent);border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer}
+.sub-progress{font-size:.65rem;color:var(--accent);font-weight:700;margin-top:4px}
+.sub-remove{margin-left:auto;color:var(--text2);background:none;border:none;cursor:pointer;font-size:.8rem;padding:0 2px;opacity:.5}
+.sub-remove:hover{opacity:1;color:var(--red)}
 .focus-cat{font-size:.65rem;color:var(--text2);background:var(--main-bg);padding:2px 8px;border-radius:99px;white-space:nowrap}
 .heading-card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:var(--shadow)}
 .heading-card-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-bottom:14px}
@@ -564,6 +580,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <label class="modal-label">Nota</label>
         <textarea class="modal-textarea" id="add-note" placeholder="Notas adicionales…"></textarea>
       </div>
+      <div>
+        <label class="modal-label">Acciones / subtareas</label>
+        <div class="sub-list" id="add-sub-list"></div>
+        <div class="sub-inp-row">
+          <input id="add-sub-inp" placeholder="Agregar acción…" onkeydown="if(event.key==='Enter'){event.preventDefault();addSubtask('add')}"/>
+          <button type="button" onclick="addSubtask('add')">+ Agregar</button>
+        </div>
+      </div>
       <button class="modal-btn primary" onclick="addItem()">Agregar tarea</button>
     </div>
   </div>
@@ -643,6 +667,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div>
         <label class="modal-label">Nota</label>
         <textarea class="modal-textarea" id="edit-note"></textarea>
+      </div>
+      <div>
+        <label class="modal-label">Acciones / subtareas</label>
+        <div class="sub-list" id="edit-sub-list"></div>
+        <div class="sub-inp-row">
+          <input id="edit-sub-inp" placeholder="Agregar acción…" onkeydown="if(event.key==='Enter'){event.preventDefault();addSubtask('edit')}"/>
+          <button type="button" onclick="addSubtask('edit')">+ Agregar</button>
+        </div>
       </div>
       <button class="modal-btn primary" onclick="saveEdit()">Guardar cambios</button>
       <button class="modal-btn danger" onclick="deleteItem()">Eliminar tarea</button>
@@ -1019,9 +1051,15 @@ function renderDash() {
   const focus = pending.sort((a,b)=>a.priority-b.priority).slice(0,5);
   const focusRows = focus.length ? focus.map(item => {
     const cat = getCat(item.cat);
-    return `<div class="focus-row" onclick="openEditModal(${item.id})">
+    const subs = item.subtasks||[];
+    const subDone = subs.filter(s=>s.done).length;
+    return `<div class="focus-row">
+      <div class="focus-check" onclick="event.stopPropagation();toggleDone(${item.id})" title="Marcar hecha">✓</div>
       <div class="focus-dot" style="background:${priorityColor(item.priority)}"></div>
-      <div class="focus-text">${h(item.text)}</div>
+      <div style="flex:1;min-width:0" onclick="openEditModal(${item.id})" style="cursor:pointer">
+        <div class="focus-text">${h(item.text)}</div>
+        ${subs.length?`<div class="sub-progress">${subDone}/${subs.length} acciones</div>`:''}
+      </div>
       <div class="focus-cat">${cat.icon} ${h(cat.name)}</div>
     </div>`;
   }).join('') : `<div class="empty-state"><div class="es-icon">🎉</div><p>¡Todo al día!</p></div>`;
@@ -1253,6 +1291,12 @@ function taskCard(item, showDone=false) {
       <div class="task-text">${h(item.text)}</div>
       ${item.note?`<div class="task-note">${h(item.note)}</div>`:''}
       ${eisBadge}
+      ${(item.subtasks&&item.subtasks.length)?`<div class="sub-list" onclick="event.stopPropagation()">
+        ${item.subtasks.map((s,si)=>`<div class="sub-row">
+          <div class="sub-check${s.done?' done':''}" onclick="toggleSubtask(${item.id},${si})">${s.done?'✓':''}</div>
+          <span class="sub-text${s.done?' done':''}">${h(s.text)}</span>
+        </div>`).join('')}
+      </div>`:''}
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
       <div class="task-cat">${cat.icon} ${h(cat.name)}</div>
@@ -1509,6 +1553,8 @@ function openAddModal() {
   document.getElementById('add-tipo').value = 'todo';
   document.getElementById('add-recur').value = '';
   ['add-chip-i','add-chip-ni','add-chip-u','add-chip-nu'].forEach(id=>{ document.getElementById(id).className='eis-chip'; });
+  window._addSubs = [];
+  renderSubList('add');
   openModal('add-modal');
   setTimeout(()=>document.getElementById('add-text').focus(),100);
 }
@@ -1529,6 +1575,7 @@ function addItem() {
     important: document.getElementById('add-chip-i').classList.contains('active-i') ? true : document.getElementById('add-chip-ni').classList.contains('active-no') ? false : null,
     urgent: document.getElementById('add-chip-u').classList.contains('active-u') ? true : document.getElementById('add-chip-nu').classList.contains('active-no') ? false : null,
     note: document.getElementById('add-note').value.trim(),
+    subtasks: (window._addSubs||[]).map(s=>({...s})),
     done: false, archived: false,
     created: new Date().toISOString(),
   };
@@ -1562,6 +1609,8 @@ function openEditModal(id) {
   document.getElementById('edit-priority').value = item.priority||3;
   document.getElementById('edit-tipo').value = item.cat_key||'todo';
   document.getElementById('edit-recur').value = item.recur||'';
+  window._editSubs = (item.subtasks||[]).map(s=>({...s}));
+  renderSubList('edit');
   ['edit-chip-i','edit-chip-ni','edit-chip-u','edit-chip-nu'].forEach(id=>{ document.getElementById(id).className='eis-chip'; });
   if (item.important===true)  document.getElementById('edit-chip-i').classList.add('active-i');
   else if (item.important===false) document.getElementById('edit-chip-ni').classList.add('active-no');
@@ -1585,6 +1634,7 @@ function saveEdit() {
   item.important = document.getElementById('edit-chip-i').classList.contains('active-i') ? true : document.getElementById('edit-chip-ni').classList.contains('active-no') ? false : null;
   item.urgent = document.getElementById('edit-chip-u').classList.contains('active-u') ? true : document.getElementById('edit-chip-nu').classList.contains('active-no') ? false : null;
   item.note = document.getElementById('edit-note').value.trim();
+  item.subtasks = (window._editSubs||[]).map(s=>({...s}));
   save();
   closeModal('edit-modal');
   renderCurrent();
@@ -1611,6 +1661,53 @@ function setEis(prefix, axis, val) {
   noEl.classList.remove('active-no');
   if (val) yesEl.classList.add(activeClass);
   else     noEl.classList.add('active-no');
+}
+
+// ---- Subtasks ----
+window._addSubs = [];
+window._editSubs = [];
+
+function renderSubList(prefix) {
+  const subs = prefix==='add' ? window._addSubs : window._editSubs;
+  const el = document.getElementById(prefix+'-sub-list');
+  if (!el) return;
+  el.innerHTML = subs.map((s,i)=>`
+    <div class="sub-row">
+      <div class="sub-check${s.done?' done':''}" onclick="toggleModalSub('${prefix}',${i})">${s.done?'✓':''}</div>
+      <span class="sub-text${s.done?' done':''}">${h(s.text)}</span>
+      <button class="sub-remove" onclick="removeSubtask('${prefix}',${i})">✕</button>
+    </div>`).join('');
+}
+
+function addSubtask(prefix) {
+  const inp = document.getElementById(prefix+'-sub-inp');
+  const text = inp.value.trim();
+  if (!text) return;
+  const arr = prefix==='add' ? window._addSubs : window._editSubs;
+  arr.push({ id: Date.now(), text, done: false });
+  inp.value = '';
+  renderSubList(prefix);
+  inp.focus();
+}
+
+function removeSubtask(prefix, idx) {
+  const arr = prefix==='add' ? window._addSubs : window._editSubs;
+  arr.splice(idx, 1);
+  renderSubList(prefix);
+}
+
+function toggleModalSub(prefix, idx) {
+  const arr = prefix==='add' ? window._addSubs : window._editSubs;
+  arr[idx].done = !arr[idx].done;
+  renderSubList(prefix);
+}
+
+function toggleSubtask(itemId, subIdx) {
+  const item = items.find(i=>i.id===itemId);
+  if (!item || !item.subtasks) return;
+  item.subtasks[subIdx].done = !item.subtasks[subIdx].done;
+  save();
+  renderCurrent();
 }
 
 // ---- Drag & Drop ----
