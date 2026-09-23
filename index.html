@@ -1158,7 +1158,7 @@ function renderDash() {
     tarde:  pending.filter(i=>i.slot==='tarde'),
     noche:  pending.filter(i=>i.slot==='noche'),
   };
-  const unassigned = pending.filter(i=>!i.slot);
+  const unassigned = pending.filter(i=>!i.slot && i.cat_key==='todo');
   const unassignedHtml = unassigned.length ? `
     <div style="background:#f9fafb;border:1.5px dashed var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px">
       <div style="font-size:.6rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px">📋 Sin asignar — arrastra al momento del día ↓</div>
@@ -1202,8 +1202,11 @@ function renderDash() {
       <div id="dash-tl-fill" style="position:absolute;left:0;width:${tlPct}%;height:2px;background:var(--accent);border-radius:1px;transition:width 60s linear"></div>
       <div id="dash-tl-dot" style="position:absolute;left:${tlPct}%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:#f97316;border:2px solid #fff;box-shadow:0 0 0 1.5px #f97316;transition:left 60s linear"></div>
     </div>
-    <div style="display:flex;justify-content:space-between;margin-top:6px">
-      ${tlHours.map(hh=>`<span style="font-size:.6rem;color:${h_>=hh?'var(--accent)':'var(--text2)'};font-weight:${h_>=hh?'700':'400'}">${hh}h</span>`).join('')}
+    <div style="position:relative;height:16px;margin-top:4px">
+      ${tlHours.map(hh=>{
+        const pctH = Math.round(hh/24*100);
+        return `<span style="position:absolute;left:${pctH}%;transform:translateX(-50%);font-size:.6rem;color:${h_>=hh?'var(--accent)':'var(--text2)'};font-weight:${h_>=hh?'700':'400'};white-space:nowrap">${hh}h</span>`;
+      }).join('')}
     </div>
   </div>`;
 
