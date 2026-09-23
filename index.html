@@ -172,6 +172,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 /* ---- Focus pin ---- */
 .pin-btn{background:none;border:none;cursor:pointer;font-size:.85rem;opacity:.3;transition:opacity .15s;padding:2px 4px;line-height:1}
 .pin-btn:hover,.pin-btn.pinned{opacity:1}
+/* ---- Mini-kanban dashboard ---- */
+.kb-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.kb-col{border-radius:10px;border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column}
+.kb-col-head{padding:9px 12px;font-size:.78rem;font-weight:800;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.kb-badge{font-size:.65rem;font-weight:800;padding:1px 8px;border-radius:9px}
+.kb-col-body{padding:7px;display:flex;flex-direction:column;gap:5px;flex:1;background:var(--main-bg)}
+.kb-task{display:flex;align-items:flex-start;gap:7px;padding:7px 8px;background:var(--card);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color .15s}
+.kb-task:hover{border-color:var(--accent)}
+.kb-task-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.55rem;color:transparent;cursor:pointer;flex-shrink:0;transition:all .15s;margin-top:1px}
+.kb-task-check:hover{border-color:var(--accent);color:var(--accent)}
+.kb-task-text{font-size:.77rem;font-weight:600;color:var(--text);line-height:1.35;word-break:break-word}
+.kb-task-date{font-size:.62rem;color:var(--text2);margin-top:2px}
+.kb-task-date.overdue{color:#ef4444;font-weight:700}
+.kb-more{font-size:.72rem;color:var(--accent);font-weight:700;cursor:pointer;text-align:center;padding:5px;border-radius:6px;transition:background .15s;margin-top:2px}
+.kb-more:hover{background:var(--accent-light)}
 .focus-cat{font-size:.65rem;color:var(--text2);background:var(--main-bg);padding:2px 8px;border-radius:99px;white-space:nowrap}
 .heading-card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:var(--shadow)}
 .heading-card-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-bottom:14px}
@@ -770,15 +785,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div class="modal-body">
       <input type="hidden" id="meta-id"/>
-      <div class="modal-row">
-        <div>
-          <label class="modal-label">Icono</label>
-          <input class="modal-input" id="meta-icon" placeholder="🎯" maxlength="4"/>
+      <div>
+        <label class="modal-label">Icono</label>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+          <div id="meta-icon-preview" style="font-size:2rem;width:44px;text-align:center">🎯</div>
+          <input class="modal-input" id="meta-icon" placeholder="🎯" maxlength="4" style="width:70px" oninput="document.getElementById('meta-icon-preview').textContent=this.value||'🎯'"/>
         </div>
-        <div>
-          <label class="modal-label">Color</label>
-          <input class="modal-input" type="color" id="meta-color" value="#6b7a4e" style="height:42px;cursor:pointer"/>
-        </div>
+        <div id="meta-emoji-grid" style="display:flex;flex-wrap:wrap;gap:4px;max-height:100px;overflow-y:auto;padding:4px 0;margin-bottom:6px"></div>
+      </div>
+      <div>
+        <label class="modal-label">Color</label>
+        <div id="meta-color-swatches" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"></div>
+        <input type="hidden" id="meta-color" value="#6b7a4e"/>
       </div>
       <div>
         <label class="modal-label">Título</label>
@@ -799,12 +817,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <div class="modal-row">
         <div>
-          <label class="modal-label">Progreso actual (%)</label>
+          <label class="modal-label">Progreso manual (%)</label>
           <input class="modal-input" type="number" id="meta-pct" min="0" max="100" value="0"/>
+          <div style="font-size:.65rem;color:var(--text2);margin-top:3px">Solo si no usas hitos</div>
         </div>
         <div>
           <label class="modal-label">Fecha límite</label>
           <input class="modal-input" type="date" id="meta-due"/>
+        </div>
+      </div>
+      <div>
+        <label class="modal-label">Hitos / Pasos</label>
+        <div class="sub-list" id="meta-ms-list"></div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <input class="modal-input" id="meta-ms-inp" placeholder="Agregar hito…" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addMetaMilestone()}"/>
+          <button class="btn-sm" onclick="addMetaMilestone()">+</button>
         </div>
       </div>
       <button class="modal-btn primary" onclick="saveMeta()">Guardar meta</button>
@@ -1063,117 +1090,181 @@ function renderDash() {
   const el = document.getElementById('panel-dash');
   if (!el) return;
   const now = new Date();
-  const G = now.getHours()<12?'Buenos días ☀️':now.getHours()<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
+  const h_ = now.getHours();
+  const G = h_<12?'Buenos días ☀️':h_<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
   const today = todayStr();
   const pending = items.filter(i=>!i.done && !i.archived);
   const doneAll = items.filter(i=>i.done).length;
   const doneToday = items.filter(i=>i.done && i.doneDate===today);
   const overdue = items.filter(i=>!i.done && !i.archived && i.date && i.date < today);
   const totalPend = pending.length;
-  const pct = doneAll+totalPend>0 ? Math.round(doneAll/(doneAll+totalPend)*100) : 0;
 
-  // Gauge SVG
-  const r=54, cx=64, cy=64, circ=2*Math.PI*r;
-  const dash = circ*(pct/100), gap = circ - dash;
-  const gaugeSvg = `<svg width="128" height="90" viewBox="0 0 128 128">
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#eef2e6" stroke-width="12"/>
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#6b7a4e" stroke-width="12"
-      stroke-dasharray="${dash} ${gap}" stroke-dashoffset="${circ*0.25}" stroke-linecap="round"/>
-    <text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="22" font-weight="900" fill="#1c2018">${pct}%</text>
-  </svg>`;
-
-  // Focus rows: pinned first, else top 5 by priority
-  const pinned = pending.filter(i=>i.focus);
-  const focus = pinned.length ? pinned : pending.sort((a,b)=>a.priority-b.priority).slice(0,5);
-  const focusRows = focus.length ? focus.map(item => {
-    const cat = getCat(item.cat);
-    const subs = item.subtasks||[];
-    const subDone = subs.filter(s=>s.done).length;
-    return `<div class="focus-row">
-      <div class="focus-check" onclick="event.stopPropagation();toggleDone(${item.id})" title="Marcar hecha">✓</div>
-      <div class="focus-dot" style="background:${priorityColor(item.priority)}"></div>
-      <div style="flex:1;min-width:0" onclick="openEditModal(${item.id})" style="cursor:pointer">
-        <div class="focus-text">${h(item.text)}</div>
-        ${subs.length?`<div class="sub-progress">${subDone}/${subs.length} acciones</div>`:''}
+  // ── FOCUS HERO ──
+  const focusItem = pending.find(i=>i.focus) || (overdue[0]) || pending[0];
+  const focusHtml = focusItem ? (()=>{
+    const subs = focusItem.subtasks||[];
+    const doneSubs = subs.filter(s=>s.done).length;
+    const subPct = subs.length ? Math.round(doneSubs/subs.length*100) : 0;
+    const isJamActive = window._jam && window._jam.taskId===focusItem.id && window._jam.remaining>0;
+    return `<div style="background:var(--accent-light);border:1.5px solid #c8d8a8;border-radius:12px;padding:18px;margin-bottom:14px">
+      <div style="font-size:.62rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">⚡ En foco ahora</div>
+      <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.4">${h(focusItem.text)}</div>
+      ${subs.length ? `
+        <div style="height:5px;background:#dde8cc;border-radius:3px;margin-bottom:7px">
+          <div style="width:${subPct}%;height:100%;background:var(--accent);border-radius:3px;transition:width .3s"></div>
+        </div>` : ''}
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        ${subs.length ? `<span style="font-size:.7rem;color:var(--accent)">${doneSubs}/${subs.length} acciones</span><span style="color:#ccc;font-size:.7rem">·</span>` : ''}
+        ${focusItem.focus ? `<span style="font-size:.7rem;color:var(--accent)">📌 Fijada manualmente</span>` : ''}
+        ${overdue.includes(focusItem) ? `<span style="font-size:.7rem;color:#ef4444;font-weight:700">⚠️ Vencida</span>` : ''}
+        <div style="margin-left:auto;display:flex;gap:7px">
+          <button onclick="toggleDone(${focusItem.id})" style="padding:5px 12px;background:#fff;border:1.5px solid #c8d8a8;border-radius:7px;font-size:.7rem;font-weight:700;cursor:pointer;color:var(--accent)">✓ Hecha</button>
+          <button onclick="openJamModal(${focusItem.id})" style="background:var(--accent);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:.7rem;font-weight:800;cursor:pointer">${isJamActive?'⏱ JAM activo':'⚡ JAM SESH'}</button>
+        </div>
       </div>
-      <div class="focus-cat">${cat.icon} ${h(cat.name)}</div>
     </div>`;
-  }).join('') : `<div class="empty-state"><div class="es-icon">🎉</div><p>¡Todo al día!</p></div>`;
+  })() : '';
 
-  // Projects list
-  const projItems = items.filter(i=>i.cat_key==='proyectos' && !i.done && !i.archived).slice(0,4);
+  // ── STORY BAND (mañana/tarde/noche) ──
+  const slotDefs = [
+    {label:'☀️ Mañana',   from:0,  to:12, bg:'#fffbeb', lcolor:'#92400e', border:'#fde68a'},
+    {label:'🌤️ Tarde',    from:12, to:19, bg:'#f0fdf4', lcolor:'#166534', border:'#bbf7d0'},
+    {label:'🌙 Noche',    from:19, to:24, bg:'#f8f7ff', lcolor:'#4c1d95', border:'#ddd6fe'},
+  ];
+  const activeSlotIdx = h_<12 ? 0 : h_<19 ? 1 : 2;
+  const storyHtml = `<div style="display:grid;grid-template-columns:repeat(3,1fr);border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:14px">
+    ${slotDefs.map((s,si)=>{
+      const slotItems = pending.filter(i=>{
+        if (!i.date || i.date !== today) return false;
+        return true;
+      });
+      // distribute roughly: mañana = priority 1-2, tarde = 3, noche = sin fecha/extra
+      const buckets = [
+        pending.filter(i=>i.priority<=2 && !i.done),
+        pending.filter(i=>i.priority===3 && !i.done),
+        pending.filter(i=>i.priority>=4 && !i.done),
+      ];
+      const buck = buckets[si];
+      const isNow = si===activeSlotIdx;
+      return `<div style="background:${s.bg};padding:13px 14px;border-right:${si<2?'1px solid var(--border)':'none'};position:relative">
+        ${isNow?`<div style="position:absolute;top:0;left:0;right:0;height:3px;background:${s.lcolor}"></div>`:''}
+        <div style="font-size:.6rem;font-weight:800;color:${s.lcolor};text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">${s.label}${isNow?' · ahora':''}</div>
+        <div style="font-size:.8rem;font-weight:700;color:var(--text);margin-bottom:3px">${buck.length} tareas</div>
+        <div style="display:flex;flex-direction:column;gap:3px;margin-top:7px">
+          ${buck.slice(0,3).map(i=>`<div style="display:flex;align-items:center;gap:5px;font-size:.7rem;color:var(--text)">
+            <div style="width:5px;height:5px;border-radius:50%;background:${i.priority<=2?'#ef4444':i.priority===3?'#f97316':'#6b7a4e'};flex-shrink:0"></div>
+            <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px">${h(i.text)}</span>
+          </div>`).join('')}
+          ${buck.length>3?`<div style="font-size:.65rem;color:var(--text2)">+${buck.length-3} más</div>`:''}
+          ${buck.length===0?`<div style="font-size:.65rem;color:var(--text2);margin-top:2px">Sin tareas aquí</div>`:''}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+
+  // ── TIMELINE DEL DÍA ──
+  const tlPct = Math.round((h_*60+now.getMinutes())/(24*60)*100);
+  const tlHours = [8,10,12,14,17,20];
+  const timelineHtml = `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin-bottom:14px">
+    <div style="font-size:.65rem;color:var(--text2);margin-bottom:10px">Progreso del día — ${now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
+    <div style="position:relative;height:18px;display:flex;align-items:center">
+      <div style="position:absolute;left:0;right:0;height:2px;background:#e8ecdf;border-radius:1px"></div>
+      <div style="position:absolute;left:0;width:${tlPct}%;height:2px;background:var(--accent);border-radius:1px;transition:width 1s"></div>
+      <div style="position:absolute;left:${tlPct}%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:#f97316;border:2px solid #fff;box-shadow:0 0 0 1.5px #f97316"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px">
+      ${tlHours.map(hh=>`<span style="font-size:.6rem;color:${h_>=hh?'var(--accent)':'var(--text2)'};font-weight:${h_>=hh?'700':'400'}">${hh}h</span>`).join('')}
+    </div>
+  </div>`;
+
+  // ── STATS ──
+  const statsHtml = `<div class="stats-row" style="margin-bottom:14px">
+    <div class="stat-card"><div class="stat-num" style="color:var(--accent)">${totalPend}</div><div class="stat-lbl">Pendientes</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#22c55e">${doneToday.length}</div><div class="stat-lbl">Hechas hoy</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#ef4444">${overdue.length}</div><div class="stat-lbl">Vencidas</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#f97316">${goals.length}</div><div class="stat-lbl">Metas</div></div>
+  </div>`;
+
+  // ── KANBAN + METAS/VENCIDAS ──
+  const kbCols = [
+    {key:'todo',        label:'To Do',       color:'#ef4444', bg:'#fef2f2', tab:'todo'},
+    {key:'compromisos', label:'Compromisos',  color:'#f97316', bg:'#fff7ed', tab:'compromisos'},
+    {key:'proyectos',   label:'Proyectos',    color:'#6b7a4e', bg:'#eef2e6', tab:'proyectos'},
+    {key:'extra',       label:'Extra',        color:'#4a7a8a', bg:'#e6f1fb', tab:'extra'},
+  ];
+  const kanbanHtml = `<div class="kb-grid" style="margin-bottom:14px">
+    ${kbCols.map(col=>{
+      const colItems = pending.filter(i=>i.cat_key===col.key).sort((a,b)=>(a.priority||3)-(b.priority||3));
+      const shown = colItems.slice(0,3);
+      return `<div class="kb-col" ondragover="event.preventDefault();this.classList.add('drop-zone-active')" ondragleave="if(!this.contains(event.relatedTarget))this.classList.remove('drop-zone-active')" ondrop="this.classList.remove('drop-zone-active');dropOnPanel(event,'${col.key}')">
+        <div class="kb-col-head" style="background:${col.bg}">
+          <span style="color:${col.color}">${col.label}</span>
+          <span class="kb-badge" style="background:${col.color};color:#fff">${colItems.length}</span>
+        </div>
+        <div class="kb-col-body">
+          ${shown.length ? shown.map(i=>{
+            const subs=i.subtasks||[];
+            return `<div class="kb-task" draggable="true" data-id="${i.id}" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})">
+              <div class="kb-task-check" onclick="event.stopPropagation();toggleDone(${i.id})">✓</div>
+              <div style="flex:1;min-width:0">
+                <div class="kb-task-text">${h(i.text)}</div>
+                ${i.date?`<div class="kb-task-date${i.date<today?' overdue':''}">${fmtDate(i.date)}</div>`:''}
+                ${subs.length?`<div style="font-size:.6rem;color:var(--accent)">${subs.filter(s=>s.done).length}/${subs.length} acciones</div>`:''}
+              </div>
+              <div class="priority-dot p${i.priority||3}" style="margin-left:2px;flex-shrink:0"></div>
+            </div>`;
+          }).join('') : `<div style="font-size:.72rem;color:var(--text2);text-align:center;padding:14px 0">¡Todo listo! ✨</div>`}
+          ${colItems.length>3?`<div class="kb-more" onclick="switchTab('${col.tab}')">+${colItems.length-3} más →</div>`:''}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+
+  // ── METAS + VENCIDAS ──
+  const bottomHtml = `<div class="overview-grid">
+    <div>
+      <div class="heading-card">
+        <div class="heading-card-title">⭐ Metas 2026</div>
+        ${goals.length ? goals.slice(0,3).map(g=>{
+          const gp=Math.min(_metaPct(g),100);
+          return `<div style="margin-bottom:8px">
+            <div style="display:flex;justify-content:space-between;font-size:.76rem;font-weight:600;color:var(--text);margin-bottom:3px">
+              <span>${g.icon||'🎯'} ${h(g.title)}</span><span style="color:${g.color||'#6b7a4e'}">${gp}%</span>
+            </div>
+            <div style="height:5px;background:#eee;border-radius:3px">
+              <div style="width:${gp}%;height:100%;background:${g.color||'#6b7a4e'};border-radius:3px"></div>
+            </div>
+          </div>`;
+        }).join('') : `<div style="font-size:.76rem;color:var(--text2);text-align:center;padding:10px 0">Sin metas aún</div>`}
+        <button onclick="switchTab('metas')" style="width:100%;margin-top:8px;padding:8px;background:var(--accent-light);color:var(--accent);border:none;border-radius:9px;font-size:.76rem;font-weight:700;cursor:pointer">Ver todas →</button>
+      </div>
+    </div>
+    <div>
+      ${overdue.length ? `<div class="heading-card">
+        <div class="heading-card-title" style="color:#ef4444">⚠️ Vencidas (${overdue.length})</div>
+        ${overdue.slice(0,5).map(i=>`<div class="heading-item" style="cursor:pointer" onclick="openEditModal(${i.id})">
+          <div class="heading-dot" style="background:#ef4444"></div>
+          <span class="heading-item-text">${h(i.text)}</span>
+          <span style="font-size:.65rem;color:#ef4444">${fmtDate(i.date)}</span>
+        </div>`).join('')}
+      </div>` : `<div class="heading-card" style="text-align:center;padding:24px">
+        <div style="font-size:1.5rem">🎉</div>
+        <div style="font-size:.8rem;color:var(--text2);margin-top:6px">Sin vencidas</div>
+      </div>`}
+    </div>
+  </div>`;
 
   el.innerHTML = `
-    <div style="margin-bottom:18px">
-      <div style="font-size:1.25rem;font-weight:900;color:var(--text)">${G}, Montse</div>
-      <div style="font-size:.8rem;color:var(--text2);margin-top:2px">${now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:1.2rem;font-weight:900;color:var(--text)">${G}, Montse</div>
+      <div style="font-size:.78rem;color:var(--text2);margin-top:2px">${now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
     </div>
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--accent)">${totalPend}</div>
-        <div class="stat-lbl">Pendientes</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:#22c55e">${doneToday.length}</div>
-        <div class="stat-lbl">Hechas hoy</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:#ef4444">${overdue.length}</div>
-        <div class="stat-lbl">Vencidas</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:#f97316">${goals.length}</div>
-        <div class="stat-lbl">Metas</div>
-      </div>
-    </div>
-    <div class="overview-grid">
-      <div>
-        <div class="focus-card">
-          <div class="focus-title">🎯 En qué enfocarte ahora</div>
-          ${focusRows}
-        </div>
-        ${projItems.length ? `
-        <div style="margin-top:16px">
-          <div class="section-hd">Proyectos activos</div>
-          ${projItems.map(p=>`
-            <div onclick="openEditModal(${p.id})" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border-radius:13px;margin-bottom:8px;border:1px solid var(--border);cursor:pointer;transition:box-shadow .15s" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow=''">
-              <span>${p.icon||'🚀'}</span>
-              <div style="flex:1;min-width:0">
-                <div style="font-size:.83rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h(p.text)}</div>
-                ${p.note?`<div style="font-size:.68rem;color:var(--text2)">${h(p.note)}</div>`:''}
-              </div>
-              <span style="color:var(--text2)">→</span>
-            </div>
-          `).join('')}
-        </div>` : ''}
-      </div>
-      <div>
-        <div class="heading-card">
-          <div class="heading-card-title">📊 Cómo vas</div>
-          <div class="gauge-wrap">${gaugeSvg}</div>
-          <div style="font-size:.7rem;color:var(--text2);text-align:center;margin-bottom:12px">${totalPend} pendientes · ${doneAll} hechas</div>
-          ${goals.length ? `<div style="margin-top:8px">${goals.slice(0,3).map(g=>{
-            const pct2=Math.min(_metaPct(g),100);
-            return `<div class="heading-item">
-              <div class="heading-dot" style="background:${g.color||'#6b7a4e'}"></div>
-              <span class="heading-item-text">${h(g.title)}</span>
-              <span class="heading-item-tag">${pct2}%</span></div>`;
-          }).join('')}</div>` : ''}
-          <button onclick="switchTab('metas')" style="width:100%;margin-top:14px;padding:9px;background:var(--accent-light);color:var(--accent);border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer">Ver metas →</button>
-        </div>
-        ${overdue.length ? `
-        <div class="heading-card" style="margin-top:12px">
-          <div class="heading-card-title" style="color:#ef4444">⚠️ Vencidas</div>
-          ${overdue.slice(0,3).map(i=>`
-            <div class="heading-item" style="cursor:pointer" onclick="openEditModal(${i.id})">
-              <div class="heading-dot" style="background:#ef4444"></div>
-              <span class="heading-item-text">${h(i.text)}</span>
-              <span style="font-size:.68rem;color:#ef4444">${fmtDate(i.date)}</span>
-            </div>
-          `).join('')}
-        </div>` : ''}
-      </div>
-    </div>`;
+    ${focusHtml}
+    ${storyHtml}
+    ${timelineHtml}
+    ${statsHtml}
+    ${kanbanHtml}
+    ${bottomHtml}`;
 }
 
 // ============================================================
@@ -1407,34 +1498,90 @@ function goalCard(g) {
   </div>`;
 }
 
+const META_EMOJIS = ['🎯','⭐','🚀','💡','💪','💰','📚','🏆','🌱','❤️','🎨','🏃','🧘','✈️','🏠','🎵','📈','🔬','🤝','🌍','💼','🎓','🛡️','🔑','⚡','🌟','🧠','🎉','🏋️','🎸'];
+const META_COLORS = ['#6b7a4e','#4a7a8a','#8a5a4a','#7a4a8a','#4a6a8a','#8a7a4a','#c0392b','#2980b9','#27ae60','#8e44ad','#e67e22','#16a085'];
+let _metaMilestones = [];
+
+function renderMetaMsList() {
+  const el = document.getElementById('meta-ms-list');
+  if (!el) return;
+  el.innerHTML = _metaMilestones.map((m,i)=>`
+    <div class="sub-row">
+      <div class="sub-check${m.done?' done':''}" onclick="_metaMilestones[${i}].done=!_metaMilestones[${i}].done;renderMetaMsList()">${m.done?'✓':''}</div>
+      <span style="flex:1">${h(m.text)}</span>
+      <button onclick="_metaMilestones.splice(${i},1);renderMetaMsList()" style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:.8rem;padding:0 4px">✕</button>
+    </div>`).join('');
+}
+
+function addMetaMilestone() {
+  const inp = document.getElementById('meta-ms-inp');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  _metaMilestones.push({id:Date.now()+Math.random(), text:txt, done:false});
+  inp.value = '';
+  renderMetaMsList();
+}
+
+function _renderMetaEmojiGrid(selected) {
+  const grid = document.getElementById('meta-emoji-grid');
+  if (!grid) return;
+  grid.innerHTML = META_EMOJIS.map(e=>`<button onclick="selectMetaEmoji('${e}')" style="font-size:1.1rem;width:30px;height:30px;border:1.5px solid ${e===selected?'var(--accent)':'transparent'};border-radius:6px;background:${e===selected?'var(--accent-light)':'transparent'};cursor:pointer;padding:0">${e}</button>`).join('');
+}
+
+function selectMetaEmoji(e) {
+  document.getElementById('meta-icon').value = e;
+  document.getElementById('meta-icon-preview').textContent = e;
+  _renderMetaEmojiGrid(e);
+}
+
+function _renderMetaColorSwatches(selected) {
+  const el = document.getElementById('meta-color-swatches');
+  if (!el) return;
+  el.innerHTML = META_COLORS.map(c=>`<div onclick="selectMetaColor('${c}')" style="width:26px;height:26px;border-radius:50%;background:${c};cursor:pointer;border:2.5px solid ${c===selected?'#333':'transparent'};box-sizing:border-box"></div>`).join('');
+}
+
+function selectMetaColor(c) {
+  document.getElementById('meta-color').value = c;
+  _renderMetaColorSwatches(c);
+}
+
 function openMetaModal(id) {
-  const modal = document.getElementById('meta-modal');
   const delBtn = document.getElementById('meta-delete-btn');
+  let selIcon = '🎯', selColor = '#6b7a4e';
   if (id) {
     const g = goals.find(g=>g.id===id);
     if (!g) return;
+    selIcon = g.icon||'🎯';
+    selColor = g.color||'#6b7a4e';
     document.getElementById('meta-modal-title').textContent = 'Editar meta';
     document.getElementById('meta-id').value = id;
-    document.getElementById('meta-icon').value = g.icon||'';
-    document.getElementById('meta-color').value = g.color||'#6b7a4e';
+    document.getElementById('meta-icon').value = selIcon;
+    document.getElementById('meta-icon-preview').textContent = selIcon;
+    document.getElementById('meta-color').value = selColor;
     document.getElementById('meta-title').value = g.title||'';
     document.getElementById('meta-type').value = g.type||'personal';
     document.getElementById('meta-note').value = g.note||'';
     document.getElementById('meta-pct').value = g.pct||0;
     document.getElementById('meta-due').value = g.due||'';
+    _metaMilestones = (g.milestones||[]).map(m=>({...m}));
     delBtn.style.display = '';
   } else {
     document.getElementById('meta-modal-title').textContent = 'Nueva meta';
     document.getElementById('meta-id').value = '';
-    document.getElementById('meta-icon').value = '';
+    document.getElementById('meta-icon').value = '🎯';
+    document.getElementById('meta-icon-preview').textContent = '🎯';
     document.getElementById('meta-color').value = '#6b7a4e';
     document.getElementById('meta-title').value = '';
     document.getElementById('meta-type').value = 'personal';
     document.getElementById('meta-note').value = '';
     document.getElementById('meta-pct').value = 0;
     document.getElementById('meta-due').value = '';
+    _metaMilestones = [];
     delBtn.style.display = 'none';
   }
+  _renderMetaEmojiGrid(selIcon);
+  _renderMetaColorSwatches(selColor);
+  renderMetaMsList();
   openModal('meta-modal');
 }
 
@@ -1450,13 +1597,13 @@ function saveMeta() {
     note: document.getElementById('meta-note').value.trim(),
     pct: Number(document.getElementById('meta-pct').value)||0,
     due: document.getElementById('meta-due').value,
+    milestones: _metaMilestones.map(m=>({...m})),
   };
   if (id) {
     const idx = goals.findIndex(g=>g.id===Number(id));
     if (idx>=0) Object.assign(goals[idx], data);
   } else {
     data.id = Date.now();
-    data.milestones = [];
     goals.push(data);
   }
   save();
