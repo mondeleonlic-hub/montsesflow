@@ -199,16 +199,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .heading-item-tag{font-size:.68rem;font-weight:700;color:var(--accent)}
 
 /* LOG DIARIO */
-.log-dates{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px}
+.log-dates{display:flex;gap:0;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:4px}
 .log-date-card{
-  flex-shrink:0;padding:10px 14px;border-radius:12px;cursor:pointer;
-  border:1.5px solid var(--border);background:var(--card);text-align:center;
-  min-width:60px;transition:all .15s;
+  flex:1;min-width:44px;padding:7px 6px;border-radius:10px;cursor:pointer;
+  border:none;background:transparent;text-align:center;transition:all .15s;
 }
-.log-date-card.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.log-date-card .ld-day{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2)}
-.log-date-card.active .ld-day{color:rgba(255,255,255,.7)}
-.log-date-card .ld-num{font-size:1.2rem;font-weight:900}
+.log-date-card:hover{background:var(--accent-light)}
+.log-date-card.active{background:var(--accent);color:#fff}
+.log-date-card .ld-day{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text2);margin-bottom:2px}
+.log-date-card.active .ld-day{color:rgba(255,255,255,.75)}
+.log-date-card .ld-num{font-size:1.05rem;font-weight:900;line-height:1}
+.log-date-card .ld-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);margin:4px auto 0;opacity:0}
+.log-date-card.has-tasks .ld-dot{opacity:1}
+.log-date-card.active .ld-dot{background:rgba(255,255,255,.7)}
 .log-entry{
   background:var(--card);border-radius:12px;padding:13px 16px;
   margin-bottom:8px;border:1px solid var(--border);box-shadow:var(--shadow);
@@ -589,9 +592,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <input class="modal-input" type="date" id="add-date"/>
         </div>
         <div>
-          <label class="modal-label">Deadline</label>
-          <input class="modal-input" type="date" id="add-deadline"/>
+          <label class="modal-label">Hora</label>
+          <input class="modal-input" type="time" id="add-time"/>
         </div>
+      </div>
+      <div>
+        <label class="modal-label">Deadline</label>
+        <input class="modal-input" type="date" id="add-deadline"/>
       </div>
       <div>
         <label class="modal-label">Delegado a (opcional)</label>
@@ -677,9 +684,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <input class="modal-input" type="date" id="edit-date"/>
         </div>
         <div>
-          <label class="modal-label">Deadline</label>
-          <input class="modal-input" type="date" id="edit-deadline"/>
+          <label class="modal-label">Hora</label>
+          <input class="modal-input" type="time" id="edit-time"/>
         </div>
+      </div>
+      <div>
+        <label class="modal-label">Deadline</label>
+        <input class="modal-input" type="date" id="edit-deadline"/>
       </div>
       <div>
         <label class="modal-label">Delegado a (opcional)</label>
@@ -1336,14 +1347,17 @@ function renderLogDiario() {
     const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     days.push({ ds, d });
   }
-  const dateCards = days.map(({ds,d})=>`
-    <div class="log-date-card${activeLogDate===ds?' active':''}" onclick="selectLogDay('${ds}')"
+  const dateCards = days.map(({ds,d})=>{
+    const hasTasks = items.some(i=>!i.archived&&(i.date===ds||i.doneDate===ds));
+    return `<div class="log-date-card${activeLogDate===ds?' active':''}${hasTasks?' has-tasks':''}" onclick="selectLogDay('${ds}')"
       ondragover="event.preventDefault();this.classList.add('drop-zone-active')"
       ondragleave="this.classList.remove('drop-zone-active')"
       ondrop="this.classList.remove('drop-zone-active');dropOnDay(event,'${ds}');selectLogDay('${ds}')">
       <div class="ld-day">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
       <div class="ld-num">${d.getDate()}</div>
-    </div>`).join('');
+      <div class="ld-dot"></div>
+    </div>`;
+  }).join('');
 
   // ── JAM banner
   const jam = window._jam;
@@ -1389,12 +1403,17 @@ function renderLogDiario() {
   // ── TIMELINE DE TAREAS
   const dayItems = items.filter(i=>!i.archived && (i.date===activeLogDate || i.doneDate===activeLogDate));
   const slotOrder = {manana:0, tarde:1, noche:2};
-  const slotHour  = {manana:'9h', tarde:'14h', noche:'20h'};
-  const sorted = [...dayItems].sort((a,b)=>(slotOrder[a.slot]??1.5)-(slotOrder[b.slot]??1.5));
+  const slotHour  = {manana:'9:00', tarde:'14:00', noche:'20:00'};
+  // Sort by actual time, then by slot, then unassigned last
+  const sorted = [...dayItems].sort((a,b)=>{
+    const ta = a.time || slotHour[a.slot] || '23:59';
+    const tb = b.time || slotHour[b.slot] || '23:59';
+    return ta.localeCompare(tb);
+  });
 
   const tlEntries = sorted.length ? sorted.map(i=>{
     const dot = i.done?'#22c55e':i.date&&i.date<today&&!i.done?'#ef4444':'var(--accent)';
-    const hr  = slotHour[i.slot]||'—';
+    const hr  = i.time ? i.time.slice(0,5) : (slotHour[i.slot]||'—');
     return `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;position:relative">
       <div style="position:absolute;left:-30px;font-size:.58rem;color:var(--text2);font-weight:600;top:3px;width:24px;text-align:right">${hr}</div>
       <div onclick="toggleDone(${i.id})" style="width:12px;height:12px;border-radius:50%;background:${dot};border:2px solid #fff;box-shadow:0 0 0 2px ${dot};flex-shrink:0;margin-top:2px;margin-left:-7px;cursor:pointer"></div>
@@ -1943,6 +1962,7 @@ function openAddModal() {
   document.getElementById('add-text').value = '';
   document.getElementById('add-note').value = '';
   document.getElementById('add-date').value = '';
+  document.getElementById('add-time').value = '';
   document.getElementById('add-deadline').value = '';
   document.getElementById('add-delegado').value = '';
   document.getElementById('add-priority').value = '3';
@@ -1965,6 +1985,7 @@ function addItem() {
     text, cat: catId, cat_key,
     priority: Number(document.getElementById('add-priority').value)||3,
     date: document.getElementById('add-date').value,
+    time: document.getElementById('add-time').value,
     deadline: document.getElementById('add-deadline').value,
     delegado: document.getElementById('add-delegado').value.trim(),
     recur: document.getElementById('add-recur').value,
@@ -2000,6 +2021,7 @@ function openEditModal(id) {
   document.getElementById('edit-text').value = item.text||'';
   document.getElementById('edit-note').value = item.note||'';
   document.getElementById('edit-date').value = item.date||'';
+  document.getElementById('edit-time').value = item.time||'';
   document.getElementById('edit-deadline').value = item.deadline||'';
   document.getElementById('edit-delegado').value = item.delegado||'';
   document.getElementById('edit-priority').value = item.priority||3;
@@ -2025,6 +2047,7 @@ function saveEdit() {
   item.cat_key = document.getElementById('edit-tipo').value || item.cat_key || 'todo';
   item.priority = Number(document.getElementById('edit-priority').value)||3;
   item.date = document.getElementById('edit-date').value;
+  item.time = document.getElementById('edit-time').value;
   item.deadline = document.getElementById('edit-deadline').value;
   item.delegado = document.getElementById('edit-delegado').value.trim();
   item.recur = document.getElementById('edit-recur').value;
