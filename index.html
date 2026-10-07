@@ -2505,11 +2505,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // Live clock: update greeting + timeline every minute
   function _updateGreeting() {
     const h = new Date().getHours();
-    const G = h<12 ? 'Buenos días ☀️, Montse' : h<18 ? 'Buenas tardes 🌤️, Montse' : 'Buenas noches 🌙, Montse';
-    const sg = document.getElementById('sidebar-greeting');
     const tl = document.getElementById('tab-dash-label');
-    if (sg) sg.textContent = G;
-    if (tl) tl.textContent = G;
+    if (tl) tl.textContent = 'Inicio';
     // Update timeline bar if on dash
     if (activeTab==='dash') {
       const now = new Date();
