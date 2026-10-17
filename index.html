@@ -1170,7 +1170,7 @@ function renderDash() {
     tarde:  pending.filter(i=>i.slot==='tarde'),
     noche:  pending.filter(i=>i.slot==='noche'),
   };
-  const unassigned = pending.filter(i=>!i.slot && (i.col==='todo'||i.cat_key==='todo');
+  const unassigned = pending.filter(i=>!i.slot && (i.col==='todo'||i.cat_key==='todo'));
   const unassignedHtml = unassigned.length ? `
     <div style="background:#f9fafb;border:1.5px dashed var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px">
       <div style="font-size:.6rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px">📋 Sin asignar — arrastra al momento del día ↓</div>
