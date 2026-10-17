@@ -451,7 +451,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="nav-item" id="nav-extra" onclick="switchTab('extra')">💡 Extra <span class="badge" id="badge-extra">0</span></div>
   <div class="nav-item" id="nav-done" onclick="switchTab('done')">✅ Completadas</div>
   <div class="sidebar-section">Planeación</div>
-  <div class="nav-item" id="nav-metas" onclick="switchTab('metas')">⭐ Metas 2025</div>
+  <div class="nav-item" id="nav-metas" onclick="switchTab('metas')">⭐ Metas ${now.getFullYear()}</div>
   <div class="sidebar-section">Configuración</div>
   <div class="nav-item" id="nav-cats" onclick="switchTab('cats')">🎨 Categorías</div>
   <div class="nav-item" id="nav-settings" onclick="switchTab('settings')">⚙️ Ajustes</div>
@@ -899,6 +899,7 @@ let cats = [
 ];
 let nextId = 1;
 let nextCatId = 10;
+let seeds = [];
 let activeTab = 'dash';
 let activeLogDate = null;
 let _chatHistory = [];
@@ -920,7 +921,7 @@ let _fbProj = localStorage.getItem('mf_fb_proj') || '';
 // STORAGE
 // ============================================================
 function save() {
-  const d = { items, goals, cats, nextId, nextCatId };
+  const d = { items, goals, cats, nextId, nextCatId, seeds };
   try { localStorage.setItem('mf_v2', JSON.stringify(d)); } catch(e){}
   if (_db) pushFirebase();
   updateSidebarBadges();
@@ -936,7 +937,62 @@ function load() {
     if (d.cats) cats = d.cats;
     if (d.nextId) nextId = d.nextId;
     if (d.nextCatId) nextCatId = d.nextCatId;
+    if (d.seeds) seeds = d.seeds;
   } catch(e) {}
+}
+
+// ============================================================
+// PROYECTO NFC RESEÑAS (se agrega una sola vez)
+// ============================================================
+function seedNfcProject() {
+  const KEY = 'nfc-2026';
+  if (seeds.includes(KEY)) return;
+  if (goals.some(g=>g.seed===KEY) || cats.some(c=>c.seed===KEY)) { seeds.push(KEY); save(); return; }
+  const catId = nextCatId++;
+  cats.push({id:catId, name:'NFC Reseñas', color:'#e67e22', icon:'📲', seed:KEY});
+  const ms = [];
+  for (let i=1;i<=20;i++) ms.push({id:Date.now()+i, text:`Venta ${i} · $999`, done:false});
+  goals.push({
+    id: Date.now(), seed: KEY,
+    title: 'Meta Mac: 20 tarjetas NFC',
+    icon: '💻', color: '#e67e22', type: 'finanzas',
+    note: '20 × $999 = $19,980. Paga la MacBook ($14,000) y reinvierte el resto. Palomea cada venta.',
+    due: '2026-12-15',
+    milestones: ms,
+  });
+  const T = (text, date, priority, extra={}) => ({
+    id: nextId++, text, cat: catId, cat_key: extra.cat_key||'todo',
+    priority, date, time:'', deadline: extra.deadline||'', delegado:'',
+    recur: extra.recur||'', important: true, urgent: extra.urgent??null,
+    note: extra.note||'', subtasks: (extra.subs||[]).map((t,i)=>({id:Date.now()+100+i+nextId*30, text:t, done:false})),
+    done:false, archived:false, created:new Date().toISOString(), seed:KEY,
+  });
+  const tasks = [
+    T('Anotar cuántas reseñas tiene hoy cada sucursal', '2026-10-19', 1, {urgent:true,
+      note:'Es tu "antes". En un mes comparas y ese es tu caso de éxito para vender.',
+      subs:['Refugio','Álamos','La Loma']}),
+    T('Sacar link de reseñas de Google de cada sucursal', '2026-10-19', 1, {urgent:true,
+      note:'Perfil de Negocio en Google → "Pedir reseñas" → copiar link.',
+      subs:['Refugio','Álamos','La Loma']}),
+    T('Comprar tarjetas/stickers NFC NTAG215 en blanco', '2026-10-19', 1, {
+      note:'Mercado Libre o Amazon. Compra suficientes para el piloto y las primeras ventas.'}),
+    T('Descargar NFC Tools en el iPhone y grabar una tarjeta de prueba', '2026-10-20', 2),
+    T('Diseñar placa NFC con logo de Patio Cinco', '2026-10-20', 2, {
+      note:'Incluye QR también, para celulares sin NFC.'}),
+    T('Instalar NFC en las 3 sucursales y capacitar al equipo', '2026-10-22', 1, {
+      note:'Pedir reseña a todos los clientes, sin descuentos ni regalos a cambio (regla de Google).',
+      subs:['Refugio','Álamos','La Loma']}),
+    T('Armar oferta de $999: qué incluye', '2026-10-23', 2, {cat_key:'proyectos',
+      subs:['Placa con logo y colores del cliente','Configurada con su link','Instalación en el negocio','Capacitación al equipo','Reporte mensual de reseñas','Paquete de 3 placas ($2,499)']}),
+    T('Lista de 10 negocios prospecto cerca de las sucursales', '2026-10-23', 2),
+    T('Contactar 10 negocios (semanal)', '2026-10-26', 1, {recur:'weekly',
+      note:'Aprovecha tus vueltas a Refugio, Álamos o La Loma. Meta: 3 ventas por semana.'}),
+    T('Revisión semanal: ventas vs meta de 20', '2026-10-23', 3, {recur:'weekly',
+      note:'15 min el viernes. Palomea las ventas en Metas.'}),
+  ];
+  items.unshift(...tasks);
+  seeds.push(KEY);
+  save();
 }
 
 // ============================================================
@@ -978,6 +1034,7 @@ async function pullFirebase() {
     if (d.cats) cats = d.cats;
     if (d.nextId) nextId = d.nextId;
     if (d.nextCatId) nextCatId = d.nextCatId;
+    seeds = d.seeds || [];
     save();
   }
   _db = true;
@@ -985,7 +1042,7 @@ async function pullFirebase() {
 
 async function pushFirebase() {
   if (!_fbKey || !_fbProj) return;
-  const d = JSON.stringify({ items, goals, cats, nextId, nextCatId });
+  const d = JSON.stringify({ items, goals, cats, nextId, nextCatId, seeds });
   const url = `https://firestore.googleapis.com/v1/projects/${_fbProj}/databases/(default)/documents/mf_data/main?key=${_fbKey}`;
   await fetch(url, {
     method: 'PATCH',
@@ -1041,7 +1098,7 @@ function priorityColor(p) {
 const PANEL_TITLES = {
   dash:'Inicio', log:'Log diario', semana:'Semana',
   todo:'To Do', compromisos:'Compromisos', proyectos:'Proyectos',
-  extra:'Extra', done:'Completadas', metas:'Metas 2025',
+  extra:'Extra', done:'Completadas', metas:'Metas '+new Date().getFullYear(),
   cats:'Categorías', settings:'Ajustes'
 };
 
@@ -1648,7 +1705,7 @@ function renderMetas() {
 
   el.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:1rem;font-weight:900">⭐ Metas 2025</div>
+      <div style="font-size:1rem;font-weight:900">⭐ Metas ${now.getFullYear()}</div>
       <button class="btn-sm" onclick="openMetaModal()">+ Nueva meta</button>
     </div>
     <div class="timeline-bar-wrap">
@@ -2501,6 +2558,7 @@ function saveAISetup() {
 // ============================================================
 window.addEventListener('DOMContentLoaded', () => {
   load();
+  if (!(_fbKey && _fbProj)) seedNfcProject();
   updateSidebarBadges();
   renderDash();
   // Live clock: update greeting + timeline every minute
@@ -2531,7 +2589,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (_fbKey && _fbProj) {
     document.getElementById('fb-key').value = _fbKey;
     document.getElementById('fb-proj').value = _fbProj;
-    pullFirebase().then(()=>{ setSyncStatus('ok'); renderCurrent(); }).catch(()=>setSyncStatus('error'));
+    pullFirebase().then(()=>{ seedNfcProject(); setSyncStatus('ok'); renderCurrent(); }).catch(()=>setSyncStatus('error'));
   }
   // Close modals on overlay click
   document.querySelectorAll('.modal-overlay').forEach(m=>{
