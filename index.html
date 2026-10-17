@@ -439,22 +439,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
-  <div class="sidebar-logo">â¦ <span>Montse's Flow</span></div>
+  <div class="sidebar-logo">✦ <span>Montse's Flow</span></div>
   <div class="sidebar-section">Principal</div>
-  <div class="nav-item active" id="nav-dash" onclick="switchTab('dash')" id="nav-dash-label">ð¿ <span id="sidebar-greeting">Inicio</span></div>
-  <div class="nav-item" id="nav-log" onclick="switchTab('log')">ð Log diario</div>
-  <div class="nav-item" id="nav-semana" onclick="switchTab('semana')">ð Semana</div>
+  <div class="nav-item active" id="nav-dash" onclick="switchTab('dash')" id="nav-dash-label">🌿 <span id="sidebar-greeting">Inicio</span></div>
+  <div class="nav-item" id="nav-log" onclick="switchTab('log')">📋 Log diario</div>
+  <div class="nav-item" id="nav-semana" onclick="switchTab('semana')">📅 Semana</div>
   <div class="sidebar-section">Tareas</div>
-  <div class="nav-item" id="nav-todo" onclick="switchTab('todo')">ð To Do <span class="badge" id="badge-todo">0</span></div>
-  <div class="nav-item" id="nav-compromisos" onclick="switchTab('compromisos')">ð¤ Compromisos <span class="badge" id="badge-compromisos">0</span></div>
-  <div class="nav-item" id="nav-proyectos" onclick="switchTab('proyectos')">ð Proyectos <span class="badge" id="badge-proyectos">0</span></div>
-  <div class="nav-item" id="nav-extra" onclick="switchTab('extra')">ð¡ Extra <span class="badge" id="badge-extra">0</span></div>
-  <div class="nav-item" id="nav-done" onclick="switchTab('done')">â Completadas</div>
-  <div class="sidebar-section">PlaneaciÃ³n</div>
-  <div class="nav-item" id="nav-metas" onclick="switchTab('metas')">â­ Metas 2025</div>
-  <div class="sidebar-section">ConfiguraciÃ³n</div>
-  <div class="nav-item" id="nav-cats" onclick="switchTab('cats')">ð¨ CategorÃ­as</div>
-  <div class="nav-item" id="nav-settings" onclick="switchTab('settings')">âï¸ Ajustes</div>
+  <div class="nav-item" id="nav-todo" onclick="switchTab('todo')">📝 To Do <span class="badge" id="badge-todo">0</span></div>
+  <div class="nav-item" id="nav-compromisos" onclick="switchTab('compromisos')">🤝 Compromisos <span class="badge" id="badge-compromisos">0</span></div>
+  <div class="nav-item" id="nav-proyectos" onclick="switchTab('proyectos')">🚀 Proyectos <span class="badge" id="badge-proyectos">0</span></div>
+  <div class="nav-item" id="nav-extra" onclick="switchTab('extra')">💡 Extra <span class="badge" id="badge-extra">0</span></div>
+  <div class="nav-item" id="nav-done" onclick="switchTab('done')">✅ Completadas</div>
+  <div class="sidebar-section">Planeación</div>
+  <div class="nav-item" id="nav-metas" onclick="switchTab('metas')">⭐ Metas 2025</div>
+  <div class="sidebar-section">Configuración</div>
+  <div class="nav-item" id="nav-cats" onclick="switchTab('cats')">🎨 Categorías</div>
+  <div class="nav-item" id="nav-settings" onclick="switchTab('settings')">⚙️ Ajustes</div>
   <div class="sidebar-bottom">
     <div class="sync-badge" onclick="openModal('fb-modal')">
       <div class="sync-dot off" id="sync-dot"></div>
@@ -466,10 +466,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- MAIN SHELL -->
 <div class="app-shell">
   <header class="main-header">
-    <button class="mobile-menu-btn" onclick="openSidebar()">â°</button>
+    <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
     <div id="header-title">Inicio</div>
     <div class="capture-row-top">
-      <input type="text" id="cap-input" placeholder="Captura rÃ¡pidaâ¦" onkeydown="if(event.key==='Enter')quickCapture()"/>
+      <input type="text" id="cap-input" placeholder="Captura rápida…" onkeydown="if(event.key==='Enter')quickCapture()"/>
       <button class="add-btn-top" onclick="openAddModal()">+ Agregar</button>
     </div>
     <div class="live-badge"><div class="live-bar"><span></span><span></span><span></span></div>Live</div>
@@ -504,26 +504,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- MOBILE TAB BAR -->
 <div class="tab-bar" id="tab-bar">
   <div class="tab-bar-inner">
-    <button class="tab active" id="tab-dash" onclick="switchTab('dash')"><span class="tab-icon">ð¿</span><span id="tab-dash-label">Inicio</span></button>
-    <button class="tab" id="tab-todo" onclick="switchTab('todo')"><span class="tab-icon">ð</span>To Do</button>
-    <button class="tab" id="tab-semana" onclick="switchTab('semana')"><span class="tab-icon">ð</span>Semana</button>
-    <button class="tab" id="tab-metas" onclick="switchTab('metas')"><span class="tab-icon">â­</span>Metas</button>
-    <button class="tab" id="tab-log" onclick="switchTab('log')"><span class="tab-icon">ð</span>Log</button>
+    <button class="tab active" id="tab-dash" onclick="switchTab('dash')"><span class="tab-icon">🌿</span><span id="tab-dash-label">Inicio</span></button>
+    <button class="tab" id="tab-todo" onclick="switchTab('todo')"><span class="tab-icon">📝</span>To Do</button>
+    <button class="tab" id="tab-semana" onclick="switchTab('semana')"><span class="tab-icon">📅</span>Semana</button>
+    <button class="tab" id="tab-metas" onclick="switchTab('metas')"><span class="tab-icon">⭐</span>Metas</button>
+    <button class="tab" id="tab-log" onclick="switchTab('log')"><span class="tab-icon">📋</span>Log</button>
   </div>
 </div>
 
 <!-- AI BUTTON & PANEL -->
-<button class="ai-toggle" id="ai-toggle" onclick="toggleAI()">â¨ Asistente</button>
+<button class="ai-toggle" id="ai-toggle" onclick="toggleAI()">✨ Asistente</button>
 <div class="ai-panel" id="ai-panel">
   <div class="ai-header" onclick="toggleAI()">
-    <span style="font-size:1rem">â¨</span>
+    <span style="font-size:1rem">✨</span>
     <div class="ai-header-title">Asistente IA</div>
-    <span style="color:var(--text2);font-size:.8rem">â¾</span>
+    <span style="color:var(--text2);font-size:.8rem">▾</span>
   </div>
   <div class="ai-messages" id="ai-messages"></div>
   <div class="ai-input-row">
-    <input type="text" id="ai-input" placeholder="PregÃºntame algoâ¦" onkeydown="if(event.key==='Enter')sendAI()"/>
-    <button class="ai-send-btn" onclick="sendAI()">â</button>
+    <input type="text" id="ai-input" placeholder="Pregúntame algo…" onkeydown="if(event.key==='Enter')sendAI()"/>
+    <button class="ai-send-btn" onclick="sendAI()">↑</button>
   </div>
 </div>
 
@@ -535,26 +535,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="modal-box">
     <div class="modal-header">
       <div class="modal-title">Nueva tarea</div>
-      <button class="modal-close" onclick="closeModal('add-modal')">â</button>
+      <button class="modal-close" onclick="closeModal('add-modal')">✕</button>
     </div>
     <div class="modal-body">
       <div>
         <label class="modal-label">Texto</label>
-        <input class="modal-input" id="add-text" placeholder="Â¿QuÃ© tienes que hacer?"/>
+        <input class="modal-input" id="add-text" placeholder="¿Qué tienes que hacer?"/>
       </div>
       <div class="modal-row">
         <div>
-          <label class="modal-label">CategorÃ­a</label>
+          <label class="modal-label">Categoría</label>
           <select class="modal-select" id="add-cat"></select>
         </div>
         <div>
           <label class="modal-label">Tipo de tarea</label>
           <select class="modal-select" id="add-tipo">
-            <option value="todo">ð To Do</option>
-            <option value="compromisos">ð¤ Compromisos</option>
-            <option value="proyectos">ð Proyectos</option>
-            <option value="extra">ð¡ Extra</option>
-            <option value="semana">ð Semana</option>
+            <option value="todo">📝 To Do</option>
+            <option value="compromisos">🤝 Compromisos</option>
+            <option value="proyectos">🚀 Proyectos</option>
+            <option value="extra">💡 Extra</option>
+            <option value="semana">📅 Semana</option>
           </select>
         </div>
       </div>
@@ -562,10 +562,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div>
           <label class="modal-label">Prioridad</label>
           <select class="modal-select" id="add-priority">
-            <option value="1">ð´ Alta</option>
-            <option value="2">ð  Media</option>
-            <option value="3" selected>ð¡ Normal</option>
-            <option value="4">âª Baja</option>
+            <option value="1">🔴 Alta</option>
+            <option value="2">🟠 Media</option>
+            <option value="3" selected>🟡 Normal</option>
+            <option value="4">⚪ Baja</option>
           </select>
         </div>
         <div>
@@ -578,12 +578,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
       </div>
       <div>
-        <label class="modal-label">ClasificaciÃ³n (Eisenhower)</label>
+        <label class="modal-label">Clasificación (Eisenhower)</label>
         <div class="eis-row">
-          <button class="eis-chip" id="add-chip-i"  type="button" onclick="setEis('add','i',true)">â­ Importante</button>
-          <button class="eis-chip" id="add-chip-ni" type="button" onclick="setEis('add','i',false)">â No importante</button>
-          <button class="eis-chip" id="add-chip-u"  type="button" onclick="setEis('add','u',true)">ð¥ Urgente</button>
-          <button class="eis-chip" id="add-chip-nu" type="button" onclick="setEis('add','u',false)">â No urgente</button>
+          <button class="eis-chip" id="add-chip-i"  type="button" onclick="setEis('add','i',true)">⭐ Importante</button>
+          <button class="eis-chip" id="add-chip-ni" type="button" onclick="setEis('add','i',false)">— No importante</button>
+          <button class="eis-chip" id="add-chip-u"  type="button" onclick="setEis('add','u',true)">🔥 Urgente</button>
+          <button class="eis-chip" id="add-chip-nu" type="button" onclick="setEis('add','u',false)">— No urgente</button>
         </div>
       </div>
       <div class="modal-row">
@@ -602,17 +602,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <div>
         <label class="modal-label">Delegado a (opcional)</label>
-        <input class="modal-input" id="add-delegado" placeholder="Nombre o equipoâ¦"/>
+        <input class="modal-input" id="add-delegado" placeholder="Nombre o equipo…"/>
       </div>
       <div>
         <label class="modal-label">Nota</label>
-        <textarea class="modal-textarea" id="add-note" placeholder="Notas adicionalesâ¦"></textarea>
+        <textarea class="modal-textarea" id="add-note" placeholder="Notas adicionales…"></textarea>
       </div>
       <div>
         <label class="modal-label">Acciones / subtareas</label>
         <div class="sub-list" id="add-sub-list"></div>
         <div class="sub-inp-row">
-          <input id="add-sub-inp" placeholder="Agregar acciÃ³nâ¦" onkeydown="if(event.key==='Enter'){event.preventDefault();addSubtask('add')}"/>
+          <input id="add-sub-inp" placeholder="Agregar acción…" onkeydown="if(event.key==='Enter'){event.preventDefault();addSubtask('add')}"/>
           <button type="button" onclick="addSubtask('add')">+ Agregar</button>
         </div>
       </div>
@@ -626,7 +626,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="modal-box">
     <div class="modal-header">
       <div class="modal-title">Editar tarea</div>
-      <button class="modal-close" onclick="closeModal('edit-modal')">â</button>
+      <button class="modal-close" onclick="closeModal('edit-modal')">✕</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="edit-id"/>
@@ -636,17 +636,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <div class="modal-row">
         <div>
-          <label class="modal-label">CategorÃ­a</label>
+          <label class="modal-label">Categoría</label>
           <select class="modal-select" id="edit-cat"></select>
         </div>
         <div>
           <label class="modal-label">Tipo de tarea</label>
           <select class="modal-select" id="edit-tipo">
-            <option value="todo">ð To Do</option>
-            <option value="compromisos">ð¤ Compromisos</option>
-            <option value="proyectos">ð Proyectos</option>
-            <option value="extra">ð¡ Extra</option>
-            <option value="semana">ð Semana</option>
+            <option value="todo">📝 To Do</option>
+            <option value="compromisos">🤝 Compromisos</option>
+            <option value="proyectos">🚀 Proyectos</option>
+            <option value="extra">💡 Extra</option>
+            <option value="semana">📅 Semana</option>
           </select>
         </div>
       </div>
@@ -654,10 +654,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div>
           <label class="modal-label">Prioridad</label>
           <select class="modal-select" id="edit-priority">
-            <option value="1">ð´ Alta</option>
-            <option value="2">ð  Media</option>
-            <option value="3">ð¡ Normal</option>
-            <option value="4">âª Baja</option>
+            <option value="1">🔴 Alta</option>
+            <option value="2">🟠 Media</option>
+            <option value="3">🟡 Normal</option>
+            <option value="4">⚪ Baja</option>
           </select>
         </div>
         <div>
@@ -670,12 +670,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
       </div>
       <div>
-        <label class="modal-label">ClasificaciÃ³n (Eisenhower)</label>
+        <label class="modal-label">Clasificación (Eisenhower)</label>
         <div class="eis-row">
-          <button class="eis-chip" id="edit-chip-i"  type="button" onclick="setEis('edit','i',true)">â­ Importante</button>
-          <button class="eis-chip" id="edit-chip-ni" type="button" onclick="setEis('edit','i',false)">â No importante</button>
-          <button class="eis-chip" id="edit-chip-u"  type="button" onclick="setEis('edit','u',true)">ð¥ Urgente</button>
-          <button class="eis-chip" id="edit-chip-nu" type="button" onclick="setEis('edit','u',false)">â No urgente</button>
+          <button class="eis-chip" id="edit-chip-i"  type="button" onclick="setEis('edit','i',true)">⭐ Importante</button>
+          <button class="eis-chip" id="edit-chip-ni" type="button" onclick="setEis('edit','i',false)">— No importante</button>
+          <button class="eis-chip" id="edit-chip-u"  type="button" onclick="setEis('edit','u',true)">🔥 Urgente</button>
+          <button class="eis-chip" id="edit-chip-nu" type="button" onclick="setEis('edit','u',false)">— No urgente</button>
         </div>
       </div>
       <div class="modal-row">
@@ -694,7 +694,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <div>
         <label class="modal-label">Delegado a (opcional)</label>
-        <input class="modal-input" id="edit-delegado" placeholder="Nombre o equipoâ¦"/>
+        <input class="modal-input" id="edit-delegado" placeholder="Nombre o equipo…"/>
       </div>
       <div>
         <label class="modal-label">Nota</label>
@@ -704,15 +704,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <label class="modal-label">Acciones / subtareas</label>
         <div class="sub-list" id="edit-sub-list"></div>
         <div class="sub-inp-row">
-          <input id="edit-sub-inp" placeholder="Agregar acciÃ³nâ¦" onkeydown="if(event.key==='Enter'){event.preventDefault();addSubtask('edit')}"/>
+          <input id="edit-sub-inp" placeholder="Agregar acción…" onkeydown="if(event.key==='Enter'){event.preventDefault();addSubtask('edit')}"/>
           <button type="button" onclick="addSubtask('edit')">+ Agregar</button>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--accent-light);border:1.5px solid #c8d8a8;border-radius:9px;margin-bottom:8px;cursor:pointer" onclick="document.getElementById('edit-focus').checked=!document.getElementById('edit-focus').checked">
         <input type="checkbox" id="edit-focus" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer" onclick="event.stopPropagation()"/>
         <div>
-          <div style="font-size:.8rem;font-weight:800;color:var(--accent)">ð En Foco Ahora</div>
-          <div style="font-size:.65rem;color:var(--text2);margin-top:1px">Esta tarea aparecerÃ¡ primera en tu dashboard</div>
+          <div style="font-size:.8rem;font-weight:800;color:var(--accent)">📌 En Foco Ahora</div>
+          <div style="font-size:.65rem;color:var(--text2);margin-top:1px">Esta tarea aparecerá primera en tu dashboard</div>
         </div>
       </div>
       <button class="modal-btn primary" onclick="saveEdit()">Guardar cambios</button>
@@ -725,13 +725,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="modal-overlay" id="jam-modal">
   <div class="modal-box" style="max-width:340px;text-align:center">
     <div class="modal-header">
-      <div class="modal-title">â¡ JAM SESH</div>
-      <button class="modal-close" onclick="closeModal('jam-modal')">â</button>
+      <div class="modal-title">⚡ JAM SESH</div>
+      <button class="modal-close" onclick="closeModal('jam-modal')">✕</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="jam-task-id"/>
       <div id="jam-task-label" style="font-size:.82rem;color:var(--text2);margin-bottom:16px;font-weight:600"></div>
-      <div style="font-size:.8rem;color:var(--text2);margin-bottom:10px">Elige la duraciÃ³n del bloque:</div>
+      <div style="font-size:.8rem;color:var(--text2);margin-bottom:10px">Elige la duración del bloque:</div>
       <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px">
         <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(30)">30 min</button>
         <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(60)">60 min</button>
@@ -746,14 +746,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="modal-overlay" id="fb-modal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">ð¥ Firebase Sync</div>
-      <button class="modal-close" onclick="closeModal('fb-modal')">â</button>
+      <div class="modal-title">🔥 Firebase Sync</div>
+      <button class="modal-close" onclick="closeModal('fb-modal')">✕</button>
     </div>
     <div class="modal-body">
       <p style="font-size:.82rem;color:var(--text2)">Conecta Firebase para sincronizar tus tareas entre dispositivos.</p>
       <div>
         <label class="modal-label">API Key</label>
-        <input class="modal-input" id="fb-key" placeholder="AIzaâ¦" value=""/>
+        <input class="modal-input" id="fb-key" placeholder="AIza…" value=""/>
       </div>
       <div>
         <label class="modal-label">Project ID</label>
@@ -769,20 +769,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="modal-overlay" id="cat-modal">
   <div class="modal-box" style="max-width:380px">
     <div class="modal-header">
-      <div class="modal-title" id="cat-modal-title">Nueva categorÃ­a</div>
-      <button class="modal-close" onclick="closeModal('cat-modal')">â</button>
+      <div class="modal-title" id="cat-modal-title">Nueva categoría</div>
+      <button class="modal-close" onclick="closeModal('cat-modal')">✕</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="cat-modal-id"/>
       <div>
         <label class="modal-label">Nombre</label>
-        <input class="modal-input" id="cat-modal-name" placeholder="Ej. Marketing, RHâ¦"/>
+        <input class="modal-input" id="cat-modal-name" placeholder="Ej. Marketing, RH…"/>
       </div>
       <div>
         <label class="modal-label">Emoji</label>
         <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
-          <div id="cat-emoji-preview" style="font-size:2rem;width:44px;text-align:center">ð</div>
-          <input class="modal-input" id="cat-modal-emoji" style="width:80px" placeholder="ð" maxlength="2" oninput="document.getElementById('cat-emoji-preview').textContent=this.value||'ð'"/>
+          <div id="cat-emoji-preview" style="font-size:2rem;width:44px;text-align:center">📌</div>
+          <input class="modal-input" id="cat-modal-emoji" style="width:80px" placeholder="📌" maxlength="2" oninput="document.getElementById('cat-emoji-preview').textContent=this.value||'📌'"/>
           <span style="font-size:.72rem;color:var(--text2)">o elige abajo:</span>
         </div>
         <div id="cat-emoji-grid" style="display:flex;flex-wrap:wrap;gap:4px;max-height:120px;overflow-y:auto;padding:4px 0"></div>
@@ -791,8 +791,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <label class="modal-label">Color</label>
         <div id="cat-color-swatches" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px"></div>
       </div>
-      <button class="modal-btn primary" onclick="saveCat()">Guardar categorÃ­a</button>
-      <button class="modal-btn danger" id="cat-delete-btn" onclick="deleteCat()" style="display:none">Eliminar categorÃ­a</button>
+      <button class="modal-btn primary" onclick="saveCat()">Guardar categoría</button>
+      <button class="modal-btn danger" id="cat-delete-btn" onclick="deleteCat()" style="display:none">Eliminar categoría</button>
     </div>
   </div>
 </div>
@@ -802,15 +802,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="modal-box">
     <div class="modal-header">
       <div class="modal-title" id="meta-modal-title">Nueva meta</div>
-      <button class="modal-close" onclick="closeModal('meta-modal')">â</button>
+      <button class="modal-close" onclick="closeModal('meta-modal')">✕</button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="meta-id"/>
       <div>
         <label class="modal-label">Icono</label>
         <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
-          <div id="meta-icon-preview" style="font-size:2rem;width:44px;text-align:center">ð¯</div>
-          <input class="modal-input" id="meta-icon" placeholder="ð¯" maxlength="4" style="width:70px" oninput="document.getElementById('meta-icon-preview').textContent=this.value||'ð¯'"/>
+          <div id="meta-icon-preview" style="font-size:2rem;width:44px;text-align:center">🎯</div>
+          <input class="modal-input" id="meta-icon" placeholder="🎯" maxlength="4" style="width:70px" oninput="document.getElementById('meta-icon-preview').textContent=this.value||'🎯'"/>
         </div>
         <div id="meta-emoji-grid" style="display:flex;flex-wrap:wrap;gap:4px;max-height:100px;overflow-y:auto;padding:4px 0;margin-bottom:6px"></div>
       </div>
@@ -820,21 +820,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <input type="hidden" id="meta-color" value="#6b7a4e"/>
       </div>
       <div>
-        <label class="modal-label">TÃ­tulo</label>
+        <label class="modal-label">Título</label>
         <input class="modal-input" id="meta-title" placeholder="Mi gran meta"/>
       </div>
       <div>
         <label class="modal-label">Tipo</label>
         <select class="modal-select" id="meta-type">
-          <option value="personal">ð¤ Personal</option>
-          <option value="profesional">ð¼ Profesional</option>
-          <option value="salud">ðª Salud</option>
-          <option value="finanzas">ð° Finanzas</option>
+          <option value="personal">👤 Personal</option>
+          <option value="profesional">💼 Profesional</option>
+          <option value="salud">💪 Salud</option>
+          <option value="finanzas">💰 Finanzas</option>
         </select>
       </div>
       <div>
-        <label class="modal-label">DescripciÃ³n</label>
-        <textarea class="modal-textarea" id="meta-note" placeholder="Â¿Por quÃ© es importante?"></textarea>
+        <label class="modal-label">Descripción</label>
+        <textarea class="modal-textarea" id="meta-note" placeholder="¿Por qué es importante?"></textarea>
       </div>
       <div class="modal-row">
         <div>
@@ -843,7 +843,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div style="font-size:.65rem;color:var(--text2);margin-top:3px">Solo si no usas hitos</div>
         </div>
         <div>
-          <label class="modal-label">Fecha lÃ­mite</label>
+          <label class="modal-label">Fecha límite</label>
           <input class="modal-input" type="date" id="meta-due"/>
         </div>
       </div>
@@ -851,7 +851,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <label class="modal-label">Hitos / Pasos</label>
         <div class="sub-list" id="meta-ms-list"></div>
         <div style="display:flex;gap:6px;margin-top:6px">
-          <input class="modal-input" id="meta-ms-inp" placeholder="Agregar hitoâ¦" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addMetaMilestone()}"/>
+          <input class="modal-input" id="meta-ms-inp" placeholder="Agregar hito…" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addMetaMilestone()}"/>
           <button class="btn-sm" onclick="addMetaMilestone()">+</button>
         </div>
       </div>
@@ -865,17 +865,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="modal-overlay" id="ai-setup-modal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">â¨ Configurar IA</div>
-      <button class="modal-close" onclick="closeModal('ai-setup-modal')">â</button>
+      <div class="modal-title">✨ Configurar IA</div>
+      <button class="modal-close" onclick="closeModal('ai-setup-modal')">✕</button>
     </div>
     <div class="modal-body">
       <div>
         <label class="modal-label">Proveedor</label>
         <select class="modal-select" id="ai-provider-sel" onchange="renderAISetup()">
-          <option value="">â Elegir â</option>
-          <option value="groq">â¡ Groq (gratis, recomendado)</option>
-          <option value="openai">ð¤ ChatGPT / OpenAI</option>
-          <option value="gemini">ð Google Gemini</option>
+          <option value="">— Elegir —</option>
+          <option value="groq">⚡ Groq (gratis, recomendado)</option>
+          <option value="openai">🤖 ChatGPT / OpenAI</option>
+          <option value="gemini">💎 Google Gemini</option>
         </select>
       </div>
       <div id="ai-setup-body"></div>
@@ -892,10 +892,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 let items = [];
 let goals = [];
 let cats = [
-  {id:1,name:'Personal',color:'#6b7a4e',icon:'ð¤'},
-  {id:2,name:'Trabajo',color:'#2563eb',icon:'ð¼'},
-  {id:3,name:'Salud',color:'#16a34a',icon:'ðª'},
-  {id:4,name:'Finanzas',color:'#d97706',icon:'ð°'},
+  {id:1,name:'Personal',color:'#6b7a4e',icon:'👤'},
+  {id:2,name:'Trabajo',color:'#2563eb',icon:'💼'},
+  {id:3,name:'Salud',color:'#16a34a',icon:'💪'},
+  {id:4,name:'Finanzas',color:'#d97706',icon:'💰'},
 ];
 let nextId = 1;
 let nextCatId = 10;
@@ -954,7 +954,7 @@ async function initFirebase() {
     await pushFirebase();
     setSyncStatus('ok');
     closeModal('fb-modal');
-    showToast('Firebase conectado â');
+    showToast('Firebase conectado ✓');
     renderCurrent();
   } catch(e) { setSyncStatus('error'); showToast('Error: ' + e.message); }
 }
@@ -1028,7 +1028,7 @@ function todayStr() {
 }
 
 function getCat(id) {
-  return cats.find(c=>c.id===id) || {name:'Sin categorÃ­a',color:'#6b7280',icon:'ð'};
+  return cats.find(c=>c.id===id) || {name:'Sin categoría',color:'#6b7280',icon:'📌'};
 }
 
 function priorityColor(p) {
@@ -1042,13 +1042,13 @@ const PANEL_TITLES = {
   dash:'Inicio', log:'Log diario', semana:'Semana',
   todo:'To Do', compromisos:'Compromisos', proyectos:'Proyectos',
   extra:'Extra', done:'Completadas', metas:'Metas 2025',
-  cats:'CategorÃ­as', settings:'Ajustes'
+  cats:'Categorías', settings:'Ajustes'
 };
 
 function _dashHeaderHtml() {
   const now = new Date();
   const hh = now.getHours();
-  const G = hh<12?'Buenos dÃ­as âï¸':hh<18?'Buenas tardes ð¤ï¸':'Buenas noches ð';
+  const G = hh<12?'Buenos días ☀️':hh<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
   const fecha = now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   return `<div style="line-height:1.2"><div style="font-size:1.05rem;font-weight:900;color:var(--text)">${G}, Montse</div><div style="font-size:.72rem;font-weight:500;color:var(--text2)">${fecha}</div></div>`;
 }
@@ -1124,7 +1124,7 @@ function renderDash() {
   if (!el) return;
   const now = new Date();
   const h_ = now.getHours();
-  const G = h_<12?'Buenos dÃ­as âï¸':h_<18?'Buenas tardes ð¤ï¸':'Buenas noches ð';
+  const G = h_<12?'Buenos días ☀️':h_<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
   const today = todayStr();
   const pending = items.filter(i=>!i.done && !i.archived);
   const doneAll = items.filter(i=>i.done).length;
@@ -1132,7 +1132,7 @@ function renderDash() {
   const overdue = items.filter(i=>!i.done && !i.archived && i.date && i.date < today);
   const totalPend = pending.length;
 
-  // ââ FOCUS HERO ââ
+  // ── FOCUS HERO ──
   const focusItem = pending.find(i=>i.focus) || (overdue[0]) || pending[0];
   const focusHtml = focusItem ? (()=>{
     const subs = focusItem.subtasks||[];
@@ -1140,29 +1140,29 @@ function renderDash() {
     const subPct = subs.length ? Math.round(doneSubs/subs.length*100) : 0;
     const isJamActive = window._jam && window._jam.taskId===focusItem.id && window._jam.remaining>0;
     return `<div style="background:var(--accent-light);border:1.5px solid #c8d8a8;border-radius:12px;padding:18px;margin-bottom:14px">
-      <div style="font-size:.62rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">â¡ En foco ahora</div>
+      <div style="font-size:.62rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">⚡ En foco ahora</div>
       <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.4">${h(focusItem.text)}</div>
       ${subs.length ? `
         <div style="height:5px;background:#dde8cc;border-radius:3px;margin-bottom:7px">
           <div style="width:${subPct}%;height:100%;background:var(--accent);border-radius:3px;transition:width .3s"></div>
         </div>` : ''}
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        ${subs.length ? `<span style="font-size:.7rem;color:var(--accent)">${doneSubs}/${subs.length} acciones</span><span style="color:#ccc;font-size:.7rem">Â·</span>` : ''}
-        ${focusItem.focus ? `<span style="font-size:.7rem;color:var(--accent)">ð Fijada manualmente</span>` : ''}
-        ${overdue.includes(focusItem) ? `<span style="font-size:.7rem;color:#ef4444;font-weight:700">â ï¸ Vencida</span>` : ''}
+        ${subs.length ? `<span style="font-size:.7rem;color:var(--accent)">${doneSubs}/${subs.length} acciones</span><span style="color:#ccc;font-size:.7rem">·</span>` : ''}
+        ${focusItem.focus ? `<span style="font-size:.7rem;color:var(--accent)">📌 Fijada manualmente</span>` : ''}
+        ${overdue.includes(focusItem) ? `<span style="font-size:.7rem;color:#ef4444;font-weight:700">⚠️ Vencida</span>` : ''}
         <div style="margin-left:auto;display:flex;gap:7px">
-          <button onclick="toggleDone(${focusItem.id})" style="padding:5px 12px;background:#fff;border:1.5px solid #c8d8a8;border-radius:7px;font-size:.7rem;font-weight:700;cursor:pointer;color:var(--accent)">â Hecha</button>
-          <button onclick="openJamModal(${focusItem.id})" style="background:var(--accent);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:.7rem;font-weight:800;cursor:pointer">${isJamActive?'â± JAM activo':'â¡ JAM SESH'}</button>
+          <button onclick="toggleDone(${focusItem.id})" style="padding:5px 12px;background:#fff;border:1.5px solid #c8d8a8;border-radius:7px;font-size:.7rem;font-weight:700;cursor:pointer;color:var(--accent)">✓ Hecha</button>
+          <button onclick="openJamModal(${focusItem.id})" style="background:var(--accent);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:.7rem;font-weight:800;cursor:pointer">${isJamActive?'⏱ JAM activo':'⚡ JAM SESH'}</button>
         </div>
       </div>
     </div>`;
   })() : '';
 
-  // ââ STORY BAND (maÃ±ana/tarde/noche) â drag-and-drop assignment ââ
+  // ── STORY BAND (mañana/tarde/noche) — drag-and-drop assignment ──
   const slotDefs = [
-    {key:'manana', label:'âï¸ MaÃ±ana', bg:'#fffbeb', lcolor:'#92400e'},
-    {key:'tarde',  label:'ð¤ï¸ Tarde',  bg:'#f0fdf4', lcolor:'#166534'},
-    {key:'noche',  label:'ð Noche',  bg:'#f8f7ff', lcolor:'#4c1d95'},
+    {key:'manana', label:'☀️ Mañana', bg:'#fffbeb', lcolor:'#92400e'},
+    {key:'tarde',  label:'🌤️ Tarde',  bg:'#f0fdf4', lcolor:'#166534'},
+    {key:'noche',  label:'🌙 Noche',  bg:'#f8f7ff', lcolor:'#4c1d95'},
   ];
   const activeSlotIdx = h_<12 ? 0 : h_<19 ? 1 : 2;
   const slotBuckets = {
@@ -1170,12 +1170,12 @@ function renderDash() {
     tarde:  pending.filter(i=>i.slot==='tarde'),
     noche:  pending.filter(i=>i.slot==='noche'),
   };
-  const unassigned = pending.filter(i=>!i.slot && (i.col==='todo' || i.cat_key==='todo'));
+  const unassigned = pending.filter(i=>!i.slot && (i.col==='todo'||i.cat_key==='todo');
   const unassignedHtml = unassigned.length ? `
     <div style="background:#f9fafb;border:1.5px dashed var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px">
-      <div style="font-size:.6rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px">ð Sin asignar â arrastra al momento del dÃ­a â</div>
+      <div style="font-size:.6rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px">📋 Sin asignar — arrastra al momento del día ↓</div>
       <div style="display:flex;flex-wrap:wrap;gap:5px">
-        ${unassigned.map(i=>`<div class="slot-chip" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})">${h(i.text.length>28?i.text.slice(0,28)+'â¦':i.text)}</div>`).join('')}
+        ${unassigned.map(i=>`<div class="slot-chip" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})">${h(i.text.length>28?i.text.slice(0,28)+'…':i.text)}</div>`).join('')}
       </div>
     </div>` : '';
   const storyHtml = `
@@ -1185,32 +1185,32 @@ function renderDash() {
         const buck = slotBuckets[s.key];
         const isNow = si===activeSlotIdx;
         return `<div style="background:${s.bg};padding:13px 14px;border-right:${si<2?'1px solid var(--border)':'none'};position:relative;min-height:90px;transition:outline .1s"
-          ondragover="event.preventDefault();this.style.outline='2px dashed ${s.lcolor}';this.style.outlineOffset='â2px'"
+          ondragover="event.preventDefault();this.style.outline='2px dashed ${s.lcolor}';this.style.outlineOffset='−2px'"
           ondragleave="if(!this.contains(event.relatedTarget)){this.style.outline=''}"
           ondrop="this.style.outline='';dropOnSlot(event,'${s.key}')">
           ${isNow?`<div style="position:absolute;top:0;left:0;right:0;height:3px;background:${s.lcolor}"></div>`:''}
-          <div style="font-size:.6rem;font-weight:800;color:${s.lcolor};text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">${s.label}${isNow?' Â· ahora':''}</div>
+          <div style="font-size:.6rem;font-weight:800;color:${s.lcolor};text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">${s.label}${isNow?' · ahora':''}</div>
           <div style="font-size:.8rem;font-weight:700;color:var(--text);margin-bottom:3px">${buck.length} ${buck.length===1?'tarea':'tareas'}</div>
           <div style="display:flex;flex-direction:column;gap:4px;margin-top:7px">
             ${buck.map(i=>`<div draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" style="display:flex;align-items:flex-start;gap:5px;font-size:.72rem;color:var(--text);cursor:grab;padding:3px 0">
               <div onclick="event.stopPropagation();toggleDone(${i.id})" title="${i.done?'Reabrir':'Marcar hecha'}"
-                style="width:17px;height:17px;border-radius:50%;border:1.5px solid ${i.done?'#22c55e':'#d1d5db'};background:${i.done?'#22c55e':'#fff'};display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;font-size:.6rem;color:#fff;font-weight:900;transition:all .15s">${i.done?'â':''}</div>
+                style="width:17px;height:17px;border-radius:50%;border:1.5px solid ${i.done?'#22c55e':'#d1d5db'};background:${i.done?'#22c55e':'#fff'};display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;font-size:.6rem;color:#fff;font-weight:900;transition:all .15s">${i.done?'✓':''}</div>
               <span style="flex:1;min-width:0;word-break:break-word;line-height:1.35;${i.done?'text-decoration:line-through;color:var(--text2)':''}" onclick="openEditModal(${i.id})">${h(i.text)}</span>
-              <button onclick="event.stopPropagation();clearSlot(${i.id})" title="Quitar del slot" style="border:none;background:none;cursor:pointer;color:${s.lcolor};font-size:.75rem;padding:0;opacity:.4;line-height:1;flex-shrink:0;margin-top:1px">â</button>
+              <button onclick="event.stopPropagation();clearSlot(${i.id})" title="Quitar del slot" style="border:none;background:none;cursor:pointer;color:${s.lcolor};font-size:.75rem;padding:0;opacity:.4;line-height:1;flex-shrink:0;margin-top:1px">✕</button>
             </div>`).join('')}
-            ${buck.length===0?`<div style="font-size:.65rem;color:${s.lcolor};opacity:.5;margin-top:4px">Suelta aquÃ­ â</div>`:''}
+            ${buck.length===0?`<div style="font-size:.65rem;color:${s.lcolor};opacity:.5;margin-top:4px">Suelta aquí ↓</div>`:''}
           </div>
         </div>`;
       }).join('')}
     </div>`;
 
-  // ââ TIMELINE DEL DÃA (6amâ8pm) ââ
+  // ── TIMELINE DEL DÍA (6am–8pm) ──
   const TL_START = 6*60, TL_END = 20*60, TL_RANGE = TL_END-TL_START; // 840 min
   const nowMin = h_*60+now.getMinutes();
   const tlPct = Math.max(0,Math.min(100,Math.round((nowMin-TL_START)/TL_RANGE*100)));
   const tlHours = [6,8,10,12,14,17,20];
   const timelineHtml = `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin-bottom:14px">
-    <div style="font-size:.65rem;color:var(--text2);margin-bottom:10px">â± Progreso del dÃ­a â ${now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
+    <div style="font-size:.65rem;color:var(--text2);margin-bottom:10px">⏱ Progreso del día — ${now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
     <div style="position:relative;height:18px;display:flex;align-items:center">
       <div style="position:absolute;left:0;right:0;height:2px;background:#e8ecdf;border-radius:1px"></div>
       <div id="dash-tl-fill" style="position:absolute;left:0;width:${tlPct}%;height:2px;background:var(--accent);border-radius:1px;transition:width 60s linear"></div>
@@ -1226,7 +1226,7 @@ function renderDash() {
     </div>
   </div>`;
 
-  // ââ STATS ââ
+  // ── STATS ──
   const statsHtml = `<div class="stats-row" style="margin-bottom:14px">
     <div class="stat-card"><div class="stat-num" style="color:var(--accent)">${totalPend}</div><div class="stat-lbl">Pendientes</div></div>
     <div class="stat-card"><div class="stat-num" style="color:#22c55e">${doneToday.length}</div><div class="stat-lbl">Hechas hoy</div></div>
@@ -1234,7 +1234,7 @@ function renderDash() {
     <div class="stat-card"><div class="stat-num" style="color:#f97316">${goals.length}</div><div class="stat-lbl">Metas</div></div>
   </div>`;
 
-  // ââ KANBAN + METAS/VENCIDAS ââ
+  // ── KANBAN + METAS/VENCIDAS ──
   const kbCols = [
     {key:'todo',        label:'To Do',       color:'#ef4444', bg:'#fef2f2', tab:'todo'},
     {key:'compromisos', label:'Compromisos',  color:'#f97316', bg:'#fff7ed', tab:'compromisos'},
@@ -1254,7 +1254,7 @@ function renderDash() {
           ${shown.length ? shown.map(i=>{
             const subs=i.subtasks||[];
             return `<div class="kb-task" draggable="true" data-id="${i.id}" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})">
-              <div class="kb-task-check" onclick="event.stopPropagation();toggleDone(${i.id})">â</div>
+              <div class="kb-task-check" onclick="event.stopPropagation();toggleDone(${i.id})">✓</div>
               <div style="flex:1;min-width:0">
                 <div class="kb-task-text">${h(i.text)}</div>
                 ${i.date?`<div class="kb-task-date${i.date<today?' overdue':''}">${fmtDate(i.date)}</div>`:''}
@@ -1262,42 +1262,42 @@ function renderDash() {
               </div>
               <div class="priority-dot p${i.priority||3}" style="margin-left:2px;flex-shrink:0"></div>
             </div>`;
-          }).join('') : `<div style="font-size:.72rem;color:var(--text2);text-align:center;padding:14px 0">Â¡Todo listo! â¨</div>`}
-          ${colItems.length>3?`<div class="kb-more" onclick="switchTab('${col.tab}')">+${colItems.length-3} mÃ¡s â</div>`:''}
+          }).join('') : `<div style="font-size:.72rem;color:var(--text2);text-align:center;padding:14px 0">¡Todo listo! ✨</div>`}
+          ${colItems.length>3?`<div class="kb-more" onclick="switchTab('${col.tab}')">+${colItems.length-3} más →</div>`:''}
         </div>
       </div>`;
     }).join('')}
   </div>`;
 
-  // ââ METAS + VENCIDAS ââ
+  // ── METAS + VENCIDAS ──
   const bottomHtml = `<div class="overview-grid">
     <div>
       <div class="heading-card">
-        <div class="heading-card-title">â­ Metas 2026</div>
+        <div class="heading-card-title">⭐ Metas 2026</div>
         ${goals.length ? goals.slice(0,3).map(g=>{
           const gp=Math.min(_metaPct(g),100);
           return `<div style="margin-bottom:8px">
             <div style="display:flex;justify-content:space-between;font-size:.76rem;font-weight:600;color:var(--text);margin-bottom:3px">
-              <span>${g.icon||'ð¯'} ${h(g.title)}</span><span style="color:${g.color||'#6b7a4e'}">${gp}%</span>
+              <span>${g.icon||'🎯'} ${h(g.title)}</span><span style="color:${g.color||'#6b7a4e'}">${gp}%</span>
             </div>
             <div style="height:5px;background:#eee;border-radius:3px">
               <div style="width:${gp}%;height:100%;background:${g.color||'#6b7a4e'};border-radius:3px"></div>
             </div>
           </div>`;
-        }).join('') : `<div style="font-size:.76rem;color:var(--text2);text-align:center;padding:10px 0">Sin metas aÃºn</div>`}
-        <button onclick="switchTab('metas')" style="width:100%;margin-top:8px;padding:8px;background:var(--accent-light);color:var(--accent);border:none;border-radius:9px;font-size:.76rem;font-weight:700;cursor:pointer">Ver todas â</button>
+        }).join('') : `<div style="font-size:.76rem;color:var(--text2);text-align:center;padding:10px 0">Sin metas aún</div>`}
+        <button onclick="switchTab('metas')" style="width:100%;margin-top:8px;padding:8px;background:var(--accent-light);color:var(--accent);border:none;border-radius:9px;font-size:.76rem;font-weight:700;cursor:pointer">Ver todas →</button>
       </div>
     </div>
     <div>
       ${overdue.length ? `<div class="heading-card">
-        <div class="heading-card-title" style="color:#ef4444">â ï¸ Vencidas (${overdue.length})</div>
+        <div class="heading-card-title" style="color:#ef4444">⚠️ Vencidas (${overdue.length})</div>
         ${overdue.slice(0,5).map(i=>`<div class="heading-item" style="cursor:pointer" onclick="openEditModal(${i.id})">
           <div class="heading-dot" style="background:#ef4444"></div>
           <span class="heading-item-text">${h(i.text)}</span>
           <span style="font-size:.65rem;color:#ef4444">${fmtDate(i.date)}</span>
         </div>`).join('')}
       </div>` : `<div class="heading-card" style="text-align:center;padding:24px">
-        <div style="font-size:1.5rem">ð</div>
+        <div style="font-size:1.5rem">🎉</div>
         <div style="font-size:.8rem;color:var(--text2);margin-top:6px">Sin vencidas</div>
       </div>`}
     </div>
@@ -1313,7 +1313,7 @@ function renderDash() {
 }
 
 // ============================================================
-// LOG DIARIO â HÃ¡bitos (C) + Timeline con hora (A)
+// LOG DIARIO — Hábitos (C) + Timeline con hora (A)
 // ============================================================
 function _getHabits(){try{return JSON.parse(localStorage.getItem('mf_habits')||'[]')}catch(e){return[]}}
 function _saveHabits(h){localStorage.setItem('mf_habits',JSON.stringify(h))}
@@ -1329,7 +1329,7 @@ function addHabit(){
   const inp=document.getElementById('hab-inp'),emo=document.getElementById('hab-emo');
   const t=inp?inp.value.trim():'';if(!t)return;
   const habs=_getHabits();
-  habs.push({id:Date.now(),text:t,emoji:(emo&&emo.value.trim())||'â'});
+  habs.push({id:Date.now(),text:t,emoji:(emo&&emo.value.trim())||'✓'});
   _saveHabits(habs);if(inp)inp.value='';renderLogDiario();
 }
 function removeHabit(id){_saveHabits(_getHabits().filter(h=>h.id!==id));renderLogDiario();}
@@ -1374,7 +1374,7 @@ function renderLogDiario() {
     </div>`;
   }).join('');
 
-  // ââ JAM banner
+  // ── JAM banner
   const jam = window._jam;
   let jamHtml = '';
   if (jam) {
@@ -1382,16 +1382,16 @@ function renderLogDiario() {
     const pct = Math.round(remaining / (jam.totalSecs) * 100);
     const mins = Math.floor(remaining/60), secs = remaining%60;
     const jamTask = items.find(i=>i.id===jam.id);
-    jamHtml = `<div class="jam-header"><div><div style="font-size:.65rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.05em">â¡ JAM SESH ACTIVO</div><div class="jam-task">${jamTask?h(jamTask.text):'Tarea'}</div></div><div class="jam-time">${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</div><button class="jam-btn" onclick="stopJamSesh()" style="background:var(--red);color:#fff">â</button></div><div class="jam-bar-wrap"><div class="jam-bar-fill" id="jam-bar-fill" style="width:${pct}%"></div></div>`;
+    jamHtml = `<div class="jam-header"><div><div style="font-size:.65rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.05em">⚡ JAM SESH ACTIVO</div><div class="jam-task">${jamTask?h(jamTask.text):'Tarea'}</div></div><div class="jam-time">${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</div><button class="jam-btn" onclick="stopJamSesh()" style="background:var(--red);color:#fff">✕</button></div><div class="jam-bar-wrap"><div class="jam-bar-fill" id="jam-bar-fill" style="width:${pct}%"></div></div>`;
   }
 
-  // ââ HABITS PANEL
+  // ── HABITS PANEL
   const habits = _getHabits();
   const hl = _getHlog();
   const dayLog = hl[activeLogDate]||{};
   const habitsHtml = `
     <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px">
-      <div style="font-size:.62rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">ð± HÃ¡bitos</div>
+      <div style="font-size:.62rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">🌱 Hábitos</div>
       ${habits.length ? habits.map(hab=>{
         const done = !!(dayLog[hab.id]);
         const streak = _habitStreak(hab.id);
@@ -1400,22 +1400,22 @@ function renderLogDiario() {
           <div style="display:flex;align-items:center;gap:8px">
             <div onclick="toggleHabit(${hab.id})" style="width:22px;height:22px;border-radius:6px;border:1.5px solid ${done?'var(--accent)':'var(--border)'};background:${done?'var(--accent)':'transparent'};display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;color:#fff;flex-shrink:0;transition:all .15s">${done?hab.emoji:''}</div>
             <div style="flex:1;font-size:.8rem;font-weight:600;color:${done?'var(--text2)':'var(--text)'};${done?'text-decoration:line-through;text-decoration-color:#aaa':''}">${h(hab.text)}</div>
-            ${streak>0?`<span style="font-size:.65rem;font-weight:900;color:#f97316">ð¥${streak}</span>`:''}
-            <button onclick="removeHabit(${hab.id})" style="border:none;background:none;cursor:pointer;color:#d1d5db;font-size:.7rem;padding:0;line-height:1;flex-shrink:0">â</button>
+            ${streak>0?`<span style="font-size:.65rem;font-weight:900;color:#f97316">🔥${streak}</span>`:''}
+            <button onclick="removeHabit(${hab.id})" style="border:none;background:none;cursor:pointer;color:#d1d5db;font-size:.7rem;padding:0;line-height:1;flex-shrink:0">✕</button>
           </div>
           <div style="display:flex;gap:3px;margin-top:5px;padding-left:30px">
             ${week.map(w=>`<div title="${w.ds}" onclick="selectLogDay('${w.ds}')" style="flex:1;height:6px;border-radius:2px;background:${w.done?'var(--accent)':'#e5e7eb'};cursor:pointer;transition:background .15s"></div>`).join('')}
           </div>
         </div>`;
-      }).join('') : `<div style="font-size:.72rem;color:var(--text2);text-align:center;padding:6px 0">Sin hÃ¡bitos â agrÃ©galos aquÃ­ â</div>`}
+      }).join('') : `<div style="font-size:.72rem;color:var(--text2);text-align:center;padding:6px 0">Sin hábitos — agrégalos aquí ↓</div>`}
       <div style="display:flex;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:10px">
-        <input class="modal-input" id="hab-emo" placeholder="â" style="width:42px;text-align:center;padding:6px 4px" maxlength="2"/>
-        <input class="modal-input" id="hab-inp" placeholder="Agregar hÃ¡bitoâ¦" style="flex:1" onkeydown="if(event.key==='Enter')addHabit()"/>
+        <input class="modal-input" id="hab-emo" placeholder="✓" style="width:42px;text-align:center;padding:6px 4px" maxlength="2"/>
+        <input class="modal-input" id="hab-inp" placeholder="Agregar hábito…" style="flex:1" onkeydown="if(event.key==='Enter')addHabit()"/>
         <button class="btn-sm" onclick="addHabit()">+</button>
       </div>
     </div>`;
 
-  // ââ TIMELINE DE TAREAS
+  // ── TIMELINE DE TAREAS
   const dayItems = items.filter(i=>!i.archived && (i.date===activeLogDate || i.doneDate===activeLogDate));
   const slotOrder = {manana:0, tarde:1, noche:2};
   const slotHour  = {manana:'9:00', tarde:'14:00', noche:'20:00'};
@@ -1428,23 +1428,23 @@ function renderLogDiario() {
 
   const tlEntries = sorted.length ? sorted.map(i=>{
     const dot = i.done?'#22c55e':i.date&&i.date<today&&!i.done?'#ef4444':'var(--accent)';
-    const hr  = i.time ? i.time.slice(0,5) : (slotHour[i.slot]||'â');
+    const hr  = i.time ? i.time.slice(0,5) : (slotHour[i.slot]||'—');
     return `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;position:relative">
       <div style="position:absolute;left:-34px;font-size:.56rem;color:var(--text2);font-weight:600;top:4px;width:28px;text-align:right">${hr}</div>
       <div onclick="toggleDone(${i.id})" title="${i.done?'Marcar pendiente':'Marcar hecha'}"
-        style="width:20px;height:20px;border-radius:50%;border:2px solid ${i.done?'#22c55e':i.date&&i.date<today&&!i.done?'#ef4444':'#d1d5db'};background:${i.done?'#22c55e':'#fff'};display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;margin-left:-11px;transition:all .15s;font-size:.7rem;color:#fff;font-weight:900">${i.done?'â':''}</div>
+        style="width:20px;height:20px;border-radius:50%;border:2px solid ${i.done?'#22c55e':i.date&&i.date<today&&!i.done?'#ef4444':'#d1d5db'};background:${i.done?'#22c55e':'#fff'};display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;margin-left:-11px;transition:all .15s;font-size:.7rem;color:#fff;font-weight:900">${i.done?'✓':''}</div>
       <div style="flex:1;min-width:0">
         <div onclick="openEditModal(${i.id})" style="font-size:.83rem;font-weight:${i.done?400:600};color:${i.done?'var(--text2)':'var(--text)'};${i.done?'text-decoration:line-through;text-decoration-color:#aaa':''};cursor:pointer;line-height:1.35">${h(i.text)}</div>
         ${i.note?`<div style="font-size:.68rem;color:var(--text2);margin-top:2px">${h(i.note)}</div>`:''}
         <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;align-items:center">
           <span style="font-size:.6rem;background:var(--accent-light);color:var(--accent);border-radius:9px;padding:1px 7px;font-weight:700">${getCat(i.cat).icon} ${h(getCat(i.cat).name)}</span>
-          ${i.done?'<span style="font-size:.6rem;color:#22c55e;font-weight:700">â Hecha</span>':''}
-          ${i.date&&i.date<today&&!i.done?'<span style="font-size:.6rem;color:#ef4444;font-weight:700">â ï¸ Vencida</span>':''}
+          ${i.done?'<span style="font-size:.6rem;color:#22c55e;font-weight:700">✓ Hecha</span>':''}
+          ${i.date&&i.date<today&&!i.done?'<span style="font-size:.6rem;color:#ef4444;font-weight:700">⚠️ Vencida</span>':''}
         </div>
       </div>
     </div>`;
   }).join('') :
-    `<div class="empty-state"><div class="es-icon">ð</div><p>Sin tareas para este dÃ­a</p></div>`;
+    `<div class="empty-state"><div class="es-icon">📋</div><p>Sin tareas para este día</p></div>`;
 
   const d = new Date(activeLogDate+'T12:00:00');
   el.innerHTML = `
@@ -1474,7 +1474,7 @@ function openAddModalWithDate(date) {
 }
 
 // ============================================================
-// SEMANA â Swimlanes AM/PM/Noche + Heatmap de carga
+// SEMANA — Swimlanes AM/PM/Noche + Heatmap de carga
 // ============================================================
 function renderSemana() {
   const el = document.getElementById('panel-semana');
@@ -1496,10 +1496,10 @@ function renderSemana() {
   const doneWeek  = days.reduce((s,{ds})=>s+items.filter(i=>i.date===ds&&!i.archived&&i.done).length,0);
 
   const slotRows = [
-    {key:'manana', label:'âï¸ MaÃ±ana', color:'#92400e', bg:'#fffbeb'},
-    {key:'tarde',  label:'ð¤ï¸ Tarde',  color:'#166534', bg:'#f0fdf4'},
-    {key:'noche',  label:'ð Noche',  color:'#4c1d95', bg:'#f8f7ff'},
-    {key:'__none', label:'ð Sin slot',color:'#6b7280', bg:'#f9fafb'},
+    {key:'manana', label:'☀️ Mañana', color:'#92400e', bg:'#fffbeb'},
+    {key:'tarde',  label:'🌤️ Tarde',  color:'#166534', bg:'#f0fdf4'},
+    {key:'noche',  label:'🌙 Noche',  color:'#4c1d95', bg:'#f8f7ff'},
+    {key:'__none', label:'📋 Sin slot',color:'#6b7280', bg:'#f9fafb'},
   ];
 
   const colMeta = days.map(({d,ds},ci)=>{
@@ -1549,10 +1549,9 @@ function renderSemana() {
                   ondrop="this.style.outline='';dropOnDaySlot(event,'${ds}','${row.key==='__none'?'':row.key}')">
                   ${cellItems.slice(0,3).map(i=>`
                     <div draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})" title="${h(i.text)}"
-                      s
-e="font-size:.62rem;border-radius:4px;padding:2px 5px;margin-bottom:2px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;max-width:100%;background:${i.done?'#f0fdf4':i.date<today&&!i.done?'#fef2f2':row.bg};color:${i.done?'#16a34a':i.date<today&&!i.done?'#ef4444':row.color};border:1px solid ${i.done?'#bbf7d0':i.date<today&&!i.done?'#fecaca':'transparent'}">${i.done?'Ã¢ÂÂ ':i.date<today&&!i.done?'Ã¢ÂÂ  ':''}${h(i.text)}</div>`).join('')}
+                      style="font-size:.62rem;border-radius:4px;padding:2px 5px;margin-bottom:2px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;max-width:100%;background:${i.done?'#f0fdf4':i.date<today&&!i.done?'#fef2f2':row.bg};color:${i.done?'#16a34a':i.date<today&&!i.done?'#ef4444':row.color};border:1px solid ${i.done?'#bbf7d0':i.date<today&&!i.done?'#fecaca':'transparent'}">${i.done?'✓ ':i.date<today&&!i.done?'⚠ ':''}${h(i.text)}</div>`).join('')}
                   ${cellItems.length>3?`<div style="font-size:.55rem;color:var(--text2);text-align:center">+${cellItems.length-3}</div>`:''}
-                  <div onclick="openAddModalWithDate('${ds}')" style="font-size:.58rem;color:#d1d5db;cursor:pointer;text-align:center;margin-top:2px;line-height:1.2" title="Agregar aquÃÂ­">+</div>
+                  <div onclick="openAddModalWithDate('${ds}')" style="font-size:.58rem;color:#d1d5db;cursor:pointer;text-align:center;margin-top:2px;line-height:1.2" title="Agregar aquí">+</div>
                 </td>`;
               }).join('')}
             </tr>`).join('')}
@@ -1575,7 +1574,7 @@ function renderPanel(cat_key) {
   const list = items.filter(i=>i.cat_key===cat_key && !i.done && !i.archived);
   list.sort((a,b)=>a.priority-b.priority);
   if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><div class="es-icon">Ã¢ÂÂ¨</div><p>Sin tareas pendientes</p><p style="margin-top:8px"><button class="btn-sm" onclick="openAddModal()">+ Nueva tarea</button></p></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="es-icon">✨</div><p>Sin tareas pendientes</p><p style="margin-top:8px"><button class="btn-sm" onclick="openAddModal()">+ Nueva tarea</button></p></div>`;
     return;
   }
   el.innerHTML = `
@@ -1591,7 +1590,7 @@ function renderDone() {
   if (!el) return;
   const list = items.filter(i=>i.done).sort((a,b)=>(b.doneDate||'').localeCompare(a.doneDate||''));
   if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><div class="es-icon">Ã¢ÂÂ</div><p>Nada completado aÃÂºn</p></div>`;
+    el.innerHTML = `<div class="empty-state"><div class="es-icon">✅</div><p>Nada completado aún</p></div>`;
     return;
   }
   el.innerHTML = `<div>${list.map(i=>taskCard(i,true)).join('')}</div>`;
@@ -1601,12 +1600,12 @@ function taskCard(item, showDone=false) {
   const cat = getCat(item.cat);
   const hasEis = item.important!==null&&item.important!==undefined || item.urgent!==null&&item.urgent!==undefined;
   const eisBadge = hasEis ? `<div class="eis-badge">
-    ${item.important===true?'<span class="eis-tag i">Ã¢Â­Â IMP</span>':item.important===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">Ã¢ÂÂ NI</span>':''}
-    ${item.urgent===true?'<span class="eis-tag u">Ã°ÂÂÂ¥ URG</span>':item.urgent===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">Ã¢ÂÂ NU</span>':''}
+    ${item.important===true?'<span class="eis-tag i">⭐ IMP</span>':item.important===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">— NI</span>':''}
+    ${item.urgent===true?'<span class="eis-tag u">🔥 URG</span>':item.urgent===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">— NU</span>':''}
   </div>` : '';
   const isJamActive = window._jam && window._jam.id===item.id;
   return `<div class="task-item${item.done?' is-done':''}" draggable="true" data-id="${item.id}" ondragstart="dragStart(event,${item.id})" ondragend="dragEnd(event)">
-    <div class="task-check${item.done?' done':''}" onclick="toggleDone(${item.id})">${item.done?'Ã¢ÂÂ':''}</div>
+    <div class="task-check${item.done?' done':''}" onclick="toggleDone(${item.id})">${item.done?'✓':''}</div>
     <div class="priority-dot p${item.priority||3}"></div>
     <div style="flex:1;min-width:0" onclick="openEditModal(${item.id})">
       <div class="task-text">${h(item.text)}</div>
@@ -1614,7 +1613,7 @@ function taskCard(item, showDone=false) {
       ${eisBadge}
       ${(item.subtasks&&item.subtasks.length)?`<div class="sub-list" onclick="event.stopPropagation()">
         ${item.subtasks.map((s,si)=>`<div class="sub-row">
-          <div class="sub-check${s.done?' done':''}" onclick="toggleSubtask(${item.id},${si})">${s.done?'Ã¢ÂÂ':''}</div>
+          <div class="sub-check${s.done?' done':''}" onclick="toggleSubtask(${item.id},${si})">${s.done?'✓':''}</div>
           <span class="sub-text${s.done?' done':''}">${h(s.text)}</span>
         </div>`).join('')}
       </div>`:''}
@@ -1622,8 +1621,8 @@ function taskCard(item, showDone=false) {
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
       <div class="task-cat">${cat.icon} ${h(cat.name)}</div>
       ${item.date?`<div style="font-size:.65rem;color:var(--text2)">${fmtDate(item.date)}</div>`:''}
-      ${!item.done?`<button class="pin-btn${item.focus?' pinned':''}" onclick="event.stopPropagation();toggleFocus(${item.id})" title="${item.focus?'Quitar de foco':'Fijar en foco'}">Ã°ÂÂÂ</button>`:''}
-      ${!item.done?`<button class="jam-btn${isJamActive?' active':''}" onclick="event.stopPropagation();openJamModal(${item.id})">Ã¢ÂÂ¡ JAM</button>`:''}
+      ${!item.done?`<button class="pin-btn${item.focus?' pinned':''}" onclick="event.stopPropagation();toggleFocus(${item.id})" title="${item.focus?'Quitar de foco':'Fijar en foco'}">📌</button>`:''}
+      ${!item.done?`<button class="jam-btn${isJamActive?' active':''}" onclick="event.stopPropagation();openJamModal(${item.id})">⚡ JAM</button>`:''}
     </div>
   </div>`;
 }
@@ -1649,13 +1648,13 @@ function renderMetas() {
 
   el.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:1rem;font-weight:900">Ã¢Â­Â Metas 2025</div>
+      <div style="font-size:1rem;font-weight:900">⭐ Metas 2025</div>
       <button class="btn-sm" onclick="openMetaModal()">+ Nueva meta</button>
     </div>
     <div class="timeline-bar-wrap">
       <div class="timeline-label">
-        <span>AÃÂ±o ${now.getFullYear()}</span>
-        <span>${yearPct}% del aÃÂ±o transcurrido ÃÂ· ${avgMeta}% progreso metas</span>
+        <span>Año ${now.getFullYear()}</span>
+        <span>${yearPct}% del año transcurrido · ${avgMeta}% progreso metas</span>
       </div>
       <div class="timeline-track">
         <div class="timeline-fill" style="width:${yearPct}%"></div>
@@ -1665,12 +1664,12 @@ function renderMetas() {
       </div>
     </div>
     ${goals.length ? `<div class="goals-grid">${goals.map(g=>goalCard(g)).join('')}</div>` :
-      `<div class="empty-state"><div class="es-icon">Ã¢Â­Â</div><p>Sin metas aÃÂºn. ÃÂ¡Agrega tu primera!</p></div>`}`;
+      `<div class="empty-state"><div class="es-icon">⭐</div><p>Sin metas aún. ¡Agrega tu primera!</p></div>`}`;
 }
 
 function goalCard(g) {
   const pct = Math.min(_metaPct(g), 100);
-  const typeEmoji = {personal:'Ã°ÂÂÂ¤',profesional:'Ã°ÂÂÂ¼',salud:'Ã°ÂÂÂª',finanzas:'Ã°ÂÂÂ°'}[g.type]||'Ã°ÂÂÂ¯';
+  const typeEmoji = {personal:'👤',profesional:'💼',salud:'💪',finanzas:'💰'}[g.type]||'🎯';
   return `<div class="goal-card">
     <div class="goal-card-header">
       <div class="goal-icon">${g.icon||typeEmoji}</div>
@@ -1692,7 +1691,7 @@ function goalCard(g) {
   </div>`;
 }
 
-const META_EMOJIS = ['Ã°ÂÂÂ¯','Ã¢Â­Â','Ã°ÂÂÂ','Ã°ÂÂÂ¡','Ã°ÂÂÂª','Ã°ÂÂÂ°','Ã°ÂÂÂ','Ã°ÂÂÂ','Ã°ÂÂÂ±','Ã¢ÂÂ¤Ã¯Â¸Â','Ã°ÂÂÂ¨','Ã°ÂÂÂ','Ã°ÂÂ§Â','Ã¢ÂÂÃ¯Â¸Â','Ã°ÂÂÂ ','Ã°ÂÂÂµ','Ã°ÂÂÂ','Ã°ÂÂÂ¬','Ã°ÂÂ¤Â','Ã°ÂÂÂ','Ã°ÂÂÂ¼','Ã°ÂÂÂ','Ã°ÂÂÂ¡Ã¯Â¸Â','Ã°ÂÂÂ','Ã¢ÂÂ¡','Ã°ÂÂÂ','Ã°ÂÂ§Â ','Ã°ÂÂÂ','Ã°ÂÂÂÃ¯Â¸Â','Ã°ÂÂÂ¸'];
+const META_EMOJIS = ['🎯','⭐','🚀','💡','💪','💰','📚','🏆','🌱','❤️','🎨','🏃','🧘','✈️','🏠','🎵','📈','🔬','🤝','🌍','💼','🎓','🛡️','🔑','⚡','🌟','🧠','🎉','🏋️','🎸'];
 const META_COLORS = ['#6b7a4e','#4a7a8a','#8a5a4a','#7a4a8a','#4a6a8a','#8a7a4a','#c0392b','#2980b9','#27ae60','#8e44ad','#e67e22','#16a085'];
 let _metaMilestones = [];
 
@@ -1701,9 +1700,9 @@ function renderMetaMsList() {
   if (!el) return;
   el.innerHTML = _metaMilestones.map((m,i)=>`
     <div class="sub-row">
-      <div class="sub-check${m.done?' done':''}" onclick="_metaMilestones[${i}].done=!_metaMilestones[${i}].done;renderMetaMsList()">${m.done?'Ã¢ÂÂ':''}</div>
+      <div class="sub-check${m.done?' done':''}" onclick="_metaMilestones[${i}].done=!_metaMilestones[${i}].done;renderMetaMsList()">${m.done?'✓':''}</div>
       <span style="flex:1">${h(m.text)}</span>
-      <button onclick="_metaMilestones.splice(${i},1);renderMetaMsList()" style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:.8rem;padding:0 4px">Ã¢ÂÂ</button>
+      <button onclick="_metaMilestones.splice(${i},1);renderMetaMsList()" style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:.8rem;padding:0 4px">✕</button>
     </div>`).join('');
 }
 
@@ -1741,11 +1740,11 @@ function selectMetaColor(c) {
 
 function openMetaModal(id) {
   const delBtn = document.getElementById('meta-delete-btn');
-  let selIcon = 'Ã°ÂÂÂ¯', selColor = '#6b7a4e';
+  let selIcon = '🎯', selColor = '#6b7a4e';
   if (id) {
     const g = goals.find(g=>g.id===id);
     if (!g) return;
-    selIcon = g.icon||'Ã°ÂÂÂ¯';
+    selIcon = g.icon||'🎯';
     selColor = g.color||'#6b7a4e';
     document.getElementById('meta-modal-title').textContent = 'Editar meta';
     document.getElementById('meta-id').value = id;
@@ -1762,8 +1761,8 @@ function openMetaModal(id) {
   } else {
     document.getElementById('meta-modal-title').textContent = 'Nueva meta';
     document.getElementById('meta-id').value = '';
-    document.getElementById('meta-icon').value = 'Ã°ÂÂÂ¯';
-    document.getElementById('meta-icon-preview').textContent = 'Ã°ÂÂÂ¯';
+    document.getElementById('meta-icon').value = '🎯';
+    document.getElementById('meta-icon-preview').textContent = '🎯';
     document.getElementById('meta-color').value = '#6b7a4e';
     document.getElementById('meta-title').value = '';
     document.getElementById('meta-type').value = 'personal';
@@ -1781,11 +1780,11 @@ function openMetaModal(id) {
 
 function saveMeta() {
   const title = document.getElementById('meta-title').value.trim();
-  if (!title) { showToast('Ingresa un tÃÂ­tulo'); return; }
+  if (!title) { showToast('Ingresa un título'); return; }
   const id = document.getElementById('meta-id').value;
   const data = {
     title,
-    icon: document.getElementById('meta-icon').value||'Ã°ÂÂÂ¯',
+    icon: document.getElementById('meta-icon').value||'🎯',
     color: document.getElementById('meta-color').value||'#6b7a4e',
     type: document.getElementById('meta-type').value,
     note: document.getElementById('meta-note').value.trim(),
@@ -1803,7 +1802,7 @@ function saveMeta() {
   save();
   closeModal('meta-modal');
   renderMetas();
-  showToast(id?'Meta actualizada':'Meta creada Ã¢ÂÂ');
+  showToast(id?'Meta actualizada':'Meta creada ✓');
 }
 
 function deleteMeta() {
@@ -1830,7 +1829,7 @@ function renderCatsPanel() {
   if (!el) return;
   el.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:1rem;font-weight:900">CategorÃÂ­as</div>
+      <div style="font-size:1rem;font-weight:900">Categorías</div>
       <button class="btn-sm" onclick="openCatModal()">+ Nueva</button>
     </div>
     <div class="cat-grid">
@@ -1839,23 +1838,23 @@ function renderCatsPanel() {
           <div class="cat-header">
             <div class="cat-color-dot" style="background:${c.color}"></div>
             <div class="cat-name">${c.icon||''} ${h(c.name)}</div>
-            <span style="margin-left:auto;font-size:.7rem;color:var(--text2)">Ã¢ÂÂÃ¯Â¸Â</span>
+            <span style="margin-left:auto;font-size:.7rem;color:var(--text2)">✏️</span>
           </div>
           <div style="font-size:.75rem;color:var(--text2)">${items.filter(i=>i.cat===c.id&&!i.done&&!i.archived).length} pendientes</div>
         </div>`).join('')}
     </div>`;
 }
 
-const CAT_EMOJIS = ['Ã°ÂÂÂ','Ã°ÂÂÂ¼','Ã°ÂÂÂ','Ã°ÂÂÂ','Ã°ÂÂÂ¯','Ã°ÂÂÂ°','Ã°ÂÂÂ§','Ã°ÂÂÂ±','Ã°ÂÂ¤Â','Ã°ÂÂÂ¥','Ã¢ÂÂÃ¯Â¸Â','Ã°ÂÂÂ','Ã°ÂÂÂ¢','Ã°ÂÂÂ¡','Ã°ÂÂÂ¥','Ã¢ÂÂ¡','Ã°ÂÂÂ','Ã¢ÂÂ¨','Ã°ÂÂÂ','Ã°ÂÂÂÃ¯Â¸Â','Ã°ÂÂÂ','Ã°ÂÂÂ','Ã°ÂÂÂª','Ã°ÂÂÂ±','Ã°ÂÂÂ¨','Ã°ÂÂÂ£','Ã°ÂÂÂ Ã¯Â¸Â','Ã°ÂÂ§Â ','Ã¢ÂÂ¤Ã¯Â¸Â','Ã°ÂÂÂ ','Ã°ÂÂÂ¿','Ã¢Â­Â','Ã°ÂÂÂ¤','Ã°ÂÂ§Â©','Ã°ÂÂÂ½Ã¯Â¸Â','Ã°ÂÂÂ','Ã°ÂÂ§Â¹','Ã°ÂÂÂ§','Ã°ÂÂÂ','Ã°ÂÂÂ¾','Ã°ÂÂÂµ','Ã°ÂÂÂ¸','Ã°ÂÂÂÃ¯Â¸Â','Ã°ÂÂ§Â¾','Ã°ÂÂÂ','Ã°ÂÂ¤Â','Ã°ÂÂÂª','Ã°ÂÂÂ','Ã°ÂÂÂ','Ã°ÂÂÂ¦','Ã°ÂÂÂ¬'];
+const CAT_EMOJIS = ['🚀','💼','📋','📊','🎯','💰','🔧','📱','🤝','👥','⚙️','📈','🏢','💡','🔥','⚡','🌟','✨','📌','🗂️','📝','🏆','💪','🌱','🎨','📣','🛠️','🧠','❤️','🏠','🌿','⭐','👤','🧩','🍽️','🚗','🧹','💧','🌍','🐾','🎵','📸','🏋️','🧾','🛒','🤖','🎪','🏅','🔑','📦','💬'];
 const CAT_COLORS = ['#6b7a4e','#4a7a8a','#8a5a4a','#7a4a8a','#4a6a8a','#8a7a4a','#5a8a6a','#8a4a6a'];
-let _editCatId = null, _selCatColor = '#6b7a4e', _selCatEmoji = 'Ã°ÂÂÂ';
+let _editCatId = null, _selCatColor = '#6b7a4e', _selCatEmoji = '📌';
 
 function openCatModal(id) {
   _editCatId = id || null;
   const cat = id ? cats.find(c=>c.id===id) : null;
-  document.getElementById('cat-modal-title').textContent = cat ? 'Editar categorÃÂ­a' : 'Nueva categorÃÂ­a';
+  document.getElementById('cat-modal-title').textContent = cat ? 'Editar categoría' : 'Nueva categoría';
   document.getElementById('cat-modal-name').value = cat ? cat.name : '';
-  _selCatEmoji = cat ? (cat.icon||'Ã°ÂÂÂ') : 'Ã°ÂÂÂ';
+  _selCatEmoji = cat ? (cat.icon||'📌') : '📌';
   _selCatColor = cat ? (cat.color||'#6b7a4e') : '#6b7a4e';
   document.getElementById('cat-modal-emoji').value = _selCatEmoji;
   document.getElementById('cat-emoji-preview').textContent = _selCatEmoji;
@@ -1890,7 +1889,7 @@ function selectCatColor(col) {
 function saveCat() {
   const name = document.getElementById('cat-modal-name').value.trim();
   if (!name) { showToast('Escribe un nombre'); return; }
-  const emoji = document.getElementById('cat-modal-emoji').value.trim() || _selCatEmoji || 'Ã°ÂÂÂ';
+  const emoji = document.getElementById('cat-modal-emoji').value.trim() || _selCatEmoji || '📌';
   if (_editCatId) {
     const cat = cats.find(c=>c.id===_editCatId);
     if (cat) { cat.name=name; cat.icon=emoji; cat.color=_selCatColor; }
@@ -1898,14 +1897,14 @@ function saveCat() {
     cats.push({id:nextCatId++, name, icon:emoji, color:_selCatColor});
   }
   save(); closeModal('cat-modal'); renderCatsPanel();
-  showToast(_editCatId ? 'CategorÃÂ­a actualizada Ã¢ÂÂ' : 'CategorÃÂ­a creada Ã¢ÂÂ');
+  showToast(_editCatId ? 'Categoría actualizada ✓' : 'Categoría creada ✓');
 }
 
 function deleteCat() {
-  if (!_editCatId || !confirm('ÃÂ¿Eliminar esta categorÃÂ­a?')) return;
+  if (!_editCatId || !confirm('¿Eliminar esta categoría?')) return;
   cats = cats.filter(c=>c.id!==_editCatId);
   save(); closeModal('cat-modal'); renderCatsPanel();
-  showToast('CategorÃÂ­a eliminada');
+  showToast('Categoría eliminada');
 }
 
 // ============================================================
@@ -1917,7 +1916,7 @@ function renderSettings() {
   const providerName = {groq:'Groq (gratis)',openai:'ChatGPT/OpenAI',gemini:'Google Gemini','':'No configurado'}[_aiProvider]||_aiProvider;
   el.innerHTML = `
     <div class="settings-section">
-      <div class="settings-title">Ã¢ÂÂ¨ Asistente IA</div>
+      <div class="settings-title">✨ Asistente IA</div>
       <div class="settings-row">
         <label>Proveedor activo</label>
         <span style="font-size:.82rem;font-weight:700;color:var(--accent)">${providerName}</span>
@@ -1925,7 +1924,7 @@ function renderSettings() {
       <button class="btn-sm" onclick="openModal('ai-setup-modal');renderAISetup()">Configurar IA</button>
     </div>
     <div class="settings-section">
-      <div class="settings-title">Ã°ÂÂÂ¥ Firebase Sync</div>
+      <div class="settings-title">🔥 Firebase Sync</div>
       <div class="settings-row">
         <label>Estado</label>
         <span style="font-size:.82rem;font-weight:700;color:${_fbKey?'var(--accent)':'var(--text2)'}">${_fbKey?'Configurado':'Sin configurar'}</span>
@@ -1933,7 +1932,7 @@ function renderSettings() {
       <button class="btn-sm" onclick="openModal('fb-modal')">Configurar Firebase</button>
     </div>
     <div class="settings-section">
-      <div class="settings-title">Ã°ÂÂÂ¾ Datos locales</div>
+      <div class="settings-title">💾 Datos locales</div>
       <div class="settings-row">
         <label>Tareas guardadas</label>
         <span style="font-size:.82rem">${items.length} tareas</span>
@@ -1956,7 +1955,7 @@ function exportData() {
 }
 
 function clearAllData() {
-  if (!confirm('ÃÂ¿Borrar todas las tareas? Esto no se puede deshacer.')) return;
+  if (!confirm('¿Borrar todas las tareas? Esto no se puede deshacer.')) return;
   items = []; goals = []; nextId = 1;
   save(); renderCurrent(); showToast('Datos borrados');
 }
@@ -2017,7 +2016,7 @@ function addItem() {
   save();
   closeModal('add-modal');
   renderCurrent();
-  showToast('Tarea agregada Ã¢ÂÂ');
+  showToast('Tarea agregada ✓');
 }
 
 function catKeyFromId(id) {
@@ -2078,12 +2077,12 @@ function saveEdit() {
   save();
   closeModal('edit-modal');
   renderCurrent();
-  showToast('Guardado Ã¢ÂÂ');
+  showToast('Guardado ✓');
 }
 
 function deleteItem() {
   const id = Number(document.getElementById('edit-id').value);
-  if (!confirm('ÃÂ¿Eliminar esta tarea?')) return;
+  if (!confirm('¿Eliminar esta tarea?')) return;
   items = items.filter(i=>i.id!==id);
   save();
   closeModal('edit-modal');
@@ -2113,9 +2112,9 @@ function renderSubList(prefix) {
   if (!el) return;
   el.innerHTML = subs.map((s,i)=>`
     <div class="sub-row">
-      <div class="sub-check${s.done?' done':''}" onclick="toggleModalSub('${prefix}',${i})">${s.done?'Ã¢ÂÂ':''}</div>
+      <div class="sub-check${s.done?' done':''}" onclick="toggleModalSub('${prefix}',${i})">${s.done?'✓':''}</div>
       <span class="sub-text${s.done?' done':''}">${h(s.text)}</span>
-      <button class="sub-remove" onclick="removeSubtask('${prefix}',${i})">Ã¢ÂÂ</button>
+      <button class="sub-remove" onclick="removeSubtask('${prefix}',${i})">✕</button>
     </div>`).join('');
 }
 
@@ -2174,7 +2173,7 @@ function dropOnPanel(e, cat_key) {
     item.cat_key = cat_key;
     save(); renderCurrent();
     const names = {todo:'To Do',compromisos:'Compromisos',proyectos:'Proyectos',extra:'Extra',semana:'Semana'};
-    showToast('Movida a '+( names[cat_key]||cat_key)+' Ã¢ÂÂ');
+    showToast('Movida a '+( names[cat_key]||cat_key)+' ✓');
   }
   _dragId = null;
 }
@@ -2185,7 +2184,7 @@ function dropOnDay(e, ds) {
   if (item && item.date !== ds) {
     item.date = ds;
     save(); renderCurrent();
-    showToast('Fecha Ã¢ÂÂ '+fmtDate(ds)+' Ã¢ÂÂ');
+    showToast('Fecha → '+fmtDate(ds)+' ✓');
   }
   _dragId = null;
 }
@@ -2193,11 +2192,11 @@ function dropOnDay(e, ds) {
 function dropOnSlot(e, slotKey) {
   if (_dragId === null) return;
   const item = items.find(i=>i.id===_dragId);
-  const labels = {manana:'Ã¢ÂÂÃ¯Â¸Â MaÃÂ±ana', tarde:'Ã°ÂÂÂ¤Ã¯Â¸Â Tarde', noche:'Ã°ÂÂÂ Noche'};
+  const labels = {manana:'☀️ Mañana', tarde:'🌤️ Tarde', noche:'🌙 Noche'};
   if (item && item.slot !== slotKey) {
     item.slot = slotKey;
     save(); renderCurrent();
-    showToast(labels[slotKey]+' Ã¢ÂÂ');
+    showToast(labels[slotKey]+' ✓');
   }
   _dragId = null;
 }
@@ -2210,12 +2209,12 @@ function clearSlot(id) {
 function dropOnDaySlot(e, ds, slotKey) {
   if (_dragId === null) return;
   const item = items.find(i=>i.id===_dragId);
-  const slotLabels = {manana:'Ã¢ÂÂÃ¯Â¸Â MaÃÂ±ana', tarde:'Ã°ÂÂÂ¤Ã¯Â¸Â Tarde', noche:'Ã°ÂÂÂ Noche', '':'Ã°ÂÂÂ Sin slot'};
+  const slotLabels = {manana:'☀️ Mañana', tarde:'🌤️ Tarde', noche:'🌙 Noche', '':'📋 Sin slot'};
   if (item) {
     if (ds) item.date = ds;
     item.slot = slotKey || null;
     save(); renderCurrent();
-    showToast((slotLabels[slotKey||'']||'')+(ds?' ÃÂ· '+fmtDate(ds):''));
+    showToast((slotLabels[slotKey||'']||'')+(ds?' · '+fmtDate(ds):''));
   }
   _dragId = null;
 }
@@ -2258,10 +2257,10 @@ function startJamSesh(mins) {
     if (remaining <= 0) {
       playJamAlarm();
       stopJamSesh();
-      showToast('Ã¢ÂÂ¡ ÃÂ¡JAM SESH terminado! Ã°ÂÂÂ');
+      showToast('⚡ ¡JAM SESH terminado! 🎉');
     }
   }, 1000);
-  showToast('Ã¢ÂÂ¡ JAM SESH iniciado Ã¢ÂÂ '+mins+' min');
+  showToast('⚡ JAM SESH iniciado — '+mins+' min');
 }
 
 function playJamAlarm() {
@@ -2300,7 +2299,7 @@ function toggleFocus(id) {
   if (!item) return;
   item.focus = !item.focus;
   save(); renderCurrent();
-  showToast(item.focus ? 'Ã°ÂÂÂ Fijada en foco' : 'Quitada del foco');
+  showToast(item.focus ? '📌 Fijada en foco' : 'Quitada del foco');
 }
 
 function toggleDone(id) {
@@ -2326,7 +2325,7 @@ function quickCapture() {
   inp.value = '';
   save();
   renderCurrent();
-  showToast('Capturado Ã¢ÂÂ');
+  showToast('Capturado ✓');
 }
 
 function populateCatSelect(selId, selected) {
@@ -2348,7 +2347,7 @@ function buildChatContext() {
   const today = todayStr();
   const todayItems = items.filter(i=>i.date===today&&!i.done&&!i.archived);
   return `Eres el asistente personal de Montse, una persona organizada que usa "Montse's Flow" para manejar sus tareas.
-Hablas en espaÃÂ±ol, eres amable, concisa y directa.
+Hablas en español, eres amable, concisa y directa.
 Hoy es ${today}.
 Tareas pendientes (${pending.length}): ${pending.slice(0,20).map(i=>`"${i.text}"[p${i.priority}]`).join(', ')||'ninguna'}.
 Tareas para hoy: ${todayItems.map(i=>`"${i.text}"`).join(', ')||'ninguna'}.
@@ -2405,9 +2404,9 @@ async function _callAI(userText) {
         if (text) { _geminiModel=m; localStorage.setItem('mf_gemini_model',m); return text; }
       } catch(e){ continue; }
     }
-    throw new Error('NingÃÂºn modelo Gemini disponible. Prueba Groq (gratis).');
+    throw new Error('Ningún modelo Gemini disponible. Prueba Groq (gratis).');
   }
-  throw new Error('No hay IA configurada. Haz clic en "Ã¢ÂÂ¨ Asistente" Ã¢ÂÂ configurar.');
+  throw new Error('No hay IA configurada. Haz clic en "✨ Asistente" → configurar.');
 }
 
 function toggleAI() {
@@ -2415,7 +2414,7 @@ function toggleAI() {
   _aiPanel = !_aiPanel;
   panel.classList.toggle('open', _aiPanel);
   if (_aiPanel && document.getElementById('ai-messages').children.length===0) {
-    addAIMsg('bot', _hasAiKey() ? 'ÃÂ¡Hola Montse! ÃÂ¿En quÃÂ© te ayudo hoy? Ã°ÂÂÂ' : 'ÃÂ¡Hola! Para usar el asistente, configura tu clave de IA. <a href="#" onclick="openModal(\'ai-setup-modal\');renderAISetup();return false" style="color:var(--accent)">Configurar ahora Ã¢ÂÂ</a>');
+    addAIMsg('bot', _hasAiKey() ? '¡Hola Montse! ¿En qué te ayudo hoy? 😊' : '¡Hola! Para usar el asistente, configura tu clave de IA. <a href="#" onclick="openModal(\'ai-setup-modal\');renderAISetup();return false" style="color:var(--accent)">Configurar ahora →</a>');
   }
 }
 
@@ -2440,7 +2439,7 @@ async function sendAI() {
   _chatHistory.push({role:'user',content:text});
   const thinking = document.createElement('div');
   thinking.className = 'ai-msg bot';
-  thinking.textContent = 'Ã¢ÂÂ¦';
+  thinking.textContent = '…';
   document.getElementById('ai-messages').appendChild(thinking);
   try {
     const reply = await _callAI(text);
@@ -2460,24 +2459,24 @@ function renderAISetup() {
   if (prov==='groq') {
     body.innerHTML = `
       <div style="background:var(--accent-light);border-radius:10px;padding:12px 14px;font-size:.8rem;color:var(--accent);margin-bottom:10px">
-        Ã¢ÂÂ¡ Groq es gratis y muy rÃÂ¡pido. Crea tu cuenta en <strong>console.groq.com</strong> Ã¢ÂÂ API Keys Ã¢ÂÂ Create key
+        ⚡ Groq es gratis y muy rápido. Crea tu cuenta en <strong>console.groq.com</strong> → API Keys → Create key
       </div>
       <label class="modal-label">API Key de Groq</label>
-      <input class="modal-input" id="setup-key" placeholder="gsk_Ã¢ÂÂ¦" value="${_groqKey}"/>`;
+      <input class="modal-input" id="setup-key" placeholder="gsk_…" value="${_groqKey}"/>`;
   } else if (prov==='openai') {
     body.innerHTML = `
       <div style="background:#fef3c7;border-radius:10px;padding:12px 14px;font-size:.8rem;color:#92400e;margin-bottom:10px">
-        Ã°ÂÂÂ³ ChatGPT requiere crÃÂ©dito en platform.openai.com Ã¢ÂÂ API keys
+        💳 ChatGPT requiere crédito en platform.openai.com → API keys
       </div>
       <label class="modal-label">API Key de OpenAI</label>
-      <input class="modal-input" id="setup-key" placeholder="sk-Ã¢ÂÂ¦" value="${_openaiKey}"/>`;
+      <input class="modal-input" id="setup-key" placeholder="sk-…" value="${_openaiKey}"/>`;
   } else if (prov==='gemini') {
     body.innerHTML = `
       <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:.8rem;color:#166534;margin-bottom:10px">
-        Ã°ÂÂÂ Crea tu clave en <strong>aistudio.google.com</strong> (no Google Cloud Console)
+        💎 Crea tu clave en <strong>aistudio.google.com</strong> (no Google Cloud Console)
       </div>
       <label class="modal-label">API Key de Gemini</label>
-      <input class="modal-input" id="setup-key" placeholder="AIzaÃ¢ÂÂ¦" value="${_geminiKey}"/>`;
+      <input class="modal-input" id="setup-key" placeholder="AIza…" value="${_geminiKey}"/>`;
   } else {
     body.innerHTML = '';
   }
@@ -2494,7 +2493,7 @@ function saveAISetup() {
   else if (prov==='openai') { _openaiKey=key; localStorage.setItem('mf_openai_key',key); }
   else if (prov==='gemini') { _geminiKey=key; localStorage.setItem('mf_gemini_key',key); _geminiModel=''; }
   closeModal('ai-setup-modal');
-  showToast('IA configurada Ã¢ÂÂ');
+  showToast('IA configurada ✓');
 }
 
 // ============================================================
@@ -2543,4 +2542,4 @@ window.addEventListener('DOMContentLoaded', () => {
 </script>
 
 </body>
-    </html>
+</html>
