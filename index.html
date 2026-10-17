@@ -1049,7 +1049,35 @@ async function recoverLegacyCloud() {
   } catch(e) { /* sin internet: se reintenta al abrir otra vez */ }
 }
 
+// Categorías guardadas en formato viejo ({key,emoji,label}) dentro de mf_v2
+// y tareas que apuntan a la categoría por su clave ("operacion").
+function normalizeCats() {
+  let changed = false;
+  const out = [];
+  cats.forEach((c, i) => {
+    if (c && c.name) { out.push(c); return; }
+    if (!c || !(c.label || c.key)) { changed = true; return; }
+    changed = true;
+    const name = (c.label || c.key).trim();
+    const dup = out.concat(cats.filter(x=>x&&x.name)).find(x => (x.legacyKey && x.legacyKey === c.key) || x.name.trim().toLowerCase() === name.toLowerCase());
+    if (dup) { if (!dup.legacyKey) dup.legacyKey = c.key; return; }
+    out.push({id: nextCatId++, name, icon: c.emoji || '📌', color: LEGACY_COLORS[i % LEGACY_COLORS.length], legacyKey: c.key, brand: c.brand});
+  });
+  cats = out;
+  const byKey = {};
+  cats.forEach(c => { if (c.legacyKey && !byKey[c.legacyKey]) byKey[c.legacyKey] = c.id; });
+  items.forEach(it => {
+    if (typeof it.cat === 'string') {
+      const n = Number(it.cat);
+      it.cat = byKey[it.cat] || (it.cat !== '' && !isNaN(n) && cats.some(c=>c.id===n) ? n : null);
+      changed = true;
+    }
+  });
+  if (changed) save();
+}
+
 function runMigrations() {
+  normalizeCats();
   migrateLegacyLocal();
   seedNfcProject();
   recoverLegacyCloud();
