@@ -932,6 +932,7 @@ function load() {
     const raw = localStorage.getItem('mf_v2');
     if (!raw) return;
     const d = JSON.parse(raw);
+    if (Array.isArray(d)) { _legacyLocalItems = d; return; }
     if (d.items) items = d.items;
     if (d.goals) goals = d.goals;
     if (d.cats) cats = d.cats;
@@ -939,6 +940,119 @@ function load() {
     if (d.nextCatId) nextCatId = d.nextCatId;
     if (d.seeds) seeds = d.seeds;
   } catch(e) {}
+}
+
+// ============================================================
+// RECUPERAR DATOS DE LA VERSIÓN ANTERIOR (categorías mf_cats y
+// tareas del respaldo en la nube). Solo lee, nunca borra el respaldo.
+// ============================================================
+let _legacyLocalItems = null;
+const LEGACY_DEFAULT_CATS = [
+  {key:'operacion', emoji:'🟨',label:'Operación'},
+  {key:'sistemas',  emoji:'🧠',label:'Sistemas'},
+  {key:'estrategia',emoji:'🚀',label:'Estrategia'},
+  {key:'rh',        emoji:'🩵',label:'RH'},
+  {key:'mktg',      emoji:'💗',label:'Marketing'},
+  {key:'josh',      emoji:'🟠',label:'Josh'},
+  {key:'tres',      emoji:'💜',label:'Tres Media'},
+  {key:'personal',  emoji:'⭐',label:'Personal'},
+];
+const LEGACY_COLORS = ['#d97706','#7c3aed','#2563eb','#0891b2','#db2777','#ea580c','#9333ea','#6b7a4e','#16a34a','#c0392b','#4a7a8a','#8a5a4a'];
+
+function _legacyCatMap(legacyCats) {
+  const map = {};
+  (legacyCats||[]).forEach((lc, i) => {
+    if (!lc || !lc.key) return;
+    const name = (lc.label || lc.key).trim();
+    let c = cats.find(c => (c.name||'').trim().toLowerCase() === name.toLowerCase());
+    if (!c) {
+      c = {id: nextCatId++, name, icon: lc.emoji || '📌', color: LEGACY_COLORS[i % LEGACY_COLORS.length], legacyKey: lc.key};
+      cats.push(c);
+    } else if (!c.legacyKey) c.legacyKey = lc.key;
+    map[lc.key] = c.id;
+  });
+  cats.forEach(c => { if (c.legacyKey && !map[c.legacyKey]) map[c.legacyKey] = c.id; });
+  return map;
+}
+
+function _legacyAddItems(legacyItems, catMap) {
+  const have = new Set(items.filter(i => i.legacyId !== undefined).map(i => String(i.legacyId)));
+  const COLS = ['todo','compromisos','proyectos','extra','semana'];
+  let added = 0;
+  (legacyItems||[]).forEach(li => {
+    if (!li || !li.text || have.has(String(li.id))) return;
+    const isDone = li.col === 'done';
+    const col = isDone ? (li.origCol || 'todo') : li.col;
+    items.push({
+      id: nextId++, legacyId: li.id,
+      text: li.text, cat: catMap[li.cat] || null, cat_key: COLS.includes(col) ? col : 'todo',
+      priority: 3, date: li.scheduledDate || '', time: '', deadline: li.deadline || '',
+      delegado: li.delegadoA || '', recur: li.recur || '',
+      important: li.importante ?? null, urgent: li.urgente ?? null,
+      note: li.note || '',
+      subtasks: (li.subtasks||[]).map((st,k) => ({id: Date.now()+k+Math.random(), text: st.text || String(st), done: !!st.done})),
+      done: isDone, archived: false, created: new Date().toISOString(),
+    });
+    have.add(String(li.id)); added++;
+  });
+  return added;
+}
+
+function migrateLegacyLocal() {
+  if (seeds.includes('legacy-local')) return;
+  let legacyCats = null;
+  try { legacyCats = JSON.parse(localStorage.getItem('mf_cats') || 'null'); } catch(e) {}
+  if (!legacyCats && _legacyLocalItems) legacyCats = LEGACY_DEFAULT_CATS;
+  if (legacyCats || _legacyLocalItems) {
+    const map = _legacyCatMap(legacyCats || LEGACY_DEFAULT_CATS);
+    if (_legacyLocalItems) _legacyAddItems(_legacyLocalItems, map);
+  }
+  seeds.push('legacy-local');
+  save();
+}
+
+function _fsDecode(v) {
+  if (!v || typeof v !== 'object') return null;
+  if ('stringValue' in v) return v.stringValue;
+  if ('integerValue' in v) return Number(v.integerValue);
+  if ('doubleValue' in v) return Number(v.doubleValue);
+  if ('booleanValue' in v) return v.booleanValue;
+  if ('nullValue' in v) return null;
+  if ('timestampValue' in v) return v.timestampValue;
+  if ('arrayValue' in v) return (v.arrayValue.values||[]).map(_fsDecode);
+  if ('mapValue' in v) { const o={}; Object.entries(v.mapValue.fields||{}).forEach(([k,x])=>o[k]=_fsDecode(x)); return o; }
+  return null;
+}
+
+async function recoverLegacyCloud() {
+  if (seeds.includes('legacy-cloud')) return;
+  let cfg = null;
+  try { cfg = JSON.parse(localStorage.getItem('mf_firebase_config') || 'null'); } catch(e) {}
+  const apiKey = (cfg && cfg.apiKey) || 'AIzaSyDXwdUwNo2_3LG9d5Kg9-AtPQR8fXzV-X8';
+  const proj = (cfg && cfg.projectId) || 'montseflow';
+  try {
+    const res = await fetch(`https://firestore.googleapis.com/v1/projects/${proj}/databases/(default)/documents/mf_data/main?key=${apiKey}`);
+    if (!res.ok) { if (res.status === 404) { seeds.push('legacy-cloud'); save(); } return; }
+    const doc = await res.json();
+    const f = doc.fields || {};
+    const legacyItems = f.items ? _fsDecode(f.items) : null;
+    const legacyCats = f.cats ? _fsDecode(f.cats) : null;
+    let added = 0;
+    if (legacyItems || legacyCats) {
+      const map = _legacyCatMap((legacyCats && legacyCats.length) ? legacyCats : LEGACY_DEFAULT_CATS);
+      if (legacyItems) added = _legacyAddItems(legacyItems, map);
+    }
+    seeds.push('legacy-cloud');
+    save();
+    renderCurrent();
+    if (added) showToast(`Recuperé ${added} tareas y tus categorías ✓`, 3500);
+  } catch(e) { /* sin internet: se reintenta al abrir otra vez */ }
+}
+
+function runMigrations() {
+  migrateLegacyLocal();
+  seedNfcProject();
+  recoverLegacyCloud();
 }
 
 // ============================================================
@@ -1044,7 +1158,7 @@ async function pushFirebase() {
   if (!_fbKey || !_fbProj) return;
   const d = JSON.stringify({ items, goals, cats, nextId, nextCatId, seeds });
   const url = `https://firestore.googleapis.com/v1/projects/${_fbProj}/databases/(default)/documents/mf_data/main?key=${_fbKey}`;
-  await fetch(url, {
+  await fetch(url + '&updateMask.fieldPaths=data', {
     method: 'PATCH',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({ fields:{ data:{ stringValue:d } } })
@@ -2558,7 +2672,7 @@ function saveAISetup() {
 // ============================================================
 window.addEventListener('DOMContentLoaded', () => {
   load();
-  if (!(_fbKey && _fbProj)) seedNfcProject();
+  if (!(_fbKey && _fbProj)) runMigrations();
   updateSidebarBadges();
   renderDash();
   // Live clock: update greeting + timeline every minute
@@ -2589,7 +2703,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (_fbKey && _fbProj) {
     document.getElementById('fb-key').value = _fbKey;
     document.getElementById('fb-proj').value = _fbProj;
-    pullFirebase().then(()=>{ seedNfcProject(); setSyncStatus('ok'); renderCurrent(); }).catch(()=>setSyncStatus('error'));
+    pullFirebase().then(()=>{ runMigrations(); setSyncStatus('ok'); renderCurrent(); }).catch(()=>setSyncStatus('error'));
   }
   // Close modals on overlay click
   document.querySelectorAll('.modal-overlay').forEach(m=>{
