@@ -1102,7 +1102,7 @@ function updateSidebarBadges() {
   cats_ids.forEach(c => {
     const el = document.getElementById('badge-'+c);
     if (!el) return;
-    const count = items.filter(i=>i.cat_key===c && !i.done && !i.archived).length;
+    const count = items.filter(i=>(i.col===c||i.cat_key===c) && !i.done && !i.archived).length;
     el.textContent = count;
     el.style.display = count > 0 ? '' : 'none';
   });
@@ -1174,7 +1174,7 @@ function renderDash() {
     tarde:  pending.filter(i=>i.slot==='tarde'),
     noche:  pending.filter(i=>i.slot==='noche'),
   };
-  const unassigned = pending.filter(i=>!i.slot && i.cat_key==='todo');
+  const unassigned = pending.filter(i=>!i.slot && (i.col==='todo' || i.cat_key==='todo'));
   const unassignedHtml = unassigned.length ? `
     <div style="background:#f9fafb;border:1.5px dashed var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px">
       <div style="font-size:.6rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px">📋 Sin asignar — arrastra al momento del día ↓</div>
@@ -1247,7 +1247,7 @@ function renderDash() {
   ];
   const kanbanHtml = `<div class="kb-grid" style="margin-bottom:14px">
     ${kbCols.map(col=>{
-      const colItems = pending.filter(i=>i.cat_key===col.key).sort((a,b)=>(a.priority||3)-(b.priority||3));
+      const colItems = pending.filter(i=>(i.col===col.key||i.cat_key===col.key)).sort((a,b)=>(a.priority||3)-(b.priority||3));
       const shown = colItems.slice(0,3);
       return `<div class="kb-col" ondragover="event.preventDefault();this.classList.add('drop-zone-active')" ondragleave="if(!this.contains(event.relatedTarget))this.classList.remove('drop-zone-active')" ondrop="this.classList.remove('drop-zone-active');dropOnPanel(event,'${col.key}')">
         <div class="kb-col-head" style="background:${col.bg}">
