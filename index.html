@@ -1,5 +1,5 @@
-https://raw.githubusercontent.com/mondeleonlic-hub/montsesflow/main/index.html
-→ https://raw.githubusercontent.com/mondeleonlic-hub/montsesflow/main/index.html
+https://raw.githubusercontent.com/mondeleonlic-hub/montsesflow/50dc27c/index.html
+→ https://raw.githubusercontent.com/mondeleonlic-hub/montsesflow/50dc27c/index.html
 Content-Type: text/plain; charset=utf-8
 
 <!DOCTYPE html>
@@ -29,6 +29,30 @@ Content-Type: text/plain; charset=utf-8
   --radius:10px;
   --shadow:0 1px 6px rgba(107,122,78,.09);
 }
+/* ---- Eisenhower chips ---- */
+.eis-row{display:flex;gap:8px;margin-top:2px;flex-wrap:wrap}
+.eis-chip{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:#fff;font-size:.75rem;font-weight:700;cursor:pointer;color:var(--text2);transition:all .15s}
+.eis-chip.active-i{background:#fff3cd;border-color:#d4a017;color:#8a6200}
+.eis-chip.active-u{background:#fde8e8;border-color:#e05050;color:#a03030}
+.eis-chip.active-no{background:#f3f4f6;border-color:#9ca3af;color:#374151}
+.eis-badge{display:inline-flex;gap:4px;align-items:center;margin-top:3px}
+.eis-tag{font-size:.6rem;font-weight:800;padding:1px 5px;border-radius:4px}
+.eis-tag.i{background:#fff3cd;color:#8a6200}
+.eis-tag.u{background:#fde8e8;color:#a03030}
+/* ---- JAM SESH ---- */
+.jam-btn{padding:3px 9px;font-size:.65rem;font-weight:800;border:none;border-radius:6px;background:var(--accent-light);color:var(--accent);cursor:pointer;transition:background .15s}
+.jam-btn:hover,.jam-btn.active{background:var(--accent);color:#fff}
+.jam-bar-wrap{background:#eef2e6;border-radius:8px;overflow:hidden;height:8px;margin:10px 0 4px}
+.jam-bar-fill{height:100%;background:var(--accent);transition:width 1s linear}
+.jam-header{background:var(--accent-light);border-radius:10px;padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.jam-time{font-size:1.6rem;font-weight:900;color:var(--accent);font-variant-numeric:tabular-nums}
+.jam-task{font-size:.8rem;font-weight:600;color:var(--text);flex:1}
+/* ---- Drag & Drop ---- */
+.task-item[draggable]{cursor:grab}
+.task-item[draggable]:active{cursor:grabbing}
+.task-item.dragging{opacity:.3;pointer-events:none}
+.drop-zone-active{outline:2px dashed var(--accent)!important;background:var(--accent-light)!important;border-radius:var(--radius)}
+.day-col.drop-zone-active,.log-date-card.drop-zone-active{outline:2px dashed var(--accent);background:var(--accent-light)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--main-bg);color:var(--text);min-height:100vh}
 
@@ -133,6 +157,42 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .focus-row:hover{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
 .focus-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .focus-text{font-size:.84rem;font-weight:600;color:var(--text);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.focus-check{width:22px;height:22px;border-radius:50%;border:2px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:all .15s;font-size:.7rem}
+.focus-check:hover{border-color:var(--accent);background:var(--accent-light)}
+/* ---- Subtasks ---- */
+.sub-list{margin-top:6px;display:flex;flex-direction:column;gap:3px}
+.sub-row{display:flex;align-items:center;gap:7px;font-size:.76rem;color:var(--text2);padding:3px 0}
+.sub-check{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border);background:#fff;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.6rem;transition:all .15s}
+.sub-check:hover{border-color:var(--accent)}
+.sub-check.done{background:var(--accent);border-color:var(--accent);color:#fff}
+.sub-text.done{text-decoration:line-through;color:var(--text2)}
+.sub-inp-row{display:flex;gap:6px;margin-top:8px}
+.sub-inp-row input{flex:1;padding:6px 10px;border:1.5px solid var(--border);border-radius:8px;font-size:.8rem;outline:none}
+.sub-inp-row input:focus{border-color:var(--accent)}
+.sub-inp-row button{padding:6px 12px;background:var(--accent-light);color:var(--accent);border:none;border-radius:8px;font-size:.8rem;font-weight:700;cursor:pointer}
+.sub-progress{font-size:.65rem;color:var(--accent);font-weight:700;margin-top:4px}
+.sub-remove{margin-left:auto;color:var(--text2);background:none;border:none;cursor:pointer;font-size:.8rem;padding:0 2px;opacity:.5}
+.sub-remove:hover{opacity:1;color:var(--red)}
+/* ---- Focus pin ---- */
+.pin-btn{background:none;border:none;cursor:pointer;font-size:.85rem;opacity:.3;transition:opacity .15s;padding:2px 4px;line-height:1}
+.pin-btn:hover,.pin-btn.pinned{opacity:1}
+/* ---- Mini-kanban dashboard ---- */
+.kb-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.kb-col{border-radius:10px;border:1px solid var(--border);overflow:hidden;display:flex;flex-direction:column}
+.kb-col-head{padding:9px 12px;font-size:.78rem;font-weight:800;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border)}
+.kb-badge{font-size:.65rem;font-weight:800;padding:1px 8px;border-radius:9px}
+.kb-col-body{padding:7px;display:flex;flex-direction:column;gap:5px;flex:1;background:var(--main-bg)}
+.kb-task{display:flex;align-items:flex-start;gap:7px;padding:7px 8px;background:var(--card);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:border-color .15s}
+.kb-task:hover{border-color:var(--accent)}
+.kb-task-check{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.55rem;color:transparent;cursor:pointer;flex-shrink:0;transition:all .15s;margin-top:1px}
+.kb-task-check:hover{border-color:var(--accent);color:var(--accent)}
+.kb-task-text{font-size:.77rem;font-weight:600;color:var(--text);line-height:1.35;word-break:break-word}
+.kb-task-date{font-size:.62rem;color:var(--text2);margin-top:2px}
+.kb-task-date.overdue{color:#ef4444;font-weight:700}
+.kb-more{font-size:.72rem;color:var(--accent);font-weight:700;cursor:pointer;text-align:center;padding:5px;border-radius:6px;transition:background .15s;margin-top:2px}
+.kb-more:hover{background:var(--accent-light)}
+.slot-chip{font-size:.7rem;color:var(--text);background:#fff;border:1px solid var(--border);border-radius:20px;padding:3px 10px;cursor:grab;white-space:nowrap;transition:background .15s,box-shadow .15s;user-select:none}
+.slot-chip:hover{background:var(--accent-light);border-color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .focus-cat{font-size:.65rem;color:var(--text2);background:var(--main-bg);padding:2px 8px;border-radius:99px;white-space:nowrap}
 .heading-card{background:var(--card);border-radius:var(--radius);padding:20px;border:1px solid var(--border);box-shadow:var(--shadow)}
 .heading-card-title{font-size:.7rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);margin-bottom:14px}
@@ -143,16 +203,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .heading-item-tag{font-size:.68rem;font-weight:700;color:var(--accent)}
 
 /* LOG DIARIO */
-.log-dates{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px}
+.log-dates{display:flex;gap:0;overflow-x:auto;padding-bottom:4px;margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:4px}
 .log-date-card{
-  flex-shrink:0;padding:10px 14px;border-radius:12px;cursor:pointer;
-  border:1.5px solid var(--border);background:var(--card);text-align:center;
-  min-width:60px;transition:all .15s;
+  flex:1;min-width:44px;padding:7px 6px;border-radius:10px;cursor:pointer;
+  border:none;background:transparent;text-align:center;transition:all .15s;
 }
-.log-date-card.active{background:var(--accent);border-color:var(--accent);color:#fff}
-.log-date-card .ld-day{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text2)}
-.log-date-card.active .ld-day{color:rgba(255,255,255,.7)}
-.log-date-card .ld-num{font-size:1.2rem;font-weight:900}
+.log-date-card:hover{background:var(--accent-light)}
+.log-date-card.active{background:var(--accent);color:#fff}
+.log-date-card .ld-day{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--text2);margin-bottom:2px}
+.log-date-card.active .ld-day{color:rgba(255,255,255,.75)}
+.log-date-card .ld-num{font-size:1.05rem;font-weight:900;line-height:1}
+.log-date-card .ld-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);margin:4px auto 0;opacity:0}
+.log-date-card.has-tasks .ld-dot{opacity:1}
+.log-date-card.active .ld-dot{background:rgba(255,255,255,.7)}
 .log-entry{
   background:var(--card);border-radius:12px;padding:13px 16px;
   margin-bottom:8px;border:1px solid var(--border);box-shadow:var(--shadow);
@@ -264,14 +327,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .modal-overlay.open{opacity:1;pointer-events:all}
 .modal-box{
   background:#fff;border-radius:20px;width:100%;max-width:480px;
-  box-shadow:0 8px 40px rgba(0,0,0,.18);overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,.18);
   transform:scale(.96);transition:transform .2s;
+  display:flex;flex-direction:column;max-height:calc(100vh - 40px);overflow:hidden;
 }
 .modal-overlay.open .modal-box{transform:scale(1)}
-.modal-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between}
+.modal-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
 .modal-title{font-size:1rem;font-weight:800}
 .modal-close{background:none;border:none;font-size:1.3rem;cursor:pointer;color:var(--text2);padding:4px 8px}
-.modal-body{padding:20px 24px 24px;display:flex;flex-direction:column;gap:12px}
+.modal-body{padding:20px 24px 24px;display:flex;flex-direction:column;gap:12px;overflow-y:auto;flex:1}
 .modal-label{font-size:.72rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:4px}
 .modal-input,.modal-select,.modal-textarea{
   width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;
@@ -381,7 +445,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">✦ <span>Montse's Flow</span></div>
   <div class="sidebar-section">Principal</div>
-  <div class="nav-item active" id="nav-dash" onclick="switchTab('dash')">🏠 Inicio</div>
+  <div class="nav-item active" id="nav-dash" onclick="switchTab('dash')" id="nav-dash-label">🌿 <span id="sidebar-greeting">Inicio</span></div>
   <div class="nav-item" id="nav-log" onclick="switchTab('log')">📋 Log diario</div>
   <div class="nav-item" id="nav-semana" onclick="switchTab('semana')">📅 Semana</div>
   <div class="sidebar-section">Tareas</div>
@@ -444,7 +508,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- MOBILE TAB BAR -->
 <div class="tab-bar" id="tab-bar">
   <div class="tab-bar-inner">
-    <button class="tab active" id="tab-dash" onclick="switchTab('dash')"><span class="tab-icon">🏠</span>Inicio</button>
+    <button class="tab active" id="tab-dash" onclick="switchTab('dash')"><span class="tab-icon">🌿</span><span id="tab-dash-label">Inicio</span></button>
     <button class="tab" id="tab-todo" onclick="switchTab('todo')"><span class="tab-icon">📝</span>To Do</button>
     <button class="tab" id="tab-semana" onclick="switchTab('semana')"><span class="tab-icon">📅</span>Semana</button>
     <button class="tab" id="tab-metas" onclick="switchTab('metas')"><span class="tab-icon">⭐</span>Metas</button>
@@ -488,6 +552,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <select class="modal-select" id="add-cat"></select>
         </div>
         <div>
+          <label class="modal-label">Tipo de tarea</label>
+          <select class="modal-select" id="add-tipo">
+            <option value="todo">📝 To Do</option>
+            <option value="compromisos">🤝 Compromisos</option>
+            <option value="proyectos">🚀 Proyectos</option>
+            <option value="extra">💡 Extra</option>
+            <option value="semana">📅 Semana</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div>
           <label class="modal-label">Prioridad</label>
           <select class="modal-select" id="add-priority">
             <option value="1">🔴 Alta</option>
@@ -496,14 +572,53 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <option value="4">⚪ Baja</option>
           </select>
         </div>
+        <div>
+          <label class="modal-label">Recurrencia</label>
+          <select class="modal-select" id="add-recur">
+            <option value="">Sin recurrencia</option>
+            <option value="daily">Diario</option>
+            <option value="weekly">Semanal</option>
+          </select>
+        </div>
       </div>
       <div>
-        <label class="modal-label">Fecha (opcional)</label>
-        <input class="modal-input" type="date" id="add-date"/>
+        <label class="modal-label">Clasificación (Eisenhower)</label>
+        <div class="eis-row">
+          <button class="eis-chip" id="add-chip-i"  type="button" onclick="setEis('add','i',true)">⭐ Importante</button>
+          <button class="eis-chip" id="add-chip-ni" type="button" onclick="setEis('add','i',false)">— No importante</button>
+          <button class="eis-chip" id="add-chip-u"  type="button" onclick="setEis('add','u',true)">🔥 Urgente</button>
+          <button class="eis-chip" id="add-chip-nu" type="button" onclick="setEis('add','u',false)">— No urgente</button>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div>
+          <label class="modal-label">Fecha programada</label>
+          <input class="modal-input" type="date" id="add-date"/>
+        </div>
+        <div>
+          <label class="modal-label">Hora</label>
+          <input class="modal-input" type="time" id="add-time"/>
+        </div>
+      </div>
+      <div>
+        <label class="modal-label">Deadline</label>
+        <input class="modal-input" type="date" id="add-deadline"/>
+      </div>
+      <div>
+        <label class="modal-label">Delegado a (opcional)</label>
+        <input class="modal-input" id="add-delegado" placeholder="Nombre o equipo…"/>
       </div>
       <div>
         <label class="modal-label">Nota</label>
         <textarea class="modal-textarea" id="add-note" placeholder="Notas adicionales…"></textarea>
+      </div>
+      <div>
+        <label class="modal-label">Acciones / subtareas</label>
+        <div class="sub-list" id="add-sub-list"></div>
+        <div class="sub-inp-row">
+          <input id="add-sub-inp" placeholder="Agregar acción…" onkeydown="if(event.key==='Enter'){event.preventDefault();addSubtask('add')}"/>
+          <button type="button" onclick="addSubtask('add')">+ Agregar</button>
+        </div>
       </div>
       <button class="modal-btn primary" onclick="addItem()">Agregar tarea</button>
     </div>
@@ -529,6 +644,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <select class="modal-select" id="edit-cat"></select>
         </div>
         <div>
+          <label class="modal-label">Tipo de tarea</label>
+          <select class="modal-select" id="edit-tipo">
+            <option value="todo">📝 To Do</option>
+            <option value="compromisos">🤝 Compromisos</option>
+            <option value="proyectos">🚀 Proyectos</option>
+            <option value="extra">💡 Extra</option>
+            <option value="semana">📅 Semana</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div>
           <label class="modal-label">Prioridad</label>
           <select class="modal-select" id="edit-priority">
             <option value="1">🔴 Alta</option>
@@ -537,17 +664,84 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <option value="4">⚪ Baja</option>
           </select>
         </div>
+        <div>
+          <label class="modal-label">Recurrencia</label>
+          <select class="modal-select" id="edit-recur">
+            <option value="">Sin recurrencia</option>
+            <option value="daily">Diario</option>
+            <option value="weekly">Semanal</option>
+          </select>
+        </div>
       </div>
       <div>
-        <label class="modal-label">Fecha</label>
-        <input class="modal-input" type="date" id="edit-date"/>
+        <label class="modal-label">Clasificación (Eisenhower)</label>
+        <div class="eis-row">
+          <button class="eis-chip" id="edit-chip-i"  type="button" onclick="setEis('edit','i',true)">⭐ Importante</button>
+          <button class="eis-chip" id="edit-chip-ni" type="button" onclick="setEis('edit','i',false)">— No importante</button>
+          <button class="eis-chip" id="edit-chip-u"  type="button" onclick="setEis('edit','u',true)">🔥 Urgente</button>
+          <button class="eis-chip" id="edit-chip-nu" type="button" onclick="setEis('edit','u',false)">— No urgente</button>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div>
+          <label class="modal-label">Fecha programada</label>
+          <input class="modal-input" type="date" id="edit-date"/>
+        </div>
+        <div>
+          <label class="modal-label">Hora</label>
+          <input class="modal-input" type="time" id="edit-time"/>
+        </div>
+      </div>
+      <div>
+        <label class="modal-label">Deadline</label>
+        <input class="modal-input" type="date" id="edit-deadline"/>
+      </div>
+      <div>
+        <label class="modal-label">Delegado a (opcional)</label>
+        <input class="modal-input" id="edit-delegado" placeholder="Nombre o equipo…"/>
       </div>
       <div>
         <label class="modal-label">Nota</label>
         <textarea class="modal-textarea" id="edit-note"></textarea>
       </div>
+      <div>
+        <label class="modal-label">Acciones / subtareas</label>
+        <div class="sub-list" id="edit-sub-list"></div>
+        <div class="sub-inp-row">
+          <input id="edit-sub-inp" placeholder="Agregar acción…" onkeydown="if(event.key==='Enter'){event.preventDefault();addSubtask('edit')}"/>
+          <button type="button" onclick="addSubtask('edit')">+ Agregar</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--accent-light);border:1.5px solid #c8d8a8;border-radius:9px;margin-bottom:8px;cursor:pointer" onclick="document.getElementById('edit-focus').checked=!document.getElementById('edit-focus').checked">
+        <input type="checkbox" id="edit-focus" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer" onclick="event.stopPropagation()"/>
+        <div>
+          <div style="font-size:.8rem;font-weight:800;color:var(--accent)">📌 En Foco Ahora</div>
+          <div style="font-size:.65rem;color:var(--text2);margin-top:1px">Esta tarea aparecerá primera en tu dashboard</div>
+        </div>
+      </div>
       <button class="modal-btn primary" onclick="saveEdit()">Guardar cambios</button>
       <button class="modal-btn danger" onclick="deleteItem()">Eliminar tarea</button>
+    </div>
+  </div>
+</div>
+
+<!-- JAM SESH MODAL -->
+<div class="modal-overlay" id="jam-modal">
+  <div class="modal-box" style="max-width:340px;text-align:center">
+    <div class="modal-header">
+      <div class="modal-title">⚡ JAM SESH</div>
+      <button class="modal-close" onclick="closeModal('jam-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="jam-task-id"/>
+      <div id="jam-task-label" style="font-size:.82rem;color:var(--text2);margin-bottom:16px;font-weight:600"></div>
+      <div style="font-size:.8rem;color:var(--text2);margin-bottom:10px">Elige la duración del bloque:</div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px">
+        <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(30)">30 min</button>
+        <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(60)">60 min</button>
+        <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(90)">90 min</button>
+      </div>
+      <button class="modal-btn danger" onclick="closeModal('jam-modal')">Cancelar</button>
     </div>
   </div>
 </div>
@@ -575,6 +769,38 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 
+<!-- CAT MODAL -->
+<div class="modal-overlay" id="cat-modal">
+  <div class="modal-box" style="max-width:380px">
+    <div class="modal-header">
+      <div class="modal-title" id="cat-modal-title">Nueva categoría</div>
+      <button class="modal-close" onclick="closeModal('cat-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="cat-modal-id"/>
+      <div>
+        <label class="modal-label">Nombre</label>
+        <input class="modal-input" id="cat-modal-name" placeholder="Ej. Marketing, RH…"/>
+      </div>
+      <div>
+        <label class="modal-label">Emoji</label>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+          <div id="cat-emoji-preview" style="font-size:2rem;width:44px;text-align:center">📌</div>
+          <input class="modal-input" id="cat-modal-emoji" style="width:80px" placeholder="📌" maxlength="2" oninput="document.getElementById('cat-emoji-preview').textContent=this.value||'📌'"/>
+          <span style="font-size:.72rem;color:var(--text2)">o elige abajo:</span>
+        </div>
+        <div id="cat-emoji-grid" style="display:flex;flex-wrap:wrap;gap:4px;max-height:120px;overflow-y:auto;padding:4px 0"></div>
+      </div>
+      <div>
+        <label class="modal-label">Color</label>
+        <div id="cat-color-swatches" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px"></div>
+      </div>
+      <button class="modal-btn primary" onclick="saveCat()">Guardar categoría</button>
+      <button class="modal-btn danger" id="cat-delete-btn" onclick="deleteCat()" style="display:none">Eliminar categoría</button>
+    </div>
+  </div>
+</div>
+
 <!-- META MODAL -->
 <div class="modal-overlay" id="meta-modal">
   <div class="modal-box">
@@ -584,15 +810,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     </div>
     <div class="modal-body">
       <input type="hidden" id="meta-id"/>
-      <div class="modal-row">
-        <div>
-          <label class="modal-label">Icono</label>
-          <input class="modal-input" id="meta-icon" placeholder="🎯" maxlength="4"/>
+      <div>
+        <label class="modal-label">Icono</label>
+        <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+          <div id="meta-icon-preview" style="font-size:2rem;width:44px;text-align:center">🎯</div>
+          <input class="modal-input" id="meta-icon" placeholder="🎯" maxlength="4" style="width:70px" oninput="document.getElementById('meta-icon-preview').textContent=this.value||'🎯'"/>
         </div>
-        <div>
-          <label class="modal-label">Color</label>
-          <input class="modal-input" type="color" id="meta-color" value="#6b7a4e" style="height:42px;cursor:pointer"/>
-        </div>
+        <div id="meta-emoji-grid" style="display:flex;flex-wrap:wrap;gap:4px;max-height:100px;overflow-y:auto;padding:4px 0;margin-bottom:6px"></div>
+      </div>
+      <div>
+        <label class="modal-label">Color</label>
+        <div id="meta-color-swatches" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px"></div>
+        <input type="hidden" id="meta-color" value="#6b7a4e"/>
       </div>
       <div>
         <label class="modal-label">Título</label>
@@ -613,12 +842,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <div class="modal-row">
         <div>
-          <label class="modal-label">Progreso actual (%)</label>
+          <label class="modal-label">Progreso manual (%)</label>
           <input class="modal-input" type="number" id="meta-pct" min="0" max="100" value="0"/>
+          <div style="font-size:.65rem;color:var(--text2);margin-top:3px">Solo si no usas hitos</div>
         </div>
         <div>
           <label class="modal-label">Fecha límite</label>
           <input class="modal-input" type="date" id="meta-due"/>
+        </div>
+      </div>
+      <div>
+        <label class="modal-label">Hitos / Pasos</label>
+        <div class="sub-list" id="meta-ms-list"></div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <input class="modal-input" id="meta-ms-inp" placeholder="Agregar hito…" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addMetaMilestone()}"/>
+          <button class="btn-sm" onclick="addMetaMilestone()">+</button>
         </div>
       </div>
       <button class="modal-btn primary" onclick="saveMeta()">Guardar meta</button>
@@ -811,6 +1049,14 @@ const PANEL_TITLES = {
   cats:'Categorías', settings:'Ajustes'
 };
 
+function _dashHeaderHtml() {
+  const now = new Date();
+  const hh = now.getHours();
+  const G = hh<12?'Buenos días ☀️':hh<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
+  const fecha = now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
+  return `<div style="line-height:1.2"><div style="font-size:1.05rem;font-weight:900;color:var(--text)">${G}, Montse</div><div style="font-size:.72rem;font-weight:500;color:var(--text2)">${fecha}</div></div>`;
+}
+
 function switchTab(tab) {
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   const tabEl = document.getElementById('tab-'+tab);
@@ -822,7 +1068,10 @@ function switchTab(tab) {
   const navEl = document.getElementById('nav-'+tab);
   if (navEl) navEl.classList.add('active');
   const ht = document.getElementById('header-title');
-  if (ht) ht.textContent = PANEL_TITLES[tab] || tab;
+  if (ht) {
+    if (tab==='dash') { ht.innerHTML = _dashHeaderHtml(); }
+    else { ht.textContent = PANEL_TITLES[tab] || tab; }
+  }
   activeTab = tab;
   window.scrollTo(0,0);
   if (tab==='dash') renderDash();
@@ -878,154 +1127,343 @@ function renderDash() {
   const el = document.getElementById('panel-dash');
   if (!el) return;
   const now = new Date();
-  const G = now.getHours()<12?'Buenos días ☀️':now.getHours()<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
+  const h_ = now.getHours();
+  const G = h_<12?'Buenos días ☀️':h_<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
   const today = todayStr();
   const pending = items.filter(i=>!i.done && !i.archived);
   const doneAll = items.filter(i=>i.done).length;
   const doneToday = items.filter(i=>i.done && i.doneDate===today);
   const overdue = items.filter(i=>!i.done && !i.archived && i.date && i.date < today);
   const totalPend = pending.length;
-  const pct = doneAll+totalPend>0 ? Math.round(doneAll/(doneAll+totalPend)*100) : 0;
 
-  // Gauge SVG
-  const r=54, cx=64, cy=64, circ=2*Math.PI*r;
-  const dash = circ*(pct/100), gap = circ - dash;
-  const gaugeSvg = `<svg width="128" height="90" viewBox="0 0 128 128">
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#eef2e6" stroke-width="12"/>
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#6b7a4e" stroke-width="12"
-      stroke-dasharray="${dash} ${gap}" stroke-dashoffset="${circ*0.25}" stroke-linecap="round"/>
-    <text x="${cx}" y="${cy+6}" text-anchor="middle" font-size="22" font-weight="900" fill="#1c2018">${pct}%</text>
-  </svg>`;
-
-  // Focus rows (top 5 priority)
-  const focus = pending.sort((a,b)=>a.priority-b.priority).slice(0,5);
-  const focusRows = focus.length ? focus.map(item => {
-    const cat = getCat(item.cat);
-    return `<div class="focus-row" onclick="openEditModal(${item.id})">
-      <div class="focus-dot" style="background:${priorityColor(item.priority)}"></div>
-      <div class="focus-text">${h(item.text)}</div>
-      <div class="focus-cat">${cat.icon} ${h(cat.name)}</div>
+  // ── FOCUS HERO ──
+  const focusItem = pending.find(i=>i.focus) || (overdue[0]) || pending[0];
+  const focusHtml = focusItem ? (()=>{
+    const subs = focusItem.subtasks||[];
+    const doneSubs = subs.filter(s=>s.done).length;
+    const subPct = subs.length ? Math.round(doneSubs/subs.length*100) : 0;
+    const isJamActive = window._jam && window._jam.taskId===focusItem.id && window._jam.remaining>0;
+    return `<div style="background:var(--accent-light);border:1.5px solid #c8d8a8;border-radius:12px;padding:18px;margin-bottom:14px">
+      <div style="font-size:.62rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">⚡ En foco ahora</div>
+      <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.4">${h(focusItem.text)}</div>
+      ${subs.length ? `
+        <div style="height:5px;background:#dde8cc;border-radius:3px;margin-bottom:7px">
+          <div style="width:${subPct}%;height:100%;background:var(--accent);border-radius:3px;transition:width .3s"></div>
+        </div>` : ''}
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        ${subs.length ? `<span style="font-size:.7rem;color:var(--accent)">${doneSubs}/${subs.length} acciones</span><span style="color:#ccc;font-size:.7rem">·</span>` : ''}
+        ${focusItem.focus ? `<span style="font-size:.7rem;color:var(--accent)">📌 Fijada manualmente</span>` : ''}
+        ${overdue.includes(focusItem) ? `<span style="font-size:.7rem;color:#ef4444;font-weight:700">⚠️ Vencida</span>` : ''}
+        <div style="margin-left:auto;display:flex;gap:7px">
+          <button onclick="toggleDone(${focusItem.id})" style="padding:5px 12px;background:#fff;border:1.5px solid #c8d8a8;border-radius:7px;font-size:.7rem;font-weight:700;cursor:pointer;color:var(--accent)">✓ Hecha</button>
+          <button onclick="openJamModal(${focusItem.id})" style="background:var(--accent);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:.7rem;font-weight:800;cursor:pointer">${isJamActive?'⏱ JAM activo':'⚡ JAM SESH'}</button>
+        </div>
+      </div>
     </div>`;
-  }).join('') : `<div class="empty-state"><div class="es-icon">🎉</div><p>¡Todo al día!</p></div>`;
+  })() : '';
 
-  // Projects list
-  const projItems = items.filter(i=>i.cat_key==='proyectos' && !i.done && !i.archived).slice(0,4);
+  // ── STORY BAND (mañana/tarde/noche) — drag-and-drop assignment ──
+  const slotDefs = [
+    {key:'manana', label:'☀️ Mañana', bg:'#fffbeb', lcolor:'#92400e'},
+    {key:'tarde',  label:'🌤️ Tarde',  bg:'#f0fdf4', lcolor:'#166534'},
+    {key:'noche',  label:'🌙 Noche',  bg:'#f8f7ff', lcolor:'#4c1d95'},
+  ];
+  const activeSlotIdx = h_<12 ? 0 : h_<19 ? 1 : 2;
+  const slotBuckets = {
+    manana: pending.filter(i=>i.slot==='manana'),
+    tarde:  pending.filter(i=>i.slot==='tarde'),
+    noche:  pending.filter(i=>i.slot==='noche'),
+  };
+  const unassigned = pending.filter(i=>!i.slot && i.cat_key==='todo');
+  const unassignedHtml = unassigned.length ? `
+    <div style="background:#f9fafb;border:1.5px dashed var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px">
+      <div style="font-size:.6rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px">📋 Sin asignar — arrastra al momento del día ↓</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px">
+        ${unassigned.map(i=>`<div class="slot-chip" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})">${h(i.text.length>28?i.text.slice(0,28)+'…':i.text)}</div>`).join('')}
+      </div>
+    </div>` : '';
+  const storyHtml = `
+    ${unassignedHtml}
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:14px">
+      ${slotDefs.map((s,si)=>{
+        const buck = slotBuckets[s.key];
+        const isNow = si===activeSlotIdx;
+        return `<div style="background:${s.bg};padding:13px 14px;border-right:${si<2?'1px solid var(--border)':'none'};position:relative;min-height:90px;transition:outline .1s"
+          ondragover="event.preventDefault();this.style.outline='2px dashed ${s.lcolor}';this.style.outlineOffset='−2px'"
+          ondragleave="if(!this.contains(event.relatedTarget)){this.style.outline=''}"
+          ondrop="this.style.outline='';dropOnSlot(event,'${s.key}')">
+          ${isNow?`<div style="position:absolute;top:0;left:0;right:0;height:3px;background:${s.lcolor}"></div>`:''}
+          <div style="font-size:.6rem;font-weight:800;color:${s.lcolor};text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">${s.label}${isNow?' · ahora':''}</div>
+          <div style="font-size:.8rem;font-weight:700;color:var(--text);margin-bottom:3px">${buck.length} ${buck.length===1?'tarea':'tareas'}</div>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:7px">
+            ${buck.map(i=>`<div draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" style="display:flex;align-items:flex-start;gap:5px;font-size:.72rem;color:var(--text);cursor:grab;padding:3px 0">
+              <div onclick="event.stopPropagation();toggleDone(${i.id})" title="${i.done?'Reabrir':'Marcar hecha'}"
+                style="width:17px;height:17px;border-radius:50%;border:1.5px solid ${i.done?'#22c55e':'#d1d5db'};background:${i.done?'#22c55e':'#fff'};display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;font-size:.6rem;color:#fff;font-weight:900;transition:all .15s">${i.done?'✓':''}</div>
+              <span style="flex:1;min-width:0;word-break:break-word;line-height:1.35;${i.done?'text-decoration:line-through;color:var(--text2)':''}" onclick="openEditModal(${i.id})">${h(i.text)}</span>
+              <button onclick="event.stopPropagation();clearSlot(${i.id})" title="Quitar del slot" style="border:none;background:none;cursor:pointer;color:${s.lcolor};font-size:.75rem;padding:0;opacity:.4;line-height:1;flex-shrink:0;margin-top:1px">✕</button>
+            </div>`).join('')}
+            ${buck.length===0?`<div style="font-size:.65rem;color:${s.lcolor};opacity:.5;margin-top:4px">Suelta aquí ↓</div>`:''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+
+  // ── TIMELINE DEL DÍA (6am–8pm) ──
+  const TL_START = 6*60, TL_END = 20*60, TL_RANGE = TL_END-TL_START; // 840 min
+  const nowMin = h_*60+now.getMinutes();
+  const tlPct = Math.max(0,Math.min(100,Math.round((nowMin-TL_START)/TL_RANGE*100)));
+  const tlHours = [6,8,10,12,14,17,20];
+  const timelineHtml = `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin-bottom:14px">
+    <div style="font-size:.65rem;color:var(--text2);margin-bottom:10px">⏱ Progreso del día — ${now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
+    <div style="position:relative;height:18px;display:flex;align-items:center">
+      <div style="position:absolute;left:0;right:0;height:2px;background:#e8ecdf;border-radius:1px"></div>
+      <div id="dash-tl-fill" style="position:absolute;left:0;width:${tlPct}%;height:2px;background:var(--accent);border-radius:1px;transition:width 60s linear"></div>
+      <div id="dash-tl-dot" style="position:absolute;left:${tlPct}%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:#f97316;border:2px solid #fff;box-shadow:0 0 0 1.5px #f97316;transition:left 60s linear">
+        <div id="dash-tl-time" style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:#f97316;color:#fff;font-size:.58rem;font-weight:800;padding:2px 6px;border-radius:6px;white-space:nowrap">${String(h_).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</div>
+      </div>
+    </div>
+    <div style="position:relative;height:16px;margin-top:4px">
+      ${tlHours.map(hh=>{
+        const pctH = Math.round((hh*60-TL_START)/TL_RANGE*100);
+        return `<span style="position:absolute;left:${pctH}%;transform:translateX(-50%);font-size:.6rem;color:${h_>=hh?'var(--accent)':'var(--text2)'};font-weight:${h_>=hh?'700':'400'};white-space:nowrap">${hh}h</span>`;
+      }).join('')}
+    </div>
+  </div>`;
+
+  // ── STATS ──
+  const statsHtml = `<div class="stats-row" style="margin-bottom:14px">
+    <div class="stat-card"><div class="stat-num" style="color:var(--accent)">${totalPend}</div><div class="stat-lbl">Pendientes</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#22c55e">${doneToday.length}</div><div class="stat-lbl">Hechas hoy</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#ef4444">${overdue.length}</div><div class="stat-lbl">Vencidas</div></div>
+    <div class="stat-card"><div class="stat-num" style="color:#f97316">${goals.length}</div><div class="stat-lbl">Metas</div></div>
+  </div>`;
+
+  // ── KANBAN + METAS/VENCIDAS ──
+  const kbCols = [
+    {key:'todo',        label:'To Do',       color:'#ef4444', bg:'#fef2f2', tab:'todo'},
+    {key:'compromisos', label:'Compromisos',  color:'#f97316', bg:'#fff7ed', tab:'compromisos'},
+    {key:'proyectos',   label:'Proyectos',    color:'#6b7a4e', bg:'#eef2e6', tab:'proyectos'},
+    {key:'extra',       label:'Extra',        color:'#4a7a8a', bg:'#e6f1fb', tab:'extra'},
+  ];
+  const kanbanHtml = `<div class="kb-grid" style="margin-bottom:14px">
+    ${kbCols.map(col=>{
+      const colItems = pending.filter(i=>i.cat_key===col.key).sort((a,b)=>(a.priority||3)-(b.priority||3));
+      const shown = colItems.slice(0,3);
+      return `<div class="kb-col" ondragover="event.preventDefault();this.classList.add('drop-zone-active')" ondragleave="if(!this.contains(event.relatedTarget))this.classList.remove('drop-zone-active')" ondrop="this.classList.remove('drop-zone-active');dropOnPanel(event,'${col.key}')">
+        <div class="kb-col-head" style="background:${col.bg}">
+          <span style="color:${col.color}">${col.label}</span>
+          <span class="kb-badge" style="background:${col.color};color:#fff">${colItems.length}</span>
+        </div>
+        <div class="kb-col-body">
+          ${shown.length ? shown.map(i=>{
+            const subs=i.subtasks||[];
+            return `<div class="kb-task" draggable="true" data-id="${i.id}" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})">
+              <div class="kb-task-check" onclick="event.stopPropagation();toggleDone(${i.id})">✓</div>
+              <div style="flex:1;min-width:0">
+                <div class="kb-task-text">${h(i.text)}</div>
+                ${i.date?`<div class="kb-task-date${i.date<today?' overdue':''}">${fmtDate(i.date)}</div>`:''}
+                ${subs.length?`<div style="font-size:.6rem;color:var(--accent)">${subs.filter(s=>s.done).length}/${subs.length} acciones</div>`:''}
+              </div>
+              <div class="priority-dot p${i.priority||3}" style="margin-left:2px;flex-shrink:0"></div>
+            </div>`;
+          }).join('') : `<div style="font-size:.72rem;color:var(--text2);text-align:center;padding:14px 0">¡Todo listo! ✨</div>`}
+          ${colItems.length>3?`<div class="kb-more" onclick="switchTab('${col.tab}')">+${colItems.length-3} más →</div>`:''}
+        </div>
+      </div>`;
+    }).join('')}
+  </div>`;
+
+  // ── METAS + VENCIDAS ──
+  const bottomHtml = `<div class="overview-grid">
+    <div>
+      <div class="heading-card">
+        <div class="heading-card-title">⭐ Metas 2026</div>
+        ${goals.length ? goals.slice(0,3).map(g=>{
+          const gp=Math.min(_metaPct(g),100);
+          return `<div style="margin-bottom:8px">
+            <div style="display:flex;justify-content:space-between;font-size:.76rem;font-weight:600;color:var(--text);margin-bottom:3px">
+              <span>${g.icon||'🎯'} ${h(g.title)}</span><span style="color:${g.color||'#6b7a4e'}">${gp}%</span>
+            </div>
+            <div style="height:5px;background:#eee;border-radius:3px">
+              <div style="width:${gp}%;height:100%;background:${g.color||'#6b7a4e'};border-radius:3px"></div>
+            </div>
+          </div>`;
+        }).join('') : `<div style="font-size:.76rem;color:var(--text2);text-align:center;padding:10px 0">Sin metas aún</div>`}
+        <button onclick="switchTab('metas')" style="width:100%;margin-top:8px;padding:8px;background:var(--accent-light);color:var(--accent);border:none;border-radius:9px;font-size:.76rem;font-weight:700;cursor:pointer">Ver todas →</button>
+      </div>
+    </div>
+    <div>
+      ${overdue.length ? `<div class="heading-card">
+        <div class="heading-card-title" style="color:#ef4444">⚠️ Vencidas (${overdue.length})</div>
+        ${overdue.slice(0,5).map(i=>`<div class="heading-item" style="cursor:pointer" onclick="openEditModal(${i.id})">
+          <div class="heading-dot" style="background:#ef4444"></div>
+          <span class="heading-item-text">${h(i.text)}</span>
+          <span style="font-size:.65rem;color:#ef4444">${fmtDate(i.date)}</span>
+        </div>`).join('')}
+      </div>` : `<div class="heading-card" style="text-align:center;padding:24px">
+        <div style="font-size:1.5rem">🎉</div>
+        <div style="font-size:.8rem;color:var(--text2);margin-top:6px">Sin vencidas</div>
+      </div>`}
+    </div>
+  </div>`;
 
   el.innerHTML = `
-    <div style="margin-bottom:18px">
-      <div style="font-size:1.25rem;font-weight:900;color:var(--text)">${G}, Montse</div>
-      <div style="font-size:.8rem;color:var(--text2);margin-top:2px">${now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
-    </div>
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-num" style="color:var(--accent)">${totalPend}</div>
-        <div class="stat-lbl">Pendientes</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:#22c55e">${doneToday.length}</div>
-        <div class="stat-lbl">Hechas hoy</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:#ef4444">${overdue.length}</div>
-        <div class="stat-lbl">Vencidas</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="color:#f97316">${goals.length}</div>
-        <div class="stat-lbl">Metas</div>
-      </div>
-    </div>
-    <div class="overview-grid">
-      <div>
-        <div class="focus-card">
-          <div class="focus-title">🎯 En qué enfocarte ahora</div>
-          ${focusRows}
-        </div>
-        ${projItems.length ? `
-        <div style="margin-top:16px">
-          <div class="section-hd">Proyectos activos</div>
-          ${projItems.map(p=>`
-            <div onclick="openEditModal(${p.id})" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border-radius:13px;margin-bottom:8px;border:1px solid var(--border);cursor:pointer;transition:box-shadow .15s" onmouseover="this.style.boxShadow='var(--shadow)'" onmouseout="this.style.boxShadow=''">
-              <span>${p.icon||'🚀'}</span>
-              <div style="flex:1;min-width:0">
-                <div style="font-size:.83rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${h(p.text)}</div>
-                ${p.note?`<div style="font-size:.68rem;color:var(--text2)">${h(p.note)}</div>`:''}
-              </div>
-              <span style="color:var(--text2)">→</span>
-            </div>
-          `).join('')}
-        </div>` : ''}
-      </div>
-      <div>
-        <div class="heading-card">
-          <div class="heading-card-title">📊 Cómo vas</div>
-          <div class="gauge-wrap">${gaugeSvg}</div>
-          <div style="font-size:.7rem;color:var(--text2);text-align:center;margin-bottom:12px">${totalPend} pendientes · ${doneAll} hechas</div>
-          ${goals.length ? `<div style="margin-top:8px">${goals.slice(0,3).map(g=>{
-            const pct2=Math.min(_metaPct(g),100);
-            return `<div class="heading-item">
-              <div class="heading-dot" style="background:${g.color||'#6b7a4e'}"></div>
-              <span class="heading-item-text">${h(g.title)}</span>
-              <span class="heading-item-tag">${pct2}%</span></div>`;
-          }).join('')}</div>` : ''}
-          <button onclick="switchTab('metas')" style="width:100%;margin-top:14px;padding:9px;background:var(--accent-light);color:var(--accent);border:none;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer">Ver metas →</button>
-        </div>
-        ${overdue.length ? `
-        <div class="heading-card" style="margin-top:12px">
-          <div class="heading-card-title" style="color:#ef4444">⚠️ Vencidas</div>
-          ${overdue.slice(0,3).map(i=>`
-            <div class="heading-item" style="cursor:pointer" onclick="openEditModal(${i.id})">
-              <div class="heading-dot" style="background:#ef4444"></div>
-              <span class="heading-item-text">${h(i.text)}</span>
-              <span style="font-size:.68rem;color:#ef4444">${fmtDate(i.date)}</span>
-            </div>
-          `).join('')}
-        </div>` : ''}
-      </div>
-    </div>`;
+    ${focusHtml}
+    ${storyHtml}
+    ${timelineHtml}
+    ${statsHtml}
+    ${kanbanHtml}
+    ${bottomHtml}`;
 }
 
 // ============================================================
-// LOG DIARIO
+// LOG DIARIO — Hábitos (C) + Timeline con hora (A)
 // ============================================================
+function _getHabits(){try{return JSON.parse(localStorage.getItem('mf_habits')||'[]')}catch(e){return[]}}
+function _saveHabits(h){localStorage.setItem('mf_habits',JSON.stringify(h))}
+function _getHlog(){try{return JSON.parse(localStorage.getItem('mf_hlog')||'{}')}catch(e){return{}}}
+function _saveHlog(hl){localStorage.setItem('mf_hlog',JSON.stringify(hl))}
+function toggleHabit(id){
+  const hl=_getHlog();
+  if(!hl[activeLogDate])hl[activeLogDate]={};
+  hl[activeLogDate][id]=!hl[activeLogDate][id];
+  _saveHlog(hl);renderLogDiario();
+}
+function addHabit(){
+  const inp=document.getElementById('hab-inp'),emo=document.getElementById('hab-emo');
+  const t=inp?inp.value.trim():'';if(!t)return;
+  const habs=_getHabits();
+  habs.push({id:Date.now(),text:t,emoji:(emo&&emo.value.trim())||'✓'});
+  _saveHabits(habs);if(inp)inp.value='';renderLogDiario();
+}
+function removeHabit(id){_saveHabits(_getHabits().filter(h=>h.id!==id));renderLogDiario();}
+function _habitStreak(id){
+  const hl=_getHlog();let streak=0;const d=new Date();
+  for(let i=0;i<90;i++){
+    const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(hl[ds]&&hl[ds][id]){streak++;d.setDate(d.getDate()-1);}else break;
+  }
+  return streak;
+}
+function _habitWeek7(id){
+  const hl=_getHlog(),res=[],now=new Date();
+  for(let i=6;i>=0;i--){
+    const d=new Date(now);d.setDate(now.getDate()-i);
+    const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    res.push({ds,done:!!(hl[ds]&&hl[ds][id]),d});
+  }
+  return res;
+}
+
 function renderLogDiario() {
   const el = document.getElementById('panel-log');
   if (!el) return;
   const today = todayStr();
   if (!activeLogDate) activeLogDate = today;
-  // Build 7 days
   const days = [];
   for (let i=6;i>=0;i--) {
     const d = new Date(); d.setDate(d.getDate()-i);
     const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     days.push({ ds, d });
   }
-  const dateCards = days.map(({ds,d})=>`
-    <div class="log-date-card${activeLogDate===ds?' active':''}" onclick="selectLogDay('${ds}')">
+  const dateCards = days.map(({ds,d})=>{
+    const hasTasks = items.some(i=>!i.archived&&(i.date===ds||i.doneDate===ds));
+    return `<div class="log-date-card${activeLogDate===ds?' active':''}${hasTasks?' has-tasks':''}" onclick="selectLogDay('${ds}')"
+      ondragover="event.preventDefault();this.classList.add('drop-zone-active')"
+      ondragleave="this.classList.remove('drop-zone-active')"
+      ondrop="this.classList.remove('drop-zone-active');dropOnDay(event,'${ds}');selectLogDay('${ds}')">
       <div class="ld-day">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
       <div class="ld-num">${d.getDate()}</div>
-    </div>`).join('');
-  
-  const dayItems = items.filter(i=>!i.archived && (i.date===activeLogDate || i.doneDate===activeLogDate));
-  const entries = dayItems.length ? dayItems.map(i=>`
-    <div class="log-entry${i.done?' done-item':''}">
-      <div class="log-check${i.done?' checked':''}" onclick="toggleDone(${i.id})">${i.done?'✓':''}</div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:.85rem;font-weight:600;color:var(--text)">${h(i.text)}</div>
-        ${i.note?`<div style="font-size:.72rem;color:var(--text2)">${h(i.note)}</div>`:''}
+      <div class="ld-dot"></div>
+    </div>`;
+  }).join('');
+
+  // ── JAM banner
+  const jam = window._jam;
+  let jamHtml = '';
+  if (jam) {
+    const remaining = Math.max(0, Math.ceil((jam.endTime - Date.now())/1000));
+    const pct = Math.round(remaining / (jam.totalSecs) * 100);
+    const mins = Math.floor(remaining/60), secs = remaining%60;
+    const jamTask = items.find(i=>i.id===jam.id);
+    jamHtml = `<div class="jam-header"><div><div style="font-size:.65rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.05em">⚡ JAM SESH ACTIVO</div><div class="jam-task">${jamTask?h(jamTask.text):'Tarea'}</div></div><div class="jam-time">${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</div><button class="jam-btn" onclick="stopJamSesh()" style="background:var(--red);color:#fff">✕</button></div><div class="jam-bar-wrap"><div class="jam-bar-fill" id="jam-bar-fill" style="width:${pct}%"></div></div>`;
+  }
+
+  // ── HABITS PANEL
+  const habits = _getHabits();
+  const hl = _getHlog();
+  const dayLog = hl[activeLogDate]||{};
+  const habitsHtml = `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px">
+      <div style="font-size:.62rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">🌱 Hábitos</div>
+      ${habits.length ? habits.map(hab=>{
+        const done = !!(dayLog[hab.id]);
+        const streak = _habitStreak(hab.id);
+        const week = _habitWeek7(hab.id);
+        return `<div style="margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div onclick="toggleHabit(${hab.id})" style="width:22px;height:22px;border-radius:6px;border:1.5px solid ${done?'var(--accent)':'var(--border)'};background:${done?'var(--accent)':'transparent'};display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;color:#fff;flex-shrink:0;transition:all .15s">${done?hab.emoji:''}</div>
+            <div style="flex:1;font-size:.8rem;font-weight:600;color:${done?'var(--text2)':'var(--text)'};${done?'text-decoration:line-through;text-decoration-color:#aaa':''}">${h(hab.text)}</div>
+            ${streak>0?`<span style="font-size:.65rem;font-weight:900;color:#f97316">🔥${streak}</span>`:''}
+            <button onclick="removeHabit(${hab.id})" style="border:none;background:none;cursor:pointer;color:#d1d5db;font-size:.7rem;padding:0;line-height:1;flex-shrink:0">✕</button>
+          </div>
+          <div style="display:flex;gap:3px;margin-top:5px;padding-left:30px">
+            ${week.map(w=>`<div title="${w.ds}" onclick="selectLogDay('${w.ds}')" style="flex:1;height:6px;border-radius:2px;background:${w.done?'var(--accent)':'#e5e7eb'};cursor:pointer;transition:background .15s"></div>`).join('')}
+          </div>
+        </div>`;
+      }).join('') : `<div style="font-size:.72rem;color:var(--text2);text-align:center;padding:6px 0">Sin hábitos — agrégalos aquí ↓</div>`}
+      <div style="display:flex;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:10px">
+        <input class="modal-input" id="hab-emo" placeholder="✓" style="width:42px;text-align:center;padding:6px 4px" maxlength="2"/>
+        <input class="modal-input" id="hab-inp" placeholder="Agregar hábito…" style="flex:1" onkeydown="if(event.key==='Enter')addHabit()"/>
+        <button class="btn-sm" onclick="addHabit()">+</button>
       </div>
-      <div class="focus-cat">${getCat(i.cat).icon} ${h(getCat(i.cat).name)}</div>
-    </div>`).join('') :
+    </div>`;
+
+  // ── TIMELINE DE TAREAS
+  const dayItems = items.filter(i=>!i.archived && (i.date===activeLogDate || i.doneDate===activeLogDate));
+  const slotOrder = {manana:0, tarde:1, noche:2};
+  const slotHour  = {manana:'9:00', tarde:'14:00', noche:'20:00'};
+  // Sort by actual time, then by slot, then unassigned last
+  const sorted = [...dayItems].sort((a,b)=>{
+    const ta = a.time || slotHour[a.slot] || '23:59';
+    const tb = b.time || slotHour[b.slot] || '23:59';
+    return ta.localeCompare(tb);
+  });
+
+  const tlEntries = sorted.length ? sorted.map(i=>{
+    const dot = i.done?'#22c55e':i.date&&i.date<today&&!i.done?'#ef4444':'var(--accent)';
+    const hr  = i.time ? i.time.slice(0,5) : (slotHour[i.slot]||'—');
+    return `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;position:relative">
+      <div style="position:absolute;left:-34px;font-size:.56rem;color:var(--text2);font-weight:600;top:4px;width:28px;text-align:right">${hr}</div>
+      <div onclick="toggleDone(${i.id})" title="${i.done?'Marcar pendiente':'Marcar hecha'}"
+        style="width:20px;height:20px;border-radius:50%;border:2px solid ${i.done?'#22c55e':i.date&&i.date<today&&!i.done?'#ef4444':'#d1d5db'};background:${i.done?'#22c55e':'#fff'};display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;margin-left:-11px;transition:all .15s;font-size:.7rem;color:#fff;font-weight:900">${i.done?'✓':''}</div>
+      <div style="flex:1;min-width:0">
+        <div onclick="openEditModal(${i.id})" style="font-size:.83rem;font-weight:${i.done?400:600};color:${i.done?'var(--text2)':'var(--text)'};${i.done?'text-decoration:line-through;text-decoration-color:#aaa':''};cursor:pointer;line-height:1.35">${h(i.text)}</div>
+        ${i.note?`<div style="font-size:.68rem;color:var(--text2);margin-top:2px">${h(i.note)}</div>`:''}
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;align-items:center">
+          <span style="font-size:.6rem;background:var(--accent-light);color:var(--accent);border-radius:9px;padding:1px 7px;font-weight:700">${getCat(i.cat).icon} ${h(getCat(i.cat).name)}</span>
+          ${i.done?'<span style="font-size:.6rem;color:#22c55e;font-weight:700">✓ Hecha</span>':''}
+          ${i.date&&i.date<today&&!i.done?'<span style="font-size:.6rem;color:#ef4444;font-weight:700">⚠️ Vencida</span>':''}
+        </div>
+      </div>
+    </div>`;
+  }).join('') :
     `<div class="empty-state"><div class="es-icon">📋</div><p>Sin tareas para este día</p></div>`;
-  
+
   const d = new Date(activeLogDate+'T12:00:00');
   el.innerHTML = `
     <div class="log-dates">${dateCards}</div>
+    ${jamHtml}
+    ${habitsHtml}
     <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
         <div style="font-weight:800;font-size:.95rem">${d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
-        <button class="btn-sm" onclick="openAddModalWithDate('${activeLogDate}')">+ Agregar</button>
+        <button class="btn-sm" onclick="openAddModalWithDate('${activeLogDate}')">+ Agregar tarea</button>
       </div>
-      ${entries}
+      <div style="position:relative;padding-left:42px">
+        <div style="position:absolute;left:20px;top:0;bottom:0;width:2px;background:var(--border);border-radius:1px"></div>
+        ${tlEntries}
+      </div>
     </div>`;
 }
 
@@ -1040,7 +1478,7 @@ function openAddModalWithDate(date) {
 }
 
 // ============================================================
-// SEMANA
+// SEMANA — Swimlanes AM/PM/Noche + Heatmap de carga
 // ============================================================
 function renderSemana() {
   const el = document.getElementById('panel-semana');
@@ -1055,597 +1493,64 @@ function renderSemana() {
     const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     days.push({d,ds});
   }
-  const cols = days.map(({d,ds})=>{
-    const dayItems = items.filter(i=>i.date===ds && !i.archived);
-    const isToday = ds===today;
-    return `<div class="day-col${isToday?' today':''}">
-      <div class="day-name">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
-      <div class="day-num">${d.getDate()}</div>
-      ${dayItems.map(i=>`<div class="day-task${i.done?' done-t':''}" onclick="openEditModal(${i.id})" title="${h(i.text)}">${h(i.text)}</div>`).join('')}
-      <div onclick="openAddModalWithDate('${ds}')" style="font-size:.65rem;color:var(--accent);cursor:pointer;margin-top:6px;text-align:center">+ agregar</div>
-    </div>`;
-  }).join('');
-  el.innerHTML = `<div class="week-grid">${cols}</div>`;
-}
 
-// ============================================================
-// TASK PANELS
-// ============================================================
-function renderPanel(cat_key) {
-  const el = document.getElementById('panel-'+cat_key);
-  if (!el) return;
-  const list = items.filter(i=>i.cat_key===cat_key && !i.done && !i.archived);
-  list.sort((a,b)=>a.priority-b.priority);
-  if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><div class="es-icon">✨</div><p>Sin tareas pendientes</p><p style="margin-top:8px"><button class="btn-sm" onclick="openAddModal()">+ Nueva tarea</button></p></div>`;
-    return;
-  }
-  el.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:.85rem;color:var(--text2)">${list.length} pendiente${list.length!==1?'s':''}</div>
-      <button class="btn-sm" onclick="openAddModal()">+ Agregar</button>
-    </div>
-    ${list.map(i=>taskCard(i)).join('')}`;
-}
+  const pendingCounts = days.map(({ds})=>items.filter(i=>i.date===ds&&!i.archived&&!i.done).length);
+  const maxLoad = Math.max(1,...pendingCounts);
+  const totalWeek = days.reduce((s,{ds})=>s+items.filter(i=>i.date===ds&&!i.archived).length,0);
+  const doneWeek  = days.reduce((s,{ds})=>s+items.filter(i=>i.date===ds&&!i.archived&&i.done).length,0);
 
-function renderDone() {
-  const el = document.getElementById('panel-done');
-  if (!el) return;
-  const list = items.filter(i=>i.done).sort((a,b)=>(b.doneDate||'').localeCompare(a.doneDate||''));
-  if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><div class="es-icon">✅</div><p>Nada completado aún</p></div>`;
-    return;
-  }
-  el.innerHTML = `<div>${list.map(i=>taskCard(i,true)).join('')}</div>`;
-}
+  const slotRows = [
+    {key:'manana', label:'☀️ Mañana', color:'#92400e', bg:'#fffbeb'},
+    {key:'tarde',  label:'🌤️ Tarde',  color:'#166534', bg:'#f0fdf4'},
+    {key:'noche',  label:'🌙 Noche',  color:'#4c1d95', bg:'#f8f7ff'},
+    {key:'__none', label:'📋 Sin slot',color:'#6b7280', bg:'#f9fafb'},
+  ];
 
-function taskCard(item, showDone=false) {
-  const cat = getCat(item.cat);
-  return `<div class="task-item${item.done?' is-done':''}">
-    <div class="task-check${item.done?' done':''}" onclick="toggleDone(${item.id})">${item.done?'✓':''}</div>
-    <div class="priority-dot p${item.priority||3}"></div>
-    <div style="flex:1;min-width:0" onclick="openEditModal(${item.id})">
-      <div class="task-text">${h(item.text)}</div>
-      ${item.note?`<div class="task-note">${h(item.note)}</div>`:''}
-    </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0">
-      <div class="task-cat">${cat.icon} ${h(cat.name)}</div>
-      ${item.date?`<div style="font-size:.65rem;color:var(--text2)">${fmtDate(item.date)}</div>`:''}
-    </div>
-  </div>`;
-}
-
-// ============================================================
-// METAS
-// ============================================================
-function _metaPct(g) {
-  if (g.pct !== undefined && g.pct !== null) return Number(g.pct);
-  if (!g.milestones || !g.milestones.length) return 0;
-  return Math.round(g.milestones.filter(m=>m.done).length/g.milestones.length*100);
-}
-
-function renderMetas() {
-  const el = document.getElementById('panel-metas');
-  if (!el) return;
-  const now = new Date();
-  const start = new Date(now.getFullYear(),0,1);
-  const end = new Date(now.getFullYear(),11,31);
-  const yearPct = Math.round((now-start)/(end-start)*100);
-
-  const avgMeta = goals.length ? Math.round(goals.reduce((s,g)=>s+_metaPct(g),0)/goals.length) : 0;
-
-  el.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:1rem;font-weight:900">⭐ Metas 2025</div>
-      <button class="btn-sm" onclick="openMetaModal()">+ Nueva meta</button>
-    </div>
-    <div class="timeline-bar-wrap">
-      <div class="timeline-label">
-        <span>Año ${now.getFullYear()}</span>
-        <span>${yearPct}% del año transcurrido · ${avgMeta}% progreso metas</span>
-      </div>
-      <div class="timeline-track">
-        <div class="timeline-fill" style="width:${yearPct}%"></div>
-      </div>
-      <div style="display:flex;justify-content:space-between;font-size:.65rem;color:var(--text2);margin-top:5px">
-        <span>Ene</span><span>Mar</span><span>Jun</span><span>Sep</span><span>Dic</span>
-      </div>
-    </div>
-    ${goals.length ? `<div class="goals-grid">${goals.map(g=>goalCard(g)).join('')}</div>` :
-      `<div class="empty-state"><div class="es-icon">⭐</div><p>Sin metas aún. ¡Agrega tu primera!</p></div>`}`;
-}
-
-function goalCard(g) {
-  const pct = Math.min(_metaPct(g), 100);
-  const typeEmoji = {personal:'👤',profesional:'💼',salud:'💪',finanzas:'💰'}[g.type]||'🎯';
-  return `<div class="goal-card">
-    <div class="goal-card-header">
-      <div class="goal-icon">${g.icon||typeEmoji}</div>
-      <div class="goal-title">${h(g.title)}</div>
-      <div class="goal-tag">${typeEmoji} ${h(g.type||'personal')}</div>
-    </div>
-    ${g.note?`<div class="goal-note">${h(g.note)}</div>`:''}
-    <div class="goal-progress-track">
-      <div class="goal-progress-fill" style="width:${pct}%;background:${g.color||'#6b7a4e'}"></div>
-    </div>
-    <div class="goal-progress-label"><span>${pct}%</span><span>${g.due?fmtDate(g.due):''}</span></div>
-    ${g.milestones&&g.milestones.length?`<div class="goal-milestones">${g.milestones.map(m=>`
-      <div class="goal-milestone${m.done?' done':''}" onclick="toggleMilestone(${g.id},${m.id})">
-        <div class="ms-dot"></div><span>${h(m.text)}</span>
-      </div>`).join('')}</div>`:''}
-    <div style="display:flex;gap:6px;margin-top:12px">
-      <button onclick="openMetaModal(${g.id})" style="flex:1;padding:7px;background:var(--accent-light);color:var(--accent);border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer">Editar</button>
-    </div>
-  </div>`;
-}
-
-function openMetaModal(id) {
-  const modal = document.getElementById('meta-modal');
-  const delBtn = document.getElementById('meta-delete-btn');
-  if (id) {
-    const g = goals.find(g=>g.id===id);
-    if (!g) return;
-    document.getElementById('meta-modal-title').textContent = 'Editar meta';
-    document.getElementById('meta-id').value = id;
-    document.getElementById('meta-icon').value = g.icon||'';
-    document.getElementById('meta-color').value = g.color||'#6b7a4e';
-    document.getElementById('meta-title').value = g.title||'';
-    document.getElementById('meta-type').value = g.type||'personal';
-    document.getElementById('meta-note').value = g.note||'';
-    document.getElementById('meta-pct').value = g.pct||0;
-    document.getElementById('meta-due').value = g.due||'';
-    delBtn.style.display = '';
-  } else {
-    document.getElementById('meta-modal-title').textContent = 'Nueva meta';
-    document.getElementById('meta-id').value = '';
-    document.getElementById('meta-icon').value = '';
-    document.getElementById('meta-color').value = '#6b7a4e';
-    document.getElementById('meta-title').value = '';
-    document.getElementById('meta-type').value = 'personal';
-    document.getElementById('meta-note').value = '';
-    document.getElementById('meta-pct').value = 0;
-    document.getElementById('meta-due').value = '';
-    delBtn.style.display = 'none';
-  }
-  openModal('meta-modal');
-}
-
-function saveMeta() {
-  const title = document.getElementById('meta-title').value.trim();
-  if (!title) { showToast('Ingresa un título'); return; }
-  const id = document.getElementById('meta-id').value;
-  const data = {
-    title,
-    icon: document.getElementById('meta-icon').value||'🎯',
-    color: document.getElementById('meta-color').value||'#6b7a4e',
-    type: document.getElementById('meta-type').value,
-    note: document.getElementById('meta-note').value.trim(),
-    pct: Number(document.getElementById('meta-pct').value)||0,
-    due: document.getElementById('meta-due').value,
-  };
-  if (id) {
-    const idx = goals.findIndex(g=>g.id===Number(id));
-    if (idx>=0) Object.assign(goals[idx], data);
-  } else {
-    data.id = Date.now();
-    data.milestones = [];
-    goals.push(data);
-  }
-  save();
-  closeModal('meta-modal');
-  renderMetas();
-  showToast(id?'Meta actualizada':'Meta creada ✓');
-}
-
-function deleteMeta() {
-  const id = Number(document.getElementById('meta-id').value);
-  goals = goals.filter(g=>g.id!==id);
-  save();
-  closeModal('meta-modal');
-  renderMetas();
-  showToast('Meta eliminada');
-}
-
-function toggleMilestone(goalId, msId) {
-  const g = goals.find(g=>g.id===goalId);
-  if (!g||!g.milestones) return;
-  const ms = g.milestones.find(m=>m.id===msId);
-  if (ms) { ms.done = !ms.done; save(); renderMetas(); }
-}
-
-// ============================================================
-// CATS PANEL
-// ============================================================
-function renderCatsPanel() {
-  const el = document.getElementById('panel-cats');
-  if (!el) return;
-  el.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:1rem;font-weight:900">Categorías</div>
-      <button class="btn-sm" onclick="addCatPrompt()">+ Nueva</button>
-    </div>
-    <div class="cat-grid">
-      ${cats.map(c=>`
-        <div class="cat-card">
-          <div class="cat-header">
-            <div class="cat-color-dot" style="background:${c.color}"></div>
-            <div class="cat-name">${c.icon||''} ${h(c.name)}</div>
-          </div>
-          <div style="font-size:.75rem;color:var(--text2)">${items.filter(i=>i.cat===c.id&&!i.done&&!i.archived).length} pendientes</div>
-        </div>`).join('')}
-    </div>`;
-}
-
-function addCatPrompt() {
-  const name = prompt('Nombre de la categoría:');
-  if (!name) return;
-  const icon = prompt('Emoji (opcional):', '📌') || '📌';
-  cats.push({id:nextCatId++, name:name.trim(), icon, color:'#6b7a4e'});
-  save();
-  renderCatsPanel();
-}
-
-// ============================================================
-// SETTINGS
-// ============================================================
-function renderSettings() {
-  const el = document.getElementById('panel-settings');
-  if (!el) return;
-  const providerName = {groq:'Groq (gratis)',openai:'ChatGPT/OpenAI',gemini:'Google Gemini','':'No configurado'}[_aiProvider]||_aiProvider;
-  el.innerHTML = `
-    <div class="settings-section">
-      <div class="settings-title">✨ Asistente IA</div>
-      <div class="settings-row">
-        <label>Proveedor activo</label>
-        <span style="font-size:.82rem;font-weight:700;color:var(--accent)">${providerName}</span>
-      </div>
-      <button class="btn-sm" onclick="openModal('ai-setup-modal');renderAISetup()">Configurar IA</button>
-    </div>
-    <div class="settings-section">
-      <div class="settings-title">🔥 Firebase Sync</div>
-      <div class="settings-row">
-        <label>Estado</label>
-        <span style="font-size:.82rem;font-weight:700;color:${_fbKey?'var(--accent)':'var(--text2)'}">${_fbKey?'Configurado':'Sin configurar'}</span>
-      </div>
-      <button class="btn-sm" onclick="openModal('fb-modal')">Configurar Firebase</button>
-    </div>
-    <div class="settings-section">
-      <div class="settings-title">💾 Datos locales</div>
-      <div class="settings-row">
-        <label>Tareas guardadas</label>
-        <span style="font-size:.82rem">${items.length} tareas</span>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-sm" onclick="exportData()">Exportar JSON</button>
-        <button class="btn-sm" style="background:#ef4444" onclick="clearAllData()">Borrar todo</button>
-      </div>
-    </div>`;
-  document.getElementById('fb-key').value = _fbKey;
-  document.getElementById('fb-proj').value = _fbProj;
-}
-
-function exportData() {
-  const d = JSON.stringify({items,goals,cats}, null, 2);
-  const a = document.createElement('a');
-  a.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(d);
-  a.download = 'montse-flow-backup.json';
-  a.click();
-}
-
-function clearAllData() {
-  if (!confirm('¿Borrar todas las tareas? Esto no se puede deshacer.')) return;
-  items = []; goals = []; nextId = 1;
-  save(); renderCurrent(); showToast('Datos borrados');
-}
-
-// ============================================================
-// MODAL HELPERS
-// ============================================================
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
-}
-
-// ============================================================
-// ADD / EDIT / DELETE
-// ============================================================
-function openAddModal() {
-  populateCatSelect('add-cat');
-  document.getElementById('add-text').value = '';
-  document.getElementById('add-note').value = '';
-  document.getElementById('add-date').value = '';
-  document.getElementById('add-priority').value = '3';
-  openModal('add-modal');
-  setTimeout(()=>document.getElementById('add-text').focus(),100);
-}
-
-function addItem() {
-  const text = document.getElementById('add-text').value.trim();
-  if (!text) { showToast('Escribe algo primero'); return; }
-  const catId = Number(document.getElementById('add-cat').value);
-  const cat = cats.find(c=>c.id===catId);
-  const cat_key = catKeyFromId(catId);
-  const item = {
-    id: nextId++,
-    text, cat: catId, cat_key,
-    priority: Number(document.getElementById('add-priority').value)||3,
-    date: document.getElementById('add-date').value,
-    note: document.getElementById('add-note').value.trim(),
-    done: false, archived: false,
-    created: new Date().toISOString(),
-  };
-  items.unshift(item);
-  save();
-  closeModal('add-modal');
-  renderCurrent();
-  showToast('Tarea agregada ✓');
-}
-
-function catKeyFromId(id) {
-  const c = cats.find(c=>c.id===id);
-  if (!c) return 'todo';
-  const name = c.name.toLowerCase();
-  if (name.includes('compromi')) return 'compromisos';
-  if (name.includes('proy')) return 'proyectos';
-  if (name.includes('extra') || name.includes('idea')) return 'extra';
-  return 'todo';
-}
-
-function openEditModal(id) {
-  const item = items.find(i=>i.id===id);
-  if (!item) return;
-  populateCatSelect('edit-cat', item.cat);
-  document.getElementById('edit-id').value = id;
-  document.getElementById('edit-text').value = item.text||'';
-  document.getElementById('edit-note').value = item.note||'';
-  document.getElementById('edit-date').value = item.date||'';
-  document.getElementById('edit-priority').value = item.priority||3;
-  openModal('edit-modal');
-}
-
-function saveEdit() {
-  const id = Number(document.getElementById('edit-id').value);
-  const item = items.find(i=>i.id===id);
-  if (!item) return;
-  item.text = document.getElementById('edit-text').value.trim() || item.text;
-  item.cat = Number(document.getElementById('edit-cat').value);
-  item.cat_key = catKeyFromId(item.cat);
-  item.priority = Number(document.getElementById('edit-priority').value)||3;
-  item.date = document.getElementById('edit-date').value;
-  item.note = document.getElementById('edit-note').value.trim();
-  save();
-  closeModal('edit-modal');
-  renderCurrent();
-  showToast('Guardado ✓');
-}
-
-function deleteItem() {
-  const id = Number(document.getElementById('edit-id').value);
-  if (!confirm('¿Eliminar esta tarea?')) return;
-  items = items.filter(i=>i.id!==id);
-  save();
-  closeModal('edit-modal');
-  renderCurrent();
-  showToast('Tarea eliminada');
-}
-
-function toggleDone(id) {
-  const item = items.find(i=>i.id===id);
-  if (!item) return;
-  item.done = !item.done;
-  item.doneDate = item.done ? todayStr() : null;
-  save();
-  renderCurrent();
-}
-
-function quickCapture() {
-  const inp = document.getElementById('cap-input');
-  const text = inp.value.trim();
-  if (!text) return;
-  const item = {
-    id: nextId++, text,
-    cat: cats[0]?.id||1, cat_key:'todo',
-    priority:3, done:false, archived:false,
-    created: new Date().toISOString(),
-  };
-  items.unshift(item);
-  inp.value = '';
-  save();
-  renderCurrent();
-  showToast('Capturado ✓');
-}
-
-function populateCatSelect(selId, selected) {
-  const sel = document.getElementById(selId);
-  if (!sel) return;
-  sel.innerHTML = cats.map(c=>`<option value="${c.id}"${c.id===selected?' selected':''}>${c.icon||''} ${h(c.name)}</option>`).join('');
-}
-
-// ============================================================
-// AI
-// ============================================================
-function _hasAiKey() {
-  return (_aiProvider==='groq'&&_groqKey) || (_aiProvider==='openai'&&_openaiKey) || (_aiProvider==='gemini'&&_geminiKey);
-}
-
-function buildChatContext() {
-  const pending = items.filter(i=>!i.done&&!i.archived);
-  const done = items.filter(i=>i.done).length;
-  const today = todayStr();
-  const todayItems = items.filter(i=>i.date===today&&!i.done&&!i.archived);
-  return `Eres el asistente personal de Montse, una persona organizada que usa "Montse's Flow" para manejar sus tareas.
-Hablas en español, eres amable, concisa y directa.
-Hoy es ${today}.
-Tareas pendientes (${pending.length}): ${pending.slice(0,20).map(i=>`"${i.text}"[p${i.priority}]`).join(', ')||'ninguna'}.
-Tareas para hoy: ${todayItems.map(i=>`"${i.text}"`).join(', ')||'ninguna'}.
-Tareas completadas: ${done}.
-Metas: ${goals.map(g=>`"${g.title}"(${_metaPct(g)}%)`).join(', ')||'ninguna'}.`;
-}
-
-async function _callAI(userText) {
-  if (_aiProvider==='groq') {
-    const msgs = [{role:'system',content:buildChatContext()}];
-    for (const h of _chatHistory) msgs.push({role:h.role==='assistant'?'assistant':'user',content:h.content});
-    msgs.push({role:'user',content:userText});
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+_groqKey},
-      body:JSON.stringify({model:'llama-3.1-8b-instant',messages:msgs,max_tokens:700,temperature:0.75})
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message||JSON.stringify(data.error));
-    return data.choices?.[0]?.message?.content || '(sin respuesta)';
-  } else if (_aiProvider==='openai') {
-    const msgs = [{role:'system',content:buildChatContext()}];
-    for (const h of _chatHistory) msgs.push({role:h.role==='assistant'?'assistant':'user',content:h.content});
-    msgs.push({role:'user',content:userText});
-    const res = await fetch('https://api.openai.com/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+_openaiKey},
-      body:JSON.stringify({model:'gpt-4o-mini',messages:msgs,max_tokens:700})
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message||JSON.stringify(data.error));
-    return data.choices?.[0]?.message?.content || '(sin respuesta)';
-  } else if (_aiProvider==='gemini') {
-    const MODELS = [
-      {v:'v1beta',m:'gemini-1.5-flash'},{v:'v1',m:'gemini-1.5-flash'},
-      {v:'v1beta',m:'gemini-1.5-flash-latest'},{v:'v1',m:'gemini-1.5-flash-latest'},
-      {v:'v1beta',m:'gemini-pro'},{v:'v1',m:'gemini-pro'},
-    ];
-    const tryModels = _geminiModel ? [{v:'v1beta',m:_geminiModel},...MODELS] : MODELS;
-    for (const {v,m} of tryModels) {
-      try {
-        const ctx = buildChatContext();
-        const contents = _chatHistory.map(h=>({role:h.role==='assistant'?'model':'user',parts:[{text:h.content}]}));
-        contents.push({role:'user',parts:[{text:userText}]});
-        const url = `https://generativelanguage.googleapis.com/${v}/models/${m}:generateContent?key=${_geminiKey}`;
-        const res = await fetch(url,{
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({systemInstruction:{parts:[{text:ctx}]},contents})
-        });
-        const data = await res.json();
-        if (data.error) continue;
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text) { _geminiModel=m; localStorage.setItem('mf_gemini_model',m); return text; }
-      } catch(e){ continue; }
-    }
-    throw new Error('Ningún modelo Gemini disponible. Prueba Groq (gratis).');
-  }
-  throw new Error('No hay IA configurada. Haz clic en "✨ Asistente" → configurar.');
-}
-
-function toggleAI() {
-  const panel = document.getElementById('ai-panel');
-  _aiPanel = !_aiPanel;
-  panel.classList.toggle('open', _aiPanel);
-  if (_aiPanel && document.getElementById('ai-messages').children.length===0) {
-    addAIMsg('bot', _hasAiKey() ? '¡Hola Montse! ¿En qué te ayudo hoy? 😊' : '¡Hola! Para usar el asistente, configura tu clave de IA. <a href="#" onclick="openModal(\'ai-setup-modal\');renderAISetup();return false" style="color:var(--accent)">Configurar ahora →</a>');
-  }
-}
-
-function addAIMsg(role, content) {
-  const el = document.getElementById('ai-messages');
-  const div = document.createElement('div');
-  div.className = 'ai-msg ' + role;
-  div.innerHTML = content;
-  el.appendChild(div);
-  el.scrollTop = el.scrollHeight;
-}
-
-async function sendAI() {
-  const inp = document.getElementById('ai-input');
-  const text = inp.value.trim();
-  if (!text) return;
-  if (!_hasAiKey()) {
-    openModal('ai-setup-modal'); renderAISetup(); return;
-  }
-  inp.value = '';
-  addAIMsg('user', h(text));
-  _chatHistory.push({role:'user',content:text});
-  const thinking = document.createElement('div');
-  thinking.className = 'ai-msg bot';
-  thinking.textContent = '…';
-  document.getElementById('ai-messages').appendChild(thinking);
-  try {
-    const reply = await _callAI(text);
-    thinking.textContent = reply;
-    _chatHistory.push({role:'assistant',content:reply});
-    if (_chatHistory.length>20) _chatHistory = _chatHistory.slice(-20);
-  } catch(e) {
-    thinking.innerHTML = '<span style="color:#ef4444">Error: ' + h(e.message) + '</span>';
-  }
-}
-
-// AI SETUP
-function renderAISetup() {
-  const prov = document.getElementById('ai-provider-sel').value;
-  const body = document.getElementById('ai-setup-body');
-  if (!body) return;
-  if (prov==='groq') {
-    body.innerHTML = `
-      <div style="background:var(--accent-light);border-radius:10px;padding:12px 14px;font-size:.8rem;color:var(--accent);margin-bottom:10px">
-        ⚡ Groq es gratis y muy rápido. Crea tu cuenta en <strong>console.groq.com</strong> → API Keys → Create key
-      </div>
-      <label class="modal-label">API Key de Groq</label>
-      <input class="modal-input" id="setup-key" placeholder="gsk_…" value="${_groqKey}"/>`;
-  } else if (prov==='openai') {
-    body.innerHTML = `
-      <div style="background:#fef3c7;border-radius:10px;padding:12px 14px;font-size:.8rem;color:#92400e;margin-bottom:10px">
-        💳 ChatGPT requiere crédito en platform.openai.com → API keys
-      </div>
-      <label class="modal-label">API Key de OpenAI</label>
-      <input class="modal-input" id="setup-key" placeholder="sk-…" value="${_openaiKey}"/>`;
-  } else if (prov==='gemini') {
-    body.innerHTML = `
-      <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:.8rem;color:#166534;margin-bottom:10px">
-        💎 Crea tu clave en <strong>aistudio.google.com</strong> (no Google Cloud Console)
-      </div>
-      <label class="modal-label">API Key de Gemini</label>
-      <input class="modal-input" id="setup-key" placeholder="AIza…" value="${_geminiKey}"/>`;
-  } else {
-    body.innerHTML = '';
-  }
-}
-
-function saveAISetup() {
-  const prov = document.getElementById('ai-provider-sel').value;
-  if (!prov) { showToast('Elige un proveedor'); return; }
-  const key = document.getElementById('setup-key')?.value.trim();
-  if (!key) { showToast('Ingresa tu API key'); return; }
-  _aiProvider = prov;
-  localStorage.setItem('mf_ai_provider', prov);
-  if (prov==='groq') { _groqKey=key; localStorage.setItem('mf_groq_key',key); }
-  else if (prov==='openai') { _openaiKey=key; localStorage.setItem('mf_openai_key',key); }
-  else if (prov==='gemini') { _geminiKey=key; localStorage.setItem('mf_gemini_key',key); _geminiModel=''; }
-  closeModal('ai-setup-modal');
-  showToast('IA configurada ✓');
-}
-
-// ============================================================
-// INIT
-// ============================================================
-window.addEventListener('DOMContentLoaded', () => {
-  load();
-  updateSidebarBadges();
-  renderDash();
-  if (_aiProvider) document.getElementById('ai-provider-sel').value = _aiProvider;
-  // Restore Firebase
-  if (_fbKey && _fbProj) {
-    document.getElementById('fb-key').value = _fbKey;
-    document.getElementById('fb-proj').value = _fbProj;
-    pullFirebase().then(()=>{ setSyncStatus('ok'); renderCurrent(); }).catch(()=>setSyncStatus('error'));
-  }
-  // Close modals on overlay click
-  document.querySelectorAll('.modal-overlay').forEach(m=>{
-    m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('open'); });
+  const colMeta = days.map(({d,ds},ci)=>{
+    const load = pendingCounts[ci];
+    const pct  = Math.round(load/maxLoad*100);
+    const lc   = pct>75?'#ef4444':pct>45?'#f97316':'var(--accent)';
+    return {d, ds, load, pct, lc, isToday:ds===today};
   });
-});
 
-</script>
+  const summaryHtml = `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+      <div><div style="font-size:.58rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em">Esta semana</div><div style="font-size:1.15rem;font-weight:900;color:var(--text)">${totalWeek} tareas</div></div>
+      <div style="width:1px;height:32px;background:var(--border)"></div>
+      <div><div style="font-size:.58rem;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:.04em">Completadas</div><div style="font-size:1.15rem;font-weight:900;color:#22c55e">${doneWeek}</div></div>
+      <div style="flex:1"></div>
+      <button class="btn-sm" onclick="openAddModal()">+ Agregar</button>
+    </div>`;
 
-</body>
-</html>
+  const tableHtml = `
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--card)">
+      <table style="width:100%;border-collapse:collapse;min-width:460px">
+        <thead>
+          <tr>
+            <th style="width:76px;padding:8px 10px;text-align:left;border-bottom:2px solid var(--border);background:#f9fafb;font-size:.6rem;font-weight:700;color:var(--text2)">Momento</th>
+            ${colMeta.map(({d,ds,load,pct,lc,isToday})=>`
+              <th style="padding:6px 5px;border-bottom:2px solid var(--border);background:${isToday?'var(--accent-light)':'#f9fafb'};text-align:center;min-width:72px">
+                <div style="font-size:.58rem;font-weight:800;text-transform:uppercase;color:${isToday?'var(--accent)':'var(--text2)'}">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
+                <div style="font-size:.8rem;font-weight:900;color:${isToday?'var(--accent)':'var(--text)'}">${d.getDate()}</div>
+                <div style="height:5px;background:#e5e7eb;border-radius:3px;margin:4px 8px 0;overflow:hidden" title="${load} pendientes">
+                  <div style="width:${pct}%;height:100%;background:${lc};border-radius:3px;transition:width .3s"></div>
+                </div>
+                <div style="font-size:.55rem;font-weight:700;color:${lc};margin-top:1px">${load>0?load+'t':''}</div>
+              </th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${slotRows.map(row=>`
+            <tr>
+              <td style="padding:8px 10px;font-size:.62rem;font-weight:800;color:${row.color};background:${row.bg};border-right:2px solid var(--border);border-bottom:1px solid var(--border);vertical-align:top;white-space:nowrap">${row.label}</td>
+              ${colMeta.map(({ds,isToday})=>{
+                const cellItems = row.key==='__none'
+                  ? items.filter(i=>i.date===ds&&!i.archived&&!i.slot)
+                  : items.filter(i=>i.date===ds&&!i.archived&&i.slot===row.key);
+                return `<td style="padding:5px;vertical-align:top;border-bottom:1px solid var(--border);border-right:1px solid var(--border);background:${isToday?row.bg:'#fff'};min-height:46px"
+                  ondragover="event.preventDefault();this.style.outline='1.5px dashed ${row.color}'"
+                  ondragleave="if(!this.contains(event.relatedTarget))this.style.outline=''"
+                  ondrop="this.style.outline='';dropOnDaySlot(event,'${ds}','${row.key==='__none'?'':row.key}')">
+                  ${cellItems.slice(0,3).map(i=>`
+                    <div draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})" title="${h(i.text)}"
+                      s
