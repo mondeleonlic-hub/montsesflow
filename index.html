@@ -430,6 +430,127 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* ===== v3 · Pulso · Log diario · Semana · Bandeja ===== */
+.pl-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.pl-week{font-size:.68rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.08em}
+.pl-verdict{font-size:1.3rem;font-weight:900;color:var(--text);margin-top:4px;letter-spacing:-.01em;line-height:1.25}
+.pl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+.pl-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);min-width:0}
+.pl-card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:14px}
+.pl-q{font-size:.66rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.07em}
+.pl-pill{display:inline-flex;align-items:center;gap:6px;font-size:.66rem;font-weight:800;padding:3px 9px;border-radius:99px;white-space:nowrap;flex-shrink:0}
+.pl-pill i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.pl-pill.ok{background:#ecfdf3;color:#15803d}.pl-pill.ok i{background:#16a34a}
+.pl-pill.warn{background:#fffbeb;color:#b45309}.pl-pill.warn i{background:#f59e0b}
+.pl-pill.bad{background:#fef2f2;color:#b91c1c}.pl-pill.bad i{background:#ef4444}
+.pl-pill.na{background:#f3f4f6;color:#6b7280}.pl-pill.na i{background:#9ca3af}
+.pl-big{font-size:2.1rem;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em}
+.pl-big small{font-size:.82rem;font-weight:700;color:var(--text2);margin-left:6px;letter-spacing:0}
+.pl-sub{font-size:.76rem;color:var(--text2);margin-top:8px;line-height:1.45}
+.pl-track{position:relative;height:8px;background:#eef0ea;border-radius:99px;margin-top:12px}
+.pl-fill{height:100%;border-radius:99px;background:var(--accent);transition:width .3s}
+.pl-mark{position:absolute;top:-4px;width:2px;height:16px;background:#1f2937;opacity:.45;border-radius:1px}
+.pl-sep{margin-top:14px;border-top:1px solid #f1f3ee;padding-top:10px}
+.pl-alert{display:flex;align-items:center;gap:8px;font-size:.78rem;padding:6px 0;cursor:pointer;color:var(--text);min-width:0}
+.pl-ellipsis{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pl-link{background:none;border:none;color:var(--accent);font-weight:800;font-size:.74rem;cursor:pointer;padding:0;margin-top:10px;display:inline-block}
+.pl-goal{padding:12px 0;border-top:1px solid #f1f3ee;cursor:pointer}
+.pl-goal:first-of-type{border-top:none;padding-top:0}
+.pl-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid #f1f3ee;min-width:0}
+.pl-row:first-child{border-top:none}
+.pl-row-main{flex:1;min-width:0}
+.pl-row-title{font-size:.82rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.pl-row-meta{font-size:.68rem;color:var(--text2);margin-top:2px}
+.pl-dots{display:flex;gap:4px;flex-shrink:0}
+.pl-dot{width:12px;height:12px;border-radius:4px;background:#eceee8}
+.pl-dot.on{background:var(--accent)}
+.pl-dot.today{outline:1.5px solid #9ca3af;outline-offset:1px}
+.pl-bar{display:grid;grid-template-columns:minmax(0,1fr) 40px;align-items:end;gap:10px;margin-bottom:10px}
+.pl-bar-track{height:6px;background:#eef0ea;border-radius:99px;overflow:hidden;margin-top:5px}
+.pl-bar-pct{font-size:.74rem;font-weight:800;color:var(--text2);text-align:right}
+@media(max-width:860px){.pl-grid{grid-template-columns:1fr}}
+
+.dy-card{margin-bottom:12px}
+.dy-card + .dy-card{margin-top:0}
+.dy-sec{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dy-hero{background:var(--accent-light);border:1.5px solid #c8d8a8;border-radius:14px;padding:16px 18px;margin-bottom:12px}
+.dy-hero-k{font-size:.62rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.08em}
+.dy-hero-t{font-size:1.08rem;font-weight:800;color:var(--text);margin:6px 0 12px;line-height:1.35;cursor:pointer}
+.dy-hero-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dy-btn{padding:7px 12px;border-radius:9px;font-size:.74rem;font-weight:800;cursor:pointer;border:1.5px solid #c8d8a8;background:#fff;color:var(--accent);font-family:inherit}
+.dy-btn:hover{border-color:var(--accent)}
+.dy-btn.solid{background:var(--accent);border-color:var(--accent);color:#fff}
+.dy-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.dy-title{font-size:1rem;font-weight:900;color:var(--text)}
+.dy-title::first-letter{text-transform:uppercase}
+.dy-count{font-size:.74rem;font-weight:700;color:var(--text2)}
+.dy-prog{height:6px;background:#eef0ea;border-radius:99px;overflow:hidden;margin:10px 0 6px}
+.dy-task{display:flex;align-items:flex-start;gap:10px;padding:11px 2px;border-top:1px solid #f1f3ee}
+.dy-check{width:22px;height:22px;border-radius:50%;border:2px solid #d1d5db;background:#fff;flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:#fff;font-weight:900;margin-top:1px;transition:all .15s}
+.dy-check:hover{border-color:var(--accent)}
+.dy-check.done{background:#22c55e;border-color:#22c55e}
+.dy-text{font-size:.88rem;font-weight:600;color:var(--text);line-height:1.35;cursor:pointer;word-break:break-word}
+.dy-task.done .dy-text{color:var(--text2);text-decoration:line-through;text-decoration-color:#bbb;font-weight:400}
+.dy-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;align-items:center;font-size:.64rem;color:var(--text2)}
+.dy-chip{background:var(--accent-light);color:var(--accent);border-radius:9px;padding:1px 7px;font-weight:700}
+.dy-acts{display:flex;gap:1px;flex-shrink:0}
+.dy-ic{border:none;background:none;cursor:pointer;font-size:.82rem;padding:4px 6px;border-radius:6px;color:var(--text2);opacity:.45;font-family:inherit}
+.dy-ic:hover{opacity:1;background:#f3f4f6}
+.dy-ic.on{opacity:1}
+.dy-empty{display:flex;align-items:center;gap:10px;padding:11px 2px;border-top:1px solid #f1f3ee;color:#a9b09f;font-size:.8rem;cursor:pointer}
+.dy-empty:hover{color:var(--accent)}
+.dy-empty .o{width:22px;height:22px;border-radius:50%;border:2px dashed #d6dacd;flex-shrink:0}
+.dy-tools{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.dy-pick{margin-top:12px;border:1px solid var(--border);border-radius:12px;background:#fafbf8;padding:10px}
+.dy-pick-row{display:flex;align-items:center;gap:8px;padding:8px;border-radius:8px;cursor:pointer;font-size:.8rem;min-width:0}
+.dy-pick-row:hover{background:#fff;box-shadow:var(--shadow)}
+.dy-pick-row .plus{color:var(--accent);font-weight:900;flex-shrink:0}
+.dy-pick-group{font-size:.6rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin:12px 8px 4px}
+.dy-habits{display:flex;gap:6px;flex-wrap:wrap}
+.dy-hab{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:99px;border:1.5px solid var(--border);background:#fff;font-size:.78rem;font-weight:700;cursor:pointer;color:var(--text);user-select:none;transition:all .15s}
+.dy-hab:hover{border-color:var(--accent)}
+.dy-hab.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.dy-hab .st{font-size:.66rem;color:#f97316;font-weight:900}
+.dy-hab.on .st{color:#fde68a}
+.dy-hab .x{color:#ef4444;font-weight:900;margin-left:2px}
+.dy-close{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#f8f7ff;border-color:#e4e1f7}
+
+.wk-nav{display:flex;align-items:center;gap:6px}
+.wk-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.wk-day{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px;min-height:170px;display:flex;flex-direction:column;min-width:0}
+.wk-day.today{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.wk-day.past{background:#fbfbf9}
+.wk-dh{display:flex;align-items:baseline;justify-content:space-between;cursor:pointer}
+.wk-dn{font-size:.6rem;font-weight:800;text-transform:uppercase;color:var(--text2);letter-spacing:.05em}
+.wk-day.today .wk-dn{color:var(--accent)}
+.wk-dd{font-size:1.1rem;font-weight:900;color:var(--text)}
+.wk-load{height:4px;background:#eef0ea;border-radius:99px;overflow:hidden;margin:6px 0 8px}
+.wk-load div{height:100%;border-radius:99px}
+.wk-t{font-size:.7rem;padding:4px 6px;border-radius:6px;background:#f5f6f2;margin-bottom:4px;cursor:pointer;line-height:1.3;word-break:break-word}
+.wk-t:hover{background:var(--accent-light)}
+.wk-t.done{color:#16a34a;background:#f0fdf4;text-decoration:line-through}
+.wk-t.late{background:#fef2f2;color:#b91c1c}
+.wk-more{font-size:.66rem;color:var(--accent);font-weight:700;cursor:pointer;padding:2px 6px}
+.wk-add{margin-top:auto;font-size:.68rem;color:#b6bcae;text-align:center;cursor:pointer;padding-top:6px}
+.wk-add:hover{color:var(--accent)}
+.wk-plan-row{display:flex;align-items:center;gap:10px;padding:9px 2px;border-top:1px solid #f1f3ee}
+.wk-plan-row:first-child{border-top:none}
+.wk-plan-row .t{cursor:pointer}
+.wk-days-btns{display:flex;gap:3px;flex-shrink:0}
+.wk-db{width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:#fff;font-size:.66rem;font-weight:800;color:var(--text2);cursor:pointer;font-family:inherit}
+.wk-db:hover:not(:disabled){background:var(--accent);color:#fff;border-color:var(--accent)}
+.wk-db.today{border-color:var(--accent);color:var(--accent)}
+.wk-db:disabled{opacity:.25;cursor:default}
+@media(max-width:960px){.wk-grid{grid-template-columns:1fr}.wk-day{min-height:0}.wk-add{margin-top:4px;text-align:left}}
+@media(max-width:520px){.wk-plan-row{flex-wrap:wrap}.wk-plan-row .t{flex-basis:100%}}
+
+.bq-tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:2px}
+.bq-tab{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:99px;border:1.5px solid var(--border);background:#fff;font-size:.8rem;font-weight:700;color:var(--text2);cursor:pointer;white-space:nowrap;font-family:inherit}
+.bq-tab:hover{border-color:var(--accent)}
+.bq-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.bq-tab b{font-size:.68rem;background:rgba(0,0,0,.07);padding:1px 7px;border-radius:99px}
+.bq-tab.active b{background:rgba(255,255,255,.25)}
 </style>
 </head>
 <body>
@@ -441,17 +562,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">✦ <span>Montse's Flow</span></div>
   <div class="sidebar-section">Principal</div>
-  <div class="nav-item active" id="nav-dash" onclick="switchTab('dash')" id="nav-dash-label">🌿 <span id="sidebar-greeting">Inicio</span></div>
+  <div class="nav-item active" id="nav-dash" onclick="switchTab('dash')">📊 <span id="sidebar-greeting">Pulso</span></div>
   <div class="nav-item" id="nav-log" onclick="switchTab('log')">📋 Log diario</div>
   <div class="nav-item" id="nav-semana" onclick="switchTab('semana')">📅 Semana</div>
-  <div class="sidebar-section">Tareas</div>
-  <div class="nav-item" id="nav-todo" onclick="switchTab('todo')">📝 To Do <span class="badge" id="badge-todo">0</span></div>
-  <div class="nav-item" id="nav-compromisos" onclick="switchTab('compromisos')">🤝 Compromisos <span class="badge" id="badge-compromisos">0</span></div>
-  <div class="nav-item" id="nav-proyectos" onclick="switchTab('proyectos')">🚀 Proyectos <span class="badge" id="badge-proyectos">0</span></div>
-  <div class="nav-item" id="nav-extra" onclick="switchTab('extra')">💡 Extra <span class="badge" id="badge-extra">0</span></div>
-  <div class="nav-item" id="nav-done" onclick="switchTab('done')">✅ Completadas</div>
-  <div class="sidebar-section">Planeación</div>
+  <div class="sidebar-section">Organizar</div>
+  <div class="nav-item" id="nav-bandeja" onclick="switchTab('bandeja')">📥 Bandeja <span class="badge" id="badge-bandeja">0</span></div>
   <div class="nav-item" id="nav-metas" onclick="switchTab('metas')">⭐ Metas</div>
+  <div class="nav-item" id="nav-done" onclick="switchTab('done')">✅ Completadas</div>
   <div class="sidebar-section">Configuración</div>
   <div class="nav-item" id="nav-cats" onclick="switchTab('cats')">🎨 Categorías</div>
   <div class="nav-item" id="nav-settings" onclick="switchTab('settings')">⚙️ Ajustes</div>
@@ -467,7 +584,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="app-shell">
   <header class="main-header">
     <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
-    <div id="header-title">Inicio</div>
+    <div id="header-title">Pulso</div>
     <div class="capture-row-top">
       <input type="text" id="cap-input" placeholder="Captura rápida…" onkeydown="if(event.key==='Enter')quickCapture()"/>
       <button class="add-btn-top" onclick="openAddModal()">+ Agregar</button>
@@ -482,6 +599,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="panel" id="panel-log"></div>
     <!-- SEMANA -->
     <div class="panel" id="panel-semana"></div>
+    <!-- BANDEJA -->
+    <div class="panel" id="panel-bandeja"></div>
     <!-- TODO -->
     <div class="panel" id="panel-todo"></div>
     <!-- COMPROMISOS -->
@@ -504,11 +623,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- MOBILE TAB BAR -->
 <div class="tab-bar" id="tab-bar">
   <div class="tab-bar-inner">
-    <button class="tab active" id="tab-dash" onclick="switchTab('dash')"><span class="tab-icon">🌿</span><span id="tab-dash-label">Inicio</span></button>
-    <button class="tab" id="tab-todo" onclick="switchTab('todo')"><span class="tab-icon">📝</span>To Do</button>
-    <button class="tab" id="tab-semana" onclick="switchTab('semana')"><span class="tab-icon">📅</span>Semana</button>
-    <button class="tab" id="tab-metas" onclick="switchTab('metas')"><span class="tab-icon">⭐</span>Metas</button>
+    <button class="tab active" id="tab-dash" onclick="switchTab('dash')"><span class="tab-icon">📊</span><span id="tab-dash-label">Pulso</span></button>
     <button class="tab" id="tab-log" onclick="switchTab('log')"><span class="tab-icon">📋</span>Log</button>
+    <button class="tab" id="tab-semana" onclick="switchTab('semana')"><span class="tab-icon">📅</span>Semana</button>
+    <button class="tab" id="tab-bandeja" onclick="switchTab('bandeja')"><span class="tab-icon">📥</span>Bandeja</button>
+    <button class="tab" id="tab-metas" onclick="switchTab('metas')"><span class="tab-icon">⭐</span>Metas</button>
   </div>
 </div>
 
@@ -1305,7 +1424,7 @@ function priorityColor(p) {
 // SIDEBAR & NAVIGATION
 // ============================================================
 const PANEL_TITLES = {
-  dash:'Inicio', log:'Log diario', semana:'Semana',
+  dash:'Pulso', log:'Log diario', semana:'Semana', bandeja:'Bandeja',
   todo:'To Do', compromisos:'Compromisos', proyectos:'Proyectos',
   extra:'Extra', done:'Completadas', metas:'Metas '+new Date().getFullYear(),
   cats:'Categorías', settings:'Ajustes'
@@ -1320,6 +1439,7 @@ function _dashHeaderHtml() {
 }
 
 function switchTab(tab) {
+  if (['todo','compromisos','proyectos','extra'].includes(tab)) { _bandejaTab = tab; try { localStorage.setItem('mf_bq_tab', tab); } catch(e) {} tab = 'bandeja'; }
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   const tabEl = document.getElementById('tab-'+tab);
   if (tabEl) tabEl.classList.add('active');
@@ -1341,6 +1461,7 @@ function switchTab(tab) {
   if (tab==='cats') renderCatsPanel();
   if (tab==='metas') renderMetas();
   if (tab==='log') renderLogDiario();
+  if (tab==='bandeja') renderBandeja();
   if (tab==='todo') renderPanel('todo');
   if (tab==='compromisos') renderPanel('compromisos');
   if (tab==='proyectos') renderPanel('proyectos');
@@ -1368,6 +1489,8 @@ function updateSidebarBadges() {
     el.textContent = count;
     el.style.display = count > 0 ? '' : 'none';
   });
+  const bq = document.getElementById('badge-bandeja');
+  if (bq) { const n = items.filter(i=>!i.done && !i.archived && !i.date).length; bq.textContent = n; bq.style.display = n ? '' : 'none'; }
 }
 
 function renderCurrent() {
@@ -1378,6 +1501,7 @@ function renderCurrent() {
   else if (activeTab==='log') renderLogDiario();
   else if (activeTab==='done') renderDone();
   else if (activeTab==='settings') renderSettings();
+  else if (activeTab==='bandeja') renderBandeja();
   else renderPanel(activeTab);
   updateSidebarBadges();
 }
@@ -1385,199 +1509,6 @@ function renderCurrent() {
 // ============================================================
 // DASHBOARD
 // ============================================================
-function renderDash() {
-  const el = document.getElementById('panel-dash');
-  if (!el) return;
-  const now = new Date();
-  const h_ = now.getHours();
-  const G = h_<12?'Buenos días ☀️':h_<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
-  const today = todayStr();
-  const pending = items.filter(i=>!i.done && !i.archived);
-  const doneAll = items.filter(i=>i.done).length;
-  const doneToday = items.filter(i=>i.done && i.doneDate===today);
-  const overdue = items.filter(i=>!i.done && !i.archived && i.date && i.date < today);
-  const totalPend = pending.length;
-
-  // ── FOCUS HERO ──
-  const focusItem = pending.find(i=>i.focus) || (overdue[0]) || pending[0];
-  const focusHtml = focusItem ? (()=>{
-    const subs = focusItem.subtasks||[];
-    const doneSubs = subs.filter(s=>s.done).length;
-    const subPct = subs.length ? Math.round(doneSubs/subs.length*100) : 0;
-    const isJamActive = window._jam && window._jam.taskId===focusItem.id && window._jam.remaining>0;
-    return `<div style="background:var(--accent-light);border:1.5px solid #c8d8a8;border-radius:12px;padding:18px;margin-bottom:14px">
-      <div style="font-size:.62rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">⚡ En foco ahora</div>
-      <div style="font-size:1rem;font-weight:800;color:var(--text);margin-bottom:12px;line-height:1.4">${h(focusItem.text)}</div>
-      ${subs.length ? `
-        <div style="height:5px;background:#dde8cc;border-radius:3px;margin-bottom:7px">
-          <div style="width:${subPct}%;height:100%;background:var(--accent);border-radius:3px;transition:width .3s"></div>
-        </div>` : ''}
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        ${subs.length ? `<span style="font-size:.7rem;color:var(--accent)">${doneSubs}/${subs.length} acciones</span><span style="color:#ccc;font-size:.7rem">·</span>` : ''}
-        ${focusItem.focus ? `<span style="font-size:.7rem;color:var(--accent)">📌 Fijada manualmente</span>` : ''}
-        ${overdue.includes(focusItem) ? `<span style="font-size:.7rem;color:#ef4444;font-weight:700">⚠️ Vencida</span>` : ''}
-        <div style="margin-left:auto;display:flex;gap:7px">
-          <button onclick="toggleDone(${focusItem.id})" style="padding:5px 12px;background:#fff;border:1.5px solid #c8d8a8;border-radius:7px;font-size:.7rem;font-weight:700;cursor:pointer;color:var(--accent)">✓ Hecha</button>
-          <button onclick="openJamModal(${focusItem.id})" style="background:var(--accent);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:.7rem;font-weight:800;cursor:pointer">${isJamActive?'⏱ JAM activo':'⚡ JAM SESH'}</button>
-        </div>
-      </div>
-    </div>`;
-  })() : '';
-
-  // ── STORY BAND (mañana/tarde/noche) — drag-and-drop assignment ──
-  const slotDefs = [
-    {key:'manana', label:'☀️ Mañana', bg:'#fffbeb', lcolor:'#92400e'},
-    {key:'tarde',  label:'🌤️ Tarde',  bg:'#f0fdf4', lcolor:'#166534'},
-    {key:'noche',  label:'🌙 Noche',  bg:'#f8f7ff', lcolor:'#4c1d95'},
-  ];
-  const activeSlotIdx = h_<12 ? 0 : h_<19 ? 1 : 2;
-  const slotBuckets = {
-    manana: pending.filter(i=>i.slot==='manana'),
-    tarde:  pending.filter(i=>i.slot==='tarde'),
-    noche:  pending.filter(i=>i.slot==='noche'),
-  };
-  const unassigned = pending.filter(i=>!i.slot && (i.col==='todo'||i.cat_key==='todo'));
-  const unassignedHtml = unassigned.length ? `
-    <div style="background:#f9fafb;border:1.5px dashed var(--border);border-radius:10px;padding:10px 14px;margin-bottom:10px">
-      <div style="font-size:.6rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:7px">📋 Sin asignar — arrastra al momento del día ↓</div>
-      <div style="display:flex;flex-wrap:wrap;gap:5px">
-        ${unassigned.map(i=>`<div class="slot-chip" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})">${h(i.text.length>28?i.text.slice(0,28)+'…':i.text)}</div>`).join('')}
-      </div>
-    </div>` : '';
-  const storyHtml = `
-    ${unassignedHtml}
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);border-radius:12px;overflow:hidden;border:1px solid var(--border);margin-bottom:14px">
-      ${slotDefs.map((s,si)=>{
-        const buck = slotBuckets[s.key];
-        const isNow = si===activeSlotIdx;
-        return `<div style="background:${s.bg};padding:13px 14px;border-right:${si<2?'1px solid var(--border)':'none'};position:relative;min-height:90px;transition:outline .1s"
-          ondragover="event.preventDefault();this.style.outline='2px dashed ${s.lcolor}';this.style.outlineOffset='−2px'"
-          ondragleave="if(!this.contains(event.relatedTarget)){this.style.outline=''}"
-          ondrop="this.style.outline='';dropOnSlot(event,'${s.key}')">
-          ${isNow?`<div style="position:absolute;top:0;left:0;right:0;height:3px;background:${s.lcolor}"></div>`:''}
-          <div style="font-size:.6rem;font-weight:800;color:${s.lcolor};text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">${s.label}${isNow?' · ahora':''}</div>
-          <div style="font-size:.8rem;font-weight:700;color:var(--text);margin-bottom:3px">${buck.length} ${buck.length===1?'tarea':'tareas'}</div>
-          <div style="display:flex;flex-direction:column;gap:4px;margin-top:7px">
-            ${buck.map(i=>`<div draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" style="display:flex;align-items:flex-start;gap:5px;font-size:.72rem;color:var(--text);cursor:grab;padding:3px 0">
-              <div onclick="event.stopPropagation();toggleDone(${i.id})" title="${i.done?'Reabrir':'Marcar hecha'}"
-                style="width:17px;height:17px;border-radius:50%;border:1.5px solid ${i.done?'#22c55e':'#d1d5db'};background:${i.done?'#22c55e':'#fff'};display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;font-size:.6rem;color:#fff;font-weight:900;transition:all .15s">${i.done?'✓':''}</div>
-              <span style="flex:1;min-width:0;word-break:break-word;line-height:1.35;${i.done?'text-decoration:line-through;color:var(--text2)':''}" onclick="openEditModal(${i.id})">${h(i.text)}</span>
-              <button onclick="event.stopPropagation();clearSlot(${i.id})" title="Quitar del slot" style="border:none;background:none;cursor:pointer;color:${s.lcolor};font-size:.75rem;padding:0;opacity:.4;line-height:1;flex-shrink:0;margin-top:1px">✕</button>
-            </div>`).join('')}
-            ${buck.length===0?`<div style="font-size:.65rem;color:${s.lcolor};opacity:.5;margin-top:4px">Suelta aquí ↓</div>`:''}
-          </div>
-        </div>`;
-      }).join('')}
-    </div>`;
-
-  // ── TIMELINE DEL DÍA (6am–8pm) ──
-  const TL_START = 6*60, TL_END = 20*60, TL_RANGE = TL_END-TL_START; // 840 min
-  const nowMin = h_*60+now.getMinutes();
-  const tlPct = Math.max(0,Math.min(100,Math.round((nowMin-TL_START)/TL_RANGE*100)));
-  const tlHours = [6,8,10,12,14,17,20];
-  const timelineHtml = `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:13px 16px;margin-bottom:14px">
-    <div style="font-size:.65rem;color:var(--text2);margin-bottom:10px">⏱ Progreso del día — ${now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
-    <div style="position:relative;height:18px;display:flex;align-items:center">
-      <div style="position:absolute;left:0;right:0;height:2px;background:#e8ecdf;border-radius:1px"></div>
-      <div id="dash-tl-fill" style="position:absolute;left:0;width:${tlPct}%;height:2px;background:var(--accent);border-radius:1px;transition:width 60s linear"></div>
-      <div id="dash-tl-dot" style="position:absolute;left:${tlPct}%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:#f97316;border:2px solid #fff;box-shadow:0 0 0 1.5px #f97316;transition:left 60s linear">
-        <div id="dash-tl-time" style="position:absolute;bottom:14px;left:50%;transform:translateX(-50%);background:#f97316;color:#fff;font-size:.58rem;font-weight:800;padding:2px 6px;border-radius:6px;white-space:nowrap">${String(h_).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}</div>
-      </div>
-    </div>
-    <div style="position:relative;height:16px;margin-top:4px">
-      ${tlHours.map(hh=>{
-        const pctH = Math.round((hh*60-TL_START)/TL_RANGE*100);
-        return `<span style="position:absolute;left:${pctH}%;transform:translateX(-50%);font-size:.6rem;color:${h_>=hh?'var(--accent)':'var(--text2)'};font-weight:${h_>=hh?'700':'400'};white-space:nowrap">${hh}h</span>`;
-      }).join('')}
-    </div>
-  </div>`;
-
-  // ── STATS ──
-  const statsHtml = `<div class="stats-row" style="margin-bottom:14px">
-    <div class="stat-card"><div class="stat-num" style="color:var(--accent)">${totalPend}</div><div class="stat-lbl">Pendientes</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:#22c55e">${doneToday.length}</div><div class="stat-lbl">Hechas hoy</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:#ef4444">${overdue.length}</div><div class="stat-lbl">Vencidas</div></div>
-    <div class="stat-card"><div class="stat-num" style="color:#f97316">${goals.length}</div><div class="stat-lbl">Metas</div></div>
-  </div>`;
-
-  // ── KANBAN + METAS/VENCIDAS ──
-  const kbCols = [
-    {key:'todo',        label:'To Do',       color:'#ef4444', bg:'#fef2f2', tab:'todo'},
-    {key:'compromisos', label:'Compromisos',  color:'#f97316', bg:'#fff7ed', tab:'compromisos'},
-    {key:'proyectos',   label:'Proyectos',    color:'#6b7a4e', bg:'#eef2e6', tab:'proyectos'},
-    {key:'extra',       label:'Extra',        color:'#4a7a8a', bg:'#e6f1fb', tab:'extra'},
-  ];
-  const kanbanHtml = `<div class="kb-grid" style="margin-bottom:14px">
-    ${kbCols.map(col=>{
-      const colItems = pending.filter(i=>(i.col===col.key||i.cat_key===col.key)).sort((a,b)=>(a.priority||3)-(b.priority||3));
-      const shown = colItems.slice(0,3);
-      return `<div class="kb-col" ondragover="event.preventDefault();this.classList.add('drop-zone-active')" ondragleave="if(!this.contains(event.relatedTarget))this.classList.remove('drop-zone-active')" ondrop="this.classList.remove('drop-zone-active');dropOnPanel(event,'${col.key}')">
-        <div class="kb-col-head" style="background:${col.bg}">
-          <span style="color:${col.color}">${col.label}</span>
-          <span class="kb-badge" style="background:${col.color};color:#fff">${colItems.length}</span>
-        </div>
-        <div class="kb-col-body">
-          ${shown.length ? shown.map(i=>{
-            const subs=i.subtasks||[];
-            return `<div class="kb-task" draggable="true" data-id="${i.id}" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})">
-              <div class="kb-task-check" onclick="event.stopPropagation();toggleDone(${i.id})">✓</div>
-              <div style="flex:1;min-width:0">
-                <div class="kb-task-text">${h(i.text)}</div>
-                ${i.date?`<div class="kb-task-date${i.date<today?' overdue':''}">${fmtDate(i.date)}</div>`:''}
-                ${subs.length?`<div style="font-size:.6rem;color:var(--accent)">${subs.filter(s=>s.done).length}/${subs.length} acciones</div>`:''}
-              </div>
-              <div class="priority-dot p${i.priority||3}" style="margin-left:2px;flex-shrink:0"></div>
-            </div>`;
-          }).join('') : `<div style="font-size:.72rem;color:var(--text2);text-align:center;padding:14px 0">¡Todo listo! ✨</div>`}
-          ${colItems.length>3?`<div class="kb-more" onclick="switchTab('${col.tab}')">+${colItems.length-3} más →</div>`:''}
-        </div>
-      </div>`;
-    }).join('')}
-  </div>`;
-
-  // ── METAS + VENCIDAS ──
-  const bottomHtml = `<div class="overview-grid">
-    <div>
-      <div class="heading-card">
-        <div class="heading-card-title">⭐ Metas 2026</div>
-        ${goals.length ? goals.slice(0,3).map(g=>{
-          const gp=Math.min(_metaPct(g),100);
-          return `<div style="margin-bottom:8px">
-            <div style="display:flex;justify-content:space-between;font-size:.76rem;font-weight:600;color:var(--text);margin-bottom:3px">
-              <span>${g.icon||'🎯'} ${h(g.title)}</span><span style="color:${g.color||'#6b7a4e'}">${gp}%</span>
-            </div>
-            <div style="height:5px;background:#eee;border-radius:3px">
-              <div style="width:${gp}%;height:100%;background:${g.color||'#6b7a4e'};border-radius:3px"></div>
-            </div>
-          </div>`;
-        }).join('') : `<div style="font-size:.76rem;color:var(--text2);text-align:center;padding:10px 0">Sin metas aún</div>`}
-        <button onclick="switchTab('metas')" style="width:100%;margin-top:8px;padding:8px;background:var(--accent-light);color:var(--accent);border:none;border-radius:9px;font-size:.76rem;font-weight:700;cursor:pointer">Ver todas →</button>
-      </div>
-    </div>
-    <div>
-      ${overdue.length ? `<div class="heading-card">
-        <div class="heading-card-title" style="color:#ef4444">⚠️ Vencidas (${overdue.length})</div>
-        ${overdue.slice(0,5).map(i=>`<div class="heading-item" style="cursor:pointer" onclick="openEditModal(${i.id})">
-          <div class="heading-dot" style="background:#ef4444"></div>
-          <span class="heading-item-text">${h(i.text)}</span>
-          <span style="font-size:.65rem;color:#ef4444">${fmtDate(i.date)}</span>
-        </div>`).join('')}
-      </div>` : `<div class="heading-card" style="text-align:center;padding:24px">
-        <div style="font-size:1.5rem">🎉</div>
-        <div style="font-size:.8rem;color:var(--text2);margin-top:6px">Sin vencidas</div>
-      </div>`}
-    </div>
-  </div>`;
-
-  el.innerHTML = `
-    ${focusHtml}
-    ${storyHtml}
-    ${timelineHtml}
-    ${statsHtml}
-    ${kanbanHtml}
-    ${bottomHtml}`;
-}
-
 // ============================================================
 // LOG DIARIO — Hábitos (C) + Timeline con hora (A)
 // ============================================================
@@ -1601,6 +1532,8 @@ function addHabit(){
 function removeHabit(id){_saveHabits(_getHabits().filter(h=>h.id!==id));renderLogDiario();}
 function _habitStreak(id){
   const hl=_getHlog();let streak=0;const d=new Date();
+  const t0=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  if(!(hl[t0]&&hl[t0][id]))d.setDate(d.getDate()-1);
   for(let i=0;i<90;i++){
     const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
     if(hl[ds]&&hl[ds][id]){streak++;d.setDate(d.getDate()-1);}else break;
@@ -1617,24 +1550,208 @@ function _habitWeek7(id){
   return res;
 }
 
+function selectLogDay(ds) {
+  activeLogDate = ds;
+  renderLogDiario();
+}
+
+function openAddModalWithDate(date) {
+  openAddModal();
+  setTimeout(()=>{ const el=document.getElementById('add-date'); if(el) el.value=date; },50);
+}
+
+// ============================================================
+// SEMANA — Swimlanes AM/PM/Noche + Heatmap de carga
+// ============================================================
+// ============================================================
+// v3 — PULSO · LOG DIARIO · SEMANA · BANDEJA
+// ============================================================
+function _addDays(ds, n) { const d = new Date(ds+'T12:00:00'); d.setDate(d.getDate()+n); return _ymd(d); }
+function _weekDays(offset) { const m = _addDays(_weekStart(), (offset||0)*7); return [0,1,2,3,4,5,6].map(n=>_addDays(m,n)); }
+function _fmtLong(ds) { return new Date(ds+'T12:00:00').toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'}); }
+function _mes(d) { return d.toLocaleDateString('es-MX',{month:'short'}).replace('.',''); }
+function _fmtRange(a, b) {
+  const A = new Date(a+'T12:00:00'), B = new Date(b+'T12:00:00');
+  return A.getMonth()===B.getMonth() ? `${A.getDate()}–${B.getDate()} ${_mes(B)}` : `${A.getDate()} ${_mes(A)} – ${B.getDate()} ${_mes(B)}`;
+}
+function _live(i) { return !i.done && !i.archived; }
+function _pill(level, text) { return `<span class="pl-pill ${level}"><i></i>${text}</span>`; }
+function _worst(levels) { const r = {na:0, ok:0, warn:1, bad:2}; return levels.reduce((w,l)=>r[l]>r[w]?l:w, 'ok'); }
+function _joinEs(a) { return a.length<2 ? (a[0]||'') : a.slice(0,-1).join(', ')+' y '+a[a.length-1]; }
+function _s(n) { return n===1 ? '' : 's'; }
+const _DAY_LETTERS = ['L','M','M','J','V','S','D'];
+
+// ---------- PULSO ----------
+function _goalStatus(g) {
+  const pct = Math.min(_metaPct(g), 100);
+  const total = (g.milestones||[]).length;
+  const done = total ? g.milestones.filter(m=>m.done).length : null;
+  const base = {pct, done, total, expected:null};
+  if (pct >= 100) return {...base, level:'ok', label:'Lograda'};
+  if (!g.due) return {...base, level:'na', label:'Sin fecha'};
+  const start = g.start ? new Date(g.start+'T00:00:00').getTime()
+              : (g.id > 1e12 ? g.id : new Date(new Date().getFullYear(),0,1).getTime());
+  const end = new Date(g.due+'T23:59:59').getTime();
+  if (end <= start) return {...base, level:'na', label:'Sin fecha'};
+  const now = Date.now();
+  const expected = Math.max(0, Math.min(100, Math.round((now-start)/(end-start)*100)));
+  if (now > end) return {...base, expected, level:'bad', label:'Venció'};
+  if (pct >= expected-10) return {...base, expected, level:'ok', label:'En ritmo'};
+  if (pct >= expected-25) return {...base, expected, level:'warn', label:'Un poco atrás'};
+  return {...base, expected, level:'bad', label:'Atrasada'};
+}
+
+function renderDash() {
+  const el = document.getElementById('panel-dash');
+  if (!el) return;
+  const today = todayStr(), wk = _weekDays(0), mon = wk[0], sun = wk[6];
+  const inWk = ds => !!ds && ds >= mon && ds <= sun;
+
+  // 1 · Tareas
+  const planned = items.filter(i=>!i.archived && inWk(i.date));
+  const pDone = planned.filter(i=>i.done).length;
+  const extraDone = items.filter(i=>i.done && inWk(i.doneDate) && !inWk(i.date)).length;
+  const doneToday = items.filter(i=>i.done && i.doneDate===today).length;
+  const overdue = items.filter(i=>_live(i) && i.date && i.date < today).sort((a,b)=>a.date.localeCompare(b.date));
+  const elapsed = Math.round((wk.indexOf(today)+1)/7*100);
+  const pctT = planned.length ? Math.round(pDone/planned.length*100) : 0;
+  let tLevel = 'ok', tLabel = 'Al corriente';
+  if (!planned.length && !overdue.length) { tLevel = 'na'; tLabel = 'Sin plan'; }
+  else if (overdue.length > 5 || (planned.length && pctT < elapsed-35)) { tLevel = 'bad'; tLabel = 'Atrasada'; }
+  else if (overdue.length || (planned.length && pctT < elapsed-15)) { tLevel = 'warn'; tLabel = 'Ojo'; }
+  const cTasks = `<div class="pl-card">
+    <div class="pl-card-top"><div class="pl-q">¿Voy al corriente?</div>${_pill(tLevel,tLabel)}</div>
+    ${planned.length ? `
+      <div class="pl-big">${pDone}<small>de ${planned.length}</small></div>
+      <div class="pl-sub">tareas planeadas esta semana · ${pctT}%</div>
+      <div class="pl-track"><div class="pl-fill" style="width:${pctT}%"></div><div class="pl-mark" style="left:calc(${elapsed}% - 1px)" title="Dónde deberías ir hoy"></div></div>
+      <div class="pl-sub" style="margin-top:6px">La rayita marca dónde deberías ir hoy.</div>`
+    : `<div class="pl-sub">No tienes tareas con fecha esta semana. Repártelas en <b>Semana</b>.</div>
+       <button class="pl-link" onclick="switchTab('semana')">Planear la semana →</button>`}
+    <div class="pl-sub">Hoy llevas <b>${doneToday}</b> hecha${_s(doneToday)}${extraDone?` · +${extraDone} fuera de plan esta semana`:''}</div>
+    ${overdue.length ? `<div class="pl-sep">
+      <div class="pl-q" style="color:#b91c1c;margin-bottom:2px">${overdue.length} vencida${_s(overdue.length)}</div>
+      ${overdue.slice(0,3).map(i=>`<div class="pl-alert" onclick="openEditModal(${i.id})"><span style="color:#ef4444">●</span><span class="pl-ellipsis">${h(i.text)}</span><span style="font-size:.66rem;color:#b91c1c;flex-shrink:0">${fmtDate(i.date)}</span></div>`).join('')}
+      <button class="pl-link" onclick="activeLogDate=todayStr();_dayPickOpen=true;switchTab('log')">Resolverlas en Log diario →</button>
+    </div>` : ''}
+  </div>`;
+
+  // 2 · Metas
+  const gs = goals.map(g=>({g, s:_goalStatus(g)}));
+  const mLevel = gs.length ? _worst(gs.map(x=>x.s.level)) : 'na';
+  const mAllNa = gs.length && gs.every(x=>x.s.level==='na');
+  const mLabel = !gs.length ? 'Sin metas' : mAllNa ? 'Sin fecha' : {ok:'En ritmo', warn:'Ojo', bad:'Atrasadas'}[mLevel];
+  const cGoals = `<div class="pl-card">
+    <div class="pl-card-top"><div class="pl-q">¿Mis metas avanzan?</div>${_pill(mAllNa?'na':mLevel, mLabel)}</div>
+    ${gs.length ? gs.slice(0,4).map(({g,s})=>{
+      const sub = s.total
+        ? `${s.done} de ${s.total}${s.expected!==null&&s.pct<100?` · a hoy deberías llevar ${Math.round(s.expected/100*s.total)}`:''}`
+        : `${s.pct}%${s.expected!==null&&s.pct<100?` · a hoy deberías ir en ${s.expected}%`:''}`;
+      return `<div class="pl-goal" onclick="switchTab('metas')">
+        <div style="display:flex;align-items:center;gap:8px;min-width:0"><span>${g.icon||'🎯'}</span><div class="pl-row-title" style="flex:1">${h(g.title)}</div>${_pill(s.level,s.label)}</div>
+        <div class="pl-track" style="height:6px;margin-top:9px"><div class="pl-fill" style="width:${s.pct}%;background:${g.color||'var(--accent)'}"></div>${s.expected!==null&&s.pct<100?`<div class="pl-mark" style="left:calc(${s.expected}% - 1px);top:-3px;height:12px"></div>`:''}</div>
+        <div class="pl-row-meta" style="margin-top:6px">${sub}${g.due?` · vence ${fmtDate(g.due)}`:''}</div>
+      </div>`;
+    }).join('') + (gs.length>4?`<button class="pl-link" onclick="switchTab('metas')">Ver las ${gs.length} metas →</button>`:'')
+    : `<div class="pl-sub">Aún no tienes metas.</div><button class="pl-link" onclick="switchTab('metas')">Crear una meta →</button>`}
+  </div>`;
+
+  // 3 · Hábitos
+  const habits = _getHabits();
+  let hLevel = 'na', hLabel = 'Sin hábitos', hRate = 0;
+  if (habits.length) {
+    const tot = habits.reduce((s,hb)=>s+_habitWeek7(hb.id).filter(w=>w.done).length, 0);
+    hRate = Math.round(tot/(habits.length*7)*100);
+    [hLevel, hLabel] = hRate>=70 ? ['ok','Constante'] : hRate>=40 ? ['warn','A medias'] : ['bad','Hay que retomar'];
+  }
+  const cHabits = `<div class="pl-card">
+    <div class="pl-card-top"><div class="pl-q">¿Sostengo mis hábitos?</div>${_pill(hLevel,hLabel)}</div>
+    ${habits.length ? `
+      <div class="pl-big">${hRate}%<small>últimos 7 días</small></div>
+      <div style="margin-top:10px">${habits.map(hb=>{
+        const w7 = _habitWeek7(hb.id), n = w7.filter(w=>w.done).length, st = _habitStreak(hb.id);
+        const emo = hb.emoji && hb.emoji!=='✓' ? hb.emoji+' ' : '';
+        return `<div class="pl-row">
+          <div class="pl-row-main"><div class="pl-row-title">${emo}${h(hb.text)}</div><div class="pl-row-meta">${n} de 7 días${st>1?` · 🔥 ${st} seguidos`:''}</div></div>
+          <div class="pl-dots">${w7.map(w=>`<span class="pl-dot${w.done?' on':''}${w.ds===today?' today':''}" title="${w.ds}"></span>`).join('')}</div>
+        </div>`;
+      }).join('')}</div>`
+    : `<div class="pl-sub">Aún no tienes hábitos.</div><button class="pl-link" onclick="_habEdit=true;switchTab('log')">Agregarlos en Log diario →</button>`}
+  </div>`;
+
+  // 4 · Energía
+  let pool = items.filter(i=>i.done && inWk(i.doneDate)), basis = 'hecha';
+  if (!pool.length) { pool = planned; basis = 'planeada'; }
+  const by = {};
+  pool.forEach(i=>{ const c = getCat(i.cat); (by[c.name] = by[c.name] || {c, n:0}).n++; });
+  let arr = Object.values(by).sort((a,b)=>b.n-a.n);
+  if (arr.length > 5) { const rest = arr.slice(4).reduce((s,x)=>s+x.n,0); arr = arr.slice(0,4).concat([{c:{name:'Otras',icon:'•',color:'#9ca3af'}, n:rest}]); }
+  const topShare = pool.length && arr.length ? Math.round(arr[0].n/pool.length*100) : 0;
+  const eLevel = !pool.length ? 'na' : topShare>=70 ? 'warn' : 'ok';
+  const eLabel = !pool.length ? 'Sin datos' : topShare>=70 ? 'Muy concentrada' : 'Repartida';
+  const cEnergy = `<div class="pl-card">
+    <div class="pl-card-top"><div class="pl-q">¿A dónde se va mi energía?</div>${_pill(eLevel,eLabel)}</div>
+    ${pool.length ? `
+      ${arr.map(x=>{ const p = Math.round(x.n/pool.length*100); return `<div class="pl-bar">
+        <div style="min-width:0"><div class="pl-row-title" style="font-weight:600;font-size:.78rem">${x.c.icon||'📌'} ${h(x.c.name)}</div>
+        <div class="pl-bar-track"><div class="pl-fill" style="width:${p}%;background:${x.c.color||'var(--accent)'}"></div></div></div>
+        <div class="pl-bar-pct">${p}%</div></div>`; }).join('')}
+      <div class="pl-sub">Según ${pool.length} tarea${_s(pool.length)} ${basis}${_s(pool.length)} esta semana.</div>`
+    : `<div class="pl-sub">Cuando completes tareas esta semana verás aquí en qué áreas se va tu tiempo.</div>`}
+  </div>`;
+
+  const flagged = [['tareas',tLevel],['metas',mLevel],['hábitos',hLevel]].filter(a=>a[1]==='warn'||a[1]==='bad').map(a=>a[0]);
+  const verdict = flagged.length ? `Ojo con ${_joinEs(flagged)}.` : 'Vas bien esta semana.';
+  el.innerHTML = `
+    <div class="pl-head"><div><div class="pl-week">Semana ${_fmtRange(mon,sun)}</div><div class="pl-verdict">${verdict}</div></div></div>
+    <div class="pl-grid">${cTasks}${cGoals}${cHabits}${cEnergy}</div>`;
+}
+
+// ---------- LOG DIARIO ----------
+let _dayPickOpen = false, _habEdit = false;
+const DAY_GOAL = 5;
+
+function _dayRow(i, D) {
+  const today = todayStr(), cat = getCat(i.cat), subs = i.subtasks||[];
+  const late = !i.done && i.date && i.date < today;
+  const nextLbl = D < today ? 'hoy' : 'mañana';
+  return `<div class="dy-task${i.done?' done':''}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)">
+    <div class="dy-check${i.done?' done':''}" onclick="toggleDone(${i.id})" title="${i.done?'Marcar pendiente':'Marcar hecha'}">${i.done?'✓':''}</div>
+    <div style="flex:1;min-width:0">
+      <div class="dy-text" onclick="openEditModal(${i.id})">${h(i.text)}</div>
+      <div class="dy-meta">
+        <span class="dy-chip">${cat.icon} ${h(cat.name)}</span>
+        ${i.time?`<span>🕐 ${h(i.time)}</span>`:''}
+        ${subs.length?`<span>${subs.filter(s=>s.done).length}/${subs.length} acciones</span>`:''}
+        ${i.recur?'<span title="Repetitiva">🔁</span>':''}
+        ${late?`<span style="color:#ef4444;font-weight:700">Vencida ${fmtDate(i.date)}</span>`:''}
+      </div>
+    </div>
+    ${!i.done?`<div class="dy-acts">
+      <button class="dy-ic${i.focus?' on':''}" title="${i.focus?'Quitar de Ahora toca':'Fijar en Ahora toca'}" onclick="toggleFocus(${i.id})">📌</button>
+      <button class="dy-ic" title="Pasar a ${nextLbl}" onclick="dayMove(${i.id})">↪</button>
+      <button class="dy-ic" title="Regresar a la bandeja" onclick="dayDrop(${i.id})">✕</button>
+    </div>`:''}
+  </div>`;
+}
+
 function renderLogDiario() {
   const el = document.getElementById('panel-log');
   if (!el) return;
   const today = todayStr();
   if (!activeLogDate) activeLogDate = today;
-  const days = [];
-  for (let i=6;i>=0;i--) {
-    const d = new Date(); d.setDate(d.getDate()-i);
-    const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    days.push({ ds, d });
-  }
-  const dateCards = days.map(({ds,d})=>{
-    const hasTasks = items.some(i=>!i.archived&&(i.date===ds||i.doneDate===ds));
-    return `<div class="log-date-card${activeLogDate===ds?' active':''}${hasTasks?' has-tasks':''}" onclick="selectLogDay('${ds}')"
+  const D = activeLogDate, isToday = D===today, isPast = D < today;
+
+  const strip = [-3,-2,-1,0,1,2,3].map(n=>_addDays(today,n));
+  if (!strip.includes(D)) strip.push(D), strip.sort();
+  const dateCards = strip.map(ds=>{
+    const d = new Date(ds+'T12:00:00');
+    const hasTasks = items.some(i=>!i.archived && (i.date===ds || i.doneDate===ds));
+    return `<div class="log-date-card${D===ds?' active':''}${hasTasks?' has-tasks':''}" onclick="selectLogDay('${ds}')"
       ondragover="event.preventDefault();this.classList.add('drop-zone-active')"
       ondragleave="this.classList.remove('drop-zone-active')"
-      ondrop="this.classList.remove('drop-zone-active');dropOnDay(event,'${ds}');selectLogDay('${ds}')">
-      <div class="ld-day">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
+      ondrop="this.classList.remove('drop-zone-active');dropOnDay(event,'${ds}')">
+      <div class="ld-day">${ds===today?'Hoy':d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
       <div class="ld-num">${d.getDate()}</div>
       <div class="ld-dot"></div>
     </div>`;
@@ -1651,181 +1768,224 @@ function renderLogDiario() {
     jamHtml = `<div class="jam-header"><div><div style="font-size:.65rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.05em">⚡ JAM SESH ACTIVO</div><div class="jam-task">${jamTask?h(jamTask.text):'Tarea'}</div></div><div class="jam-time">${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</div><button class="jam-btn" onclick="stopJamSesh()" style="background:var(--red);color:#fff">✕</button></div><div class="jam-bar-wrap"><div class="jam-bar-fill" id="jam-bar-fill" style="width:${pct}%"></div></div>`;
   }
 
-  // ── HABITS PANEL
-  const habits = _getHabits();
-  const hl = _getHlog();
-  const dayLog = hl[activeLogDate]||{};
-  const habitsHtml = `
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:12px">
-      <div style="font-size:.62rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">🌱 Hábitos</div>
-      ${habits.length ? habits.map(hab=>{
-        const done = !!(dayLog[hab.id]);
-        const streak = _habitStreak(hab.id);
-        const week = _habitWeek7(hab.id);
-        return `<div style="margin-bottom:10px">
-          <div style="display:flex;align-items:center;gap:8px">
-            <div onclick="toggleHabit(${hab.id})" style="width:22px;height:22px;border-radius:6px;border:1.5px solid ${done?'var(--accent)':'var(--border)'};background:${done?'var(--accent)':'transparent'};display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.8rem;color:#fff;flex-shrink:0;transition:all .15s">${done?hab.emoji:''}</div>
-            <div style="flex:1;font-size:.8rem;font-weight:600;color:${done?'var(--text2)':'var(--text)'};${done?'text-decoration:line-through;text-decoration-color:#aaa':''}">${h(hab.text)}</div>
-            ${streak>0?`<span style="font-size:.65rem;font-weight:900;color:#f97316">🔥${streak}</span>`:''}
-            <button onclick="removeHabit(${hab.id})" style="border:none;background:none;cursor:pointer;color:#d1d5db;font-size:.7rem;padding:0;line-height:1;flex-shrink:0">✕</button>
-          </div>
-          <div style="display:flex;gap:3px;margin-top:5px;padding-left:30px">
-            ${week.map(w=>`<div title="${w.ds}" onclick="selectLogDay('${w.ds}')" style="flex:1;height:6px;border-radius:2px;background:${w.done?'var(--accent)':'#e5e7eb'};cursor:pointer;transition:background .15s"></div>`).join('')}
-          </div>
-        </div>`;
-      }).join('') : `<div style="font-size:.72rem;color:var(--text2);text-align:center;padding:6px 0">Sin hábitos — agrégalos aquí ↓</div>`}
-      <div style="display:flex;gap:6px;margin-top:8px;border-top:1px solid var(--border);padding-top:10px">
-        <input class="modal-input" id="hab-emo" placeholder="✓" style="width:42px;text-align:center;padding:6px 4px" maxlength="2"/>
-        <input class="modal-input" id="hab-inp" placeholder="Agregar hábito…" style="flex:1" onkeydown="if(event.key==='Enter')addHabit()"/>
-        <button class="btn-sm" onclick="addHabit()">+</button>
-      </div>
-    </div>`;
 
-  // ── TIMELINE DE TAREAS
-  const dayItems = items.filter(i=>!i.archived && (i.date===activeLogDate || i.doneDate===activeLogDate));
-  const slotOrder = {manana:0, tarde:1, noche:2};
-  const slotHour  = {manana:'9:00', tarde:'14:00', noche:'20:00'};
-  // Sort by actual time, then by slot, then unassigned last
-  const sorted = [...dayItems].sort((a,b)=>{
-    const ta = a.time || slotHour[a.slot] || '23:59';
-    const tb = b.time || slotHour[b.slot] || '23:59';
-    return ta.localeCompare(tb);
-  });
+  const dayAll = items.filter(i=>!i.archived && (i.date===D || (i.done && i.doneDate===D && i.date!==D)));
+  const pend = dayAll.filter(i=>!i.done).sort((a,b)=>
+    (b.focus?1:0)-(a.focus?1:0) || (a.time||'99').localeCompare(b.time||'99') || (a.priority||3)-(b.priority||3));
+  const dn = dayAll.filter(i=>i.done);
+  const total = pend.length + dn.length;
 
-  const tlEntries = sorted.length ? sorted.map(i=>{
-    const dot = i.done?'#22c55e':i.date&&i.date<today&&!i.done?'#ef4444':'var(--accent)';
-    const hr  = i.time ? i.time.slice(0,5) : (slotHour[i.slot]||'—');
-    return `<div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:14px;position:relative">
-      <div style="position:absolute;left:-34px;font-size:.56rem;color:var(--text2);font-weight:600;top:4px;width:28px;text-align:right">${hr}</div>
-      <div onclick="toggleDone(${i.id})" title="${i.done?'Marcar pendiente':'Marcar hecha'}"
-        style="width:20px;height:20px;border-radius:50%;border:2px solid ${i.done?'#22c55e':i.date&&i.date<today&&!i.done?'#ef4444':'#d1d5db'};background:${i.done?'#22c55e':'#fff'};display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;margin-top:1px;margin-left:-11px;transition:all .15s;font-size:.7rem;color:#fff;font-weight:900">${i.done?'✓':''}</div>
-      <div style="flex:1;min-width:0">
-        <div onclick="openEditModal(${i.id})" style="font-size:.83rem;font-weight:${i.done?400:600};color:${i.done?'var(--text2)':'var(--text)'};${i.done?'text-decoration:line-through;text-decoration-color:#aaa':''};cursor:pointer;line-height:1.35">${h(i.text)}</div>
-        ${i.note?`<div style="font-size:.68rem;color:var(--text2);margin-top:2px">${h(i.note)}</div>`:''}
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;align-items:center">
-          <span style="font-size:.6rem;background:var(--accent-light);color:var(--accent);border-radius:9px;padding:1px 7px;font-weight:700">${getCat(i.cat).icon} ${h(getCat(i.cat).name)}</span>
-          ${i.done?'<span style="font-size:.6rem;color:#22c55e;font-weight:700">✓ Hecha</span>':''}
-          ${i.date&&i.date<today&&!i.done?'<span style="font-size:.6rem;color:#ef4444;font-weight:700">⚠️ Vencida</span>':''}
+  // Ahora toca (solo hoy)
+  let heroHtml = '';
+  if (isToday) {
+    const f = pend.find(i=>i.focus) || items.find(i=>i.focus && _live(i)) || pend[0];
+    if (f) {
+      const subs = f.subtasks||[], ds_ = subs.filter(s=>s.done).length;
+      const jamOn = window._jam && window._jam.id===f.id;
+      heroHtml = `<div class="dy-hero">
+        <div class="dy-hero-k">⚡ Ahora toca</div>
+        <div class="dy-hero-t" onclick="openEditModal(${f.id})">${h(f.text)}</div>
+        ${subs.length?`<div class="pl-track" style="height:5px;margin:-4px 0 6px;background:#dde8cc"><div class="pl-fill" style="width:${Math.round(ds_/subs.length*100)}%"></div></div>
+          <div style="font-size:.7rem;color:var(--accent);margin-bottom:10px">${ds_}/${subs.length} acciones</div>`:''}
+        <div class="dy-hero-actions">
+          <button class="dy-btn" onclick="toggleDone(${f.id})">✓ Hecha</button>
+          <button class="dy-btn solid" onclick="openJamModal(${f.id})">${jamOn?'⏱ JAM activo':'⚡ JAM SESH'}</button>
+          <span style="font-size:.68rem;color:${f.focus?'var(--accent)':'var(--text2)'}">${f.focus?'📌 Fijada por ti':'Fija otra con 📌'}</span>
         </div>
-      </div>
-    </div>`;
-  }).join('') :
-    `<div class="empty-state"><div class="es-icon">📋</div><p>Sin tareas para este día</p></div>`;
+      </div>`;
+    }
+  }
 
-  const d = new Date(activeLogDate+'T12:00:00');
-  el.innerHTML = `
-    <div class="log-dates">${dateCards}</div>
-    ${jamHtml}
-    ${habitsHtml}
-    <div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-        <div style="font-weight:800;font-size:.95rem">${d.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'})}</div>
-        <button class="btn-sm" onclick="openAddModalWithDate('${activeLogDate}')">+ Agregar tarea</button>
-      </div>
-      <div style="position:relative;padding-left:42px">
-        <div style="position:absolute;left:20px;top:0;bottom:0;width:2px;background:var(--border);border-radius:1px"></div>
-        ${tlEntries}
-      </div>
-    </div>`;
+  // Hábitos
+  const habits = _getHabits(), dayLog = _getHlog()[D] || {};
+  const habitsHtml = `<div class="card dy-card">
+    <div class="dy-sec"><div class="pl-q">🌱 Hábitos</div>
+      ${habits.length?`<button class="pl-link" style="margin:0" onclick="_habEdit=!_habEdit;renderLogDiario()">${_habEdit?'Listo':'Editar'}</button>`:''}</div>
+    <div class="dy-habits">${habits.map(hb=>{
+      const on = !!dayLog[hb.id], st = _habitStreak(hb.id);
+      const emo = hb.emoji && hb.emoji!=='✓' ? hb.emoji+' ' : '';
+      return `<span class="dy-hab${on?' on':''}" ${_habEdit?'':`onclick="toggleHabit(${hb.id})"`}>${on?'✓ ':''}${emo}${h(hb.text)}${st>1&&!_habEdit?`<span class="st">🔥${st}</span>`:''}${_habEdit?`<span class="x" onclick="event.stopPropagation();removeHabit(${hb.id})" title="Quitar hábito">✕</span>`:''}</span>`;
+    }).join('') || '<span class="pl-sub" style="margin:0">Sin hábitos todavía. Agrega el primero ↓</span>'}</div>
+    ${_habEdit || !habits.length ? `<div style="display:flex;gap:6px;margin-top:12px">
+      <input class="modal-input" id="hab-emo" placeholder="🙂" style="width:46px;text-align:center;padding:6px 4px" maxlength="2"/>
+      <input class="modal-input" id="hab-inp" placeholder="Nuevo hábito…" style="flex:1" onkeydown="if(event.key==='Enter')addHabit()"/>
+      <button class="btn-sm" onclick="addHabit()">+</button>
+    </div>` : ''}
+  </div>`;
+
+  // Tareas del día
+  const free = Math.max(0, DAY_GOAL - total);
+  const pctDay = Math.round(dn.length / Math.max(total, DAY_GOAL) * 100);
+  const dayHtml = `<div class="card dy-card">
+    <div class="dy-head">
+      <div class="dy-title">${isToday?'Hoy · ':''}${_fmtLong(D)}</div>
+      <div class="dy-count">${dn.length} de ${total} hecha${_s(total)}${total<DAY_GOAL?` · tu meta: ${DAY_GOAL}`:''}</div>
+    </div>
+    <div class="dy-prog"><div class="pl-fill" style="width:${pctDay}%"></div></div>
+    <div ondragover="event.preventDefault()" ondrop="dropOnDay(event,'${D}')">
+      ${pend.map(i=>_dayRow(i,D)).join('')}
+      ${Array.from({length:free}).map(()=>`<div class="dy-empty" onclick="openDayPick()"><span class="o"></span><span>Espacio libre · trae algo de la bandeja</span></div>`).join('')}
+      ${dn.map(i=>_dayRow(i,D)).join('')}
+    </div>
+    <div class="dy-tools">
+      <button class="dy-btn${_dayPickOpen?' solid':''}" onclick="toggleDayPick()">📥 ${_dayPickOpen?'Cerrar bandeja':'Traer de la bandeja'}</button>
+      <button class="dy-btn" onclick="openAddModalWithDate('${D}')">+ Nueva tarea</button>
+    </div>
+    ${_dayPickOpen ? `<div class="dy-pick">
+      <input class="modal-input" id="dy-pick-q" placeholder="Buscar en tus listas…" oninput="_renderPickList()"/>
+      <div id="dy-pick-list"></div>
+    </div>` : ''}
+  </div>`;
+
+  // Cerrar el día
+  const showClose = pend.length && (isPast || (isToday && new Date().getHours() >= 17));
+  const closeHtml = showClose ? `<div class="card dy-card dy-close">
+    <div style="flex:1;min-width:200px"><div class="pl-q">🌙 Cerrar el día</div>
+      <div class="pl-sub" style="margin-top:4px">Te ${pend.length===1?'queda':'quedan'} ${pend.length} pendiente${_s(pend.length)}. Decide qué pasa con ${pend.length===1?'ella':'ellas'} para empezar limpia.</div></div>
+    <button class="dy-btn solid" onclick="dayMoveAll()">↪ Pasar ${pend.length===1?'a':'todas a'} ${isPast?'hoy':'mañana'}</button>
+    <button class="dy-btn" onclick="dayDropAll()">Regresar a la bandeja</button>
+  </div>` : '';
+
+  el.innerHTML = `<div class="log-dates">${dateCards}</div>${jamHtml}${heroHtml}${habitsHtml}${dayHtml}${closeHtml}`;
+  if (_dayPickOpen) _renderPickList();
 }
 
-function selectLogDay(ds) {
-  activeLogDate = ds;
+function openDayPick() { _dayPickOpen = true; renderLogDiario(); setTimeout(()=>{ const q=document.getElementById('dy-pick-q'); if(q) q.focus(); }, 50); }
+function toggleDayPick() { if (_dayPickOpen) { _dayPickOpen = false; renderLogDiario(); } else openDayPick(); }
+
+function _renderPickList() {
+  const box = document.getElementById('dy-pick-list');
+  if (!box) return;
+  const q = ((document.getElementById('dy-pick-q')||{}).value||'').trim().toLowerCase();
+  const D = activeLogDate, today = todayStr();
+  const c = items.filter(i=>_live(i) && i.date!==D && (!q || (i.text||'').toLowerCase().includes(q)));
+  const undated = k => c.filter(i=>!i.date && _bqMatch(i,k)).sort((a,b)=>(a.priority||3)-(b.priority||3));
+  const groups = [
+    ['⚠️ Vencidas', c.filter(i=>i.date && i.date<today).sort((a,b)=>a.date.localeCompare(b.date))],
+    ['📝 To Do', undated('todo')], ['🤝 Compromisos', undated('compromisos')],
+    ['🚀 Proyectos', undated('proyectos')], ['💡 Extra', undated('extra')],
+  ];
+  if (q) groups.push(['📅 Con otra fecha', c.filter(i=>i.date && i.date>=today)]);
+  const lim = q ? 30 : 6;
+  const html = groups.filter(g=>g[1].length).map(([lbl,arr])=>`<div class="dy-pick-group">${lbl} · ${arr.length}</div>
+    ${arr.slice(0,lim).map(i=>{ const cat=getCat(i.cat); return `<div class="dy-pick-row" onclick="pickToDay(${i.id})">
+      <span class="plus">+</span><span class="pl-ellipsis" style="flex:1">${h(i.text)}</span>
+      <span style="font-size:.64rem;color:var(--text2);flex-shrink:0">${cat.icon}${i.date?' '+fmtDate(i.date):''}</span></div>`; }).join('')}
+    ${arr.length>lim?`<div class="pl-row-meta" style="padding:2px 8px 4px">+${arr.length-lim} más · usa el buscador</div>`:''}`).join('');
+  box.innerHTML = html || `<div class="pl-sub" style="padding:8px">${q?'Nada coincide con tu búsqueda.':'No hay nada pendiente por traer. 🎉'}</div>`;
+}
+
+function pickToDay(id) {
+  const i = items.find(x=>x.id===id); if (!i) return;
+  const q = (document.getElementById('dy-pick-q')||{}).value || '';
+  _moveItemTo(i, activeLogDate); save();
   renderLogDiario();
+  const qq = document.getElementById('dy-pick-q'); if (qq) { qq.value = q; _renderPickList(); }
+  showToast('Agregada al día ✓');
 }
+function _dayNext() { const t = todayStr(); return activeLogDate < t ? t : _addDays(activeLogDate, 1); }
+function dayMove(id) { const i = items.find(x=>x.id===id); if (!i) return; const t = _dayNext(); _moveItemTo(i, t); save(); renderCurrent(); showToast('Pasada a '+fmtDate(t)+' ✓'); }
+function _undate(i) { i.date = ''; if (i.scheduledDate) i.scheduledDate = ''; i.focus = false; }
+function dayDrop(id) { const i = items.find(x=>x.id===id); if (!i) return; _undate(i); save(); renderCurrent(); showToast('De regreso en la bandeja'); }
+function _dayPending() { return items.filter(i=>_live(i) && i.date===activeLogDate); }
+function dayMoveAll() { const t = _dayNext(), p = _dayPending(); p.forEach(i=>_moveItemTo(i,t)); save(); renderCurrent(); showToast(`${p.length} pasada${_s(p.length)} a ${fmtDate(t)} ✓`); }
+function dayDropAll() { const p = _dayPending(); p.forEach(_undate); save(); renderCurrent(); showToast(`${p.length} de regreso en la bandeja`); }
 
-function openAddModalWithDate(date) {
-  openAddModal();
-  setTimeout(()=>{ const el=document.getElementById('add-date'); if(el) el.value=date; },50);
-}
-
-// ============================================================
-// SEMANA — Swimlanes AM/PM/Noche + Heatmap de carga
-// ============================================================
+// ---------- SEMANA ----------
+let _weekOffset = 0, _planQ = '';
 function renderSemana() {
   const el = document.getElementById('panel-semana');
   if (!el) return;
-  const today = todayStr();
-  const now = new Date();
-  const dow = now.getDay();
-  const days = [];
-  for (let i=0;i<7;i++) {
-    const d = new Date(now);
-    d.setDate(now.getDate() - dow + i);
-    const ds = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    days.push({d,ds});
-  }
-
-  const pendingCounts = days.map(({ds})=>items.filter(i=>i.date===ds&&!i.archived&&!i.done).length);
-  const maxLoad = Math.max(1,...pendingCounts);
-  const totalWeek = days.reduce((s,{ds})=>s+items.filter(i=>i.date===ds&&!i.archived).length,0);
-  const doneWeek  = days.reduce((s,{ds})=>s+items.filter(i=>i.date===ds&&!i.archived&&i.done).length,0);
-
-  const slotRows = [
-    {key:'manana', label:'☀️ Mañana', color:'#92400e', bg:'#fffbeb'},
-    {key:'tarde',  label:'🌤️ Tarde',  color:'#166534', bg:'#f0fdf4'},
-    {key:'noche',  label:'🌙 Noche',  color:'#4c1d95', bg:'#f8f7ff'},
-    {key:'__none', label:'📋 Sin slot',color:'#6b7280', bg:'#f9fafb'},
-  ];
-
-  const colMeta = days.map(({d,ds},ci)=>{
-    const load = pendingCounts[ci];
-    const pct  = Math.round(load/maxLoad*100);
-    const lc   = pct>75?'#ef4444':pct>45?'#f97316':'var(--accent)';
-    return {d, ds, load, pct, lc, isToday:ds===today};
-  });
-
-  const summaryHtml = `
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
-      <div><div style="font-size:.58rem;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.04em">Esta semana</div><div style="font-size:1.15rem;font-weight:900;color:var(--text)">${totalWeek} tareas</div></div>
-      <div style="width:1px;height:32px;background:var(--border)"></div>
-      <div><div style="font-size:.58rem;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:.04em">Completadas</div><div style="font-size:1.15rem;font-weight:900;color:#22c55e">${doneWeek}</div></div>
-      <div style="flex:1"></div>
-      <button class="btn-sm" onclick="openAddModal()">+ Agregar</button>
+  const today = todayStr(), wk = _weekDays(_weekOffset);
+  const dayItems = ds => items.filter(i=>!i.archived && i.date===ds).sort((a,b)=>(a.done?1:0)-(b.done?1:0) || (a.priority||3)-(b.priority||3));
+  const all = wk.flatMap(dayItems), doneN = all.filter(i=>i.done).length;
+  const lbl = {0:'Esta semana', 1:'Próxima semana', '-1':'Semana pasada'}[_weekOffset] || 'Semana';
+  const grid = wk.map((ds,ix)=>{
+    const d = new Date(ds+'T12:00:00'), list = dayItems(ds), p = list.filter(i=>!i.done).length;
+    const lc = p>=8 ? '#ef4444' : p>=6 ? '#f59e0b' : 'var(--accent)';
+    return `<div class="wk-day${ds===today?' today':''}${ds<today?' past':''}"
+      ondragover="event.preventDefault();this.classList.add('drop-zone-active')"
+      ondragleave="if(!this.contains(event.relatedTarget))this.classList.remove('drop-zone-active')"
+      ondrop="this.classList.remove('drop-zone-active');dropOnDay(event,'${ds}')">
+      <div class="wk-dh" onclick="activeLogDate='${ds}';switchTab('log')" title="Abrir en Log diario">
+        <span class="wk-dn">${ds===today?'Hoy':d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</span>
+        <span class="wk-dd">${d.getDate()}</span></div>
+      <div class="wk-load" title="${p} pendiente${_s(p)}"><div style="width:${Math.min(100,p/8*100)}%;background:${lc}"></div></div>
+      ${list.slice(0,8).map(i=>`<div class="wk-t${i.done?' done':(ds<today?' late':'')}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})" title="${h(i.text)}">${h(i.text)}</div>`).join('')}
+      ${list.length>8?`<div class="wk-more" onclick="activeLogDate='${ds}';switchTab('log')">+${list.length-8} más</div>`:''}
+      <div class="wk-add" onclick="openAddModalWithDate('${ds}')">+ Agregar</div>
     </div>`;
-
-  const tableHtml = `
-    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);background:var(--card)">
-      <table style="width:100%;border-collapse:collapse;min-width:460px">
-        <thead>
-          <tr>
-            <th style="width:76px;padding:8px 10px;text-align:left;border-bottom:2px solid var(--border);background:#f9fafb;font-size:.6rem;font-weight:700;color:var(--text2)">Momento</th>
-            ${colMeta.map(({d,ds,load,pct,lc,isToday})=>`
-              <th style="padding:6px 5px;border-bottom:2px solid var(--border);background:${isToday?'var(--accent-light)':'#f9fafb'};text-align:center;min-width:72px">
-                <div style="font-size:.58rem;font-weight:800;text-transform:uppercase;color:${isToday?'var(--accent)':'var(--text2)'}">${d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</div>
-                <div style="font-size:.8rem;font-weight:900;color:${isToday?'var(--accent)':'var(--text)'}">${d.getDate()}</div>
-                <div style="height:5px;background:#e5e7eb;border-radius:3px;margin:4px 8px 0;overflow:hidden" title="${load} pendientes">
-                  <div style="width:${pct}%;height:100%;background:${lc};border-radius:3px;transition:width .3s"></div>
-                </div>
-                <div style="font-size:.55rem;font-weight:700;color:${lc};margin-top:1px">${load>0?load+'t':''}</div>
-              </th>`).join('')}
-          </tr>
-        </thead>
-        <tbody>
-          ${slotRows.map(row=>`
-            <tr>
-              <td style="padding:8px 10px;font-size:.62rem;font-weight:800;color:${row.color};background:${row.bg};border-right:2px solid var(--border);border-bottom:1px solid var(--border);vertical-align:top;white-space:nowrap">${row.label}</td>
-              ${colMeta.map(({ds,isToday})=>{
-                const cellItems = row.key==='__none'
-                  ? items.filter(i=>i.date===ds&&!i.archived&&!i.slot)
-                  : items.filter(i=>i.date===ds&&!i.archived&&i.slot===row.key);
-                return `<td style="padding:5px;vertical-align:top;border-bottom:1px solid var(--border);border-right:1px solid var(--border);background:${isToday?row.bg:'#fff'};min-height:46px"
-                  ondragover="event.preventDefault();this.style.outline='1.5px dashed ${row.color}'"
-                  ondragleave="if(!this.contains(event.relatedTarget))this.style.outline=''"
-                  ondrop="this.style.outline='';dropOnDaySlot(event,'${ds}','${row.key==='__none'?'':row.key}')">
-                  ${cellItems.slice(0,3).map(i=>`
-                    <div draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})" title="${h(i.text)}"
-                      style="font-size:.62rem;border-radius:4px;padding:2px 5px;margin-bottom:2px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;max-width:100%;background:${i.done?'#f0fdf4':i.date<today&&!i.done?'#fef2f2':row.bg};color:${i.done?'#16a34a':i.date<today&&!i.done?'#ef4444':row.color};border:1px solid ${i.done?'#bbf7d0':i.date<today&&!i.done?'#fecaca':'transparent'}">${i.done?'✓ ':i.date<today&&!i.done?'⚠ ':''}${h(i.text)}</div>`).join('')}
-                  ${cellItems.length>3?`<div style="font-size:.55rem;color:var(--text2);text-align:center">+${cellItems.length-3}</div>`:''}
-                  <div onclick="openAddModalWithDate('${ds}')" style="font-size:.58rem;color:#d1d5db;cursor:pointer;text-align:center;margin-top:2px;line-height:1.2" title="Agregar aquí">+</div>
-                </td>`;
-              }).join('')}
-            </tr>`).join('')}
-        </tbody>
-      </table>
+  }).join('');
+  el.innerHTML = `
+    <div class="pl-head">
+      <div><div class="pl-week">${lbl}</div><div class="pl-verdict" style="font-size:1.1rem">${_fmtRange(wk[0],wk[6])} · ${all.length} tarea${_s(all.length)} · ${doneN} hecha${_s(doneN)}</div></div>
+      <div class="wk-nav">
+        <button class="dy-btn" onclick="_weekOffset--;renderSemana()" title="Semana anterior">‹</button>
+        ${_weekOffset!==0?`<button class="dy-btn" onclick="_weekOffset=0;renderSemana()">Hoy</button>`:''}
+        <button class="dy-btn" onclick="_weekOffset++;renderSemana()" title="Semana siguiente">›</button>
+      </div>
+    </div>
+    <div class="wk-grid">${grid}</div>
+    <div class="card dy-card" style="margin-top:14px">
+      <div class="dy-head">
+        <div><div class="pl-q">📥 Por planear</div><div class="pl-sub" style="margin-top:3px">Tareas sin día o vencidas. Toca la letra del día para asignarla.</div></div>
+        <input class="modal-input" id="wk-q" placeholder="Buscar…" style="max-width:220px" oninput="_planQ=this.value;_renderPlanList()"/>
+      </div>
+      <div id="wk-plan-list"></div>
     </div>`;
+  const q = document.getElementById('wk-q'); if (q) q.value = _planQ;
+  _renderPlanList();
+}
 
-  el.innerHTML = summaryHtml + tableHtml;
+function _renderPlanList() {
+  const box = document.getElementById('wk-plan-list');
+  if (!box) return;
+  const today = todayStr(), wk = _weekDays(_weekOffset), q = _planQ.trim().toLowerCase();
+  const LST = {todo:'To Do', semana:'To Do', compromisos:'Compromisos', proyectos:'Proyectos', extra:'Extra'};
+  const c = items.filter(i=>_live(i) && (!i.date || i.date<today) && (!q || (i.text||'').toLowerCase().includes(q)))
+    .sort((a,b)=>((a.date?0:1)-(b.date?0:1)) || (a.priority||3)-(b.priority||3));
+  const lim = 25;
+  box.innerHTML = c.length ? c.slice(0,lim).map(i=>{
+    const cat = getCat(i.cat);
+    return `<div class="wk-plan-row">
+      <div class="t" style="flex:1;min-width:0" onclick="openEditModal(${i.id})">
+        <div class="pl-row-title" style="font-weight:600">${h(i.text)}</div>
+        <div class="pl-row-meta">${cat.icon} ${h(cat.name)} · ${LST[i.cat_key]||'To Do'}${i.date?` · <span style="color:#ef4444;font-weight:700">vencida ${fmtDate(i.date)}</span>`:''}</div>
+      </div>
+      <div class="wk-days-btns">${wk.map((ds,ix)=>`<button class="wk-db${ds===today?' today':''}" ${ds<today?'disabled':''} title="${_fmtLong(ds)}" onclick="planTo(${i.id},'${ds}')">${_DAY_LETTERS[ix]}</button>`).join('')}</div>
+    </div>`;
+  }).join('') + (c.length>lim?`<div class="pl-row-meta" style="padding:8px 4px">+${c.length-lim} más · usa el buscador</div>`:'')
+  : `<div class="pl-sub" style="padding:6px 0">${q?'Nada coincide con tu búsqueda.':'Todo tiene día asignado. 🎉'}</div>`;
+}
+
+function planTo(id, ds) {
+  const i = items.find(x=>x.id===id); if (!i) return;
+  _moveItemTo(i, ds); save(); renderSemana();
+  showToast('→ '+_fmtLong(ds));
+}
+
+// ---------- BANDEJA ----------
+let _bandejaTab = (()=>{ try { return localStorage.getItem('mf_bq_tab') || 'todo'; } catch(e) { return 'todo'; } })();
+const BQ_TABS = [['todo','📝','To Do'],['compromisos','🤝','Compromisos'],['proyectos','🚀','Proyectos'],['extra','💡','Extra']];
+function _bqMatch(i, k) { return k==='todo' ? (!i.cat_key || i.cat_key==='todo' || i.cat_key==='semana' || !BQ_TABS.some(t=>t[0]===i.cat_key)) : i.cat_key===k; }
+function setBandejaTab(k) { _bandejaTab = k; try { localStorage.setItem('mf_bq_tab', k); } catch(e) {} renderBandeja(); }
+function openAddModalInList(k) { openAddModal(); setTimeout(()=>{ const s = document.getElementById('add-tipo'); if (s) s.value = k; }, 50); }
+function renderBandeja() {
+  const el = document.getElementById('panel-bandeja');
+  if (!el) return;
+  const tabs = BQ_TABS.map(([k,ic,lb])=>{
+    const n = items.filter(i=>_live(i) && _bqMatch(i,k)).length;
+    return `<button class="bq-tab${k===_bandejaTab?' active':''}" onclick="setBandejaTab('${k}')"
+      ondragover="event.preventDefault();this.classList.add('drop-zone-active')" ondragleave="this.classList.remove('drop-zone-active')"
+      ondrop="this.classList.remove('drop-zone-active');dropOnPanel(event,'${k}')">${ic} ${lb} <b>${n}</b></button>`;
+  }).join('');
+  const list = items.filter(i=>_live(i) && _bqMatch(i,_bandejaTab)).sort((a,b)=>(a.priority||3)-(b.priority||3));
+  el.innerHTML = `<div class="bq-tabs">${tabs}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:.85rem;color:var(--text2)">${list.length} pendiente${_s(list.length)}</div>
+      <button class="btn-sm" onclick="openAddModalInList('${_bandejaTab}')">+ Agregar</button>
+    </div>
+    ${list.length ? list.map(i=>taskCard(i)).join('') : `<div class="empty-state"><div class="es-icon">✨</div><p>Sin tareas pendientes aquí</p></div>`}`;
 }
 
 // ============================================================
@@ -2564,6 +2724,7 @@ function toggleFocus(id) {
   const item = items.find(i=>i.id===id);
   if (!item) return;
   item.focus = !item.focus;
+  if (item.focus) items.forEach(i=>{ if (i!==item) i.focus = false; });
   save(); renderCurrent();
   showToast(item.focus ? '📌 Fijada en foco' : 'Quitada del foco');
 }
@@ -2782,7 +2943,7 @@ window.addEventListener('DOMContentLoaded', () => {
   function _updateGreeting() {
     const h = new Date().getHours();
     const tl = document.getElementById('tab-dash-label');
-    if (tl) tl.textContent = 'Inicio';
+    if (tl) tl.textContent = 'Pulso';
     // Update timeline bar if on dash
     if (activeTab==='dash') {
       const now = new Date();
