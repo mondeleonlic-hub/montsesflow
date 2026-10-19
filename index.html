@@ -2790,19 +2790,61 @@ Tareas completadas: ${done}.
 Metas: ${goals.map(g=>`"${g.title}"(${_metaPct(g)}%)`).join(', ')||'ninguna'}.`;
 }
 
+// Groq retira modelos seguido: se prueba una lista y, si ninguno existe,
+// se pregunta a Groq cuáles hay. El que funciona se recuerda.
+const GROQ_MODELS = ['openai/gpt-oss-120b','qwen/qwen3.8-27b','openai/gpt-oss-20b'];
+async function _groqRequest(model, msgs) {
+  const body = {model, messages:msgs, max_completion_tokens:1500, temperature:0.7};
+  if (model.startsWith('openai/gpt-oss')) body.reasoning_effort = 'low';
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+_groqKey}, body:JSON.stringify(body)
+  });
+  const data = await res.json().catch(()=>({}));
+  return {res, data};
+}
+async function _callGroq(msgs) {
+  let saved = ''; try { saved = localStorage.getItem('mf_groq_model') || ''; } catch(e) {}
+  let tries = [...new Set([saved, ...GROQ_MODELS].filter(Boolean))];
+  let discovered = false;
+  for (let i = 0; i < tries.length; i++) {
+    const {res, data} = await _groqRequest(tries[i], msgs);
+    if (res.ok && data.choices) {
+      try { localStorage.setItem('mf_groq_model', tries[i]); } catch(e) {}
+      return data.choices[0]?.message?.content || '(sin respuesta)';
+    }
+    const err = data.error || {};
+    if (res.status===401) throw new Error('Tu clave de Groq no es válida o expiró. Crea una nueva en console.groq.com → API Keys y pégala en ✨ Asistente → configurar.');
+    if (res.status===429) throw new Error('Groq dice que hiciste muchas preguntas seguidas. Espera un minuto y vuelve a intentar.');
+    const modelGone = res.status===404 || err.code==='model_not_found' || err.code==='model_decommissioned' || /model/i.test(err.message||'');
+    if (!modelGone) throw new Error(err.message || ('Groq respondió con error '+res.status));
+    if (tries[i]===saved) { try { localStorage.removeItem('mf_groq_model'); } catch(e) {} }
+    if (i===tries.length-1 && !discovered) {
+      discovered = true;
+      try {
+        const r = await fetch('https://api.groq.com/openai/v1/models',{headers:{'Authorization':'Bearer '+_groqKey}});
+        const j = await r.json();
+        const ids = (j.data||[]).map(m=>m.id).filter(id=>!/whisper|guard|orpheus|tts|playai|compound|allam/i.test(id) && !tries.includes(id));
+        tries = tries.concat(ids);
+      } catch(e) {}
+    }
+  }
+  throw new Error('Groq no tiene ningún modelo de chat disponible para tu clave ahora mismo.');
+}
+
+function _mdLite(t) {
+  let x = h(String(t||'')).replace(/\r/g,'');
+  x = x.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*(?!\s)(.+?)\*(?!\*)/g,'$1<i>$2</i>');
+  x = x.replace(/^#{1,4}\s*(.+)$/gm,'<b>$1</b>');
+  x = x.replace(/^\s*[-•]\s+/gm,'• ');
+  return x.replace(/\n/g,'<br>');
+}
+
 async function _callAI(userText) {
   if (_aiProvider==='groq') {
     const msgs = [{role:'system',content:buildChatContext()}];
     for (const h of _chatHistory) msgs.push({role:h.role==='assistant'?'assistant':'user',content:h.content});
     msgs.push({role:'user',content:userText});
-    const res = await fetch('https://api.groq.com/openai/v1/chat/completions',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+_groqKey},
-      body:JSON.stringify({model:'llama-3.3-70b-versatile',messages:msgs,max_tokens:700,temperature:0.75})
-    });
-    const data = await res.json();
-    if (data.error) throw new Error(data.error.message||JSON.stringify(data.error));
-    return data.choices?.[0]?.message?.content || '(sin respuesta)';
+    return await _callGroq(msgs);
   } else if (_aiProvider==='openai') {
     const msgs = [{role:'system',content:buildChatContext()}];
     for (const h of _chatHistory) msgs.push({role:h.role==='assistant'?'assistant':'user',content:h.content});
@@ -2817,6 +2859,7 @@ async function _callAI(userText) {
     return data.choices?.[0]?.message?.content || '(sin respuesta)';
   } else if (_aiProvider==='gemini') {
     const MODELS = [
+      {v:'v1beta',m:'gemini-flash-latest'},{v:'v1beta',m:'gemini-2.5-flash'},{v:'v1beta',m:'gemini-2.0-flash'},
       {v:'v1beta',m:'gemini-1.5-flash'},{v:'v1',m:'gemini-1.5-flash'},
       {v:'v1beta',m:'gemini-1.5-flash-latest'},{v:'v1',m:'gemini-1.5-flash-latest'},
       {v:'v1beta',m:'gemini-pro'},{v:'v1',m:'gemini-pro'},
@@ -2878,7 +2921,7 @@ async function sendAI() {
   document.getElementById('ai-messages').appendChild(thinking);
   try {
     const reply = await _callAI(text);
-    thinking.textContent = reply;
+    thinking.innerHTML = _mdLite(reply);
     _chatHistory.push({role:'assistant',content:reply});
     if (_chatHistory.length>20) _chatHistory = _chatHistory.slice(-20);
   } catch(e) {
