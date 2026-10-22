@@ -551,6 +551,87 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bq-tab.active{background:var(--accent);border-color:var(--accent);color:#fff}
 .bq-tab b{font-size:.68rem;background:rgba(0,0,0,.07);padding:1px 7px;border-radius:99px}
 .bq-tab.active b{background:rgba(255,255,255,.25)}
+
+/* ===== v4 · menú claro con íconos propios + Pulso (A+C) ===== */
+:root{--sidebar-bg:#FAFAF8}
+.ico{flex-shrink:0;display:inline-block;vertical-align:middle}
+.sidebar{background:var(--sidebar-bg);color:var(--text);border-right:1px solid #ECEEE8}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:26px 22px 14px;color:var(--accent);font-size:1.02rem}
+.sidebar-logo span{color:var(--text)}
+.sidebar-section{color:#6b7280;padding:18px 22px 6px}
+.nav-item{margin:2px 10px;padding:9px 12px;border-radius:10px;color:#4b5563;font-weight:600;gap:11px}
+.nav-item .ico{color:#6b7280}
+.nav-item:hover{background:#F0F1EC;color:var(--text)}
+.nav-item.active{background:#1C2018;color:#fff;font-weight:700}
+.nav-item.active .ico{color:#B9E26B}
+.nav-item.active .badge{background:#B9E26B;color:#1C2018}
+.nav-label{flex:1}
+.sync-badge{background:#F0F1EC;color:#4b5563}
+.sync-badge:hover{background:#E6E8E1}
+.tab .tab-icon{display:flex;justify-content:center;height:24px}
+.tab .tab-icon .ico{width:22px;height:22px}
+.ai-toggle{display:inline-flex;align-items:center;gap:7px}
+.pz-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0;vertical-align:middle;margin-right:5px}
+.dy-chip{display:inline-flex;align-items:center}
+.dy-chip .pz-dot{width:7px;height:7px;margin-right:4px}
+.dy-mi{display:inline-flex;align-items:center;gap:3px}
+.dy-ic{display:inline-flex;align-items:center;justify-content:center}
+.dy-btn{display:inline-flex;align-items:center;gap:6px}
+.task-cat{display:inline-flex;align-items:center}
+.pin-btn{display:inline-flex;align-items:center;justify-content:center}
+
+.pz{display:flex;flex-direction:column;gap:18px;max-width:1240px}
+.pz-verdict{margin:6px 0 0;font-size:2.1rem;font-weight:900;letter-spacing:-.035em;line-height:1.08;color:var(--text)}
+.pz-top{display:flex;flex-wrap:wrap;gap:16px}
+.pz-card{background:#fff;border:1px solid #E8EAE3;border-radius:22px;padding:22px 24px;box-shadow:0 1px 2px rgba(16,24,40,.04),0 6px 20px rgba(16,24,40,.04);min-width:0}
+.pz-rings{flex:1 1 480px;display:flex;flex-wrap:wrap;align-items:center;gap:30px}
+.pz-ringbox{position:relative;width:240px;height:240px;flex-shrink:0;margin:0 auto}
+.pz-ringc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text)}
+.pz-legend{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:18px}
+.pz-li{display:flex;gap:12px;align-items:flex-start}
+.pz-li i{width:11px;height:11px;border-radius:50%;margin-top:6px;flex-shrink:0}
+.pz-k{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.pz-v{font-size:1.8rem;font-weight:900;letter-spacing:-.03em;line-height:1.1;margin-top:2px;color:var(--text)}
+.pz-v small{font-size:1rem;color:var(--text2);font-weight:700}
+.pz-s{font-size:.78rem;color:var(--text2);margin-top:3px;line-height:1.4}
+.pz-s a{color:var(--accent);font-weight:700}
+.pz-side{flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:16px}
+.pz-lbl{font-size:.7rem;font-weight:800;color:var(--text2);letter-spacing:.08em;text-transform:uppercase}
+.pz-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.pz-sq{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:5px;margin-top:12px}
+.pz-sq span{aspect-ratio:1;border-radius:5px;background:#EEF0EA}
+.pz-bar{position:relative;height:10px;background:#EEF0EA;border-radius:99px;margin:16px 0 6px}
+.pz-bar .f{position:absolute;left:0;top:0;bottom:0;border-radius:99px;min-width:4px}
+.pz-bar .m{position:absolute;top:-6px;width:2px;height:22px;background:#1C2018;border-radius:1px}
+.pz-stack{display:flex;height:12px;border-radius:99px;overflow:hidden;gap:3px;margin:14px 0 10px}
+.pz-leg{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--text);align-items:center}
+.pz-leg span{display:inline-flex;align-items:center}
+.pz-leg b{margin-left:4px}
+.pz-week-h{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.pz-h2{margin:0;font-size:1.2rem;font-weight:900;letter-spacing:-.02em;color:var(--text)}
+.pz-nav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pz-ib{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:#fff;color:var(--text);display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.pz-ib:hover{border-color:var(--accent)}
+.pz-plan{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font:inherit;font-size:.82rem;font-weight:800;cursor:pointer}
+.pz-plan.on{background:#1C2018}
+.pz-days{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.pz-day{flex:1 0 128px;background:#F6F7F4;border:1.5px solid transparent;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:5px;min-height:250px;min-width:0}
+.pz-day.today{background:#EEF5FF;border-color:#0A84FF}
+.pz-dh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;cursor:pointer}
+.pz-dn{font-size:.62rem;font-weight:800;letter-spacing:.1em;color:var(--text2)}
+.pz-day.today .pz-dn{color:#0060C7}
+.pz-dd{font-size:1.4rem;font-weight:900;color:var(--text);line-height:1.1}
+.pz-dc{font-size:.72rem;font-weight:700;color:var(--text2)}
+.pz-chip{font-size:.72rem;font-weight:600;border-radius:8px;padding:6px 8px;cursor:pointer;line-height:1.3;word-break:break-word;border:1px solid transparent}
+.pz-chip:hover{filter:brightness(.97)}
+.pz-chip.done{text-decoration:line-through;font-weight:700}
+.pz-more{font-size:.7rem;font-weight:700;color:var(--accent);cursor:pointer;padding:2px 4px}
+.pz-free{font-size:.74rem;color:var(--text2)}
+.pz-add{margin-top:auto;border:none;background:none;color:var(--text2);font:inherit;font-size:.74rem;font-weight:700;cursor:pointer;padding:8px 0 2px;text-align:left;display:inline-flex;align-items:center;gap:4px}
+.pz-add:hover{color:var(--accent)}
+.pz-planbox{margin-top:16px;border-top:1px solid #EEF0EA;padding-top:14px}
+@media(max-width:960px){.pz-days{flex-direction:column}.pz-day{min-height:0;flex:1 1 auto}.pz-add{margin-top:4px}}
+@media(max-width:480px){.pz-verdict{font-size:1.6rem}.pz-card{padding:18px}.pz-ringbox{width:200px;height:200px}.pz-ringbox svg{width:200px;height:200px}}
 </style>
 </head>
 <body>
@@ -560,18 +641,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- SIDEBAR -->
 <nav class="sidebar" id="sidebar">
-  <div class="sidebar-logo">✦ <span>Montse's Flow</span></div>
+  <div class="sidebar-logo"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/></svg><span>Montse's Flow</span></div>
   <div class="sidebar-section">Principal</div>
-  <div class="nav-item active" id="nav-dash" onclick="switchTab('dash')">📊 <span id="sidebar-greeting">Pulso</span></div>
-  <div class="nav-item" id="nav-log" onclick="switchTab('log')">📋 Log diario</div>
-  <div class="nav-item" id="nav-semana" onclick="switchTab('semana')">📅 Semana</div>
+  <div class="nav-item active" id="nav-dash" onclick="switchTab('dash')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-6 5 12 2.5-6h4"/></svg><span class="nav-label" id="sidebar-greeting">Pulso</span></div>
+  <div class="nav-item" id="nav-log" onclick="switchTab('log')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9.5l2 2 4-4M8 16h8"/></svg><span class="nav-label">Log diario</span></div>
   <div class="sidebar-section">Organizar</div>
-  <div class="nav-item" id="nav-bandeja" onclick="switchTab('bandeja')">📥 Bandeja <span class="badge" id="badge-bandeja">0</span></div>
-  <div class="nav-item" id="nav-metas" onclick="switchTab('metas')">⭐ Metas</div>
-  <div class="nav-item" id="nav-done" onclick="switchTab('done')">✅ Completadas</div>
+  <div class="nav-item" id="nav-bandeja" onclick="switchTab('bandeja')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l3-8h12l3 8v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 13h5l1.5 3h5L16 13h5"/></svg><span class="nav-label">Bandeja</span> <span class="badge" id="badge-bandeja">0</span></div>
+  <div class="nav-item" id="nav-metas" onclick="switchTab('metas')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><span class="nav-label">Metas</span></div>
+  <div class="nav-item" id="nav-done" onclick="switchTab('done')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg><span class="nav-label">Completadas</span></div>
   <div class="sidebar-section">Configuración</div>
-  <div class="nav-item" id="nav-cats" onclick="switchTab('cats')">🎨 Categorías</div>
-  <div class="nav-item" id="nav-settings" onclick="switchTab('settings')">⚙️ Ajustes</div>
+  <div class="nav-item" id="nav-cats" onclick="switchTab('cats')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8" r="1.3"/></svg><span class="nav-label">Categorías</span></div>
+  <div class="nav-item" id="nav-settings" onclick="switchTab('settings')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/></svg><span class="nav-label">Ajustes</span></div>
   <div class="sidebar-bottom">
     <div class="sync-badge" onclick="openModal('fb-modal')">
       <div class="sync-dot off" id="sync-dot"></div>
@@ -623,19 +703,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- MOBILE TAB BAR -->
 <div class="tab-bar" id="tab-bar">
   <div class="tab-bar-inner">
-    <button class="tab active" id="tab-dash" onclick="switchTab('dash')"><span class="tab-icon">📊</span><span id="tab-dash-label">Pulso</span></button>
-    <button class="tab" id="tab-log" onclick="switchTab('log')"><span class="tab-icon">📋</span>Log</button>
-    <button class="tab" id="tab-semana" onclick="switchTab('semana')"><span class="tab-icon">📅</span>Semana</button>
-    <button class="tab" id="tab-bandeja" onclick="switchTab('bandeja')"><span class="tab-icon">📥</span>Bandeja</button>
-    <button class="tab" id="tab-metas" onclick="switchTab('metas')"><span class="tab-icon">⭐</span>Metas</button>
+    <button class="tab active" id="tab-dash" onclick="switchTab('dash')"><span class="tab-icon"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-6 5 12 2.5-6h4"/></svg></span><span id="tab-dash-label">Pulso</span></button>
+    <button class="tab" id="tab-log" onclick="switchTab('log')"><span class="tab-icon"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9.5l2 2 4-4M8 16h8"/></svg></span><span>Log</span></button>
+    <button class="tab" id="tab-bandeja" onclick="switchTab('bandeja')"><span class="tab-icon"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l3-8h12l3 8v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 13h5l1.5 3h5L16 13h5"/></svg></span><span>Bandeja</span></button>
+    <button class="tab" id="tab-metas" onclick="switchTab('metas')"><span class="tab-icon"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span>Metas</span></button>
   </div>
 </div>
 
 <!-- AI BUTTON & PANEL -->
-<button class="ai-toggle" id="ai-toggle" onclick="toggleAI()">✨ Asistente</button>
+<button class="ai-toggle" id="ai-toggle" onclick="toggleAI()"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg> Asistente</button>
 <div class="ai-panel" id="ai-panel">
   <div class="ai-header" onclick="toggleAI()">
-    <span style="font-size:1rem">✨</span>
+    <span style="display:inline-flex;color:var(--accent)"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg></span>
     <div class="ai-header-title">Asistente IA</div>
     <span style="color:var(--text2);font-size:.8rem">▾</span>
   </div>
@@ -1433,12 +1512,13 @@ const PANEL_TITLES = {
 function _dashHeaderHtml() {
   const now = new Date();
   const hh = now.getHours();
-  const G = hh<12?'Buenos días ☀️':hh<18?'Buenas tardes 🌤️':'Buenas noches 🌙';
+  const G = hh<12?'Buenos días':hh<18?'Buenas tardes':'Buenas noches';
   const fecha = now.toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
   return `<div style="line-height:1.2"><div style="font-size:1.05rem;font-weight:900;color:var(--text)">${G}, Montse</div><div style="font-size:.72rem;font-weight:500;color:var(--text2)">${fecha}</div></div>`;
 }
 
 function switchTab(tab) {
+  if (tab==='semana') tab = 'dash';
   if (['todo','compromisos','proyectos','extra'].includes(tab)) { _bandejaTab = tab; try { localStorage.setItem('mf_bq_tab', tab); } catch(e) {} tab = 'bandeja'; }
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   const tabEl = document.getElementById('tab-'+tab);
@@ -1457,7 +1537,6 @@ function switchTab(tab) {
   activeTab = tab;
   window.scrollTo(0,0);
   if (tab==='dash') renderDash();
-  if (tab==='semana') renderSemana();
   if (tab==='cats') renderCatsPanel();
   if (tab==='metas') renderMetas();
   if (tab==='log') renderLogDiario();
@@ -1495,7 +1574,6 @@ function updateSidebarBadges() {
 
 function renderCurrent() {
   if (activeTab==='dash') renderDash();
-  else if (activeTab==='semana') renderSemana();
   else if (activeTab==='cats') renderCatsPanel();
   else if (activeTab==='metas') renderMetas();
   else if (activeTab==='log') renderLogDiario();
@@ -1601,110 +1679,210 @@ function _goalStatus(g) {
   return {...base, expected, level:'bad', label:'Atrasada'};
 }
 
+// ---------- ÍCONOS PROPIOS (sin emojis) ----------
+const ICON_PATHS = {
+  pulso:'<path d="M3 12h4l2.5-6 5 12 2.5-6h4"/>',
+  log:'<rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9.5l2 2 4-4M8 16h8"/>',
+  semana:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+  bandeja:'<path d="M3 13l3-8h12l3 8v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 13h5l1.5 3h5L16 13h5"/>',
+  metas:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/>',
+  done:'<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/>',
+  cats:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8" r="1.3"/>',
+  ajustes:'<path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="17" r="2"/>',
+  logo:'<path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2z"/>',
+  left:'<path d="M15 6l-6 6 6 6"/>', right:'<path d="M9 6l6 6-6 6"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>', x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  pin:'<path d="M9 4h6l-1 6 3 3H7l3-3z"/><path d="M12 13v7"/>',
+  next:'<path d="M5 12h12M13 6l6 6-6 6"/>',
+  repeat:'<path d="M4 11V9a3 3 0 0 1 3-3h12l-3-3M20 13v2a3 3 0 0 1-3 3H5l3 3"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  bolt:'<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>',
+  moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+  leaf:'<path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19l7-7"/>',
+  sparkle:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+};
+function ico(name, size, extra) {
+  return `<svg class="ico" width="${size||18}" height="${size||18}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${extra||''}>${ICON_PATHS[name]||''}</svg>`;
+}
+function catDot(c) { return `<span class="pz-dot" style="background:${(c&&c.color)||'#9ca3af'}"></span>`; }
+
+// ---------- COLOR ----------
+function _hexRgb(hex) {
+  let x = String(hex||'').trim().replace('#','');
+  if (x.length===3) x = x.split('').map(c=>c+c).join('');
+  const n = parseInt(x.slice(0,6),16);
+  return isNaN(n) ? [107,114,128] : [n>>16&255, n>>8&255, n&255];
+}
+function _mix(hex, toward, amt) {
+  const a = _hexRgb(hex), b = _hexRgb(toward);
+  return 'rgb(' + a.map((v,i)=>Math.round(v+(b[i]-v)*amt)).join(',') + ')';
+}
+function _lum(hex) { const f = v=>{ v/=255; return v<=.03928 ? v/12.92 : Math.pow((v+.055)/1.055,2.4); }; const [r,g,b] = _hexRgb(hex); return .2126*f(r)+.7152*f(g)+.0722*f(b); }
+function _onColor(hex) { const L = _lum(hex); return (1.05/(L+.05)) >= ((L+.05)/.0575) ? '#FFFFFF' : '#111827'; }
+
+// ---------- PULSO (A + C, claro) ----------
+let _pzPlanOpen = false;
+const RING = { t:'#FF2D55', h:'#34C759', m:'#0A84FF' };
+const RING_TXT = { t:'#C2003A', h:'#1F7A35', m:'#0060C7' };
+
+function _ringSvg(rings) {
+  const parts = rings.map(([r,pct,col])=>{
+    const C = 2*Math.PI*r, d = C*Math.max(0,Math.min(pct,100))/100;
+    return `<circle cx="150" cy="150" r="${r}" stroke="${col}" stroke-opacity=".15" stroke-width="24"/>` +
+      (d>0.5 ? `<circle cx="150" cy="150" r="${r}" stroke="${col}" stroke-width="24" stroke-dasharray="${d.toFixed(1)} ${C.toFixed(1)}"/>` : '');
+  }).join('');
+  return `<g transform="rotate(-90 150 150)" fill="none" stroke-linecap="round">${parts}</g>`;
+}
+
+function _chipHtml(i, ds) {
+  const c = getCat(i.cat), col = (c && c.color) || '#6b7280';
+  const style = i.done
+    ? `background:${col};color:${_onColor(col)}`
+    : `background:${_mix(col,'#ffffff',.86)};border-color:${_mix(col,'#ffffff',.55)};color:${_mix(col,'#000000',.5)}`;
+  return `<div class="pz-chip${i.done?' done':''}" style="${style}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})" title="${h(i.text)} · ${h(c.name)}">${h(i.text)}</div>`;
+}
+
 function renderDash() {
   const el = document.getElementById('panel-dash');
   if (!el) return;
-  const today = todayStr(), wk = _weekDays(0), mon = wk[0], sun = wk[6];
+  const today = todayStr(), wk0 = _weekDays(0), mon = wk0[0], sun = wk0[6];
   const inWk = ds => !!ds && ds >= mon && ds <= sun;
+  const dayIdx = wk0.indexOf(today), dayName = new Date(today+'T12:00:00').toLocaleDateString('es-MX',{weekday:'long'});
 
-  // 1 · Tareas
+  // Tareas
   const planned = items.filter(i=>!i.archived && inWk(i.date));
   const pDone = planned.filter(i=>i.done).length;
-  const extraDone = items.filter(i=>i.done && inWk(i.doneDate) && !inWk(i.date)).length;
-  const doneToday = items.filter(i=>i.done && i.doneDate===today).length;
-  const overdue = items.filter(i=>_live(i) && i.date && i.date < today).sort((a,b)=>a.date.localeCompare(b.date));
-  const elapsed = Math.round((wk.indexOf(today)+1)/7*100);
+  const overdue = items.filter(i=>_live(i) && i.date && i.date < today);
+  const elapsed = Math.round((dayIdx+1)/7*100);
   const pctT = planned.length ? Math.round(pDone/planned.length*100) : 0;
-  let tLevel = 'ok', tLabel = 'Al corriente';
-  if (!planned.length && !overdue.length) { tLevel = 'na'; tLabel = 'Sin plan'; }
-  else if (overdue.length > 5 || (planned.length && pctT < elapsed-35)) { tLevel = 'bad'; tLabel = 'Atrasada'; }
-  else if (overdue.length || (planned.length && pctT < elapsed-15)) { tLevel = 'warn'; tLabel = 'Ojo'; }
-  const cTasks = `<div class="pl-card">
-    <div class="pl-card-top"><div class="pl-q">¿Voy al corriente?</div>${_pill(tLevel,tLabel)}</div>
-    ${planned.length ? `
-      <div class="pl-big">${pDone}<small>de ${planned.length}</small></div>
-      <div class="pl-sub">tareas planeadas esta semana · ${pctT}%</div>
-      <div class="pl-track"><div class="pl-fill" style="width:${pctT}%"></div><div class="pl-mark" style="left:calc(${elapsed}% - 1px)" title="Dónde deberías ir hoy"></div></div>
-      <div class="pl-sub" style="margin-top:6px">La rayita marca dónde deberías ir hoy.</div>`
-    : `<div class="pl-sub">No tienes tareas con fecha esta semana. Repártelas en <b>Semana</b>.</div>
-       <button class="pl-link" onclick="switchTab('semana')">Planear la semana →</button>`}
-    <div class="pl-sub">Hoy llevas <b>${doneToday}</b> hecha${_s(doneToday)}${extraDone?` · +${extraDone} fuera de plan esta semana`:''}</div>
-    ${overdue.length ? `<div class="pl-sep">
-      <div class="pl-q" style="color:#b91c1c;margin-bottom:2px">${overdue.length} vencida${_s(overdue.length)}</div>
-      ${overdue.slice(0,3).map(i=>`<div class="pl-alert" onclick="openEditModal(${i.id})"><span style="color:#ef4444">●</span><span class="pl-ellipsis">${h(i.text)}</span><span style="font-size:.66rem;color:#b91c1c;flex-shrink:0">${fmtDate(i.date)}</span></div>`).join('')}
-      <button class="pl-link" onclick="activeLogDate=todayStr();_dayPickOpen=true;switchTab('log')">Resolverlas en Log diario →</button>
-    </div>` : ''}
-  </div>`;
+  let tLevel = 'ok', tSub = `Al corriente · a hoy esperabas ${elapsed}%`;
+  if (!planned.length && !overdue.length) { tLevel = 'na'; tSub = 'Sin tareas con día esta semana'; }
+  else if (overdue.length > 5 || (planned.length && pctT < elapsed-35)) { tLevel = 'bad'; tSub = `Atrasada · a hoy esperabas ${elapsed}%`; }
+  else if (overdue.length || (planned.length && pctT < elapsed-15)) { tLevel = 'warn'; tSub = `Un poco atrás · a hoy esperabas ${elapsed}%`; }
+  if (overdue.length) tSub += ` · ${overdue.length} vencida${_s(overdue.length)}`;
 
-  // 2 · Metas
+  // Hábitos
+  const habits = _getHabits();
+  let hRate = 0, hLevel = 'na', hMarks = 0;
+  if (habits.length) {
+    hMarks = habits.reduce((s,hb)=>s+_habitWeek7(hb.id).filter(w=>w.done).length, 0);
+    hRate = Math.round(hMarks/(habits.length*7)*100);
+    hLevel = hRate>=70 ? 'ok' : hRate>=40 ? 'warn' : 'bad';
+  }
+
+  // Metas
   const gs = goals.map(g=>({g, s:_goalStatus(g)}));
   const mLevel = gs.length ? _worst(gs.map(x=>x.s.level)) : 'na';
-  const mAllNa = gs.length && gs.every(x=>x.s.level==='na');
-  const mLabel = !gs.length ? 'Sin metas' : mAllNa ? 'Sin fecha' : {ok:'En ritmo', warn:'Ojo', bad:'Atrasadas'}[mLevel];
-  const cGoals = `<div class="pl-card">
-    <div class="pl-card-top"><div class="pl-q">¿Mis metas avanzan?</div>${_pill(mAllNa?'na':mLevel, mLabel)}</div>
-    ${gs.length ? gs.slice(0,4).map(({g,s})=>{
-      const sub = s.total
-        ? `${s.done} de ${s.total}${s.expected!==null&&s.pct<100?` · a hoy deberías llevar ${Math.round(s.expected/100*s.total)}`:''}`
-        : `${s.pct}%${s.expected!==null&&s.pct<100?` · a hoy deberías ir en ${s.expected}%`:''}`;
-      return `<div class="pl-goal" onclick="switchTab('metas')">
-        <div style="display:flex;align-items:center;gap:8px;min-width:0"><span>${g.icon||'🎯'}</span><div class="pl-row-title" style="flex:1">${h(g.title)}</div>${_pill(s.level,s.label)}</div>
-        <div class="pl-track" style="height:6px;margin-top:9px"><div class="pl-fill" style="width:${s.pct}%;background:${g.color||'var(--accent)'}"></div>${s.expected!==null&&s.pct<100?`<div class="pl-mark" style="left:calc(${s.expected}% - 1px);top:-3px;height:12px"></div>`:''}</div>
-        <div class="pl-row-meta" style="margin-top:6px">${sub}${g.due?` · vence ${fmtDate(g.due)}`:''}</div>
-      </div>`;
-    }).join('') + (gs.length>4?`<button class="pl-link" onclick="switchTab('metas')">Ver las ${gs.length} metas →</button>`:'')
-    : `<div class="pl-sub">Aún no tienes metas.</div><button class="pl-link" onclick="switchTab('metas')">Crear una meta →</button>`}
-  </div>`;
+  const mPct = gs.length ? Math.round(gs.reduce((a,x)=>a+x.s.pct,0)/gs.length) : 0;
+  const mWord = !gs.length ? 'Sin metas' : gs.every(x=>x.s.level==='na') ? 'Sin fecha' : {ok:'En ritmo',warn:'Un poco atrás',bad:'Atrasadas'}[mLevel];
 
-  // 3 · Hábitos
-  const habits = _getHabits();
-  let hLevel = 'na', hLabel = 'Sin hábitos', hRate = 0;
-  if (habits.length) {
-    const tot = habits.reduce((s,hb)=>s+_habitWeek7(hb.id).filter(w=>w.done).length, 0);
-    hRate = Math.round(tot/(habits.length*7)*100);
-    [hLevel, hLabel] = hRate>=70 ? ['ok','Constante'] : hRate>=40 ? ['warn','A medias'] : ['bad','Hay que retomar'];
-  }
-  const cHabits = `<div class="pl-card">
-    <div class="pl-card-top"><div class="pl-q">¿Sostengo mis hábitos?</div>${_pill(hLevel,hLabel)}</div>
-    ${habits.length ? `
-      <div class="pl-big">${hRate}%<small>últimos 7 días</small></div>
-      <div style="margin-top:10px">${habits.map(hb=>{
-        const w7 = _habitWeek7(hb.id), n = w7.filter(w=>w.done).length, st = _habitStreak(hb.id);
-        const emo = hb.emoji && hb.emoji!=='✓' ? hb.emoji+' ' : '';
-        return `<div class="pl-row">
-          <div class="pl-row-main"><div class="pl-row-title">${emo}${h(hb.text)}</div><div class="pl-row-meta">${n} de 7 días${st>1?` · 🔥 ${st} seguidos`:''}</div></div>
-          <div class="pl-dots">${w7.map(w=>`<span class="pl-dot${w.done?' on':''}${w.ds===today?' today':''}" title="${w.ds}"></span>`).join('')}</div>
-        </div>`;
-      }).join('')}</div>`
-    : `<div class="pl-sub">Aún no tienes hábitos.</div><button class="pl-link" onclick="_habEdit=true;switchTab('log')">Agregarlos en Log diario →</button>`}
-  </div>`;
+  const flagged = [['tareas',tLevel],['metas',mLevel],['hábitos',hLevel]].filter(a=>a[1]==='warn'||a[1]==='bad').map(a=>a[0]);
+  const verdict = flagged.length ? `Ojo con ${_joinEs(flagged)}.` : 'Vas bien esta semana.';
 
-  // 4 · Energía
+  const ringsHtml = `<section class="pz-card pz-rings">
+    <div class="pz-ringbox">
+      <svg width="240" height="240" viewBox="0 0 300 300" role="img" aria-label="Tareas ${pctT}%, hábitos ${hRate}%, metas ${mPct}%">${_ringSvg([[128,pctT,RING.t],[98,hRate,RING.h],[68,mPct,RING.m]])}</svg>
+      <div class="pz-ringc"><div class="pz-lbl">${h(dayName)}</div><div style="font-size:1.6rem;font-weight:900;letter-spacing:-.03em">Día ${dayIdx+1}/7</div></div>
+    </div>
+    <div class="pz-legend">
+      <div class="pz-li"><i style="background:${RING.t}"></i><div><div class="pz-k" style="color:${RING_TXT.t}">Tareas</div>
+        <div class="pz-v">${pDone}<small> / ${planned.length}</small></div><div class="pz-s">${tSub}</div></div></div>
+      <div class="pz-li"><i style="background:${RING.h}"></i><div><div class="pz-k" style="color:${RING_TXT.h}">Hábitos</div>
+        ${habits.length ? `<div class="pz-v">${hRate}%</div><div class="pz-s">${hMarks} de ${habits.length*7} marcas en 7 días</div>`
+          : `<div class="pz-v" style="font-size:1.1rem">Sin hábitos</div><div class="pz-s"><a href="#" onclick="_habEdit=true;switchTab('log');return false">Agrégalos en Log diario</a></div>`}</div></div>
+      <div class="pz-li"><i style="background:${RING.m}"></i><div><div class="pz-k" style="color:${RING_TXT.m}">Metas</div>
+        <div class="pz-v">${mWord}</div><div class="pz-s">${gs.length?`${gs.length} meta${_s(gs.length)} activa${_s(gs.length)} · ${mPct}% en promedio`:'<a href="#" onclick="switchTab(\'metas\');return false">Crea tu primera meta</a>'}</div></div></div>
+    </div>
+  </section>`;
+
+  // Metas (cuadritos + barra con línea de ritmo)
+  const goalCards = gs.slice(0,2).map(({g,s})=>{
+    const col = g.color || RING.m;
+    const total = s.total && s.total <= 40 ? s.total : 0;
+    const expN = s.expected!==null && total ? Math.min(total, Math.round(s.expected/100*total)) : null;
+    const squares = total ? `<div class="pz-sq">${Array.from({length:total}).map((_,k)=>{
+      if (k < s.done) return `<span style="background:${col}"></span>`;
+      if (expN && k === expN-1 && expN > s.done) return `<span style="background:#fff;box-shadow:inset 0 0 0 2px ${col}" title="A hoy deberías ir aquí"></span>`;
+      return '<span></span>';
+    }).join('')}</div>` : '';
+    const days = g.due ? Math.max(0, Math.round((new Date(g.due+'T12:00:00') - new Date(today+'T12:00:00'))/86400000)) : null;
+    const head = total ? `${s.done} de ${total}` : `${s.pct}%`;
+    const paceTxt = s.expected!==null && s.pct<100 ? (total ? `La línea: a hoy deberías llevar ${expN}` : `La línea: a hoy deberías ir en ${s.expected}%`) : s.label;
+    return `<section class="pz-card" style="cursor:pointer" onclick="switchTab('metas')">
+      <div class="pz-row"><div class="pz-lbl">${h(g.title)}</div><div class="pz-s" style="margin:0;white-space:nowrap">${g.due?`vence ${fmtDate(g.due)} · ${days} día${_s(days)}`:'sin fecha'}</div></div>
+      <div style="font-size:1rem;font-weight:800;margin-top:6px">${head} <span style="font-weight:600;color:var(--text2);font-size:.82rem">· ${s.label}</span></div>
+      ${squares}
+      <div class="pz-bar"><div class="f" style="width:${s.pct}%;background:${col}"></div>${s.expected!==null&&s.pct<100?`<div class="m" style="left:calc(${s.expected}% - 1px)"></div>`:''}</div>
+      <div class="pz-row pz-s" style="margin:0"><span>0</span><span>${paceTxt}</span><span>${total||'100%'}</span></div>
+    </section>`;
+  }).join('') || `<section class="pz-card"><div class="pz-lbl">Metas</div><div class="pz-s">Aún no tienes metas. <a href="#" onclick="switchTab('metas');return false">Crear una</a></div></section>`;
+
+  // Energía
   let pool = items.filter(i=>i.done && inWk(i.doneDate)), basis = 'hecha';
   if (!pool.length) { pool = planned; basis = 'planeada'; }
   const by = {};
   pool.forEach(i=>{ const c = getCat(i.cat); (by[c.name] = by[c.name] || {c, n:0}).n++; });
   let arr = Object.values(by).sort((a,b)=>b.n-a.n);
-  if (arr.length > 5) { const rest = arr.slice(4).reduce((s,x)=>s+x.n,0); arr = arr.slice(0,4).concat([{c:{name:'Otras',icon:'•',color:'#9ca3af'}, n:rest}]); }
-  const topShare = pool.length && arr.length ? Math.round(arr[0].n/pool.length*100) : 0;
-  const eLevel = !pool.length ? 'na' : topShare>=70 ? 'warn' : 'ok';
-  const eLabel = !pool.length ? 'Sin datos' : topShare>=70 ? 'Muy concentrada' : 'Repartida';
-  const cEnergy = `<div class="pl-card">
-    <div class="pl-card-top"><div class="pl-q">¿A dónde se va mi energía?</div>${_pill(eLevel,eLabel)}</div>
-    ${pool.length ? `
-      ${arr.map(x=>{ const p = Math.round(x.n/pool.length*100); return `<div class="pl-bar">
-        <div style="min-width:0"><div class="pl-row-title" style="font-weight:600;font-size:.78rem">${x.c.icon||'📌'} ${h(x.c.name)}</div>
-        <div class="pl-bar-track"><div class="pl-fill" style="width:${p}%;background:${x.c.color||'var(--accent)'}"></div></div></div>
-        <div class="pl-bar-pct">${p}%</div></div>`; }).join('')}
-      <div class="pl-sub">Según ${pool.length} tarea${_s(pool.length)} ${basis}${_s(pool.length)} esta semana.</div>`
-    : `<div class="pl-sub">Cuando completes tareas esta semana verás aquí en qué áreas se va tu tiempo.</div>`}
-  </div>`;
+  if (arr.length > 5) { const rest = arr.slice(4).reduce((s,x)=>s+x.n,0); arr = arr.slice(0,4).concat([{c:{name:'Otras',color:'#9ca3af'}, n:rest}]); }
+  const energyHtml = `<section class="pz-card">
+    <div class="pz-lbl">Tu energía esta semana</div>
+    ${pool.length ? `<div class="pz-stack">${arr.map(x=>`<span style="width:${x.n/pool.length*100}%;background:${x.c.color||'#9ca3af'}" title="${h(x.c.name)}"></span>`).join('')}</div>
+      <div class="pz-leg">${arr.map(x=>`<span>${catDot(x.c)}${h(x.c.name)} <b>${Math.round(x.n/pool.length*100)}%</b></span>`).join('')}</div>
+      <div class="pz-s" style="margin-top:10px">Según ${pool.length} tarea${_s(pool.length)} ${basis}${_s(pool.length)} esta semana.</div>`
+    : `<div class="pz-s">Cuando completes tareas verás aquí en qué áreas se va tu tiempo.</div>`}
+  </section>`;
 
-  const flagged = [['tareas',tLevel],['metas',mLevel],['hábitos',hLevel]].filter(a=>a[1]==='warn'||a[1]==='bad').map(a=>a[0]);
-  const verdict = flagged.length ? `Ojo con ${_joinEs(flagged)}.` : 'Vas bien esta semana.';
-  el.innerHTML = `
-    <div class="pl-head"><div><div class="pl-week">Semana ${_fmtRange(mon,sun)}</div><div class="pl-verdict">${verdict}</div></div></div>
-    <div class="pl-grid">${cTasks}${cGoals}${cHabits}${cEnergy}</div>`;
+  // Semana
+  const wk = _weekDays(_weekOffset);
+  const dayItems = ds => items.filter(i=>!i.archived && i.date===ds).sort((a,b)=>(b.done?1:0)-(a.done?1:0) || (a.priority||3)-(b.priority||3));
+  const weekCats = {};
+  const cols = wk.map(ds=>{
+    const d = new Date(ds+'T12:00:00'), list = dayItems(ds), dn = list.filter(i=>i.done).length;
+    list.forEach(i=>{ const c = getCat(i.cat); weekCats[c.name] = c; });
+    const isT = ds===today;
+    return `<div class="pz-day${isT?' today':''}${ds<today?' past':''}"
+      ondragover="event.preventDefault();this.classList.add('drop-zone-active')"
+      ondragleave="if(!this.contains(event.relatedTarget))this.classList.remove('drop-zone-active')"
+      ondrop="this.classList.remove('drop-zone-active');dropOnDay(event,'${ds}')">
+      <div class="pz-dh" onclick="activeLogDate='${ds}';switchTab('log')" title="Abrir en Log diario">
+        <div><div class="pz-dn">${isT?'HOY':d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','').toUpperCase()}</div><div class="pz-dd">${d.getDate()}</div></div>
+        ${list.length?`<span class="pz-dc" style="${dn===list.length?'color:#1F7A35':''}">${dn}/${list.length}</span>`:''}
+      </div>
+      ${list.slice(0,8).map(i=>_chipHtml(i,ds)).join('')}
+      ${list.length>8?`<div class="pz-more" onclick="activeLogDate='${ds}';switchTab('log')">+${list.length-8} más</div>`:''}
+      ${!list.length?'<div class="pz-free">Libre</div>':''}
+      <button class="pz-add" onclick="openAddModalWithDate('${ds}')">${ico('plus',14)} Agregar</button>
+    </div>`;
+  }).join('');
+  const toPlan = items.filter(i=>_live(i) && (!i.date || i.date<today)).length;
+  const wkLbl = {0:'Esta semana', 1:'Próxima semana', '-1':'Semana pasada'}[_weekOffset] || _fmtRange(wk[0],wk[6]);
+  const weekHtml = `<section class="pz-card" aria-label="Tu semana">
+    <div class="pz-week-h">
+      <div><h2 class="pz-h2">Tu semana</h2><div class="pz-s" style="margin-top:2px">${wkLbl} · ${_fmtRange(wk[0],wk[6])}</div></div>
+      <div class="pz-nav">
+        <button class="pz-ib" aria-label="Semana anterior" onclick="_weekOffset--;renderDash()">${ico('left',16)}</button>
+        ${_weekOffset!==0?`<button class="dy-btn" onclick="_weekOffset=0;renderDash()">Hoy</button>`:''}
+        <button class="pz-ib" aria-label="Semana siguiente" onclick="_weekOffset++;renderDash()">${ico('right',16)}</button>
+        <button class="pz-plan${_pzPlanOpen?' on':''}" onclick="_pzPlanOpen=!_pzPlanOpen;renderDash()">${ico('bandeja',16)} ${_pzPlanOpen?'Cerrar':'Por planear'} · ${toPlan}</button>
+      </div>
+    </div>
+    <div class="pz-days">${cols}</div>
+    ${Object.keys(weekCats).length?`<div class="pz-leg" style="margin-top:14px;color:var(--text2);font-size:.74rem">${Object.values(weekCats).map(c=>`<span>${catDot(c)}${h(c.name)}</span>`).join('')}<span>· Sólido = hecha · Claro = pendiente · Arrastra para mover de día</span></div>`:''}
+    ${_pzPlanOpen?`<div class="pz-planbox">
+      <div class="pz-row" style="align-items:center;flex-wrap:wrap">
+        <div><div class="pz-lbl">Por planear</div><div class="pz-s" style="margin-top:2px">Tareas sin día o vencidas. Toca la letra del día para asignarla.</div></div>
+        <input class="modal-input" id="wk-q" placeholder="Buscar…" style="max-width:240px" oninput="_planQ=this.value;_renderPlanList()"/>
+      </div>
+      <div id="wk-plan-list" style="margin-top:8px"></div>
+    </div>`:''}
+  </section>`;
+
+  el.innerHTML = `<div class="pz">
+    <div><div class="pl-week">Semana ${_fmtRange(mon,sun)} · ${h(dayName)} ${new Date(today+'T12:00:00').getDate()}</div><h1 class="pz-verdict">${verdict}</h1></div>
+    <div class="pz-top">${ringsHtml}<div class="pz-side">${goalCards}${energyHtml}</div></div>
+    ${weekHtml}
+  </div>`;
+  if (_pzPlanOpen) { const q = document.getElementById('wk-q'); if (q) q.value = _planQ; _renderPlanList(); }
 }
 
 // ---------- LOG DIARIO ----------
@@ -1720,17 +1898,17 @@ function _dayRow(i, D) {
     <div style="flex:1;min-width:0">
       <div class="dy-text" onclick="openEditModal(${i.id})">${h(i.text)}</div>
       <div class="dy-meta">
-        <span class="dy-chip">${cat.icon} ${h(cat.name)}</span>
-        ${i.time?`<span>🕐 ${h(i.time)}</span>`:''}
+        <span class="dy-chip">${catDot(cat)}${h(cat.name)}</span>
+        ${i.time?`<span class="dy-mi">${ico('clock',12)} ${h(i.time)}</span>`:''}
         ${subs.length?`<span>${subs.filter(s=>s.done).length}/${subs.length} acciones</span>`:''}
-        ${i.recur?'<span title="Repetitiva">🔁</span>':''}
+        ${i.recur?`<span class="dy-mi" title="Repetitiva">${ico('repeat',12)} repite</span>`:''}
         ${late?`<span style="color:#ef4444;font-weight:700">Vencida ${fmtDate(i.date)}</span>`:''}
       </div>
     </div>
     ${!i.done?`<div class="dy-acts">
-      <button class="dy-ic${i.focus?' on':''}" title="${i.focus?'Quitar de Ahora toca':'Fijar en Ahora toca'}" onclick="toggleFocus(${i.id})">📌</button>
-      <button class="dy-ic" title="Pasar a ${nextLbl}" onclick="dayMove(${i.id})">↪</button>
-      <button class="dy-ic" title="Regresar a la bandeja" onclick="dayDrop(${i.id})">✕</button>
+      <button class="dy-ic${i.focus?' on':''}" title="${i.focus?'Quitar de Ahora toca':'Fijar en Ahora toca'}" onclick="toggleFocus(${i.id})">${ico('pin',16)}</button>
+      <button class="dy-ic" title="Pasar a ${nextLbl}" onclick="dayMove(${i.id})">${ico('next',16)}</button>
+      <button class="dy-ic" title="Regresar a la bandeja" onclick="dayDrop(${i.id})">${ico('x',16)}</button>
     </div>`:''}
   </div>`;
 }
@@ -1765,7 +1943,7 @@ function renderLogDiario() {
     const pct = Math.round(remaining / (jam.totalSecs) * 100);
     const mins = Math.floor(remaining/60), secs = remaining%60;
     const jamTask = items.find(i=>i.id===jam.id);
-    jamHtml = `<div class="jam-header"><div><div style="font-size:.65rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.05em">⚡ JAM SESH ACTIVO</div><div class="jam-task">${jamTask?h(jamTask.text):'Tarea'}</div></div><div class="jam-time">${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</div><button class="jam-btn" onclick="stopJamSesh()" style="background:var(--red);color:#fff">✕</button></div><div class="jam-bar-wrap"><div class="jam-bar-fill" id="jam-bar-fill" style="width:${pct}%"></div></div>`;
+    jamHtml = `<div class="jam-header"><div><div style="font-size:.65rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.05em">JAM SESH ACTIVO</div><div class="jam-task">${jamTask?h(jamTask.text):'Tarea'}</div></div><div class="jam-time">${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}</div><button class="jam-btn" onclick="stopJamSesh()" style="background:var(--red);color:#fff">✕</button></div><div class="jam-bar-wrap"><div class="jam-bar-fill" id="jam-bar-fill" style="width:${pct}%"></div></div>`;
   }
 
 
@@ -1783,14 +1961,14 @@ function renderLogDiario() {
       const subs = f.subtasks||[], ds_ = subs.filter(s=>s.done).length;
       const jamOn = window._jam && window._jam.id===f.id;
       heroHtml = `<div class="dy-hero">
-        <div class="dy-hero-k">⚡ Ahora toca</div>
+        <div class="dy-hero-k">Ahora toca</div>
         <div class="dy-hero-t" onclick="openEditModal(${f.id})">${h(f.text)}</div>
         ${subs.length?`<div class="pl-track" style="height:5px;margin:-4px 0 6px;background:#dde8cc"><div class="pl-fill" style="width:${Math.round(ds_/subs.length*100)}%"></div></div>
           <div style="font-size:.7rem;color:var(--accent);margin-bottom:10px">${ds_}/${subs.length} acciones</div>`:''}
         <div class="dy-hero-actions">
           <button class="dy-btn" onclick="toggleDone(${f.id})">✓ Hecha</button>
-          <button class="dy-btn solid" onclick="openJamModal(${f.id})">${jamOn?'⏱ JAM activo':'⚡ JAM SESH'}</button>
-          <span style="font-size:.68rem;color:${f.focus?'var(--accent)':'var(--text2)'}">${f.focus?'📌 Fijada por ti':'Fija otra con 📌'}</span>
+          <button class="dy-btn solid" onclick="openJamModal(${f.id})">${jamOn?'JAM activo':'JAM SESH'}</button>
+          <span style="font-size:.68rem;color:${f.focus?'var(--accent)':'var(--text2)'}">${f.focus?'Fijada por ti':'Fija otra con el pin'}</span>
         </div>
       </div>`;
     }
@@ -1799,12 +1977,12 @@ function renderLogDiario() {
   // Hábitos
   const habits = _getHabits(), dayLog = _getHlog()[D] || {};
   const habitsHtml = `<div class="card dy-card">
-    <div class="dy-sec"><div class="pl-q">🌱 Hábitos</div>
+    <div class="dy-sec"><div class="pl-q">Hábitos</div>
       ${habits.length?`<button class="pl-link" style="margin:0" onclick="_habEdit=!_habEdit;renderLogDiario()">${_habEdit?'Listo':'Editar'}</button>`:''}</div>
     <div class="dy-habits">${habits.map(hb=>{
       const on = !!dayLog[hb.id], st = _habitStreak(hb.id);
       const emo = hb.emoji && hb.emoji!=='✓' ? hb.emoji+' ' : '';
-      return `<span class="dy-hab${on?' on':''}" ${_habEdit?'':`onclick="toggleHabit(${hb.id})"`}>${on?'✓ ':''}${emo}${h(hb.text)}${st>1&&!_habEdit?`<span class="st">🔥${st}</span>`:''}${_habEdit?`<span class="x" onclick="event.stopPropagation();removeHabit(${hb.id})" title="Quitar hábito">✕</span>`:''}</span>`;
+      return `<span class="dy-hab${on?' on':''}" ${_habEdit?'':`onclick="toggleHabit(${hb.id})"`}>${on?'✓ ':''}${emo}${h(hb.text)}${st>1&&!_habEdit?`<span class="st">${st} días</span>`:''}${_habEdit?`<span class="x" onclick="event.stopPropagation();removeHabit(${hb.id})" title="Quitar hábito">✕</span>`:''}</span>`;
     }).join('') || '<span class="pl-sub" style="margin:0">Sin hábitos todavía. Agrega el primero ↓</span>'}</div>
     ${_habEdit || !habits.length ? `<div style="display:flex;gap:6px;margin-top:12px">
       <input class="modal-input" id="hab-emo" placeholder="🙂" style="width:46px;text-align:center;padding:6px 4px" maxlength="2"/>
@@ -1828,7 +2006,7 @@ function renderLogDiario() {
       ${dn.map(i=>_dayRow(i,D)).join('')}
     </div>
     <div class="dy-tools">
-      <button class="dy-btn${_dayPickOpen?' solid':''}" onclick="toggleDayPick()">📥 ${_dayPickOpen?'Cerrar bandeja':'Traer de la bandeja'}</button>
+      <button class="dy-btn${_dayPickOpen?' solid':''}" onclick="toggleDayPick()">${ico('bandeja',15)} ${_dayPickOpen?'Cerrar bandeja':'Traer de la bandeja'}</button>
       <button class="dy-btn" onclick="openAddModalWithDate('${D}')">+ Nueva tarea</button>
     </div>
     ${_dayPickOpen ? `<div class="dy-pick">
@@ -1840,9 +2018,9 @@ function renderLogDiario() {
   // Cerrar el día
   const showClose = pend.length && (isPast || (isToday && new Date().getHours() >= 17));
   const closeHtml = showClose ? `<div class="card dy-card dy-close">
-    <div style="flex:1;min-width:200px"><div class="pl-q">🌙 Cerrar el día</div>
+    <div style="flex:1;min-width:200px"><div class="pl-q">Cerrar el día</div>
       <div class="pl-sub" style="margin-top:4px">Te ${pend.length===1?'queda':'quedan'} ${pend.length} pendiente${_s(pend.length)}. Decide qué pasa con ${pend.length===1?'ella':'ellas'} para empezar limpia.</div></div>
-    <button class="dy-btn solid" onclick="dayMoveAll()">↪ Pasar ${pend.length===1?'a':'todas a'} ${isPast?'hoy':'mañana'}</button>
+    <button class="dy-btn solid" onclick="dayMoveAll()">Pasar ${pend.length===1?'a':'todas a'} ${isPast?'hoy':'mañana'}</button>
     <button class="dy-btn" onclick="dayDropAll()">Regresar a la bandeja</button>
   </div>` : '';
 
@@ -1861,18 +2039,18 @@ function _renderPickList() {
   const c = items.filter(i=>_live(i) && i.date!==D && (!q || (i.text||'').toLowerCase().includes(q)));
   const undated = k => c.filter(i=>!i.date && _bqMatch(i,k)).sort((a,b)=>(a.priority||3)-(b.priority||3));
   const groups = [
-    ['⚠️ Vencidas', c.filter(i=>i.date && i.date<today).sort((a,b)=>a.date.localeCompare(b.date))],
-    ['📝 To Do', undated('todo')], ['🤝 Compromisos', undated('compromisos')],
-    ['🚀 Proyectos', undated('proyectos')], ['💡 Extra', undated('extra')],
+    ['Vencidas', c.filter(i=>i.date && i.date<today).sort((a,b)=>a.date.localeCompare(b.date))],
+    ['To Do', undated('todo')], ['Compromisos', undated('compromisos')],
+    ['Proyectos', undated('proyectos')], ['Extra', undated('extra')],
   ];
-  if (q) groups.push(['📅 Con otra fecha', c.filter(i=>i.date && i.date>=today)]);
+  if (q) groups.push(['Con otra fecha', c.filter(i=>i.date && i.date>=today)]);
   const lim = q ? 30 : 6;
   const html = groups.filter(g=>g[1].length).map(([lbl,arr])=>`<div class="dy-pick-group">${lbl} · ${arr.length}</div>
     ${arr.slice(0,lim).map(i=>{ const cat=getCat(i.cat); return `<div class="dy-pick-row" onclick="pickToDay(${i.id})">
       <span class="plus">+</span><span class="pl-ellipsis" style="flex:1">${h(i.text)}</span>
-      <span style="font-size:.64rem;color:var(--text2);flex-shrink:0">${cat.icon}${i.date?' '+fmtDate(i.date):''}</span></div>`; }).join('')}
+      <span style="font-size:.64rem;color:var(--text2);flex-shrink:0;display:inline-flex;align-items:center;gap:5px">${catDot(cat)}${i.date?fmtDate(i.date):''}</span></div>`; }).join('')}
     ${arr.length>lim?`<div class="pl-row-meta" style="padding:2px 8px 4px">+${arr.length-lim} más · usa el buscador</div>`:''}`).join('');
-  box.innerHTML = html || `<div class="pl-sub" style="padding:8px">${q?'Nada coincide con tu búsqueda.':'No hay nada pendiente por traer. 🎉'}</div>`;
+  box.innerHTML = html || `<div class="pl-sub" style="padding:8px">${q?'Nada coincide con tu búsqueda.':'No hay nada pendiente por traer.'}</div>`;
 }
 
 function pickToDay(id) {
@@ -1891,52 +2069,8 @@ function _dayPending() { return items.filter(i=>_live(i) && i.date===activeLogDa
 function dayMoveAll() { const t = _dayNext(), p = _dayPending(); p.forEach(i=>_moveItemTo(i,t)); save(); renderCurrent(); showToast(`${p.length} pasada${_s(p.length)} a ${fmtDate(t)} ✓`); }
 function dayDropAll() { const p = _dayPending(); p.forEach(_undate); save(); renderCurrent(); showToast(`${p.length} de regreso en la bandeja`); }
 
-// ---------- SEMANA ----------
+// ---------- PLANEAR LA SEMANA (vive dentro de Pulso) ----------
 let _weekOffset = 0, _planQ = '';
-function renderSemana() {
-  const el = document.getElementById('panel-semana');
-  if (!el) return;
-  const today = todayStr(), wk = _weekDays(_weekOffset);
-  const dayItems = ds => items.filter(i=>!i.archived && i.date===ds).sort((a,b)=>(a.done?1:0)-(b.done?1:0) || (a.priority||3)-(b.priority||3));
-  const all = wk.flatMap(dayItems), doneN = all.filter(i=>i.done).length;
-  const lbl = {0:'Esta semana', 1:'Próxima semana', '-1':'Semana pasada'}[_weekOffset] || 'Semana';
-  const grid = wk.map((ds,ix)=>{
-    const d = new Date(ds+'T12:00:00'), list = dayItems(ds), p = list.filter(i=>!i.done).length;
-    const lc = p>=8 ? '#ef4444' : p>=6 ? '#f59e0b' : 'var(--accent)';
-    return `<div class="wk-day${ds===today?' today':''}${ds<today?' past':''}"
-      ondragover="event.preventDefault();this.classList.add('drop-zone-active')"
-      ondragleave="if(!this.contains(event.relatedTarget))this.classList.remove('drop-zone-active')"
-      ondrop="this.classList.remove('drop-zone-active');dropOnDay(event,'${ds}')">
-      <div class="wk-dh" onclick="activeLogDate='${ds}';switchTab('log')" title="Abrir en Log diario">
-        <span class="wk-dn">${ds===today?'Hoy':d.toLocaleDateString('es-MX',{weekday:'short'}).replace('.','')}</span>
-        <span class="wk-dd">${d.getDate()}</span></div>
-      <div class="wk-load" title="${p} pendiente${_s(p)}"><div style="width:${Math.min(100,p/8*100)}%;background:${lc}"></div></div>
-      ${list.slice(0,8).map(i=>`<div class="wk-t${i.done?' done':(ds<today?' late':'')}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})" title="${h(i.text)}">${h(i.text)}</div>`).join('')}
-      ${list.length>8?`<div class="wk-more" onclick="activeLogDate='${ds}';switchTab('log')">+${list.length-8} más</div>`:''}
-      <div class="wk-add" onclick="openAddModalWithDate('${ds}')">+ Agregar</div>
-    </div>`;
-  }).join('');
-  el.innerHTML = `
-    <div class="pl-head">
-      <div><div class="pl-week">${lbl}</div><div class="pl-verdict" style="font-size:1.1rem">${_fmtRange(wk[0],wk[6])} · ${all.length} tarea${_s(all.length)} · ${doneN} hecha${_s(doneN)}</div></div>
-      <div class="wk-nav">
-        <button class="dy-btn" onclick="_weekOffset--;renderSemana()" title="Semana anterior">‹</button>
-        ${_weekOffset!==0?`<button class="dy-btn" onclick="_weekOffset=0;renderSemana()">Hoy</button>`:''}
-        <button class="dy-btn" onclick="_weekOffset++;renderSemana()" title="Semana siguiente">›</button>
-      </div>
-    </div>
-    <div class="wk-grid">${grid}</div>
-    <div class="card dy-card" style="margin-top:14px">
-      <div class="dy-head">
-        <div><div class="pl-q">📥 Por planear</div><div class="pl-sub" style="margin-top:3px">Tareas sin día o vencidas. Toca la letra del día para asignarla.</div></div>
-        <input class="modal-input" id="wk-q" placeholder="Buscar…" style="max-width:220px" oninput="_planQ=this.value;_renderPlanList()"/>
-      </div>
-      <div id="wk-plan-list"></div>
-    </div>`;
-  const q = document.getElementById('wk-q'); if (q) q.value = _planQ;
-  _renderPlanList();
-}
-
 function _renderPlanList() {
   const box = document.getElementById('wk-plan-list');
   if (!box) return;
@@ -1950,23 +2084,23 @@ function _renderPlanList() {
     return `<div class="wk-plan-row">
       <div class="t" style="flex:1;min-width:0" onclick="openEditModal(${i.id})">
         <div class="pl-row-title" style="font-weight:600">${h(i.text)}</div>
-        <div class="pl-row-meta">${cat.icon} ${h(cat.name)} · ${LST[i.cat_key]||'To Do'}${i.date?` · <span style="color:#ef4444;font-weight:700">vencida ${fmtDate(i.date)}</span>`:''}</div>
+        <div class="pl-row-meta">${catDot(cat)} ${h(cat.name)} · ${LST[i.cat_key]||'To Do'}${i.date?` · <span style="color:#ef4444;font-weight:700">vencida ${fmtDate(i.date)}</span>`:''}</div>
       </div>
       <div class="wk-days-btns">${wk.map((ds,ix)=>`<button class="wk-db${ds===today?' today':''}" ${ds<today?'disabled':''} title="${_fmtLong(ds)}" onclick="planTo(${i.id},'${ds}')">${_DAY_LETTERS[ix]}</button>`).join('')}</div>
     </div>`;
   }).join('') + (c.length>lim?`<div class="pl-row-meta" style="padding:8px 4px">+${c.length-lim} más · usa el buscador</div>`:'')
-  : `<div class="pl-sub" style="padding:6px 0">${q?'Nada coincide con tu búsqueda.':'Todo tiene día asignado. 🎉'}</div>`;
+  : `<div class="pl-sub" style="padding:6px 0">${q?'Nada coincide con tu búsqueda.':'Todo tiene día asignado.'}</div>`;
 }
 
 function planTo(id, ds) {
   const i = items.find(x=>x.id===id); if (!i) return;
-  _moveItemTo(i, ds); save(); renderSemana();
+  _moveItemTo(i, ds); save(); renderCurrent();
   showToast('→ '+_fmtLong(ds));
 }
 
 // ---------- BANDEJA ----------
 let _bandejaTab = (()=>{ try { return localStorage.getItem('mf_bq_tab') || 'todo'; } catch(e) { return 'todo'; } })();
-const BQ_TABS = [['todo','📝','To Do'],['compromisos','🤝','Compromisos'],['proyectos','🚀','Proyectos'],['extra','💡','Extra']];
+const BQ_TABS = [['todo','','To Do'],['compromisos','','Compromisos'],['proyectos','','Proyectos'],['extra','','Extra']];
 function _bqMatch(i, k) { return k==='todo' ? (!i.cat_key || i.cat_key==='todo' || i.cat_key==='semana' || !BQ_TABS.some(t=>t[0]===i.cat_key)) : i.cat_key===k; }
 function setBandejaTab(k) { _bandejaTab = k; try { localStorage.setItem('mf_bq_tab', k); } catch(e) {} renderBandeja(); }
 function openAddModalInList(k) { openAddModal(); setTimeout(()=>{ const s = document.getElementById('add-tipo'); if (s) s.value = k; }, 50); }
@@ -1977,7 +2111,7 @@ function renderBandeja() {
     const n = items.filter(i=>_live(i) && _bqMatch(i,k)).length;
     return `<button class="bq-tab${k===_bandejaTab?' active':''}" onclick="setBandejaTab('${k}')"
       ondragover="event.preventDefault();this.classList.add('drop-zone-active')" ondragleave="this.classList.remove('drop-zone-active')"
-      ondrop="this.classList.remove('drop-zone-active');dropOnPanel(event,'${k}')">${ic} ${lb} <b>${n}</b></button>`;
+      ondrop="this.classList.remove('drop-zone-active');dropOnPanel(event,'${k}')">${lb} <b>${n}</b></button>`;
   }).join('');
   const list = items.filter(i=>_live(i) && _bqMatch(i,_bandejaTab)).sort((a,b)=>(a.priority||3)-(b.priority||3));
   el.innerHTML = `<div class="bq-tabs">${tabs}</div>
@@ -1985,7 +2119,7 @@ function renderBandeja() {
       <div style="font-size:.85rem;color:var(--text2)">${list.length} pendiente${_s(list.length)}</div>
       <button class="btn-sm" onclick="openAddModalInList('${_bandejaTab}')">+ Agregar</button>
     </div>
-    ${list.length ? list.map(i=>taskCard(i)).join('') : `<div class="empty-state"><div class="es-icon">✨</div><p>Sin tareas pendientes aquí</p></div>`}`;
+    ${list.length ? list.map(i=>taskCard(i)).join('') : `<div class="empty-state"><p>Sin tareas pendientes aquí</p></div>`}`;
 }
 
 // ============================================================
@@ -2026,8 +2160,8 @@ function taskCard(item, showDone=false) {
   const cat = getCat(item.cat);
   const hasEis = item.important!==null&&item.important!==undefined || item.urgent!==null&&item.urgent!==undefined;
   const eisBadge = hasEis ? `<div class="eis-badge">
-    ${item.important===true?'<span class="eis-tag i">⭐ IMP</span>':item.important===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">— NI</span>':''}
-    ${item.urgent===true?'<span class="eis-tag u">🔥 URG</span>':item.urgent===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">— NU</span>':''}
+    ${item.important===true?'<span class="eis-tag i">Importante</span>':item.important===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">— NI</span>':''}
+    ${item.urgent===true?'<span class="eis-tag u">Urgente</span>':item.urgent===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">— NU</span>':''}
   </div>` : '';
   const isJamActive = window._jam && window._jam.id===item.id;
   return `<div class="task-item${item.done?' is-done':''}" draggable="true" data-id="${item.id}" ondragstart="dragStart(event,${item.id})" ondragend="dragEnd(event)">
@@ -2045,10 +2179,10 @@ function taskCard(item, showDone=false) {
       </div>`:''}
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-      <div class="task-cat">${cat.icon} ${h(cat.name)}</div>
+      <div class="task-cat">${catDot(cat)} ${h(cat.name)}</div>
       ${item.date?`<div style="font-size:.65rem;color:var(--text2)">${fmtDate(item.date)}</div>`:''}
-      ${!item.done?`<button class="pin-btn${item.focus?' pinned':''}" onclick="event.stopPropagation();toggleFocus(${item.id})" title="${item.focus?'Quitar de foco':'Fijar en foco'}">📌</button>`:''}
-      ${!item.done?`<button class="jam-btn${isJamActive?' active':''}" onclick="event.stopPropagation();openJamModal(${item.id})">⚡ JAM</button>`:''}
+      ${!item.done?`<button class="pin-btn${item.focus?' pinned':''}" onclick="event.stopPropagation();toggleFocus(${item.id})" title="${item.focus?'Quitar de foco':'Fijar en foco'}">${ico('pin',14)}</button>`:''}
+      ${!item.done?`<button class="jam-btn${isJamActive?' active':''}" onclick="event.stopPropagation();openJamModal(${item.id})">JAM</button>`:''}
     </div>
   </div>`;
 }
