@@ -632,6 +632,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .pz-planbox{margin-top:16px;border-top:1px solid #EEF0EA;padding-top:14px}
 @media(max-width:960px){.pz-days{flex-direction:column}.pz-day{min-height:0;flex:1 1 auto}.pz-add{margin-top:4px}}
 @media(max-width:480px){.pz-verdict{font-size:1.6rem}.pz-card{padding:18px}.pz-ringbox{width:200px;height:200px}.pz-ringbox svg{width:200px;height:200px}}
+
+/* ===== v5 · selector de íconos ===== */
+.cat-ico{display:inline-flex;align-items:center;margin-right:4px}
+.icon-preview{width:46px;height:46px;border-radius:12px;background:#F3F4F0;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px;max-height:150px;overflow-y:auto;padding:4px 0}
+.icon-opt{height:38px;border-radius:10px;border:1.5px solid transparent;background:#F6F7F4;color:#374151;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.icon-opt:hover{border-color:var(--border)}
+.icon-opt.on{border-color:var(--accent);background:var(--accent-light);color:var(--accent)}
+.modal-close{display:inline-flex;align-items:center;justify-content:center}
+.mobile-menu-btn{align-items:center;justify-content:center}
+.goal-icon{display:flex;align-items:center}
 </style>
 </head>
 <body>
@@ -663,7 +674,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <!-- MAIN SHELL -->
 <div class="app-shell">
   <header class="main-header">
-    <button class="mobile-menu-btn" onclick="openSidebar()">☰</button>
+    <button class="mobile-menu-btn" onclick="openSidebar()" aria-label="Abrir menú"><svg class="ico" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
     <div id="header-title">Pulso</div>
     <div class="capture-row-top">
       <input type="text" id="cap-input" placeholder="Captura rápida…" onkeydown="if(event.key==='Enter')quickCapture()"/>
@@ -733,7 +744,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="modal-box">
     <div class="modal-header">
       <div class="modal-title">Nueva tarea</div>
-      <button class="modal-close" onclick="closeModal('add-modal')">✕</button>
+      <button class="modal-close" onclick="closeModal('add-modal')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <div>
@@ -748,11 +759,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div>
           <label class="modal-label">Tipo de tarea</label>
           <select class="modal-select" id="add-tipo">
-            <option value="todo">📝 To Do</option>
-            <option value="compromisos">🤝 Compromisos</option>
-            <option value="proyectos">🚀 Proyectos</option>
-            <option value="extra">💡 Extra</option>
-            <option value="semana">📅 Semana</option>
+            <option value="todo">To Do</option>
+            <option value="compromisos">Compromisos</option>
+            <option value="proyectos">Proyectos</option>
+            <option value="extra">Extra</option>
+            <option value="semana">Semana</option>
           </select>
         </div>
       </div>
@@ -760,10 +771,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div>
           <label class="modal-label">Prioridad</label>
           <select class="modal-select" id="add-priority">
-            <option value="1">🔴 Alta</option>
-            <option value="2">🟠 Media</option>
-            <option value="3" selected>🟡 Normal</option>
-            <option value="4">⚪ Baja</option>
+            <option value="1">Alta</option>
+            <option value="2">Media</option>
+            <option value="3" selected>Normal</option>
+            <option value="4">Baja</option>
           </select>
         </div>
         <div>
@@ -778,9 +789,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div>
         <label class="modal-label">Clasificación (Eisenhower)</label>
         <div class="eis-row">
-          <button class="eis-chip" id="add-chip-i"  type="button" onclick="setEis('add','i',true)">⭐ Importante</button>
+          <button class="eis-chip" id="add-chip-i"  type="button" onclick="setEis('add','i',true)">Importante</button>
           <button class="eis-chip" id="add-chip-ni" type="button" onclick="setEis('add','i',false)">— No importante</button>
-          <button class="eis-chip" id="add-chip-u"  type="button" onclick="setEis('add','u',true)">🔥 Urgente</button>
+          <button class="eis-chip" id="add-chip-u"  type="button" onclick="setEis('add','u',true)">Urgente</button>
           <button class="eis-chip" id="add-chip-nu" type="button" onclick="setEis('add','u',false)">— No urgente</button>
         </div>
       </div>
@@ -824,7 +835,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="modal-box">
     <div class="modal-header">
       <div class="modal-title">Editar tarea</div>
-      <button class="modal-close" onclick="closeModal('edit-modal')">✕</button>
+      <button class="modal-close" onclick="closeModal('edit-modal')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="edit-id"/>
@@ -840,11 +851,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div>
           <label class="modal-label">Tipo de tarea</label>
           <select class="modal-select" id="edit-tipo">
-            <option value="todo">📝 To Do</option>
-            <option value="compromisos">🤝 Compromisos</option>
-            <option value="proyectos">🚀 Proyectos</option>
-            <option value="extra">💡 Extra</option>
-            <option value="semana">📅 Semana</option>
+            <option value="todo">To Do</option>
+            <option value="compromisos">Compromisos</option>
+            <option value="proyectos">Proyectos</option>
+            <option value="extra">Extra</option>
+            <option value="semana">Semana</option>
           </select>
         </div>
       </div>
@@ -852,10 +863,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div>
           <label class="modal-label">Prioridad</label>
           <select class="modal-select" id="edit-priority">
-            <option value="1">🔴 Alta</option>
-            <option value="2">🟠 Media</option>
-            <option value="3">🟡 Normal</option>
-            <option value="4">⚪ Baja</option>
+            <option value="1">Alta</option>
+            <option value="2">Media</option>
+            <option value="3">Normal</option>
+            <option value="4">Baja</option>
           </select>
         </div>
         <div>
@@ -870,9 +881,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div>
         <label class="modal-label">Clasificación (Eisenhower)</label>
         <div class="eis-row">
-          <button class="eis-chip" id="edit-chip-i"  type="button" onclick="setEis('edit','i',true)">⭐ Importante</button>
+          <button class="eis-chip" id="edit-chip-i"  type="button" onclick="setEis('edit','i',true)">Importante</button>
           <button class="eis-chip" id="edit-chip-ni" type="button" onclick="setEis('edit','i',false)">— No importante</button>
-          <button class="eis-chip" id="edit-chip-u"  type="button" onclick="setEis('edit','u',true)">🔥 Urgente</button>
+          <button class="eis-chip" id="edit-chip-u"  type="button" onclick="setEis('edit','u',true)">Urgente</button>
           <button class="eis-chip" id="edit-chip-nu" type="button" onclick="setEis('edit','u',false)">— No urgente</button>
         </div>
       </div>
@@ -909,7 +920,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--accent-light);border:1.5px solid #c8d8a8;border-radius:9px;margin-bottom:8px;cursor:pointer" onclick="document.getElementById('edit-focus').checked=!document.getElementById('edit-focus').checked">
         <input type="checkbox" id="edit-focus" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer" onclick="event.stopPropagation()"/>
         <div>
-          <div style="font-size:.8rem;font-weight:800;color:var(--accent)">📌 En Foco Ahora</div>
+          <div style="font-size:.8rem;font-weight:800;color:var(--accent)">En foco ahora</div>
           <div style="font-size:.65rem;color:var(--text2);margin-top:1px">Esta tarea aparecerá primera en tu dashboard</div>
         </div>
       </div>
@@ -923,8 +934,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="modal-overlay" id="jam-modal">
   <div class="modal-box" style="max-width:340px;text-align:center">
     <div class="modal-header">
-      <div class="modal-title">⚡ JAM SESH</div>
-      <button class="modal-close" onclick="closeModal('jam-modal')">✕</button>
+      <div class="modal-title">JAM SESH</div>
+      <button class="modal-close" onclick="closeModal('jam-modal')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="jam-task-id"/>
@@ -944,8 +955,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="modal-overlay" id="fb-modal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">🔥 Firebase Sync</div>
-      <button class="modal-close" onclick="closeModal('fb-modal')">✕</button>
+      <div class="modal-title">Sincronización en la nube</div>
+      <button class="modal-close" onclick="closeModal('fb-modal')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <p style="font-size:.82rem;color:var(--text2)">Conecta Firebase para sincronizar tus tareas entre dispositivos.</p>
@@ -968,7 +979,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="modal-box" style="max-width:380px">
     <div class="modal-header">
       <div class="modal-title" id="cat-modal-title">Nueva categoría</div>
-      <button class="modal-close" onclick="closeModal('cat-modal')">✕</button>
+      <button class="modal-close" onclick="closeModal('cat-modal')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="cat-modal-id"/>
@@ -977,13 +988,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <input class="modal-input" id="cat-modal-name" placeholder="Ej. Marketing, RH…"/>
       </div>
       <div>
-        <label class="modal-label">Emoji</label>
+        <label class="modal-label">Ícono</label>
         <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
-          <div id="cat-emoji-preview" style="font-size:2rem;width:44px;text-align:center">📌</div>
-          <input class="modal-input" id="cat-modal-emoji" style="width:80px" placeholder="📌" maxlength="2" oninput="document.getElementById('cat-emoji-preview').textContent=this.value||'📌'"/>
-          <span style="font-size:.72rem;color:var(--text2)">o elige abajo:</span>
+          <div id="cat-emoji-preview" class="icon-preview"></div>
+          <input type="hidden" id="cat-modal-emoji"/>
+          <span style="font-size:.72rem;color:var(--text2)">Elige uno:</span>
         </div>
-        <div id="cat-emoji-grid" style="display:flex;flex-wrap:wrap;gap:4px;max-height:120px;overflow-y:auto;padding:4px 0"></div>
+        <div id="cat-emoji-grid" class="icon-grid"></div>
       </div>
       <div>
         <label class="modal-label">Color</label>
@@ -1000,17 +1011,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="modal-box">
     <div class="modal-header">
       <div class="modal-title" id="meta-modal-title">Nueva meta</div>
-      <button class="modal-close" onclick="closeModal('meta-modal')">✕</button>
+      <button class="modal-close" onclick="closeModal('meta-modal')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="meta-id"/>
       <div>
         <label class="modal-label">Icono</label>
         <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
-          <div id="meta-icon-preview" style="font-size:2rem;width:44px;text-align:center">🎯</div>
-          <input class="modal-input" id="meta-icon" placeholder="🎯" maxlength="4" style="width:70px" oninput="document.getElementById('meta-icon-preview').textContent=this.value||'🎯'"/>
+          <div id="meta-icon-preview" class="icon-preview"></div>
+          <input type="hidden" id="meta-icon"/>
         </div>
-        <div id="meta-emoji-grid" style="display:flex;flex-wrap:wrap;gap:4px;max-height:100px;overflow-y:auto;padding:4px 0;margin-bottom:6px"></div>
+        <div id="meta-emoji-grid" class="icon-grid" style="margin-bottom:6px"></div>
       </div>
       <div>
         <label class="modal-label">Color</label>
@@ -1024,10 +1035,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div>
         <label class="modal-label">Tipo</label>
         <select class="modal-select" id="meta-type">
-          <option value="personal">👤 Personal</option>
-          <option value="profesional">💼 Profesional</option>
-          <option value="salud">💪 Salud</option>
-          <option value="finanzas">💰 Finanzas</option>
+          <option value="personal">Personal</option>
+          <option value="profesional">Profesional</option>
+          <option value="salud">Salud</option>
+          <option value="finanzas">Finanzas</option>
         </select>
       </div>
       <div>
@@ -1063,17 +1074,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <div class="modal-overlay" id="ai-setup-modal">
   <div class="modal-box">
     <div class="modal-header">
-      <div class="modal-title">✨ Configurar IA</div>
-      <button class="modal-close" onclick="closeModal('ai-setup-modal')">✕</button>
+      <div class="modal-title">Configurar asistente</div>
+      <button class="modal-close" onclick="closeModal('ai-setup-modal')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <div>
         <label class="modal-label">Proveedor</label>
         <select class="modal-select" id="ai-provider-sel" onchange="renderAISetup()">
           <option value="">— Elegir —</option>
-          <option value="groq">⚡ Groq (gratis, recomendado)</option>
-          <option value="openai">🤖 ChatGPT / OpenAI</option>
-          <option value="gemini">💎 Google Gemini</option>
+          <option value="groq">Groq (gratis, recomendado)</option>
+          <option value="openai">ChatGPT / OpenAI</option>
+          <option value="gemini">Google Gemini</option>
         </select>
       </div>
       <div id="ai-setup-body"></div>
@@ -1090,10 +1101,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 let items = [];
 let goals = [];
 let cats = [
-  {id:1,name:'Personal',color:'#6b7a4e',icon:'👤'},
-  {id:2,name:'Trabajo',color:'#2563eb',icon:'💼'},
-  {id:3,name:'Salud',color:'#16a34a',icon:'💪'},
-  {id:4,name:'Finanzas',color:'#d97706',icon:'💰'},
+  {id:1,name:'Personal',color:'#6b7a4e',icon:'user'},
+  {id:2,name:'Trabajo',color:'#2563eb',icon:'briefcase'},
+  {id:3,name:'Salud',color:'#16a34a',icon:'dumbbell'},
+  {id:4,name:'Finanzas',color:'#d97706',icon:'calc'},
 ];
 let nextId = 1;
 let nextCatId = 10;
@@ -1112,8 +1123,12 @@ let _geminiModel = localStorage.getItem('mf_gemini_model') || '';
 
 // Firebase
 let _db = null;
-let _fbKey = localStorage.getItem('mf_fb_key') || '';
-let _fbProj = localStorage.getItem('mf_fb_proj') || '';
+// Tu nube (proyecto montseflow) se conecta sola en cualquier dispositivo,
+// salvo que la hayas desconectado a propósito.
+const FB_DEFAULT = {key:'AIzaSyDXwdUwNo2_3LG9d5Kg9-AtPQR8fXzV-X8', proj:'montseflow'};
+const _fbOff = localStorage.getItem('mf_fb_off') === '1';
+let _fbKey = localStorage.getItem('mf_fb_key') || (_fbOff ? '' : FB_DEFAULT.key);
+let _fbProj = localStorage.getItem('mf_fb_proj') || (_fbOff ? '' : FB_DEFAULT.proj);
 
 // ============================================================
 // STORAGE
@@ -1121,7 +1136,7 @@ let _fbProj = localStorage.getItem('mf_fb_proj') || '';
 function save() {
   const d = { items, goals, cats, nextId, nextCatId, seeds };
   try { localStorage.setItem('mf_v2', JSON.stringify(d)); } catch(e){}
-  if (_db) pushFirebase();
+  if (_db) _queuePush();
   updateSidebarBadges();
 }
 
@@ -1164,7 +1179,7 @@ function _legacyCatMap(legacyCats) {
     const name = (lc.label || lc.key).trim();
     let c = cats.find(c => (c.name||'').trim().toLowerCase() === name.toLowerCase());
     if (!c) {
-      c = {id: nextCatId++, name, icon: lc.emoji || '📌', color: LEGACY_COLORS[i % LEGACY_COLORS.length], legacyKey: lc.key};
+      c = {id: nextCatId++, name, icon: _guessIcon(name), color: LEGACY_COLORS[i % LEGACY_COLORS.length], legacyKey: lc.key};
       cats.push(c);
     } else if (!c.legacyKey) c.legacyKey = lc.key;
     map[lc.key] = c.id;
@@ -1259,7 +1274,7 @@ function normalizeCats() {
     const name = (c.label || c.key).trim();
     const dup = out.concat(cats.filter(x=>x&&x.name)).find(x => (x.legacyKey && x.legacyKey === c.key) || x.name.trim().toLowerCase() === name.toLowerCase());
     if (dup) { if (!dup.legacyKey) dup.legacyKey = c.key; return; }
-    out.push({id: nextCatId++, name, icon: c.emoji || '📌', color: LEGACY_COLORS[i % LEGACY_COLORS.length], legacyKey: c.key, brand: c.brand});
+    out.push({id: nextCatId++, name, icon: _guessIcon(name), color: LEGACY_COLORS[i % LEGACY_COLORS.length], legacyKey: c.key, brand: c.brand});
   });
   cats = out;
   const byKey = {};
@@ -1342,6 +1357,7 @@ function _spawnNextRecurring(item) {
 
 function runMigrations() {
   normalizeCats();
+  migrateIcons();
   cleanMissedRecurring();
   migrateLegacyLocal();
   seedNfcProject();
@@ -1356,13 +1372,13 @@ function seedNfcProject() {
   if (seeds.includes(KEY)) return;
   if (goals.some(g=>g.seed===KEY) || cats.some(c=>c.seed===KEY)) { seeds.push(KEY); save(); return; }
   const catId = nextCatId++;
-  cats.push({id:catId, name:'NFC Reseñas', color:'#e67e22', icon:'📲', seed:KEY});
+  cats.push({id:catId, name:'NFC Reseñas', color:'#e67e22', icon:'phone', seed:KEY});
   const ms = [];
   for (let i=1;i<=20;i++) ms.push({id:Date.now()+i, text:`Venta ${i} · $999`, done:false});
   goals.push({
     id: Date.now(), seed: KEY,
     title: 'Meta Mac: 20 tarjetas NFC',
-    icon: '💻', color: '#e67e22', type: 'finanzas',
+    icon: 'laptop', color: '#e67e22', type: 'finanzas',
     note: '20 × $999 = $19,980. Paga la MacBook ($14,000) y reinvierte el resto. Palomea cada venta.',
     due: '2026-12-15',
     milestones: ms,
@@ -1412,6 +1428,7 @@ async function initFirebase() {
   try {
     localStorage.setItem('mf_fb_key', key);
     localStorage.setItem('mf_fb_proj', proj);
+    localStorage.removeItem('mf_fb_off');
     _fbKey = key; _fbProj = proj;
     await pullFirebase();
     await pushFirebase();
@@ -1425,6 +1442,7 @@ async function initFirebase() {
 function disconnectFirebase() {
   _db = null; _fbKey = ''; _fbProj = '';
   localStorage.removeItem('mf_fb_key'); localStorage.removeItem('mf_fb_proj');
+  localStorage.setItem('mf_fb_off','1');
   setSyncStatus('off'); closeModal('fb-modal'); showToast('Firebase desconectado');
 }
 
@@ -1432,24 +1450,44 @@ async function pullFirebase() {
   if (!_fbKey || !_fbProj) return;
   const url = `https://firestore.googleapis.com/v1/projects/${_fbProj}/databases/(default)/documents/mf_data/main?key=${_fbKey}`;
   const res = await fetch(url);
-  if (!res.ok) { if (res.status===404) return; throw new Error('HTTP ' + res.status); }
+  if (!res.ok) { if (res.status===404) { _db = true; try { localStorage.setItem('mf_fb_merged','1'); } catch(e) {} return; } throw new Error('HTTP ' + res.status); }
   const doc = await res.json();
   if (doc.fields && doc.fields.data) {
     const d = JSON.parse(doc.fields.data.stringValue);
+    // Primera vez que este dispositivo se conecta: junta lo que tenga aquí con lo de la nube
+    // para que no se pierda nada. Después, la nube manda.
+    const firstTime = localStorage.getItem('mf_fb_merged') !== '1';
+    const byId = (a,b,key)=>{ const m = new Map((a||[]).map(x=>[x[key],x])); (b||[]).forEach(x=>{ if (!m.has(x[key])) m.set(x[key],x); }); return [...m.values()]; };
+    if (firstTime) {
+      d.items = byId(d.items, items, 'id');
+      d.goals = byId(d.goals, goals, 'id');
+      d.cats = byId(d.cats, cats.filter(c=>!(d.cats||[]).some(x=>(x.name||'').toLowerCase()===(c.name||'').toLowerCase())), 'id');
+      d.habits = byId(d.habits, _getHabits(), 'id');
+      const hl = d.hlog || {}; Object.entries(_getHlog()).forEach(([ds,v])=>{ hl[ds] = Object.assign({}, v, hl[ds]||{}); }); d.hlog = hl;
+      d.nextId = Math.max(d.nextId||1, nextId, ...d.items.map(i=>(i.id<1e12?i.id+1:0)));
+      d.nextCatId = Math.max(d.nextCatId||10, nextCatId);
+      d.seeds = [...new Set([...(d.seeds||[]), ...seeds])];
+    }
     if (d.items) items = d.items;
     if (d.goals) goals = d.goals;
     if (d.cats) cats = d.cats;
     if (d.nextId) nextId = d.nextId;
     if (d.nextCatId) nextCatId = d.nextCatId;
     seeds = d.seeds || [];
+    if (d.habits) localStorage.setItem('mf_habits', JSON.stringify(d.habits));
+    if (d.hlog) localStorage.setItem('mf_hlog', JSON.stringify(d.hlog));
+    _db = true;
     save();
+    try { localStorage.setItem('mf_fb_merged','1'); } catch(e) {}
   }
   _db = true;
 }
 
+let _pushT = null;
+function _queuePush() { clearTimeout(_pushT); _pushT = setTimeout(()=>{ pushFirebase().then(()=>setSyncStatus('ok')).catch(()=>setSyncStatus('error')); }, 600); }
 async function pushFirebase() {
   if (!_fbKey || !_fbProj) return;
-  const d = JSON.stringify({ items, goals, cats, nextId, nextCatId, seeds });
+  const d = JSON.stringify({ items, goals, cats, nextId, nextCatId, seeds, habits:_getHabits(), hlog:_getHlog(), savedAt:new Date().toISOString() });
   const url = `https://firestore.googleapis.com/v1/projects/${_fbProj}/databases/(default)/documents/mf_data/main?key=${_fbKey}`;
   await fetch(url + '&updateMask.fieldPaths=data', {
     method: 'PATCH',
@@ -1492,7 +1530,7 @@ function todayStr() {
 }
 
 function getCat(id) {
-  return cats.find(c=>c.id===id) || {name:'Sin categoría',color:'#6b7280',icon:'📌'};
+  return cats.find(c=>c.id===id) || {name:'Sin categoría',color:'#6b7280',icon:'tag'};
 }
 
 function priorityColor(p) {
@@ -1591,9 +1629,9 @@ function renderCurrent() {
 // LOG DIARIO — Hábitos (C) + Timeline con hora (A)
 // ============================================================
 function _getHabits(){try{return JSON.parse(localStorage.getItem('mf_habits')||'[]')}catch(e){return[]}}
-function _saveHabits(h){localStorage.setItem('mf_habits',JSON.stringify(h))}
+function _saveHabits(h){localStorage.setItem('mf_habits',JSON.stringify(h));if(_db)_queuePush();}
 function _getHlog(){try{return JSON.parse(localStorage.getItem('mf_hlog')||'{}')}catch(e){return{}}}
-function _saveHlog(hl){localStorage.setItem('mf_hlog',JSON.stringify(hl))}
+function _saveHlog(hl){localStorage.setItem('mf_hlog',JSON.stringify(hl));if(_db)_queuePush();}
 function toggleHabit(id){
   const hl=_getHlog();
   if(!hl[activeLogDate])hl[activeLogDate]={};
@@ -1604,7 +1642,7 @@ function addHabit(){
   const inp=document.getElementById('hab-inp'),emo=document.getElementById('hab-emo');
   const t=inp?inp.value.trim():'';if(!t)return;
   const habs=_getHabits();
-  habs.push({id:Date.now(),text:t,emoji:(emo&&emo.value.trim())||'✓'});
+  habs.push({id:Date.now(),text:t});
   _saveHabits(habs);if(inp)inp.value='';renderLogDiario();
 }
 function removeHabit(id){_saveHabits(_getHabits().filter(h=>h.id!==id));renderLogDiario();}
@@ -1700,7 +1738,53 @@ const ICON_PATHS = {
   moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
   leaf:'<path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19l7-7"/>',
   sparkle:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+  tag:'<path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8" r="1.3"/>',
+  car:'<path d="M5 16V12l2-5h10l2 5v4"/><path d="M3 16h18M5 12h14"/><circle cx="7.5" cy="18" r="1.8"/><circle cx="16.5" cy="18" r="1.8"/>',
+  utensils:'<path d="M7 3v8M5 3v4a2 2 0 0 0 4 0V3M7 11v10M17 3c-2 2-2 6 0 8v10"/>',
+  drop:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+  phone:'<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18h2"/>',
+  layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+  compass:'<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/>',
+  users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.5a3 3 0 0 1 0 6M18 14c1.9.8 3 2.7 3 6"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/>',
+  megaphone:'<path d="M4 10v4h3l7 4V6L7 10z"/><path d="M18 9a4 4 0 0 1 0 6"/>',
+  briefcase:'<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/>',
+  calc:'<rect x="5" y="3" width="14" height="18" rx="2.5"/><path d="M8 7h8M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01"/>',
+  money:'<rect x="2.5" y="6" width="19" height="12" rx="2.5"/><circle cx="12" cy="12" r="2.8"/><path d="M6 9v.01M18 15v.01"/>',
+  chart:'<path d="M4 20V4M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/>',
+  wrench:'<path d="M15 4a5 5 0 0 0-4.6 6.9L3 18.3 5.7 21l7.4-7.4A5 5 0 0 0 20 9l-3 3-3-1-1-3z"/>',
+  camera:'<rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8 7l1.5-3h5L16 7"/><circle cx="12" cy="13.5" r="3.5"/>',
+  heart:'<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  star:'<path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z"/>',
+  home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+  book:'<path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20"/>',
+  dumbbell:'<path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/>',
+  bulb:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3z"/>',
+  cart:'<path d="M3 4h2l2.4 11h10.8L21 7H6.2"/><circle cx="9" cy="19.5" r="1.5"/><circle cx="17" cy="19.5" r="1.5"/>',
+  laptop:'<rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/>',
+  flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+  pencil:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',
+  menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
 };
+const PICK_ICONS = ['tag','car','utensils','drop','cart','phone','laptop','layers','compass','users','user','megaphone','briefcase','calc','money','chart','wrench','camera','heart','star','home','book','dumbbell','leaf','bulb','flag','metas','bolt','sparkle','semana'];
+function iconOf(key, fallback) { return ICON_PATHS[key] ? key : (fallback || 'tag'); }
+function catIco(c, size) { return `<span class="cat-ico" style="color:${(c&&c.color)||'#6b7280'}">${ico(iconOf(c&&c.icon), size||13)}</span>`; }
+function _guessIcon(name) {
+  const n = String(name||'').toLowerCase();
+  const R = [[/carwash|lavad|auto|coche/,'car'],[/food|comida|cocina|restaur/,'utensils'],[/nfc|rese/,'phone'],[/sistema/,'layers'],[/estrateg/,'compass'],
+    [/^rh\b|recursos|reclut|personal de|equipo/,'users'],[/market|mktg|redes|contenido|publici/,'megaphone'],[/admon|admin|finanz|contab|dinero|pago/,'calc'],
+    [/manten|repar/,'wrench'],[/media|video|foto/,'camera'],[/salud|gym|ejerc|deporte/,'dumbbell'],[/trabajo|oficina/,'briefcase'],[/casa|hogar/,'home'],[/personal|yo\b|josh/,'user']];
+  for (const [re,k] of R) if (re.test(n)) return k;
+  return 'tag';
+}
+// Cambia los emojis guardados en categorías, metas y hábitos por íconos propios (una vez).
+function migrateIcons() {
+  let ch = false;
+  cats.forEach(c=>{ if (!ICON_PATHS[c.icon]) { c.icon = _guessIcon(c.name); ch = true; } });
+  goals.forEach(g=>{ if (!ICON_PATHS[g.icon]) { g.icon = g.icon==='💻' ? 'laptop' : 'metas'; ch = true; } });
+  const hb = _getHabits(); if (hb.some(x=>x.emoji)) { hb.forEach(x=>{ delete x.emoji; }); localStorage.setItem('mf_habits', JSON.stringify(hb)); ch = true; }
+  if (ch) save();
+}
 function ico(name, size, extra) {
   return `<svg class="ico" width="${size||18}" height="${size||18}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${extra||''}>${ICON_PATHS[name]||''}</svg>`;
 }
@@ -1898,7 +1982,7 @@ function _dayRow(i, D) {
     <div style="flex:1;min-width:0">
       <div class="dy-text" onclick="openEditModal(${i.id})">${h(i.text)}</div>
       <div class="dy-meta">
-        <span class="dy-chip">${catDot(cat)}${h(cat.name)}</span>
+        <span class="dy-chip">${catIco(cat,12)}${h(cat.name)}</span>
         ${i.time?`<span class="dy-mi">${ico('clock',12)} ${h(i.time)}</span>`:''}
         ${subs.length?`<span>${subs.filter(s=>s.done).length}/${subs.length} acciones</span>`:''}
         ${i.recur?`<span class="dy-mi" title="Repetitiva">${ico('repeat',12)} repite</span>`:''}
@@ -1981,11 +2065,10 @@ function renderLogDiario() {
       ${habits.length?`<button class="pl-link" style="margin:0" onclick="_habEdit=!_habEdit;renderLogDiario()">${_habEdit?'Listo':'Editar'}</button>`:''}</div>
     <div class="dy-habits">${habits.map(hb=>{
       const on = !!dayLog[hb.id], st = _habitStreak(hb.id);
-      const emo = hb.emoji && hb.emoji!=='✓' ? hb.emoji+' ' : '';
+      const emo = '';
       return `<span class="dy-hab${on?' on':''}" ${_habEdit?'':`onclick="toggleHabit(${hb.id})"`}>${on?'✓ ':''}${emo}${h(hb.text)}${st>1&&!_habEdit?`<span class="st">${st} días</span>`:''}${_habEdit?`<span class="x" onclick="event.stopPropagation();removeHabit(${hb.id})" title="Quitar hábito">✕</span>`:''}</span>`;
     }).join('') || '<span class="pl-sub" style="margin:0">Sin hábitos todavía. Agrega el primero ↓</span>'}</div>
     ${_habEdit || !habits.length ? `<div style="display:flex;gap:6px;margin-top:12px">
-      <input class="modal-input" id="hab-emo" placeholder="🙂" style="width:46px;text-align:center;padding:6px 4px" maxlength="2"/>
       <input class="modal-input" id="hab-inp" placeholder="Nuevo hábito…" style="flex:1" onkeydown="if(event.key==='Enter')addHabit()"/>
       <button class="btn-sm" onclick="addHabit()">+</button>
     </div>` : ''}
@@ -2134,7 +2217,7 @@ function renderPanel(cat_key) {
   const list = items.filter(i=>i.cat_key===cat_key && !i.done && !i.archived);
   list.sort((a,b)=>a.priority-b.priority);
   if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><div class="es-icon">✨</div><p>Sin tareas pendientes</p><p style="margin-top:8px"><button class="btn-sm" onclick="openAddModal()">+ Nueva tarea</button></p></div>`;
+    el.innerHTML = `<div class="empty-state"><p>Sin tareas pendientes</p><p style="margin-top:8px"><button class="btn-sm" onclick="openAddModal()">+ Nueva tarea</button></p></div>`;
     return;
   }
   el.innerHTML = `
@@ -2150,7 +2233,7 @@ function renderDone() {
   if (!el) return;
   const list = items.filter(i=>i.done).sort((a,b)=>(b.doneDate||'').localeCompare(a.doneDate||''));
   if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><div class="es-icon">✅</div><p>Nada completado aún</p></div>`;
+    el.innerHTML = `<div class="empty-state"><p>Nada completado aún</p></div>`;
     return;
   }
   el.innerHTML = `<div>${list.map(i=>taskCard(i,true)).join('')}</div>`;
@@ -2179,7 +2262,7 @@ function taskCard(item, showDone=false) {
       </div>`:''}
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-      <div class="task-cat">${catDot(cat)} ${h(cat.name)}</div>
+      <div class="task-cat">${catIco(cat,12)} ${h(cat.name)}</div>
       ${item.date?`<div style="font-size:.65rem;color:var(--text2)">${fmtDate(item.date)}</div>`:''}
       ${!item.done?`<button class="pin-btn${item.focus?' pinned':''}" onclick="event.stopPropagation();toggleFocus(${item.id})" title="${item.focus?'Quitar de foco':'Fijar en foco'}">${ico('pin',14)}</button>`:''}
       ${!item.done?`<button class="jam-btn${isJamActive?' active':''}" onclick="event.stopPropagation();openJamModal(${item.id})">JAM</button>`:''}
@@ -2208,7 +2291,7 @@ function renderMetas() {
 
   el.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:1rem;font-weight:900">⭐ Metas ${now.getFullYear()}</div>
+      <div style="font-size:1rem;font-weight:900">Metas ${now.getFullYear()}</div>
       <button class="btn-sm" onclick="openMetaModal()">+ Nueva meta</button>
     </div>
     <div class="timeline-bar-wrap">
@@ -2224,17 +2307,17 @@ function renderMetas() {
       </div>
     </div>
     ${goals.length ? `<div class="goals-grid">${goals.map(g=>goalCard(g)).join('')}</div>` :
-      `<div class="empty-state"><div class="es-icon">⭐</div><p>Sin metas aún. ¡Agrega tu primera!</p></div>`}`;
+      `<div class="empty-state"><p>Sin metas aún. ¡Agrega tu primera!</p></div>`}`;
 }
 
 function goalCard(g) {
   const pct = Math.min(_metaPct(g), 100);
-  const typeEmoji = {personal:'👤',profesional:'💼',salud:'💪',finanzas:'💰'}[g.type]||'🎯';
+  const typeEmoji = '';
   return `<div class="goal-card">
     <div class="goal-card-header">
-      <div class="goal-icon">${g.icon||typeEmoji}</div>
+      <div class="goal-icon" style="color:${g.color||'#6b7a4e'}">${ico(iconOf(g.icon,'metas'),22)}</div>
       <div class="goal-title">${h(g.title)}</div>
-      <div class="goal-tag">${typeEmoji} ${h(g.type||'personal')}</div>
+      <div class="goal-tag">${h(g.type||'personal')}</div>
     </div>
     ${g.note?`<div class="goal-note">${h(g.note)}</div>`:''}
     <div class="goal-progress-track">
@@ -2251,7 +2334,7 @@ function goalCard(g) {
   </div>`;
 }
 
-const META_EMOJIS = ['🎯','⭐','🚀','💡','💪','💰','📚','🏆','🌱','❤️','🎨','🏃','🧘','✈️','🏠','🎵','📈','🔬','🤝','🌍','💼','🎓','🛡️','🔑','⚡','🌟','🧠','🎉','🏋️','🎸'];
+const META_EMOJIS = PICK_ICONS;
 const META_COLORS = ['#6b7a4e','#4a7a8a','#8a5a4a','#7a4a8a','#4a6a8a','#8a7a4a','#c0392b','#2980b9','#27ae60','#8e44ad','#e67e22','#16a085'];
 let _metaMilestones = [];
 
@@ -2278,12 +2361,12 @@ function addMetaMilestone() {
 function _renderMetaEmojiGrid(selected) {
   const grid = document.getElementById('meta-emoji-grid');
   if (!grid) return;
-  grid.innerHTML = META_EMOJIS.map(e=>`<button onclick="selectMetaEmoji('${e}')" style="font-size:1.1rem;width:30px;height:30px;border:1.5px solid ${e===selected?'var(--accent)':'transparent'};border-radius:6px;background:${e===selected?'var(--accent-light)':'transparent'};cursor:pointer;padding:0">${e}</button>`).join('');
+  grid.innerHTML = META_EMOJIS.map(e=>`<button type="button" class="icon-opt${e===selected?' on':''}" onclick="selectMetaEmoji('${e}')" aria-label="${e}">${ico(e,20)}</button>`).join('');
 }
 
 function selectMetaEmoji(e) {
   document.getElementById('meta-icon').value = e;
-  document.getElementById('meta-icon-preview').textContent = e;
+  document.getElementById('meta-icon-preview').innerHTML = ico(e, 24);
   _renderMetaEmojiGrid(e);
 }
 
@@ -2300,16 +2383,16 @@ function selectMetaColor(c) {
 
 function openMetaModal(id) {
   const delBtn = document.getElementById('meta-delete-btn');
-  let selIcon = '🎯', selColor = '#6b7a4e';
+  let selIcon = 'metas', selColor = '#6b7a4e';
   if (id) {
     const g = goals.find(g=>g.id===id);
     if (!g) return;
-    selIcon = g.icon||'🎯';
+    selIcon = iconOf(g.icon,'metas');
     selColor = g.color||'#6b7a4e';
     document.getElementById('meta-modal-title').textContent = 'Editar meta';
     document.getElementById('meta-id').value = id;
     document.getElementById('meta-icon').value = selIcon;
-    document.getElementById('meta-icon-preview').textContent = selIcon;
+    document.getElementById('meta-icon-preview').innerHTML = ico(selIcon, 24);
     document.getElementById('meta-color').value = selColor;
     document.getElementById('meta-title').value = g.title||'';
     document.getElementById('meta-type').value = g.type||'personal';
@@ -2321,8 +2404,8 @@ function openMetaModal(id) {
   } else {
     document.getElementById('meta-modal-title').textContent = 'Nueva meta';
     document.getElementById('meta-id').value = '';
-    document.getElementById('meta-icon').value = '🎯';
-    document.getElementById('meta-icon-preview').textContent = '🎯';
+    document.getElementById('meta-icon').value = 'metas';
+    document.getElementById('meta-icon-preview').innerHTML = ico('metas', 24);
     document.getElementById('meta-color').value = '#6b7a4e';
     document.getElementById('meta-title').value = '';
     document.getElementById('meta-type').value = 'personal';
@@ -2344,7 +2427,7 @@ function saveMeta() {
   const id = document.getElementById('meta-id').value;
   const data = {
     title,
-    icon: document.getElementById('meta-icon').value||'🎯',
+    icon: iconOf(document.getElementById('meta-icon').value,'metas'),
     color: document.getElementById('meta-color').value||'#6b7a4e',
     type: document.getElementById('meta-type').value,
     note: document.getElementById('meta-note').value.trim(),
@@ -2397,31 +2480,31 @@ function renderCatsPanel() {
         <div class="cat-card" onclick="openCatModal(${c.id})" style="cursor:pointer" title="Editar">
           <div class="cat-header">
             <div class="cat-color-dot" style="background:${c.color}"></div>
-            <div class="cat-name">${c.icon||''} ${h(c.name)}</div>
-            <span style="margin-left:auto;font-size:.7rem;color:var(--text2)">✏️</span>
+            <div class="cat-name" style="display:flex;align-items:center;gap:7px">${catIco(c,16)} ${h(c.name)}</div>
+            <span style="margin-left:auto;color:var(--text2)">${ico('pencil',14)}</span>
           </div>
           <div style="font-size:.75rem;color:var(--text2)">${items.filter(i=>i.cat===c.id&&!i.done&&!i.archived).length} pendientes</div>
         </div>`).join('')}
     </div>`;
 }
 
-const CAT_EMOJIS = ['🚀','💼','📋','📊','🎯','💰','🔧','📱','🤝','👥','⚙️','📈','🏢','💡','🔥','⚡','🌟','✨','📌','🗂️','📝','🏆','💪','🌱','🎨','📣','🛠️','🧠','❤️','🏠','🌿','⭐','👤','🧩','🍽️','🚗','🧹','💧','🌍','🐾','🎵','📸','🏋️','🧾','🛒','🤖','🎪','🏅','🔑','📦','💬'];
+const CAT_EMOJIS = PICK_ICONS;
 const CAT_COLORS = ['#6b7a4e','#4a7a8a','#8a5a4a','#7a4a8a','#4a6a8a','#8a7a4a','#5a8a6a','#8a4a6a'];
-let _editCatId = null, _selCatColor = '#6b7a4e', _selCatEmoji = '📌';
+let _editCatId = null, _selCatColor = '#6b7a4e', _selCatEmoji = 'tag';
 
 function openCatModal(id) {
   _editCatId = id || null;
   const cat = id ? cats.find(c=>c.id===id) : null;
   document.getElementById('cat-modal-title').textContent = cat ? 'Editar categoría' : 'Nueva categoría';
   document.getElementById('cat-modal-name').value = cat ? cat.name : '';
-  _selCatEmoji = cat ? (cat.icon||'📌') : '📌';
+  _selCatEmoji = cat ? iconOf(cat.icon) : 'tag';
   _selCatColor = cat ? (cat.color||'#6b7a4e') : '#6b7a4e';
   document.getElementById('cat-modal-emoji').value = _selCatEmoji;
-  document.getElementById('cat-emoji-preview').textContent = _selCatEmoji;
+  document.getElementById('cat-emoji-preview').innerHTML = ico(_selCatEmoji, 24);
+  document.getElementById('cat-emoji-preview').style.color = _selCatColor;
   document.getElementById('cat-delete-btn').style.display = cat ? '' : 'none';
-  // Emoji grid
   document.getElementById('cat-emoji-grid').innerHTML = CAT_EMOJIS.map(e=>
-    `<span onclick="selectCatEmoji('${e}')" class="cat-emoji-opt" data-e="${e}" style="font-size:1.4rem;cursor:pointer;padding:5px;border-radius:7px;background:${e===_selCatEmoji?'var(--accent-light)':'transparent'}">${e}</span>`
+    `<button type="button" onclick="selectCatEmoji('${e}')" class="cat-emoji-opt icon-opt${e===_selCatEmoji?' on':''}" data-e="${e}" aria-label="${e}">${ico(e,20)}</button>`
   ).join('');
   // Color swatches
   document.getElementById('cat-color-swatches').innerHTML = CAT_COLORS.map(col=>
@@ -2433,14 +2516,13 @@ function openCatModal(id) {
 function selectCatEmoji(e) {
   _selCatEmoji = e;
   document.getElementById('cat-modal-emoji').value = e;
-  document.getElementById('cat-emoji-preview').textContent = e;
-  document.querySelectorAll('.cat-emoji-opt').forEach(el=>{
-    el.style.background = el.dataset.e===e ? 'var(--accent-light)' : 'transparent';
-  });
+  document.getElementById('cat-emoji-preview').innerHTML = ico(e, 24);
+  document.querySelectorAll('.cat-emoji-opt').forEach(el=>el.classList.toggle('on', el.dataset.e===e));
 }
 
 function selectCatColor(col) {
   _selCatColor = col;
+  const pv = document.getElementById('cat-emoji-preview'); if (pv) pv.style.color = col;
   document.getElementById('cat-color-swatches').querySelectorAll('div').forEach(el=>{
     el.style.boxShadow = el.style.background===col ? '0 0 0 3px var(--text)' : 'none';
   });
@@ -2449,7 +2531,7 @@ function selectCatColor(col) {
 function saveCat() {
   const name = document.getElementById('cat-modal-name').value.trim();
   if (!name) { showToast('Escribe un nombre'); return; }
-  const emoji = document.getElementById('cat-modal-emoji').value.trim() || _selCatEmoji || '📌';
+  const emoji = iconOf(document.getElementById('cat-modal-emoji').value.trim() || _selCatEmoji);
   if (_editCatId) {
     const cat = cats.find(c=>c.id===_editCatId);
     if (cat) { cat.name=name; cat.icon=emoji; cat.color=_selCatColor; }
@@ -2476,7 +2558,7 @@ function renderSettings() {
   const providerName = {groq:'Groq (gratis)',openai:'ChatGPT/OpenAI',gemini:'Google Gemini','':'No configurado'}[_aiProvider]||_aiProvider;
   el.innerHTML = `
     <div class="settings-section">
-      <div class="settings-title">✨ Asistente IA</div>
+      <div class="settings-title">Asistente IA</div>
       <div class="settings-row">
         <label>Proveedor activo</label>
         <span style="font-size:.82rem;font-weight:700;color:var(--accent)">${providerName}</span>
@@ -2484,7 +2566,7 @@ function renderSettings() {
       <button class="btn-sm" onclick="openModal('ai-setup-modal');renderAISetup()">Configurar IA</button>
     </div>
     <div class="settings-section">
-      <div class="settings-title">🔥 Firebase Sync</div>
+      <div class="settings-title">Sincronización en la nube</div>
       <div class="settings-row">
         <label>Estado</label>
         <span style="font-size:.82rem;font-weight:700;color:${_fbKey?'var(--accent)':'var(--text2)'}">${_fbKey?'Configurado':'Sin configurar'}</span>
@@ -2492,7 +2574,7 @@ function renderSettings() {
       <button class="btn-sm" onclick="openModal('fb-modal')">Configurar Firebase</button>
     </div>
     <div class="settings-section">
-      <div class="settings-title">💾 Datos locales</div>
+      <div class="settings-title">Datos locales</div>
       <div class="settings-row">
         <label>Tareas guardadas</label>
         <span style="font-size:.82rem">${items.length} tareas</span>
@@ -2752,7 +2834,7 @@ function dropOnDay(e, ds) {
 function dropOnSlot(e, slotKey) {
   if (_dragId === null) return;
   const item = items.find(i=>i.id===_dragId);
-  const labels = {manana:'☀️ Mañana', tarde:'🌤️ Tarde', noche:'🌙 Noche'};
+  const labels = {manana:'Mañana', tarde:'Tarde', noche:'Noche'};
   if (item && item.slot !== slotKey) {
     item.slot = slotKey;
     save(); renderCurrent();
@@ -2769,7 +2851,7 @@ function clearSlot(id) {
 function dropOnDaySlot(e, ds, slotKey) {
   if (_dragId === null) return;
   const item = items.find(i=>i.id===_dragId);
-  const slotLabels = {manana:'☀️ Mañana', tarde:'🌤️ Tarde', noche:'🌙 Noche', '':'📋 Sin slot'};
+  const slotLabels = {manana:'Mañana', tarde:'Tarde', noche:'Noche', '':'Sin momento'};
   if (item) {
     if (ds) item.date = ds;
     item.slot = slotKey || null;
@@ -2817,10 +2899,10 @@ function startJamSesh(mins) {
     if (remaining <= 0) {
       playJamAlarm();
       stopJamSesh();
-      showToast('⚡ ¡JAM SESH terminado! 🎉');
+      showToast('¡JAM SESH terminado!');
     }
   }, 1000);
-  showToast('⚡ JAM SESH iniciado — '+mins+' min');
+  showToast('JAM SESH iniciado — '+mins+' min');
 }
 
 function playJamAlarm() {
@@ -2860,7 +2942,7 @@ function toggleFocus(id) {
   item.focus = !item.focus;
   if (item.focus) items.forEach(i=>{ if (i!==item) i.focus = false; });
   save(); renderCurrent();
-  showToast(item.focus ? '📌 Fijada en foco' : 'Quitada del foco');
+  showToast(item.focus ? 'Fijada en Ahora toca' : 'Quitada de Ahora toca');
 }
 
 function toggleDone(id) {
@@ -2900,7 +2982,7 @@ function quickCapture() {
 function populateCatSelect(selId, selected) {
   const sel = document.getElementById(selId);
   if (!sel) return;
-  sel.innerHTML = cats.map(c=>`<option value="${c.id}"${c.id===selected?' selected':''}>${c.icon||''} ${h(c.name)}</option>`).join('');
+  sel.innerHTML = cats.map(c=>`<option value="${c.id}"${c.id===selected?' selected':''}>${h(c.name)}</option>`).join('');
 }
 
 // ============================================================
@@ -2947,7 +3029,7 @@ async function _callGroq(msgs) {
       return data.choices[0]?.message?.content || '(sin respuesta)';
     }
     const err = data.error || {};
-    if (res.status===401) throw new Error('Tu clave de Groq no es válida o expiró. Crea una nueva en console.groq.com → API Keys y pégala en ✨ Asistente → configurar.');
+    if (res.status===401) throw new Error('Tu clave de Groq no es válida o expiró. Crea una nueva en console.groq.com → API Keys y pégala en Asistente → configurar.');
     if (res.status===429) throw new Error('Groq dice que hiciste muchas preguntas seguidas. Espera un minuto y vuelve a intentar.');
     const modelGone = res.status===404 || err.code==='model_not_found' || err.code==='model_decommissioned' || /model/i.test(err.message||'');
     if (!modelGone) throw new Error(err.message || ('Groq respondió con error '+res.status));
@@ -3018,7 +3100,7 @@ async function _callAI(userText) {
     }
     throw new Error('Ningún modelo Gemini disponible. Prueba Groq (gratis).');
   }
-  throw new Error('No hay IA configurada. Haz clic en "✨ Asistente" → configurar.');
+  throw new Error('No hay IA configurada. Haz clic en "Asistente" → configurar.');
 }
 
 function toggleAI() {
@@ -3026,7 +3108,7 @@ function toggleAI() {
   _aiPanel = !_aiPanel;
   panel.classList.toggle('open', _aiPanel);
   if (_aiPanel && document.getElementById('ai-messages').children.length===0) {
-    addAIMsg('bot', _hasAiKey() ? '¡Hola Montse! ¿En qué te ayudo hoy? 😊' : '¡Hola! Para usar el asistente, configura tu clave de IA. <a href="#" onclick="openModal(\'ai-setup-modal\');renderAISetup();return false" style="color:var(--accent)">Configurar ahora →</a>');
+    addAIMsg('bot', _hasAiKey() ? '¡Hola Montse! ¿En qué te ayudo hoy?' : '¡Hola! Para usar el asistente, configura tu clave de IA. <a href="#" onclick="openModal(\'ai-setup-modal\');renderAISetup();return false" style="color:var(--accent)">Configurar ahora →</a>');
   }
 }
 
@@ -3071,21 +3153,21 @@ function renderAISetup() {
   if (prov==='groq') {
     body.innerHTML = `
       <div style="background:var(--accent-light);border-radius:10px;padding:12px 14px;font-size:.8rem;color:var(--accent);margin-bottom:10px">
-        ⚡ Groq es gratis y muy rápido. Crea tu cuenta en <strong>console.groq.com</strong> → API Keys → Create key
+        Groq es gratis y muy rápido. Crea tu cuenta en <strong>console.groq.com</strong> → API Keys → Create key
       </div>
       <label class="modal-label">API Key de Groq</label>
       <input class="modal-input" id="setup-key" placeholder="gsk_…" value="${_groqKey}"/>`;
   } else if (prov==='openai') {
     body.innerHTML = `
       <div style="background:#fef3c7;border-radius:10px;padding:12px 14px;font-size:.8rem;color:#92400e;margin-bottom:10px">
-        💳 ChatGPT requiere crédito en platform.openai.com → API keys
+        ChatGPT requiere crédito en platform.openai.com → API keys
       </div>
       <label class="modal-label">API Key de OpenAI</label>
       <input class="modal-input" id="setup-key" placeholder="sk-…" value="${_openaiKey}"/>`;
   } else if (prov==='gemini') {
     body.innerHTML = `
       <div style="background:#f0fdf4;border-radius:10px;padding:12px 14px;font-size:.8rem;color:#166534;margin-bottom:10px">
-        💎 Crea tu clave en <strong>aistudio.google.com</strong> (no Google Cloud Console)
+        Crea tu clave en <strong>aistudio.google.com</strong> (no Google Cloud Console)
       </div>
       <label class="modal-label">API Key de Gemini</label>
       <input class="modal-input" id="setup-key" placeholder="AIza…" value="${_geminiKey}"/>`;
@@ -3144,7 +3226,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (_fbKey && _fbProj) {
     document.getElementById('fb-key').value = _fbKey;
     document.getElementById('fb-proj').value = _fbProj;
-    pullFirebase().then(()=>{ runMigrations(); setSyncStatus('ok'); renderCurrent(); }).catch(()=>setSyncStatus('error'));
+    pullFirebase().then(()=>{ runMigrations(); setSyncStatus('ok'); renderCurrent(); }).catch(()=>{ setSyncStatus('error'); runMigrations(); renderCurrent(); });
   }
   // Close modals on overlay click
   document.querySelectorAll('.modal-overlay').forEach(m=>{
