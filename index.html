@@ -643,6 +643,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .modal-close{display:inline-flex;align-items:center;justify-content:center}
 .mobile-menu-btn{align-items:center;justify-content:center}
 .goal-icon{display:flex;align-items:center}
+
+/* ===== v7 · copiar y pegar ===== */
+.pz-chip.sel,.dy-task.sel,.task-item.sel{outline:2.5px solid #0A84FF;outline-offset:1px;border-radius:8px}
+.dy-task.sel{background:#EEF5FF}
+.pz-paste{border:1.5px dashed #0A84FF;background:#fff;color:#0060C7;font:inherit;font-size:.74rem;font-weight:800;border-radius:8px;padding:6px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;justify-content:center;margin-top:4px}
+.pz-paste:hover{background:#EEF5FF}
+#clip-bar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;z-index:900;display:flex;align-items:center;gap:10px;background:#1C2018;color:#fff;padding:9px 10px 9px 16px;border-radius:99px;font-size:.8rem;box-shadow:0 8px 30px rgba(0,0,0,.18);transition:all .2s;max-width:calc(100vw - 24px)}
+#clip-bar.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+#clip-bar button{border:none;border-radius:99px;padding:6px 12px;font:inherit;font-size:.76rem;font-weight:800;cursor:pointer;background:#B9E26B;color:#1C2018}
+#clip-bar button.ghost{background:rgba(255,255,255,.12);color:#fff}
+@media(max-width:768px){#clip-bar{bottom:84px;font-size:.74rem}}
 </style>
 </head>
 <body>
@@ -925,6 +936,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         </div>
       </div>
       <button class="modal-btn primary" onclick="saveEdit()">Guardar cambios</button>
+      <button class="modal-btn" style="background:#F3F4F0;color:var(--text);border:1.5px solid var(--border)" onclick="copyFromModal()">Copiar tarea (para pegarla en otro día)</button>
       <button class="modal-btn danger" onclick="deleteItem()">Eliminar tarea</button>
     </div>
   </div>
@@ -1685,6 +1697,7 @@ function renderCurrent() {
   else if (activeTab==='bandeja') renderBandeja();
   else renderPanel(activeTab);
   updateSidebarBadges();
+  _renderClipBar();
 }
 
 // ============================================================
@@ -1830,6 +1843,7 @@ const ICON_PATHS = {
   flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
   pencil:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',
   menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+  copy:'<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
 };
 const PICK_ICONS = ['tag','car','utensils','drop','cart','phone','laptop','layers','compass','users','user','megaphone','briefcase','calc','money','chart','wrench','camera','heart','star','home','book','dumbbell','leaf','bulb','flag','metas','bolt','sparkle','semana'];
 function iconOf(key, fallback) { return ICON_PATHS[key] ? key : (fallback || 'tag'); }
@@ -1888,7 +1902,7 @@ function _chipHtml(i, ds) {
   const style = i.done
     ? `background:${col};color:${_onColor(col)}`
     : `background:${_mix(col,'#ffffff',.86)};border-color:${_mix(col,'#ffffff',.55)};color:${_mix(col,'#000000',.5)}`;
-  return `<div class="pz-chip${i.done?' done':''}" style="${style}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="openEditModal(${i.id})" title="${h(i.text)} · ${h(c.name)}">${h(i.text)}</div>`;
+  return `<div class="pz-chip${i.done?' done':''}${_sel.has(i.id)?' sel':''}" style="${style}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="taskClick(event,${i.id})" title="${h(i.text)} · ${h(c.name)}">${h(i.text)}</div>`;
 }
 
 function renderDash() {
@@ -1989,7 +2003,7 @@ function renderDash() {
     const d = new Date(ds+'T12:00:00'), list = dayItems(ds), dn = list.filter(i=>i.done).length;
     list.forEach(i=>{ const c = getCat(i.cat); weekCats[c.name] = c; });
     const isT = ds===today;
-    return `<div class="pz-day${isT?' today':''}${ds<today?' past':''}"
+    return `<div class="pz-day${isT?' today':''}${ds<today?' past':''}" onmouseenter="_hoverDay='${ds}'" onmouseleave="if(_hoverDay==='${ds}')_hoverDay=null"
       ondragover="event.preventDefault();this.classList.add('drop-zone-active')"
       ondragleave="if(!this.contains(event.relatedTarget))this.classList.remove('drop-zone-active')"
       ondrop="this.classList.remove('drop-zone-active');dropOnDay(event,'${ds}')">
@@ -2000,6 +2014,7 @@ function renderDash() {
       ${list.slice(0,8).map(i=>_chipHtml(i,ds)).join('')}
       ${list.length>8?`<div class="pz-more" onclick="activeLogDate='${ds}';switchTab('log')">+${list.length-8} más</div>`:''}
       ${!list.length?'<div class="pz-free">Libre</div>':''}
+      ${_clip.length?`<button class="pz-paste" onclick="pasteTo('${ds}')">${ico('copy',14)} Pegar ${_clip.length>1?_clip.length:''}</button>`:''}
       <button class="pz-add" onclick="openAddModalWithDate('${ds}')">${ico('plus',14)} Agregar</button>
     </div>`;
   }).join('');
@@ -2042,10 +2057,10 @@ function _dayRow(i, D) {
   const today = todayStr(), cat = getCat(i.cat), subs = i.subtasks||[];
   const late = !i.done && i.date && i.date < today;
   const nextLbl = D < today ? 'hoy' : 'mañana';
-  return `<div class="dy-task${i.done?' done':''}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)">
+  return `<div class="dy-task${i.done?' done':''}${_sel.has(i.id)?' sel':''}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)">
     <div class="dy-check${i.done?' done':''}" onclick="toggleDone(${i.id})" title="${i.done?'Marcar pendiente':'Marcar hecha'}">${i.done?'✓':''}</div>
     <div style="flex:1;min-width:0">
-      <div class="dy-text" onclick="openEditModal(${i.id})">${h(i.text)}</div>
+      <div class="dy-text" onclick="taskClick(event,${i.id})">${h(i.text)}</div>
       <div class="dy-meta">
         <span class="dy-chip">${catIco(cat,12)}${h(cat.name)}</span>
         ${i.time?`<span class="dy-mi">${ico('clock',12)} ${h(i.time)}</span>`:''}
@@ -2156,6 +2171,7 @@ function renderLogDiario() {
     <div class="dy-tools">
       <button class="dy-btn${_dayPickOpen?' solid':''}" onclick="toggleDayPick()">${ico('bandeja',15)} ${_dayPickOpen?'Cerrar bandeja':'Traer de la bandeja'}</button>
       <button class="dy-btn" onclick="openAddModalWithDate('${D}')">+ Nueva tarea</button>
+      ${_clip.length?`<button class="dy-btn solid" onclick="pasteTo('${D}')">${ico('copy',15)} Pegar ${_clip.length} aquí</button>`:''}
     </div>
     ${_dayPickOpen ? `<div class="dy-pick">
       <input class="modal-input" id="dy-pick-q" placeholder="Buscar en tus listas…" oninput="_renderPickList()"/>
@@ -2270,6 +2286,78 @@ function renderBandeja() {
     ${list.length ? list.map(i=>taskCard(i)).join('') : `<div class="empty-state"><p>Sin tareas pendientes aquí</p></div>`}`;
 }
 
+
+// ============================================================
+// SELECCIONAR · COPIAR · PEGAR TAREAS
+// Cmd/Ctrl + clic selecciona · Cmd/Ctrl + C copia · Cmd/Ctrl + V pega
+// en el día bajo el mouse (Tu semana) o en el día abierto (Log diario).
+// ============================================================
+const _sel = new Set();
+let _clip = [], _hoverDay = null;
+function taskClick(e, id) {
+  if (e && (e.metaKey || e.ctrlKey || e.shiftKey)) {
+    e.preventDefault(); e.stopPropagation();
+    _sel.has(id) ? _sel.delete(id) : _sel.add(id);
+    renderCurrent();
+    return;
+  }
+  if (_sel.size) { _sel.clear(); renderCurrent(); }
+  openEditModal(id);
+}
+function copySelection(ids) {
+  const list = (ids || [..._sel]).map(id=>items.find(i=>i.id===id)).filter(Boolean);
+  if (!list.length) return;
+  _clip = list.map(i=>JSON.parse(JSON.stringify(i)));
+  _sel.clear(); renderCurrent();
+  showToast(`${_clip.length} tarea${_clip.length>1?'s':''} copiada${_clip.length>1?'s':''} · pega en el día que quieras`, 2600);
+}
+function copyFromModal() {
+  const id = Number(document.getElementById('edit-id').value);
+  closeModal('edit-modal');
+  copySelection([id]);
+}
+function _copyOf(src, ds) {
+  const c = JSON.parse(JSON.stringify(src));
+  c.id = nextId++;
+  c.done = false; c.doneDate = null; c.archived = false; c.focus = false; c.recur = '';
+  delete c.nextId; delete c.legacyId; delete c.seed; delete c.slot; delete c.archivedReason;
+  (c.subtasks||[]).forEach(s=>{ s.done = false; });
+  c.created = new Date().toISOString();
+  const old = src.date || src.scheduledDate || '';
+  c.date = ds; if (c.scheduledDate !== undefined) c.scheduledDate = ds;
+  if (c.deadline && old) { const dl = new Date(c.deadline+'T12:00:00'); dl.setDate(dl.getDate()+_daysBetween(old, ds)); c.deadline = _ymd(dl); }
+  return c;
+}
+function pasteTo(ds) {
+  if (!_clip.length) return;
+  const copies = _clip.map(src=>_copyOf(src, ds));
+  items.unshift(...copies);
+  save(); renderCurrent();
+  showToast(`${copies.length} pegada${copies.length>1?'s':''} en ${_fmtLong(ds)}`, 2400);
+}
+function clearClip() { _clip = []; renderCurrent(); }
+function _renderClipBar() {
+  let bar = document.getElementById('clip-bar');
+  if (!bar) { bar = document.createElement('div'); bar.id = 'clip-bar'; document.body.appendChild(bar); }
+  if (!_clip.length && !_sel.size) { bar.className = ''; bar.innerHTML = ''; return; }
+  bar.className = 'on';
+  bar.innerHTML = _sel.size
+    ? `${ico('copy',16)}<span><b>${_sel.size}</b> seleccionada${_sel.size>1?'s':''} · Cmd + C para copiar</span><button onclick="copySelection()">Copiar</button><button class="ghost" onclick="_sel.clear();renderCurrent()">Cancelar</button>`
+    : `${ico('copy',16)}<span><b>${_clip.length}</b> copiada${_clip.length>1?'s':''} · pon el mouse en un día y Cmd + V, o toca Pegar</span><button class="ghost" onclick="clearClip()">Vaciar</button>`;
+}
+document.addEventListener('keydown', e=>{
+  const t = e.target, tag = (t && t.tagName) || '';
+  if (tag==='INPUT' || tag==='TEXTAREA' || tag==='SELECT' || (t && t.isContentEditable)) return;
+  if (document.querySelector('.modal-overlay.open')) return;
+  const k = (e.key||'').toLowerCase(), mod = e.metaKey || e.ctrlKey;
+  if (mod && k==='c' && _sel.size) { e.preventDefault(); copySelection(); }
+  else if (mod && k==='v' && _clip.length) {
+    e.preventDefault();
+    pasteTo(activeTab==='log' ? (activeLogDate || todayStr()) : (_hoverDay || todayStr()));
+  }
+  else if (k==='escape' && (_sel.size || _clip.length)) { _sel.clear(); _clip = []; renderCurrent(); }
+});
+
 // ============================================================
 // TASK PANELS
 // ============================================================
@@ -2312,10 +2400,10 @@ function taskCard(item, showDone=false) {
     ${item.urgent===true?'<span class="eis-tag u">Urgente</span>':item.urgent===false?'<span class="eis-tag" style="background:#f3f4f6;color:#6b7280">— NU</span>':''}
   </div>` : '';
   const isJamActive = window._jam && window._jam.id===item.id;
-  return `<div class="task-item${item.done?' is-done':''}" draggable="true" data-id="${item.id}" ondragstart="dragStart(event,${item.id})" ondragend="dragEnd(event)">
+  return `<div class="task-item${item.done?' is-done':''}${_sel.has(item.id)?' sel':''}" draggable="true" data-id="${item.id}" ondragstart="dragStart(event,${item.id})" ondragend="dragEnd(event)">
     <div class="task-check${item.done?' done':''}" onclick="toggleDone(${item.id})">${item.done?'✓':''}</div>
     <div class="priority-dot p${item.priority||3}"></div>
-    <div style="flex:1;min-width:0" onclick="openEditModal(${item.id})">
+    <div style="flex:1;min-width:0" onclick="taskClick(event,${item.id})">
       <div class="task-text">${h(item.text)}</div>
       ${item.note?`<div class="task-note">${h(item.note)}</div>`:''}
       ${eisBadge}
