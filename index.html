@@ -653,6 +653,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 #clip-bar.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
 #clip-bar button{border:none;border-radius:99px;padding:6px 12px;font:inherit;font-size:.76rem;font-weight:800;cursor:pointer;background:#B9E26B;color:#1C2018}
 #clip-bar button.ghost{background:rgba(255,255,255,.12);color:#fff}
+#clip-bar button{display:inline-flex;align-items:center;gap:5px}
+#clip-bar button.del{background:#FF6B6B;color:#fff}
+#clip-bar button.x{background:rgba(255,255,255,.14);color:#fff;width:32px;height:32px;padding:0;justify-content:center}
+#clip-bar button.x:hover{background:rgba(255,255,255,.26)}
 @media(max-width:768px){#clip-bar{bottom:84px;font-size:.74rem}}
 </style>
 </head>
@@ -2293,7 +2297,20 @@ function renderBandeja() {
 // en el día bajo el mouse (Tu semana) o en el día abierto (Log diario).
 // ============================================================
 const _sel = new Set();
-let _clip = [], _hoverDay = null;
+let _clip = [], _hoverDay = null, _undo = null, _undoT = null;
+function _setUndo(msg, fn) {
+  _undo = { msg, fn }; clearTimeout(_undoT);
+  _undoT = setTimeout(()=>{ _undo = null; _renderClipBar(); }, 7000);
+}
+function undoLast() { if (!_undo) return; const f = _undo.fn; _undo = null; clearTimeout(_undoT); f(); save(); renderCurrent(); showToast('Listo, se deshizo'); }
+function deleteSelection() {
+  if (!_sel.size) return;
+  const gone = items.filter(i=>_sel.has(i.id));
+  items = items.filter(i=>!_sel.has(i.id));
+  _sel.clear(); save(); renderCurrent();
+  _setUndo(`${gone.length} borrada${gone.length>1?'s':''}`, ()=>{ items.unshift(...gone); });
+  _renderClipBar();
+}
 function taskClick(e, id) {
   if (e && (e.metaKey || e.ctrlKey || e.shiftKey)) {
     e.preventDefault(); e.stopPropagation();
@@ -2330,20 +2347,23 @@ function _copyOf(src, ds) {
 }
 function pasteTo(ds) {
   if (!_clip.length) return;
-  const copies = _clip.map(src=>_copyOf(src, ds));
+  const copies = _clip.map(src=>_copyOf(src, ds)), ids = new Set(copies.map(c=>c.id));
   items.unshift(...copies);
+  _clip = [];
   save(); renderCurrent();
-  showToast(`${copies.length} pegada${copies.length>1?'s':''} en ${_fmtLong(ds)}`, 2400);
+  _setUndo(`${copies.length} pegada${copies.length>1?'s':''} en ${_fmtLong(ds)}`, ()=>{ items = items.filter(i=>!ids.has(i.id)); });
+  _renderClipBar();
 }
 function clearClip() { _clip = []; renderCurrent(); }
 function _renderClipBar() {
   let bar = document.getElementById('clip-bar');
   if (!bar) { bar = document.createElement('div'); bar.id = 'clip-bar'; document.body.appendChild(bar); }
-  if (!_clip.length && !_sel.size) { bar.className = ''; bar.innerHTML = ''; return; }
+  if (!_clip.length && !_sel.size && !_undo) { bar.className = ''; bar.innerHTML = ''; return; }
   bar.className = 'on';
-  bar.innerHTML = _sel.size
-    ? `${ico('copy',16)}<span><b>${_sel.size}</b> seleccionada${_sel.size>1?'s':''} · Cmd + C para copiar</span><button onclick="copySelection()">Copiar</button><button class="ghost" onclick="_sel.clear();renderCurrent()">Cancelar</button>`
-    : `${ico('copy',16)}<span><b>${_clip.length}</b> copiada${_clip.length>1?'s':''} · pon el mouse en un día y Cmd + V, o toca Pegar</span><button class="ghost" onclick="clearClip()">Vaciar</button>`;
+  const X = `<button class="x" aria-label="Cerrar" onclick="_sel.clear();_clip=[];_undo=null;renderCurrent()">${ico('x',16)}</button>`;
+  if (_sel.size) bar.innerHTML = `<span><b>${_sel.size}</b> seleccionada${_sel.size>1?'s':''}</span><button onclick="copySelection()">${ico('copy',14)} Copiar</button><button class="del" onclick="deleteSelection()">${ico('x',14)} Borrar</button>${X}`;
+  else if (_clip.length) bar.innerHTML = `${ico('copy',16)}<span><b>${_clip.length}</b> copiada${_clip.length>1?'s':''} · mouse sobre un día + Cmd V, o toca Pegar</span>${X}`;
+  else bar.innerHTML = `<span>${_undo.msg}</span><button onclick="undoLast()">Deshacer</button>${X}`;
 }
 document.addEventListener('keydown', e=>{
   const t = e.target, tag = (t && t.tagName) || '';
@@ -2355,7 +2375,9 @@ document.addEventListener('keydown', e=>{
     e.preventDefault();
     pasteTo(activeTab==='log' ? (activeLogDate || todayStr()) : (_hoverDay || todayStr()));
   }
-  else if (k==='escape' && (_sel.size || _clip.length)) { _sel.clear(); _clip = []; renderCurrent(); }
+  else if ((k==='backspace' || k==='delete') && _sel.size) { e.preventDefault(); deleteSelection(); }
+  else if (mod && k==='z' && _undo) { e.preventDefault(); undoLast(); }
+  else if (k==='escape' && (_sel.size || _clip.length || _undo)) { _sel.clear(); _clip = []; _undo = null; renderCurrent(); }
 });
 
 // ============================================================
@@ -2959,6 +2981,7 @@ function dragStart(e, id) {
 
 function dragEnd(e) {
   document.querySelectorAll('.dragging').forEach(el=>el.classList.remove('dragging'));
+  if (_clip.length) { _clip = []; setTimeout(renderCurrent, 0); }
 }
 
 function dropOnPanel(e, cat_key) {
