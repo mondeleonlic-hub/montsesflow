@@ -1454,6 +1454,7 @@ async function pullFirebase() {
   const doc = await res.json();
   if (doc.fields && doc.fields.data) {
     const d = JSON.parse(doc.fields.data.stringValue);
+    _base = JSON.parse(JSON.stringify(_pick(d)));
     // Primera vez que este dispositivo se conecta: junta lo que tenga aquí con lo de la nube
     // para que no se pierda nada. Después, la nube manda.
     const firstTime = localStorage.getItem('mf_fb_merged') !== '1';
@@ -1483,18 +1484,82 @@ async function pullFirebase() {
   _db = true;
 }
 
-let _pushT = null;
-function _queuePush() { clearTimeout(_pushT); _pushT = setTimeout(()=>{ pushFirebase().then(()=>setSyncStatus('ok')).catch(()=>setSyncStatus('error')); }, 600); }
-async function pushFirebase() {
-  if (!_fbKey || !_fbProj) return;
-  const d = JSON.stringify({ items, goals, cats, nextId, nextCatId, seeds, habits:_getHabits(), hlog:_getHlog(), savedAt:new Date().toISOString() });
-  const url = `https://firestore.googleapis.com/v1/projects/${_fbProj}/databases/(default)/documents/mf_data/main?key=${_fbKey}`;
-  await fetch(url + '&updateMask.fieldPaths=data', {
-    method: 'PATCH',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ fields:{ data:{ stringValue:d } } })
-  });
+// ============================================================
+// SINCRONIZACIÓN SEGURA ENTRE DISPOSITIVOS
+// Antes de guardar se lee la nube y se juntan los cambios tarea por tarea
+// (lo que cambiaste aquí + lo que cambió en otro lado), en vez de pisar todo.
+// ============================================================
+let _pushT = null, _base = null, _syncing = false, _syncAgain = false;
+function _fbUrl() { return `https://firestore.googleapis.com/v1/projects/${_fbProj}/databases/(default)/documents/mf_data/main?key=${_fbKey}`; }
+function _pick(o) {
+  o = o || {};
+  return { items:o.items||[], goals:o.goals||[], cats:o.cats||[], nextId:o.nextId||1, nextCatId:o.nextCatId||10,
+           seeds:o.seeds||[], habits:o.habits||[], hlog:o.hlog||{} };
 }
+function _snap() { return JSON.parse(JSON.stringify(_pick({items, goals, cats, nextId, nextCatId, seeds, habits:_getHabits(), hlog:_getHlog()}))); }
+function _merge3(base, loc, rem) {
+  const S = x => x===undefined ? undefined : JSON.stringify(x);
+  const list = (b, l, r) => {
+    const B = new Map(b.map(x=>[x.id,S(x)])), L = new Map(l.map(x=>[x.id,x])), R = new Map(r.map(x=>[x.id,x]));
+    const ids = [...new Set([...l.map(x=>x.id), ...r.map(x=>x.id)])], out = [];
+    ids.forEach(id=>{
+      const bs = B.get(id), lx = L.get(id), rx = R.get(id);
+      const pick = S(lx)===bs ? rx : (S(rx)===bs ? lx : (lx!==undefined ? lx : rx));
+      if (pick !== undefined) out.push(pick);
+    });
+    return out;
+  };
+  const hl = {}, bh = base.hlog, lh = loc.hlog, rh = rem.hlog;
+  new Set([...Object.keys(lh), ...Object.keys(rh)]).forEach(d=>{
+    const keys = new Set([...Object.keys(lh[d]||{}), ...Object.keys(rh[d]||{})]), day = {};
+    keys.forEach(k=>{ const lv = (lh[d]||{})[k], bv = (bh[d]||{})[k], rv = (rh[d]||{})[k]; const v = lv===bv ? rv : lv; if (v!==undefined) day[k] = v; });
+    if (Object.keys(day).length) hl[d] = day;
+  });
+  return { items:list(base.items, loc.items, rem.items), goals:list(base.goals, loc.goals, rem.goals), cats:list(base.cats, loc.cats, rem.cats),
+           nextId:Math.max(loc.nextId, rem.nextId), nextCatId:Math.max(loc.nextCatId, rem.nextCatId),
+           seeds:[...new Set([...loc.seeds, ...rem.seeds])], habits:list(base.habits, loc.habits, rem.habits), hlog:hl };
+}
+function _applySnap(m) {
+  items = m.items; goals = m.goals; cats = m.cats; nextId = m.nextId; nextCatId = m.nextCatId; seeds = m.seeds;
+  try {
+    localStorage.setItem('mf_v2', JSON.stringify({ items, goals, cats, nextId, nextCatId, seeds }));
+    localStorage.setItem('mf_habits', JSON.stringify(m.habits));
+    localStorage.setItem('mf_hlog', JSON.stringify(m.hlog));
+  } catch(e) {}
+  renderCurrent();
+}
+async function _putCloud(m) {
+  const d = JSON.stringify(Object.assign({}, m, { savedAt:new Date().toISOString() }));
+  const res = await fetch(_fbUrl() + '&updateMask.fieldPaths=data', {
+    method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ fields:{ data:{ stringValue:d } } })
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+}
+async function _syncNow() {
+  if (!_fbKey || !_fbProj || !_db) return;
+  if (_syncing) { _syncAgain = true; return; }
+  _syncing = true;
+  try {
+    const res = await fetch(_fbUrl(), {cache:'no-store'});
+    let remote = null;
+    if (res.ok) { const doc = await res.json(); if (doc.fields && doc.fields.data) remote = _pick(JSON.parse(doc.fields.data.stringValue)); }
+    else if (res.status !== 404) throw new Error('HTTP ' + res.status);
+    const local = _snap();
+    const merged = remote ? _merge3(_base || remote, local, remote) : local;
+    const ms = JSON.stringify(merged);
+    if (ms !== JSON.stringify(local)) _applySnap(JSON.parse(ms));
+    if (!remote || ms !== JSON.stringify(remote)) await _putCloud(merged);
+    _base = JSON.parse(ms);
+    setSyncStatus('ok');
+  } catch(e) { setSyncStatus('error'); }
+  finally { _syncing = false; if (_syncAgain) { _syncAgain = false; _syncNow(); } }
+}
+function _queuePush() { clearTimeout(_pushT); _pushT = setTimeout(_syncNow, 600); }
+async function pushFirebase() { if (!_fbKey || !_fbProj) return; _db = true; await _syncNow(); }
+// Traer lo nuevo de la nube al volver a la pestaña y cada 45 s mientras está a la vista.
+document.addEventListener('visibilitychange', ()=>{ if (document.visibilityState==='visible') _syncNow(); });
+window.addEventListener('focus', ()=>_syncNow());
+setInterval(()=>{ if (document.visibilityState==='visible') _syncNow(); }, 45000);
 
 function setSyncStatus(s) {
   const dot = document.getElementById('sync-dot');
