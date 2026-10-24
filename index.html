@@ -658,6 +658,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 #clip-bar button.x{background:rgba(255,255,255,.14);color:#fff;width:32px;height:32px;padding:0;justify-content:center}
 #clip-bar button.x:hover{background:rgba(255,255,255,.26)}
 @media(max-width:768px){#clip-bar{bottom:84px;font-size:.74rem}}
+
+/* ===== v9 · filtros de Bandeja ===== */
+.bq-filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:-2px 0 14px}
+.bq-search{display:flex;align-items:center;gap:6px;flex:1 1 220px;max-width:340px;height:36px;padding:0 12px;border:1.5px solid var(--border);border-radius:10px;background:#fff;color:var(--text2)}
+.bq-search:focus-within{border-color:var(--accent)}
+.bq-search input{border:none;outline:none;flex:1;min-width:0;font:inherit;font-size:.82rem;color:var(--text);background:transparent}
+.bq-sel{height:36px;border:1.5px solid var(--border);border-radius:10px;background:#fff;padding:0 10px;font:inherit;font-size:.8rem;color:var(--text);max-width:240px}
+.bq-f{display:inline-flex;align-items:center;gap:5px;height:34px;padding:0 12px;border-radius:99px;border:1.5px solid var(--border);background:#fff;color:#4b5563;font:inherit;font-size:.78rem;font-weight:700;cursor:pointer}
+.bq-f:hover{border-color:var(--accent)}
+.bq-f.on{background:#1C2018;border-color:#1C2018;color:#fff}
+.bq-clear{display:inline-flex;align-items:center;gap:4px;border:none;background:none;color:var(--accent);font:inherit;font-size:.78rem;font-weight:800;cursor:pointer;padding:0 4px}
 </style>
 </head>
 <body>
@@ -1846,6 +1857,7 @@ const ICON_PATHS = {
   flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
   pencil:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/>',
   menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',
+  search:'<circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/>',
   copy:'<rect x="8" y="8" width="12" height="12" rx="2.5"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>',
 };
 const PICK_ICONS = ['tag','car','utensils','drop','cart','phone','laptop','layers','compass','users','user','megaphone','briefcase','calc','money','chart','wrench','camera','heart','star','home','book','dumbbell','leaf','bulb','flag','metas','bolt','sparkle','semana'];
@@ -2271,24 +2283,60 @@ const BQ_TABS = [['todo','','To Do'],['compromisos','','Compromisos'],['proyecto
 function _bqMatch(i, k) { return k==='todo' ? (!i.cat_key || i.cat_key==='todo' || i.cat_key==='semana' || !BQ_TABS.some(t=>t[0]===i.cat_key)) : i.cat_key===k; }
 function setBandejaTab(k) { _bandejaTab = k; try { localStorage.setItem('mf_bq_tab', k); } catch(e) {} renderBandeja(); }
 function openAddModalInList(k) { openAddModal(); setTimeout(()=>{ const s = document.getElementById('add-tipo'); if (s) s.value = k; }, 50); }
+// Filtros de Bandeja (se recuerdan en este dispositivo)
+let _bqF = (()=>{ try { return Object.assign({q:'',cat:'',imp:false,urg:false,nodate:false,late:false}, JSON.parse(localStorage.getItem('mf_bq_f')||'{}')); } catch(e) { return {q:'',cat:'',imp:false,urg:false,nodate:false,late:false}; } })();
+_bqF.q = '';
+function _bqSave() { try { localStorage.setItem('mf_bq_f', JSON.stringify(Object.assign({}, _bqF, {q:''}))); } catch(e) {} }
+function _bqActive() { return !!(_bqF.q || _bqF.cat || _bqF.imp || _bqF.urg || _bqF.nodate || _bqF.late); }
+function _bqPass(i) {
+  const today = todayStr(), q = _bqF.q.trim().toLowerCase();
+  if (q && !((i.text||'')+' '+(i.note||'')+' '+(i.subtasks||[]).map(s=>s.text).join(' ')).toLowerCase().includes(q)) return false;
+  if (_bqF.cat && String(i.cat) !== String(_bqF.cat)) return false;
+  if (_bqF.imp && i.important !== true) return false;
+  if (_bqF.urg && i.urgent !== true) return false;
+  if (_bqF.nodate && i.date) return false;
+  if (_bqF.late && !(i.date && i.date < today)) return false;
+  return true;
+}
+function bqToggle(k) { _bqF[k] = !_bqF[k]; if (k==='nodate' && _bqF.nodate) _bqF.late = false; if (k==='late' && _bqF.late) _bqF.nodate = false; _bqSave(); renderBandeja(); }
+function bqSetCat(v) { _bqF.cat = v; _bqSave(); renderBandeja(); }
+function bqClear() { _bqF = {q:'',cat:'',imp:false,urg:false,nodate:false,late:false}; _bqSave(); renderBandeja(); }
 function renderBandeja() {
   const el = document.getElementById('panel-bandeja');
   if (!el) return;
-  const tabs = BQ_TABS.map(([k,ic,lb])=>{
-    const n = items.filter(i=>_live(i) && _bqMatch(i,k)).length;
+  const live = items.filter(i=>_live(i));
+  const catCounts = {}; live.forEach(i=>{ catCounts[i.cat] = (catCounts[i.cat]||0)+1; });
+  const catOpts = cats.filter(c=>catCounts[c.id]).map(c=>`<option value="${c.id}"${String(_bqF.cat)===String(c.id)?' selected':''}>${h(c.name)} (${catCounts[c.id]})</option>`).join('');
+  const chip = (k,lbl,icn) => `<button class="bq-f${_bqF[k]?' on':''}" onclick="bqToggle('${k}')">${icn?ico(icn,14):''}${lbl}</button>`;
+  el.innerHTML = `<div class="bq-tabs" id="bq-tabs"></div>
+    <div class="bq-filters">
+      <div class="bq-search">${ico('search',15)}<input id="bq-q" type="search" placeholder="Buscar tarea…" value="${h(_bqF.q)}" oninput="_bqF.q=this.value;_renderBq()"/></div>
+      <select class="bq-sel" onchange="bqSetCat(this.value)" aria-label="Categoría"><option value="">Todas las categorías</option>${catOpts}</select>
+      ${chip('imp','Importante','star')}${chip('urg','Urgente','bolt')}${chip('nodate','Sin día','semana')}${chip('late','Vencidas','clock')}
+      ${_bqActive()?`<button class="bq-clear" onclick="bqClear()">${ico('x',13)} Quitar filtros</button>`:''}
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:.85rem;color:var(--text2)" id="bq-count"></div>
+      <button class="btn-sm" onclick="openAddModalInList('${_bandejaTab}')">+ Agregar</button>
+    </div>
+    <div id="bq-list"></div>`;
+  _renderBq();
+}
+function _renderBq() {
+  const tabsEl = document.getElementById('bq-tabs'), listEl = document.getElementById('bq-list'), countEl = document.getElementById('bq-count');
+  if (!tabsEl || !listEl) return;
+  tabsEl.innerHTML = BQ_TABS.map(([k,ic,lb])=>{
+    const n = items.filter(i=>_live(i) && _bqMatch(i,k) && _bqPass(i)).length;
     return `<button class="bq-tab${k===_bandejaTab?' active':''}" onclick="setBandejaTab('${k}')"
       ondragover="event.preventDefault();this.classList.add('drop-zone-active')" ondragleave="this.classList.remove('drop-zone-active')"
       ondrop="this.classList.remove('drop-zone-active');dropOnPanel(event,'${k}')">${lb} <b>${n}</b></button>`;
   }).join('');
-  const list = items.filter(i=>_live(i) && _bqMatch(i,_bandejaTab)).sort((a,b)=>(a.priority||3)-(b.priority||3));
-  el.innerHTML = `<div class="bq-tabs">${tabs}</div>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:.85rem;color:var(--text2)">${list.length} pendiente${_s(list.length)}</div>
-      <button class="btn-sm" onclick="openAddModalInList('${_bandejaTab}')">+ Agregar</button>
-    </div>
-    ${list.length ? list.map(i=>taskCard(i)).join('') : `<div class="empty-state"><p>Sin tareas pendientes aquí</p></div>`}`;
+  const list = items.filter(i=>_live(i) && _bqMatch(i,_bandejaTab) && _bqPass(i)).sort((a,b)=>(a.priority||3)-(b.priority||3));
+  const total = items.filter(i=>_live(i) && _bqMatch(i,_bandejaTab)).length;
+  countEl.textContent = _bqActive() ? `${list.length} de ${total} pendientes` : `${list.length} pendiente${_s(list.length)}`;
+  listEl.innerHTML = list.length ? list.map(i=>taskCard(i)).join('')
+    : `<div class="empty-state"><p>${_bqActive()?'Nada coincide con estos filtros.':'Sin tareas pendientes aquí'}</p></div>`;
 }
-
 
 // ============================================================
 // SELECCIONAR · COPIAR · PEGAR TAREAS
