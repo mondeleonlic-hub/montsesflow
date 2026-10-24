@@ -669,8 +669,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bq-f:hover{border-color:var(--accent)}
 .bq-f.on{background:#1C2018;border-color:#1C2018;color:#fff}
 .bq-clear{display:inline-flex;align-items:center;gap:4px;border:none;background:none;color:var(--accent);font:inherit;font-size:.78rem;font-weight:800;cursor:pointer;padding:0 4px}
-.plan-more{display:block;width:100%;margin-top:6px;padding:10px;border:1.5px dashed var(--border);border-radius:10px;background:#fff;color:var(--accent);font:inherit;font-size:.8rem;font-weight:800;cursor:pointer}
-.plan-more:hover{border-color:var(--accent);background:var(--accent-light)}
+.plan-more{padding:8px 4px;cursor:pointer;display:inline-block}
+.plan-more:hover{color:var(--text);text-decoration:underline}
 </style>
 </head>
 <body>
@@ -2269,7 +2269,7 @@ function _renderPlanList() {
       </div>
       <div class="wk-days-btns">${wk.map((ds,ix)=>`<button class="wk-db${ds===today?' today':''}" ${ds<today?'disabled':''} title="${_fmtLong(ds)}" onclick="planTo(${i.id},'${ds}')">${_DAY_LETTERS[ix]}</button>`).join('')}</div>
     </div>`;
-  }).join('') + (c.length>25 ? `<button class="plan-more" onclick="_planAll=!_planAll;_renderPlanList()">${_planAll?'Ver menos':`Ver las ${c.length-25} restantes`}</button>` : '')
+  }).join('') + (c.length>25 ? `<div class="pl-row-meta plan-more" onclick="_planAll=!_planAll;_renderPlanList()">${_planAll?'Ver menos':`+${c.length-25} más · usa el buscador`}</div>` : '')
   : `<div class="pl-sub" style="padding:6px 0">${q?'Nada coincide con tu búsqueda.':'Todo tiene día asignado.'}</div>`;
 }
 
