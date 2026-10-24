@@ -669,6 +669,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bq-f:hover{border-color:var(--accent)}
 .bq-f.on{background:#1C2018;border-color:#1C2018;color:#fff}
 .bq-clear{display:inline-flex;align-items:center;gap:4px;border:none;background:none;color:var(--accent);font:inherit;font-size:.78rem;font-weight:800;cursor:pointer;padding:0 4px}
+.plan-more{display:block;width:100%;margin-top:6px;padding:10px;border:1.5px dashed var(--border);border-radius:10px;background:#fff;color:var(--accent);font:inherit;font-size:.8rem;font-weight:800;cursor:pointer}
+.plan-more:hover{border-color:var(--accent);background:var(--accent-light)}
 </style>
 </head>
 <body>
@@ -2249,7 +2251,7 @@ function dayMoveAll() { const t = _dayNext(), p = _dayPending(); p.forEach(i=>_m
 function dayDropAll() { const p = _dayPending(); p.forEach(_undate); save(); renderCurrent(); showToast(`${p.length} de regreso en la bandeja`); }
 
 // ---------- PLANEAR LA SEMANA (vive dentro de Pulso) ----------
-let _weekOffset = 0, _planQ = '';
+let _weekOffset = 0, _planQ = '', _planAll = false;
 function _renderPlanList() {
   const box = document.getElementById('wk-plan-list');
   if (!box) return;
@@ -2257,7 +2259,7 @@ function _renderPlanList() {
   const LST = {todo:'To Do', semana:'To Do', compromisos:'Compromisos', proyectos:'Proyectos', extra:'Extra'};
   const c = items.filter(i=>_live(i) && (!i.date || i.date<today) && (!q || (i.text||'').toLowerCase().includes(q)))
     .sort((a,b)=>((a.date?0:1)-(b.date?0:1)) || (a.priority||3)-(b.priority||3));
-  const lim = 25;
+  const lim = _planAll ? Infinity : 25;
   box.innerHTML = c.length ? c.slice(0,lim).map(i=>{
     const cat = getCat(i.cat);
     return `<div class="wk-plan-row">
@@ -2267,7 +2269,7 @@ function _renderPlanList() {
       </div>
       <div class="wk-days-btns">${wk.map((ds,ix)=>`<button class="wk-db${ds===today?' today':''}" ${ds<today?'disabled':''} title="${_fmtLong(ds)}" onclick="planTo(${i.id},'${ds}')">${_DAY_LETTERS[ix]}</button>`).join('')}</div>
     </div>`;
-  }).join('') + (c.length>lim?`<div class="pl-row-meta" style="padding:8px 4px">+${c.length-lim} más · usa el buscador</div>`:'')
+  }).join('') + (c.length>25 ? `<button class="plan-more" onclick="_planAll=!_planAll;_renderPlanList()">${_planAll?'Ver menos':`Ver las ${c.length-25} restantes`}</button>` : '')
   : `<div class="pl-sub" style="padding:6px 0">${q?'Nada coincide con tu búsqueda.':'Todo tiene día asignado.'}</div>`;
 }
 
