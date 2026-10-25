@@ -671,6 +671,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bq-clear{display:inline-flex;align-items:center;gap:4px;border:none;background:none;color:var(--accent);font:inherit;font-size:.78rem;font-weight:800;cursor:pointer;padding:0 4px}
 .plan-more{padding:8px 4px;cursor:pointer;display:inline-block}
 .plan-more:hover{color:var(--text);text-decoration:underline}
+
+/* ===== v10 · Concentrarme (isla flotante) ===== */
+.jam-btn{background:none!important;color:#9ca3af!important;padding:3px!important;display:inline-flex;align-items:center;justify-content:center;border-radius:6px}
+.jam-btn:hover{color:var(--text)!important;background:#F3F4F0!important}
+.jam-btn.active{color:var(--accent)!important}
+.dy-link{border:none;background:none;color:var(--text2);font:inherit;font-size:.76rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:4px 2px}
+.dy-link:hover{color:var(--text)}
+.dy-focus-on{display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:700;color:var(--accent)}
+.focus-opts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.focus-opts button{height:44px;border-radius:12px;border:1.5px solid var(--border);background:#fff;font:inherit;font-size:.85rem;font-weight:700;color:var(--text);cursor:pointer}
+.focus-opts button:hover{border-color:var(--accent);background:var(--accent-light)}
+#focus-island{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;z-index:950;display:flex;align-items:center;gap:10px;background:#1C2018;color:#fff;border-radius:99px;padding:7px 14px 7px 8px;box-shadow:0 10px 30px rgba(0,0,0,.2);font-size:.8rem;cursor:pointer;transition:opacity .2s,transform .2s,border-radius .2s,padding .2s;max-width:calc(100vw - 24px)}
+#focus-island.on{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+#focus-island .fi-ring{flex-shrink:0}
+#focus-island .fi-txt{display:flex;align-items:center;gap:8px;min-width:0}
+#focus-island .fi-time{font-variant-numeric:tabular-nums}
+#focus-island .fi-name{color:#C9CEC0;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#focus-island .fi-sub{display:none;font-size:.7rem;color:#C9CEC0}
+#focus-island .fi-btn{display:none;width:30px;height:30px;border-radius:50%;border:none;background:#2E3427;color:#fff;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+#focus-island .fi-btn:hover{background:#3d4534}
+#focus-island:hover,#focus-island.open{border-radius:22px;padding:10px 12px 10px 12px}
+#focus-island:hover .fi-txt,#focus-island.open .fi-txt{flex-direction:column;align-items:flex-start;gap:1px}
+#focus-island:hover .fi-time,#focus-island.open .fi-time{display:none}
+#focus-island:hover .fi-name,#focus-island.open .fi-name{color:#fff;font-weight:700;max-width:260px}
+#focus-island:hover .fi-sub,#focus-island.open .fi-sub{display:block}
+#focus-island:hover .fi-btn,#focus-island.open .fi-btn{display:inline-flex}
+#focus-island.paused .fi-ring{opacity:.5}
+body.has-focus #clip-bar{bottom:76px}
+@media(max-width:768px){#focus-island{bottom:84px}body.has-focus #clip-bar{bottom:138px}}
 </style>
 </head>
 <body>
@@ -960,21 +989,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- JAM SESH MODAL -->
 <div class="modal-overlay" id="jam-modal">
-  <div class="modal-box" style="max-width:340px;text-align:center">
+  <div class="modal-box" style="max-width:340px">
     <div class="modal-header">
-      <div class="modal-title">JAM SESH</div>
+      <div class="modal-title">Concentrarme</div>
       <button class="modal-close" onclick="closeModal('jam-modal')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="modal-body">
       <input type="hidden" id="jam-task-id"/>
-      <div id="jam-task-label" style="font-size:.82rem;color:var(--text2);margin-bottom:16px;font-weight:600"></div>
-      <div style="font-size:.8rem;color:var(--text2);margin-bottom:10px">Elige la duración del bloque:</div>
-      <div style="display:flex;gap:10px;justify-content:center;margin-bottom:20px">
-        <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(30)">30 min</button>
-        <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(60)">60 min</button>
-        <button class="eis-chip" style="font-size:.9rem;padding:10px 18px" onclick="startJamSesh(90)">90 min</button>
+      <div id="jam-task-label" style="font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:4px"></div>
+      <div style="font-size:.78rem;color:var(--text2);margin-bottom:14px">¿Cuánto tiempo?</div>
+      <div class="focus-opts">
+        <button onclick="startJamSesh(25)">25 min</button>
+        <button onclick="startJamSesh(45)">45 min</button>
+        <button onclick="startJamSesh(60)">60 min</button>
+        <button onclick="startJamSesh(90)">90 min</button>
       </div>
-      <button class="modal-btn danger" onclick="closeModal('jam-modal')">Cancelar</button>
     </div>
   </div>
 </div>
@@ -2087,6 +2116,7 @@ function _dayRow(i, D) {
       </div>
     </div>
     ${!i.done?`<div class="dy-acts">
+      <button class="dy-ic" title="Concentrarme" onclick="openJamModal(${i.id})">${ico('clock',16)}</button>
       <button class="dy-ic${i.focus?' on':''}" title="${i.focus?'Quitar de Ahora toca':'Fijar en Ahora toca'}" onclick="toggleFocus(${i.id})">${ico('pin',16)}</button>
       <button class="dy-ic" title="Pasar a ${nextLbl}" onclick="dayMove(${i.id})">${ico('next',16)}</button>
       <button class="dy-ic" title="Regresar a la bandeja" onclick="dayDrop(${i.id})">${ico('x',16)}</button>
@@ -2117,7 +2147,7 @@ function renderLogDiario() {
   }).join('');
 
   // ── JAM banner
-  const jam = window._jam;
+  const jam = null;
   let jamHtml = '';
   if (jam) {
     const remaining = Math.max(0, Math.ceil((jam.endTime - Date.now())/1000));
@@ -2148,7 +2178,7 @@ function renderLogDiario() {
           <div style="font-size:.7rem;color:var(--accent);margin-bottom:10px">${ds_}/${subs.length} acciones</div>`:''}
         <div class="dy-hero-actions">
           <button class="dy-btn" onclick="toggleDone(${f.id})">✓ Hecha</button>
-          <button class="dy-btn solid" onclick="openJamModal(${f.id})">${jamOn?'JAM activo':'JAM SESH'}</button>
+          ${jamOn ? `<span class="dy-focus-on">${ico('clock',14)} Concentrada</span>` : `<button class="dy-link" onclick="openJamModal(${f.id})">${ico('clock',14)} Concentrarme</button>`}
           <span style="font-size:.68rem;color:${f.focus?'var(--accent)':'var(--text2)'}">${f.focus?'Fijada por ti':'Fija otra con el pin'}</span>
         </div>
       </div>`;
@@ -2489,7 +2519,7 @@ function taskCard(item, showDone=false) {
       <div class="task-cat">${catIco(cat,12)} ${h(cat.name)}</div>
       ${item.date?`<div style="font-size:.65rem;color:var(--text2)">${fmtDate(item.date)}</div>`:''}
       ${!item.done?`<button class="pin-btn${item.focus?' pinned':''}" onclick="event.stopPropagation();toggleFocus(${item.id})" title="${item.focus?'Quitar de foco':'Fijar en foco'}">${ico('pin',14)}</button>`:''}
-      ${!item.done?`<button class="jam-btn${isJamActive?' active':''}" onclick="event.stopPropagation();openJamModal(${item.id})">JAM</button>`:''}
+      ${!item.done?`<button class="jam-btn${isJamActive?' active':''}" title="Concentrarme" aria-label="Concentrarme" onclick="event.stopPropagation();openJamModal(${item.id})">${ico('clock',15)}</button>`:''}
     </div>
   </div>`;
 }
@@ -3097,37 +3127,46 @@ function openJamModal(id) {
   openModal('jam-modal');
 }
 
+// ---------- CONCENTRARME (isla flotante) ----------
+function _focusLeft() { const f = window._jam; if (!f) return 0; return f.paused ? f.left : Math.max(0, Math.ceil((f.endTime - Date.now())/1000)); }
+function _focusSave() { try { window._jam ? localStorage.setItem('mf_focus', JSON.stringify({id:_jam.id, totalSecs:_jam.totalSecs, endTime:_jam.endTime, paused:_jam.paused, left:_jam.left})) : localStorage.removeItem('mf_focus'); } catch(e) {} }
+function _mmss(t) { return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0'); }
 function startJamSesh(mins) {
   const id = Number(document.getElementById('jam-task-id').value);
   closeModal('jam-modal');
   if (window._jam && window._jam.interval) clearInterval(window._jam.interval);
-  const totalSecs = mins * 60;
-  window._jam = {
-    id, mins, totalSecs,
-    endTime: Date.now() + totalSecs * 1000,
-    interval: null
-  };
-  // Switch to Log Diario
-  switchTab('log');
-  renderLogDiario();
-  // Start tick
-  window._jam.interval = setInterval(()=>{
-    const remaining = Math.max(0, Math.ceil((window._jam.endTime - Date.now())/1000));
-    const pct = Math.round(remaining / window._jam.totalSecs * 100);
-    const bar = document.getElementById('jam-bar-fill');
-    const timeEl = document.querySelector('.jam-time');
-    if (bar) bar.style.width = pct + '%';
-    if (timeEl) {
-      const m = Math.floor(remaining/60), s = remaining%60;
-      timeEl.textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
-    }
-    if (remaining <= 0) {
-      playJamAlarm();
-      stopJamSesh();
-      showToast('¡JAM SESH terminado!');
-    }
-  }, 1000);
-  showToast('JAM SESH iniciado — '+mins+' min');
+  window._jam = { id, totalSecs: mins*60, endTime: Date.now() + mins*60000, paused:false, left:0, interval:null };
+  _focusSave(); _focusRun(); renderCurrent();
+}
+function _focusRun() {
+  if (!window._jam) return;
+  if (_jam.interval) clearInterval(_jam.interval);
+  _jam.interval = setInterval(_focusTick, 1000);
+  _focusTick();
+}
+function _focusTick() {
+  const f = window._jam;
+  if (!f) return _renderIsland();
+  const left = _focusLeft();
+  if (left <= 0 && !f.paused) { playJamAlarm(); const t = items.find(i=>i.id===f.id); stopJamSesh(); showToast('Tiempo cumplido' + (t ? ' · ' + t.text : ''), 3000); return; }
+  _renderIsland();
+}
+function pauseFocus() { const f = window._jam; if (!f) return; if (f.paused) { f.endTime = Date.now() + f.left*1000; f.paused = false; } else { f.left = _focusLeft(); f.paused = true; } _focusSave(); _renderIsland(); }
+function toggleIsland(e) { const el = document.getElementById('focus-island'); if (el && !e.target.closest('button')) el.classList.toggle('open'); }
+function _renderIsland() {
+  let el = document.getElementById('focus-island');
+  if (!el) { el = document.createElement('div'); el.id = 'focus-island'; el.setAttribute('onclick','toggleIsland(event)'); document.body.appendChild(el); }
+  const f = window._jam;
+  document.body.classList.toggle('has-focus', !!f);
+  if (!f) { el.className = ''; el.innerHTML = ''; return; }
+  const t = items.find(i=>i.id===f.id), left = _focusLeft(), done = 1 - left/f.totalSecs;
+  const C = 2*Math.PI*9, ring = `<svg class="fi-ring" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-90 12 12)" fill="none" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="9" stroke="#3A4030"/><circle cx="12" cy="12" r="9" stroke="#B9E26B" stroke-dasharray="${(C*done).toFixed(1)} ${C.toFixed(1)}"/></g></svg>`;
+  const open = el.classList.contains('open');
+  el.className = 'on' + (open ? ' open' : '') + (f.paused ? ' paused' : '');
+  el.innerHTML = `${ring}
+    <div class="fi-txt"><b class="fi-time">${_mmss(left)}</b><span class="fi-name">${h(t ? t.text : 'Tarea')}</span><span class="fi-sub">${f.paused ? 'En pausa' : _mmss(left) + ' de ' + Math.round(f.totalSecs/60) + ' min'}</span></div>
+    <button class="fi-btn" aria-label="${f.paused?'Seguir':'Pausar'}" onclick="pauseFocus()">${f.paused ? '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5l12 7-12 7z"/></svg>' : '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>'}</button>
+    <button class="fi-btn" aria-label="Parar" onclick="stopJamSesh()"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>`;
 }
 
 function playJamAlarm() {
@@ -3157,9 +3196,11 @@ function playJamAlarm() {
 function stopJamSesh() {
   if (window._jam && window._jam.interval) clearInterval(window._jam.interval);
   window._jam = null;
-  renderLogDiario();
+  _focusSave(); _renderIsland();
   renderCurrent();
 }
+// Si recargas la página, el tiempo sigue donde iba.
+try { const sv = JSON.parse(localStorage.getItem('mf_focus')||'null'); if (sv && sv.id) { window._jam = Object.assign(sv, {interval:null}); setTimeout(_focusRun, 300); } } catch(e) {}
 
 function toggleFocus(id) {
   const item = items.find(i=>i.id===id);
