@@ -700,6 +700,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 #focus-island.paused .fi-ring{opacity:.5}
 body.has-focus #clip-bar{bottom:76px}
 @media(max-width:768px){#focus-island{bottom:84px}body.has-focus #clip-bar{bottom:138px}}
+.meta-ns{display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:700;color:var(--text);cursor:pointer}
+.meta-ns input{width:16px;height:16px;accent-color:var(--accent)}
+.meta-ns span{font-weight:500;color:var(--text2)}
 </style>
 </head>
 <body>
@@ -1113,6 +1116,7 @@ body.has-focus #clip-bar{bottom:76px}
           <input class="modal-input" type="date" id="meta-due"/>
         </div>
       </div>
+      <label class="meta-ns"><input type="checkbox" id="meta-notstarted"/> Aún no empiezo <span>· la meta no corre hasta que lo quites</span></label>
       <div>
         <label class="modal-label">Hitos / Pasos</label>
         <div class="sub-list" id="meta-ms-list"></div>
@@ -1827,6 +1831,8 @@ function _goalStatus(g) {
   const done = total ? g.milestones.filter(m=>m.done).length : null;
   const base = {pct, done, total, expected:null};
   if (pct >= 100) return {...base, level:'ok', label:'Lograda'};
+  if (g.notStarted) return {...base, level:'na', label:'Sin empezar'};
+  if (g.start && g.start > todayStr()) return {...base, level:'na', label:'Empieza ' + fmtDate(g.start)};
   if (!g.due) return {...base, level:'na', label:'Sin fecha'};
   const start = g.start ? new Date(g.start+'T00:00:00').getTime()
               : (g.id > 1e12 ? g.id : new Date(new Date().getFullYear(),0,1).getTime());
@@ -1983,7 +1989,7 @@ function renderDash() {
   const gs = goals.map(g=>({g, s:_goalStatus(g)}));
   const mLevel = gs.length ? _worst(gs.map(x=>x.s.level)) : 'na';
   const mPct = gs.length ? Math.round(gs.reduce((a,x)=>a+x.s.pct,0)/gs.length) : 0;
-  const mWord = !gs.length ? 'Sin metas' : gs.every(x=>x.s.level==='na') ? 'Sin fecha' : {ok:'En ritmo',warn:'Un poco atrás',bad:'Atrasadas'}[mLevel];
+  const mWord = !gs.length ? 'Sin metas' : gs.every(x=>x.s.level==='na') ? (gs.length===1 ? gs[0].s.label : (gs.some(x=>x.g.notStarted) ? 'Sin empezar' : 'Sin fecha')) : {ok:'En ritmo',warn:'Un poco atrás',bad:'Atrasadas'}[mLevel];
 
   const flagged = [['tareas',tLevel],['metas',mLevel],['hábitos',hLevel]].filter(a=>a[1]==='warn'||a[1]==='bad').map(a=>a[0]);
   const verdict = flagged.length ? `Ojo con ${_joinEs(flagged)}.` : 'Vas bien esta semana.';
@@ -2528,6 +2534,7 @@ function taskCard(item, showDone=false) {
 // METAS
 // ============================================================
 function _metaPct(g) {
+  if (g.milestones && g.milestones.length) return Math.round(g.milestones.filter(m=>m.done).length/g.milestones.length*100);
   if (g.pct !== undefined && g.pct !== null) return Number(g.pct);
   if (!g.milestones || !g.milestones.length) return 0;
   return Math.round(g.milestones.filter(m=>m.done).length/g.milestones.length*100);
@@ -2653,6 +2660,7 @@ function openMetaModal(id) {
     document.getElementById('meta-note').value = g.note||'';
     document.getElementById('meta-pct').value = g.pct||0;
     document.getElementById('meta-due').value = g.due||'';
+    document.getElementById('meta-notstarted').checked = !!g.notStarted;
     _metaMilestones = (g.milestones||[]).map(m=>({...m}));
     delBtn.style.display = '';
   } else {
@@ -2666,6 +2674,7 @@ function openMetaModal(id) {
     document.getElementById('meta-note').value = '';
     document.getElementById('meta-pct').value = 0;
     document.getElementById('meta-due').value = '';
+    document.getElementById('meta-notstarted').checked = false;
     _metaMilestones = [];
     delBtn.style.display = 'none';
   }
@@ -2688,7 +2697,11 @@ function saveMeta() {
     pct: Number(document.getElementById('meta-pct').value)||0,
     due: document.getElementById('meta-due').value,
     milestones: _metaMilestones.map(m=>({...m})),
+    notStarted: document.getElementById('meta-notstarted').checked,
   };
+  if (_metaMilestones.length) data.pct = null;
+  { const prev = id ? goals.find(g=>g.id===Number(id)) : null;
+    if (prev && prev.notStarted && !data.notStarted) data.start = todayStr(); }
   if (id) {
     const idx = goals.findIndex(g=>g.id===Number(id));
     if (idx>=0) Object.assign(goals[idx], data);
@@ -2698,7 +2711,7 @@ function saveMeta() {
   }
   save();
   closeModal('meta-modal');
-  renderMetas();
+  renderCurrent();
   showToast(id?'Meta actualizada':'Meta creada ✓');
 }
 
@@ -2707,7 +2720,7 @@ function deleteMeta() {
   goals = goals.filter(g=>g.id!==id);
   save();
   closeModal('meta-modal');
-  renderMetas();
+  renderCurrent();
   showToast('Meta eliminada');
 }
 
