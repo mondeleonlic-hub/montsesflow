@@ -1416,9 +1416,17 @@ function _spawnNextRecurring(item) {
   item.nextId = copy.id;
 }
 
+// Meta Mac: Montse aún no arranca el proyecto (pedido 26-oct). Una sola vez.
+function markNfcGoalNotStarted() {
+  if (seeds.includes('nfc-goal-paused')) return;
+  const g = goals.find(x=>x.seed==='nfc-2026' || /meta mac/i.test(x.title||''));
+  if (g && !(g.milestones||[]).some(m=>m.done)) g.notStarted = true;
+  seeds.push('nfc-goal-paused'); save();
+}
 function runMigrations() {
   normalizeCats();
   migrateIcons();
+  markNfcGoalNotStarted();
   cleanMissedRecurring();
   migrateLegacyLocal();
   seedNfcProject();
