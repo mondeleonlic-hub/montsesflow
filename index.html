@@ -2,8 +2,17 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
 <title>Montse's Flow</title>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png"/>
+<meta name="theme-color" content="#FFFFFF"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-title" content="Flow"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
+<meta name="format-detection" content="telephone=no"/>
 <style>
 :root{
   --sidebar-bg:#2c3520;
@@ -703,6 +712,14 @@ body.has-focus #clip-bar{bottom:76px}
 .meta-ns{display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:700;color:var(--text);cursor:pointer}
 .meta-ns input{width:16px;height:16px;accent-color:var(--accent)}
 .meta-ns span{font-weight:500;color:var(--text2)}
+
+/* ===== App instalada en el celular ===== */
+@media (display-mode: standalone){
+  .main-header{padding-top:max(14px,env(safe-area-inset-top))}
+  .sidebar{padding-top:env(safe-area-inset-top)}
+  body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
+  .live-badge{display:none}
+}
 </style>
 </head>
 <body>
@@ -3521,6 +3538,11 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+
+// App instalable: guarda la app para usarla sin internet.
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+}
 </script>
 
 </body>
