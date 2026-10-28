@@ -1652,7 +1652,7 @@ function setSyncStatus(s) {
   const lbl = document.getElementById('sync-label');
   if (!dot) return;
   dot.className = 'sync-dot' + (s==='ok' ? '' : s==='error' ? ' error' : ' off');
-  lbl.textContent = s==='ok' ? 'Sincronizado' : s==='error' ? 'Error sync' : 'Sin Firebase';
+  lbl.textContent = !navigator.onLine ? 'Sin conexión · guardado aquí' : s==='ok' ? 'Sincronizado' : s==='error' ? 'Error sync' : 'Sin Firebase';
 }
 
 // ============================================================
@@ -3541,8 +3541,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // App instalable: guarda la app para usarla sin internet.
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
+
+window.addEventListener('offline', ()=>setSyncStatus('error'));
+window.addEventListener('online', ()=>{ setSyncStatus('ok'); if (typeof _syncNow==='function') _syncNow(); });
 </script>
 
 </body>
