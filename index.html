@@ -726,6 +726,12 @@ body.has-focus #clip-bar{bottom:76px}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
 html,body{max-width:100%;overflow-x:hidden}
 @media(max-width:768px){input,select,textarea{font-size:16px!important}}
+
+/* ===== Deslizar a la izquierda para borrar (Bandeja) ===== */
+#bq-list{position:relative}
+#bq-list .task-item{position:relative;z-index:1;will-change:transform}
+#bq-list .task-item.sw-anim{transition:transform .22s ease,opacity .22s ease}
+.swipe-bg{position:absolute;left:0;right:0;z-index:0;border-radius:12px;background:#E5484D;color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:22px;gap:6px;font-size:.8rem;font-weight:800;cursor:pointer}
 </style>
 </head>
 <body>
@@ -3646,6 +3652,47 @@ async function _checkInbox() {
 }
 document.addEventListener('visibilitychange', ()=>{ if (document.visibilityState==='visible') setTimeout(_checkInbox, 800); });
 setInterval(()=>{ if (document.visibilityState==='visible') _checkInbox(); }, 45000);
+// Deslizar una tarea a la izquierda en la Bandeja para borrarla (con Deshacer).
+(function(){
+  let sw = null, open = null;
+  const bgFor = el => { const b = document.createElement('div'); b.className = 'swipe-bg';
+    b.innerHTML = ico('x',15)+' Borrar'; b.style.top = el.offsetTop+'px'; b.style.height = el.offsetHeight+'px';
+    b.addEventListener('click', ()=>swipeDelete(el)); el.parentNode.insertBefore(b, el); return b; };
+  const reset = (el, bg) => { el.classList.add('sw-anim'); el.style.transform = ''; setTimeout(()=>{ el.classList.remove('sw-anim'); bg && bg.remove(); }, 230); };
+  function closeOpen(){ if (open) { reset(open.el, open.bg); open = null; } }
+  window.swipeDelete = function(el){
+    const id = Number(el.dataset.id), it = items.find(i=>i.id===id); if (!it) return;
+    el.classList.add('sw-anim'); el.style.transform = 'translateX(-110%)'; el.style.opacity = '0'; open = null;
+    setTimeout(()=>{
+      const idx = items.indexOf(it); items = items.filter(i=>i.id!==id); save(); renderCurrent();
+      _setUndo('Tarea borrada', ()=>{ items.splice(Math.min(idx, items.length), 0, it); }); _renderClipBar();
+    }, 200);
+  };
+  document.addEventListener('touchstart', e=>{
+    const el = e.target.closest && e.target.closest('#bq-list .task-item');
+    if (open && (!el || el!==open.el) && !(e.target.closest && e.target.closest('.swipe-bg'))) closeOpen();
+    if (!el || e.touches.length>1) return;
+    const t = e.touches[0]; sw = { el, x:t.clientX, y:t.clientY, dx:0, on:false, off:false, base: open && open.el===el ? -96 : 0, bg: open && open.el===el ? open.bg : null };
+  }, {passive:true});
+  document.addEventListener('touchmove', e=>{
+    if (!sw || sw.off) return;
+    const t = e.touches[0], dx = t.clientX - sw.x, dy = t.clientY - sw.y;
+    if (!sw.on) { if (Math.abs(dy) > 10 && Math.abs(dy) > Math.abs(dx)) { sw.off = true; return; }
+      if (Math.abs(dx) > 10) { sw.on = true; if (!sw.bg) sw.bg = bgFor(sw.el); } else return; }
+    e.preventDefault();
+    sw.dx = Math.min(0, sw.base + dx); sw.el.style.transform = `translateX(${sw.dx}px)`;
+  }, {passive:false});
+  document.addEventListener('touchend', ()=>{
+    if (!sw) return; const s = sw; sw = null;
+    if (!s.on) return;
+    const w = s.el.offsetWidth;
+    if (s.dx < -w*0.45) swipeDelete(s.el);
+    else if (s.dx < -60) { s.el.classList.add('sw-anim'); s.el.style.transform = 'translateX(-96px)'; setTimeout(()=>s.el.classList.remove('sw-anim'),230); open = { el:s.el, bg:s.bg }; }
+    else { reset(s.el, s.bg); if (open && open.el===s.el) open = null; }
+    // que el deslizamiento no cuente como toque en la tarea
+    const stop = ev=>{ ev.stopPropagation(); ev.preventDefault(); }; document.addEventListener('click', stop, true); setTimeout(()=>document.removeEventListener('click', stop, true), 350);
+  });
+})();
 </script>
 
 </body>
