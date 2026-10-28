@@ -3620,7 +3620,7 @@ function _splitDictado(t) {
   t = String(t||'').replace(/\r/g,'').replace(/\b([ap])\.\s?m\./gi,'$1m.').replace(/\b([ap])\.\s?m\b/gi,'$1m');
   return t.split(/\n+|[.;!?]+\s+|[.;!?]+$/)
     .map(x=>x.trim().replace(/^[-•*,\s]+|[.,\s]+$/g,''))
-    .filter(x=>x.length>1)
+    .filter(x=>x.length>1 && !/^(sale|listo|ya|termin[eé]|terminamos|ok|fin)$/i.test(x))
     .map(x=>x.charAt(0).toUpperCase()+x.slice(1));
 }
 async function _checkInbox() {
