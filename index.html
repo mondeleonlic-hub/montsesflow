@@ -2369,7 +2369,14 @@ function _bqPass(i) {
 }
 function bqToggle(k) { _bqF[k] = !_bqF[k]; if (k==='nodate' && _bqF.nodate) _bqF.late = false; if (k==='late' && _bqF.late) _bqF.nodate = false; _bqSave(); renderBandeja(); }
 function bqSetCat(v) { _bqF.cat = v; _bqSave(); renderBandeja(); }
-function bqClear() { _bqF = {q:'',cat:'',imp:false,urg:false,nodate:false,late:false}; _bqSave(); renderBandeja(); }
+function bqSetSort(v) { _bqF.sort = v; _bqSave(); _renderBq(); }
+function _bqTime(i) { return Date.parse(i.created||'') || 0; }
+function _bqSort(a, b) {
+  if (_bqF.sort==='new') return (_bqTime(b)-_bqTime(a)) || (b.id-a.id);
+  if (_bqF.sort==='old') return (_bqTime(a)-_bqTime(b)) || (a.id-b.id);
+  return (a.priority||3)-(b.priority||3);
+}
+function bqClear() { _bqF = {q:'',cat:'',imp:false,urg:false,nodate:false,late:false,sort:_bqF.sort||''}; _bqSave(); renderBandeja(); }
 function renderBandeja() {
   const el = document.getElementById('panel-bandeja');
   if (!el) return;
@@ -2381,6 +2388,7 @@ function renderBandeja() {
     <div class="bq-filters">
       <div class="bq-search">${ico('search',15)}<input id="bq-q" type="search" placeholder="Buscar tarea…" value="${h(_bqF.q)}" oninput="_bqF.q=this.value;_renderBq()"/></div>
       <select class="bq-sel" onchange="bqSetCat(this.value)" aria-label="Categoría"><option value="">Todas las categorías</option>${catOpts}</select>
+      <select class="bq-sel" onchange="bqSetSort(this.value)" aria-label="Orden"><option value=""${!_bqF.sort?' selected':''}>Por prioridad</option><option value="new"${_bqF.sort==='new'?' selected':''}>Agregadas recientemente</option><option value="old"${_bqF.sort==='old'?' selected':''}>Más antiguas</option></select>
       ${chip('imp','Importante','star')}${chip('urg','Urgente','bolt')}${chip('nodate','Sin día','semana')}${chip('late','Vencidas','clock')}
       ${_bqActive()?`<button class="bq-clear" onclick="bqClear()">${ico('x',13)} Quitar filtros</button>`:''}
     </div>
@@ -2400,7 +2408,7 @@ function _renderBq() {
       ondragover="event.preventDefault();this.classList.add('drop-zone-active')" ondragleave="this.classList.remove('drop-zone-active')"
       ondrop="this.classList.remove('drop-zone-active');dropOnPanel(event,'${k}')">${lb} <b>${n}</b></button>`;
   }).join('');
-  const list = items.filter(i=>_live(i) && _bqMatch(i,_bandejaTab) && _bqPass(i)).sort((a,b)=>(a.priority||3)-(b.priority||3));
+  const list = items.filter(i=>_live(i) && _bqMatch(i,_bandejaTab) && _bqPass(i)).sort(_bqSort);
   const total = items.filter(i=>_live(i) && _bqMatch(i,_bandejaTab)).length;
   countEl.textContent = _bqActive() ? `${list.length} de ${total} pendientes` : `${list.length} pendiente${_s(list.length)}`;
   listEl.innerHTML = list.length ? list.map(i=>taskCard(i)).join('')
