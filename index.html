@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
 <title>Montse's Flow</title>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon-v2.png"/>
@@ -417,6 +417,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   .capture-row-top input{width:130px}
   .goals-grid{grid-template-columns:1fr}
   .ai-panel,.ai-toggle{right:12px}
+  .ai-toggle{bottom:calc(78px + env(safe-area-inset-bottom));font-size:0;gap:0;padding:13px;width:46px;height:46px;justify-content:center}
   .ai-panel{width:calc(100vw - 24px)}
 }
 @media(max-width:480px){
@@ -720,6 +721,11 @@ body.has-focus #clip-bar{bottom:76px}
   body{overscroll-behavior-y:none;-webkit-tap-highlight-color:transparent}
   .live-badge{display:none}
 }
+
+/* ===== Sensación de app nativa: sin zoom ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+html,body{max-width:100%;overflow-x:hidden}
+@media(max-width:768px){input,select,textarea{font-size:16px!important}}
 </style>
 </head>
 <body>
@@ -3530,7 +3536,7 @@ window.addEventListener('DOMContentLoaded', () => {
   if (_fbKey && _fbProj) {
     document.getElementById('fb-key').value = _fbKey;
     document.getElementById('fb-proj').value = _fbProj;
-    pullFirebase().then(()=>{ runMigrations(); setSyncStatus('ok'); renderCurrent(); }).catch(()=>{ setSyncStatus('error'); runMigrations(); renderCurrent(); });
+    pullFirebase().then(()=>{ runMigrations(); setSyncStatus('ok'); renderCurrent(); _checkInbox(); }).catch(()=>{ setSyncStatus('error'); runMigrations(); renderCurrent(); });
   }
   // Close modals on overlay click
   document.querySelectorAll('.modal-overlay').forEach(m=>{
@@ -3546,6 +3552,51 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 
 window.addEventListener('offline', ()=>setSyncStatus('error'));
 window.addEventListener('online', ()=>{ setSyncStatus('ok'); if (typeof _syncNow==='function') _syncNow(); });
+// Sin zoom con los dedos ni con doble toque (se siente como app nativa).
+['gesturestart','gesturechange','gestureend'].forEach(ev=>document.addEventListener(ev, e=>e.preventDefault(), {passive:false}));
+document.addEventListener('touchmove', e=>{ if (e.touches && e.touches.length > 1) e.preventDefault(); }, {passive:false});
+
+// ============================================================
+// DICTADO CON SIRI
+// El atajo "Flow" de tu iPhone deja lo que dictas en la nube (mf_data/voz_…).
+// La app lo recoge, lo convierte en tareas del día y borra la nota.
+// ============================================================
+let _inboxBusy = false;
+function _splitDictado(t) {
+  return String(t||'').replace(/\r/g,'').split(/\n+|[.;!?]+\s+|[.;!?]+$/)
+    .map(x=>x.trim().replace(/^[-•*,\s]+|[.,\s]+$/g,''))
+    .filter(x=>x.length>1)
+    .map(x=>x.charAt(0).toUpperCase()+x.slice(1));
+}
+async function _checkInbox() {
+  if (!_fbKey || !_fbProj || !_db || _inboxBusy || !navigator.onLine) return;
+  _inboxBusy = true;
+  try {
+    const base = `https://firestore.googleapis.com/v1/projects/${_fbProj}/databases/(default)/documents/mf_data`;
+    const res = await fetch(`${base}?key=${_fbKey}&pageSize=50&mask.fieldPaths=voz`, {cache:'no-store'});
+    if (!res.ok) return;
+    const list = (await res.json()).documents || [];
+    let added = 0;
+    for (const d of list) {
+      const id = d.name.split('/').pop();
+      if (id === 'main' || !d.fields || !d.fields.voz) continue;
+      // Borrarla primero: si otro dispositivo ya la tomó, aquí no se duplica.
+      const del = await fetch(`${base}/${id}?key=${_fbKey}&currentDocument.exists=true`, {method:'DELETE'});
+      if (!del.ok) continue;
+      const when = new Date(d.createTime || Date.now());
+      const ds = when.getFullYear()+'-'+String(when.getMonth()+1).padStart(2,'0')+'-'+String(when.getDate()).padStart(2,'0');
+      _splitDictado(d.fields.voz.stringValue).reverse().forEach(text=>{
+        items.unshift({ id:nextId++, text, cat:null, cat_key:'todo', priority:3, date:ds, time:'', deadline:'', delegado:'',
+          recur:'', important:null, urgent:null, note:'', subtasks:[], done:false, archived:false, voz:true, created:when.toISOString() });
+        added++;
+      });
+    }
+    if (added) { save(); renderCurrent(); showToast(added===1 ? '1 tarea dictada agregada a tu día' : added+' tareas dictadas agregadas a tu día', 3200); }
+  } catch(e) {}
+  finally { _inboxBusy = false; }
+}
+document.addEventListener('visibilitychange', ()=>{ if (document.visibilityState==='visible') setTimeout(_checkInbox, 800); });
+setInterval(()=>{ if (document.visibilityState==='visible') _checkInbox(); }, 45000);
 </script>
 
 </body>
