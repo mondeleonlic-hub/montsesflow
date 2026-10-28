@@ -3562,8 +3562,49 @@ document.addEventListener('touchmove', e=>{ if (e.touches && e.touches.length > 
 // La app lo recoge, lo convierte en tareas del día y borra la nota.
 // ============================================================
 let _inboxBusy = false;
+// Entiende fechas y horas dichas en español dentro de una tarea dictada.
+const _DIAS = {domingo:0,lunes:1,martes:2,miercoles:3,jueves:4,viernes:5,sabado:6};
+const _MESES = {enero:0,febrero:1,marzo:2,abril:3,mayo:4,junio:5,julio:6,agosto:7,septiembre:8,setiembre:8,octubre:9,noviembre:10,diciembre:11};
+const _NUMS = {un:1,una:1,uno:1,dos:2,tres:3,cuatro:4,cinco:5,seis:6,siete:7,ocho:8,nueve:9,diez:10,once:11,doce:12,quince:15};
+function _sinAcento(s){ return s.normalize('NFD').replace(/[̀-ͯ]/g,''); }
+function _ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function _parseFecha(text, base) {
+  base = new Date(base.getFullYear(), base.getMonth(), base.getDate(), 12);
+  let t = ' ' + text + ' ', date = null, time = '';
+  const PRE = '(?:,?\\s+(?:para\\s+)?(?:el\\s+|este\\s+|esta\\s+|la\\s+)?(?:pr[oó]xim[oa]\\s+)?)';
+  const add = n => { const d = new Date(base); d.setDate(d.getDate()+n); return d; };
+  const take = (re, fn) => { if (date && fn.length) {} const m = t.match(re); if (!m) return false; const r = fn(m); if (r===false) return false; t = t.replace(m[0], ' '); return true; };
+  // Hora: "a las 5", "a las 4:30 de la tarde", "a las 10 am"
+  take(new RegExp(',?\\s+a\\s+las?\\s+(\\d{1,2})(?::(\\d{2}))?(?:\\s*(?:hrs?|horas))?(?:\\s*(de la ma[nñ]ana|de la tarde|de la noche|am|pm))?(?=[\\s,]|$)','iu'), m=>{
+    let h = +m[1], mi = m[2] ? +m[2] : 0; const q = (m[3]||'').toLowerCase();
+    if (h>23 || mi>59) return false;
+    if ((/tarde|noche|pm/.test(q)) && h<12) h += 12;
+    else if (!q && h>=1 && h<=7) h += 12;
+    if (/ma[nñ]ana|am/.test(q) && h===12) h = 0;
+    time = String(h).padStart(2,'0')+':'+String(mi).padStart(2,'0');
+  });
+  const tries = [
+    [PRE+'pasado\\s+ma[nñ]ana(?=[\\s,]|$)', ()=>add(2)],
+    ['(?<!\\b(?:la|esta|una|de))(?:,?\\s+(?:para\\s+)?)ma[nñ]ana(?=[\\s,]|$)', ()=>add(1)],
+    [PRE+'hoy(?=[\\s,]|$)', ()=>add(0)],
+    [PRE+'(?:semana\\s+que\\s+viene|siguiente\\s+semana|semana)(?=[\\s,]|$)', m=>/pr[oó]xim|que viene|siguiente/i.test(m[0]) ? add(((8-base.getDay())%7)||7) : null],
+    [',?\\s+(?:para\\s+)?en\\s+(\\d{1,2}|un|una|uno|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez|quince)\\s+(d[ií]as?|semanas?)(?=[\\s,]|$)', m=>{ const n = /^\d+$/.test(m[1]) ? +m[1] : _NUMS[m[1].toLowerCase()]; return add(/sem/i.test(m[2]) ? n*7 : n); }],
+    [PRE+'(\\d{1,2})\\s+de\\s+(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|setiembre|octubre|noviembre|diciembre)(?=[\\s,]|$)', m=>{
+      let d = new Date(base.getFullYear(), _MESES[m[2].toLowerCase()], +m[1], 12); if (d < base) d.setFullYear(d.getFullYear()+1); return d; }],
+    [PRE+'(lunes|martes|mi[eé]rcoles|jueves|viernes|s[aá]bado|domingo)(?:\\s+que\\s+viene|\\s+pr[oó]ximo)?(?=[\\s,]|$)', m=>{
+      const w = _DIAS[_sinAcento(m[1].toLowerCase())]; return add(((w - base.getDay() + 7) % 7) || 7); }],
+    [',?\\s+(?:para\\s+)?el\\s+(?:d[ií]a\\s+)?(\\d{1,2})(?=[\\s,]|$)', m=>{
+      const n = +m[1]; if (n<1 || n>31) return false; let d = new Date(base.getFullYear(), base.getMonth(), n, 12); if (d < base) d.setMonth(d.getMonth()+1); return d; }],
+  ];
+  for (const [src, fn] of tries) {
+    if (take(new RegExp(src,'iu'), m=>{ const d = fn(m); if (!d) return false; date = d; })) break;
+  }
+  t = t.replace(/\s{2,}/g,' ').replace(/[\s,]+(para|el|de|a)$/i,'').trim().replace(/^[,\s]+|[,\s]+$/g,'');
+  return { text: t ? t.charAt(0).toUpperCase()+t.slice(1) : text, date: date ? _ymd(date) : _ymd(base), time };
+}
 function _splitDictado(t) {
-  return String(t||'').replace(/\r/g,'').split(/\n+|[.;!?]+\s+|[.;!?]+$/)
+  t = String(t||'').replace(/\r/g,'').replace(/\b([ap])\.\s?m\./gi,'$1m.').replace(/\b([ap])\.\s?m\b/gi,'$1m');
+  return t.split(/\n+|[.;!?]+\s+|[.;!?]+$/)
     .map(x=>x.trim().replace(/^[-•*,\s]+|[.,\s]+$/g,''))
     .filter(x=>x.length>1)
     .map(x=>x.charAt(0).toUpperCase()+x.slice(1));
@@ -3584,14 +3625,14 @@ async function _checkInbox() {
       const del = await fetch(`${base}/${id}?key=${_fbKey}&currentDocument.exists=true`, {method:'DELETE'});
       if (!del.ok) continue;
       const when = new Date(d.createTime || Date.now());
-      const ds = when.getFullYear()+'-'+String(when.getMonth()+1).padStart(2,'0')+'-'+String(when.getDate()).padStart(2,'0');
-      _splitDictado(d.fields.voz.stringValue).reverse().forEach(text=>{
-        items.unshift({ id:nextId++, text, cat:null, cat_key:'todo', priority:3, date:ds, time:'', deadline:'', delegado:'',
+      _splitDictado(d.fields.voz.stringValue).reverse().forEach(raw=>{
+        const { text, date, time } = _parseFecha(raw, when);
+        items.unshift({ id:nextId++, text, cat:null, cat_key:'todo', priority:3, date, time, deadline:'', delegado:'',
           recur:'', important:null, urgent:null, note:'', subtasks:[], done:false, archived:false, voz:true, created:when.toISOString() });
         added++;
       });
     }
-    if (added) { save(); renderCurrent(); showToast(added===1 ? '1 tarea dictada agregada a tu día' : added+' tareas dictadas agregadas a tu día', 3200); }
+    if (added) { save(); renderCurrent(); showToast(added===1 ? '1 tarea dictada agregada' : added+' tareas dictadas agregadas', 3200); }
   } catch(e) {}
   finally { _inboxBusy = false; }
 }
