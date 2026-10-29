@@ -1467,6 +1467,17 @@ function markNfcGoalNotStarted() {
   if (g && !(g.milestones||[]).some(m=>m.done)) g.notStarted = true;
   seeds.push('nfc-goal-paused'); save();
 }
+function dropNfcCat() {
+  const KEY = 'drop-nfc-cat';
+  if (seeds.includes(KEY)) return;
+  const gone = cats.filter(c=>/nfc/i.test(c.name||'')).map(c=>c.id);
+  if (gone.length) {
+    cats = cats.filter(c=>!gone.includes(c.id));
+    items.forEach(i=>{ if (gone.includes(i.cat)) i.cat = null; });
+    goals.forEach(g=>{ if (gone.includes(g.cat)) g.cat = null; });
+  }
+  seeds.push(KEY); save();
+}
 function runMigrations() {
   normalizeCats();
   migrateIcons();
@@ -1475,6 +1486,7 @@ function runMigrations() {
   migrateLegacyLocal();
   seedNfcProject();
   recoverLegacyCloud();
+  dropNfcCat();
 }
 
 // ============================================================
@@ -2218,8 +2230,9 @@ function renderLogDiario() {
 
 
   const dayAll = items.filter(i=>!i.archived && (i.date===D || (i.done && i.doneDate===D && i.date!==D)));
+  const _eis = i => (i.urgent===true && i.important===true) ? 0 : i.urgent===true ? 1 : i.important===true ? 2 : 3;
   const pend = dayAll.filter(i=>!i.done).sort((a,b)=>
-    (b.focus?1:0)-(a.focus?1:0) || (a.time||'99').localeCompare(b.time||'99') || (a.priority||3)-(b.priority||3));
+    _eis(a)-_eis(b) || (a.time||'99').localeCompare(b.time||'99') || (a.priority||3)-(b.priority||3));
   const dn = dayAll.filter(i=>i.done);
   const total = pend.length + dn.length;
 
@@ -2960,7 +2973,7 @@ function openAddModal() {
 function addItem() {
   const text = document.getElementById('add-text').value.trim();
   if (!text) { showToast('Escribe algo primero'); return; }
-  const catId = Number(document.getElementById('add-cat').value);
+  const _cv = document.getElementById('add-cat').value, catId = _cv ? Number(_cv) : null;
   const cat_key = document.getElementById('add-tipo').value || 'todo';
   const item = {
     id: nextId++,
@@ -3025,7 +3038,7 @@ function saveEdit() {
   const item = items.find(i=>i.id===id);
   if (!item) return;
   item.text = document.getElementById('edit-text').value.trim() || item.text;
-  item.cat = Number(document.getElementById('edit-cat').value);
+  { const _cv = document.getElementById('edit-cat').value; item.cat = _cv ? Number(_cv) : null; }
   item.cat_key = document.getElementById('edit-tipo').value || item.cat_key || 'todo';
   item.priority = Number(document.getElementById('edit-priority').value)||3;
   item.date = document.getElementById('edit-date').value;
@@ -3304,7 +3317,7 @@ function quickCapture() {
   if (!text) return;
   const item = {
     id: nextId++, text,
-    cat: cats[0]?.id||1, cat_key:'todo',
+    cat: null, cat_key:'todo',
     priority:3, done:false, archived:false,
     created: new Date().toISOString(),
   };
@@ -3318,7 +3331,7 @@ function quickCapture() {
 function populateCatSelect(selId, selected) {
   const sel = document.getElementById(selId);
   if (!sel) return;
-  sel.innerHTML = cats.map(c=>`<option value="${c.id}"${c.id===selected?' selected':''}>${h(c.name)}</option>`).join('');
+  sel.innerHTML = `<option value=""${selected==null||!cats.some(c=>c.id===selected)?' selected':''}>Sin categoría</option>` + cats.map(c=>`<option value="${c.id}"${c.id===selected?' selected':''}>${h(c.name)}</option>`).join('');
 }
 
 // ============================================================
