@@ -732,6 +732,21 @@ html,body{max-width:100%;overflow-x:hidden}
 #bq-list .task-item{position:relative;z-index:1;will-change:transform}
 #bq-list .task-item.sw-anim{transition:transform .22s ease,opacity .22s ease}
 .swipe-bg{position:absolute;left:0;right:0;z-index:0;border-radius:12px;background:#E5484D;color:#fff;display:flex;align-items:center;justify-content:flex-end;padding-right:22px;gap:6px;font-size:.8rem;font-weight:800;cursor:pointer}
+
+/* ===== Ahora toca · cápsula flotante ===== */
+.dy-now{display:flex;justify-content:center;margin:2px 0 16px}
+.dy-pill{display:inline-flex;align-items:center;gap:10px;max-width:100%;background:#B9E26B;color:#1C2018;border-radius:99px;padding:7px 7px 7px 18px;box-shadow:0 10px 28px rgba(122,160,50,.35),0 2px 6px rgba(28,32,24,.08)}
+.dy-pill-k{font-size:.6rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;opacity:.6;white-space:nowrap}
+.dy-pill-t{font-size:.92rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;cursor:pointer}
+.dy-pill-n{font-size:.7rem;font-weight:700;opacity:.65;white-space:nowrap}
+.dy-pill-jam{display:inline-flex;align-items:center;gap:5px;border:none;background:rgba(28,32,24,.1);color:#1C2018;font:inherit;font-size:.68rem;font-weight:800;letter-spacing:.04em;border-radius:99px;padding:7px 11px;cursor:pointer;white-space:nowrap}
+.dy-pill-jam:hover{background:rgba(28,32,24,.18)}
+.dy-pill-jam.on{background:#1C2018;color:#B9E26B;cursor:default}
+.dy-pill-jam.on i{width:7px;height:7px;border-radius:50%;background:#B9E26B;animation:dyPulse 1.4s ease-in-out infinite}
+@keyframes dyPulse{50%{opacity:.25}}
+.dy-pill-ok{width:34px;height:34px;flex-shrink:0;border-radius:50%;border:none;background:#1C2018;color:#B9E26B;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
+.dy-pill-ok:hover{transform:scale(1.06)}
+@media(max-width:520px){.dy-pill{padding-left:14px;gap:8px}.dy-pill-k{display:none}}
 </style>
 </head>
 <body>
@@ -1023,7 +1038,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <div class="modal-overlay" id="jam-modal">
   <div class="modal-box" style="max-width:340px">
     <div class="modal-header">
-      <div class="modal-title">Concentrarme</div>
+      <div class="modal-title">JAM SESH</div>
       <button class="modal-close" onclick="closeModal('jam-modal')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     </div>
     <div class="modal-body">
@@ -1885,6 +1900,7 @@ function _goalStatus(g) {
 
 // ---------- ÍCONOS PROPIOS (sin emojis) ----------
 const ICON_PATHS = {
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   pulso:'<path d="M3 12h4l2.5-6 5 12 2.5-6h4"/>',
   log:'<rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9.5l2 2 4-4M8 16h8"/>',
   semana:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
@@ -2159,7 +2175,7 @@ function _dayRow(i, D) {
       </div>
     </div>
     ${!i.done?`<div class="dy-acts">
-      <button class="dy-ic" title="Concentrarme" onclick="openJamModal(${i.id})">${ico('clock',16)}</button>
+      <button class="dy-ic" title="JAM SESH" onclick="openJamModal(${i.id})">${ico('clock',16)}</button>
       <button class="dy-ic${i.focus?' on':''}" title="${i.focus?'Quitar de Ahora toca':'Fijar en Ahora toca'}" onclick="toggleFocus(${i.id})">${ico('pin',16)}</button>
       <button class="dy-ic" title="Pasar a ${nextLbl}" onclick="dayMove(${i.id})">${ico('next',16)}</button>
       <button class="dy-ic" title="Regresar a la bandeja" onclick="dayDrop(${i.id})">${ico('x',16)}</button>
@@ -2214,17 +2230,13 @@ function renderLogDiario() {
     if (f) {
       const subs = f.subtasks||[], ds_ = subs.filter(s=>s.done).length;
       const jamOn = window._jam && window._jam.id===f.id;
-      heroHtml = `<div class="dy-hero">
-        <div class="dy-hero-k">Ahora toca</div>
-        <div class="dy-hero-t" onclick="openEditModal(${f.id})">${h(f.text)}</div>
-        ${subs.length?`<div class="pl-track" style="height:5px;margin:-4px 0 6px;background:#dde8cc"><div class="pl-fill" style="width:${Math.round(ds_/subs.length*100)}%"></div></div>
-          <div style="font-size:.7rem;color:var(--accent);margin-bottom:10px">${ds_}/${subs.length} acciones</div>`:''}
-        <div class="dy-hero-actions">
-          <button class="dy-btn" onclick="toggleDone(${f.id})">✓ Hecha</button>
-          ${jamOn ? `<span class="dy-focus-on">${ico('clock',14)} Concentrada</span>` : `<button class="dy-link" onclick="openJamModal(${f.id})">${ico('clock',14)} Concentrarme</button>`}
-          <span style="font-size:.68rem;color:${f.focus?'var(--accent)':'var(--text2)'}">${f.focus?'Fijada por ti':'Fija otra con el pin'}</span>
-        </div>
-      </div>`;
+      heroHtml = `<div class="dy-now"><div class="dy-pill">
+        <span class="dy-pill-k">Ahora toca</span>
+        <span class="dy-pill-t" onclick="openEditModal(${f.id})" title="${f.focus?'Fijada por ti':'Fija otra con el pin'}">${h(f.text)}</span>
+        ${subs.length?`<span class="dy-pill-n">${ds_}/${subs.length}</span>`:''}
+        ${jamOn ? `<span class="dy-pill-jam on"><i></i>JAM SESH</span>` : `<button class="dy-pill-jam" onclick="openJamModal(${f.id})">${ico('clock',13)} JAM SESH</button>`}
+        <button class="dy-pill-ok" onclick="toggleDone(${f.id})" title="Marcar como hecha" aria-label="Marcar como hecha">${ico('check',16)}</button>
+      </div></div>`;
     }
   }
 
@@ -2570,7 +2582,7 @@ function taskCard(item, showDone=false) {
       <div class="task-cat">${catIco(cat,12)} ${h(cat.name)}</div>
       ${item.date?`<div style="font-size:.65rem;color:var(--text2)">${fmtDate(item.date)}</div>`:''}
       ${!item.done?`<button class="pin-btn${item.focus?' pinned':''}" onclick="event.stopPropagation();toggleFocus(${item.id})" title="${item.focus?'Quitar de foco':'Fijar en foco'}">${ico('pin',14)}</button>`:''}
-      ${!item.done?`<button class="jam-btn${isJamActive?' active':''}" title="Concentrarme" aria-label="Concentrarme" onclick="event.stopPropagation();openJamModal(${item.id})">${ico('clock',15)}</button>`:''}
+      ${!item.done?`<button class="jam-btn${isJamActive?' active':''}" title="JAM SESH" aria-label="JAM SESH" onclick="event.stopPropagation();openJamModal(${item.id})">${ico('clock',15)}</button>`:''}
     </div>
   </div>`;
 }
