@@ -781,6 +781,24 @@ html,body{max-width:100%;overflow-x:hidden}
 .modal-btn.del{background:#FDECEC;color:#D93636;border:1.5px solid #F6C9C9}
 .modal-btn.del:hover{background:#fbdcdc}
 @media(max-width:420px){.deleg-wa{flex-wrap:wrap}.wa-btn{width:100%;height:40px}}
+
+/* ===== Hábitos que crecen + cosecha del mes ===== */
+.hb-wrap{display:flex;align-items:center;gap:18px}
+.hb-wrap .dy-habits{flex:1;min-width:0}
+.dy-hab.hb2{gap:9px;padding:6px 14px 6px 9px;border-radius:13px}
+.dy-hab.hb2 .hb-tx{display:flex;flex-direction:column;line-height:1.2}
+.dy-hab.hb2 .hb-tx b{font-size:.8rem;font-weight:700}
+.dy-hab.hb2 .hb-tx small{font-size:.64rem;font-weight:600;color:#8B9280}
+.dy-hab.hb2.on{background:#F2F9E4;border-color:#B9E26B;color:var(--text)}
+.dy-hab.hb2.on .hb-tx small{color:#5E7A2A}
+.dy-hab.hb2:hover{border-color:#B9E26B}
+.hb-plant{flex-shrink:0}
+.hb-total{font-size:.68rem;font-weight:700;color:var(--accent);text-transform:none;letter-spacing:0}
+.hb-grid{display:grid;grid-template-columns:repeat(7,7px);gap:2px;flex-shrink:0}
+.hb-grid i{width:7px;height:7px;border-radius:2px;background:transparent}
+.hb-grid i.l0{background:#ECEEE7}.hb-grid i.l1{background:#DCEBB8}.hb-grid i.l2{background:#B9E26B}.hb-grid i.l3{background:#6b7a4e}
+.hb-grid i.lf{background:transparent;box-shadow:inset 0 0 0 1px #ECEEE7}
+.hb-grid i.t{outline:1.5px solid #1C2018;outline-offset:0}
 </style>
 </head>
 <body>
@@ -2002,6 +2020,37 @@ function addHabit(){
   _saveHabits(habs);if(inp)inp.value='';renderLogDiario();
 }
 function removeHabit(id){_saveHabits(_getHabits().filter(h=>h.id!==id));renderLogDiario();}
+// ---------- Hábitos que crecen: semilla → brote → planta → flor ----------
+function _habitStage(st) {
+  const d = n => n===1 ? '1 día' : n+' días';
+  if (st >= 14) return [3, 'Flor · '+d(st)];
+  if (st >= 5) return [2, 'Planta · '+d(st)];
+  if (st >= 2) return [1, 'Brote · '+d(st)];
+  return [0, st ? 'Semilla · 1 día' : 'Semilla'];
+}
+function _plantSvg(stage, on) {
+  const c = on ? '#5E7A2A' : '#A7AE9B', st = `stroke="${c}" stroke-width="1.8" stroke-linecap="round" fill="none"`;
+  const leafA = `<path d="M10 14c-3 0-4.5-1.7-4.5-3.8 2.6 0 4.5 1.3 4.5 3.8z" fill="${c}"/>`, leafB = `<path d="M10 11.5c0-2.4 1.6-4 4.3-4 0 2.4-1.8 4-4.3 4z" fill="${c}"/>`;
+  const body = stage===0 ? `<ellipse cx="10" cy="15" rx="3.2" ry="2.2" fill="${c}"/><path d="M4 18h12" ${st}/>`
+    : stage===1 ? `<path d="M10 18V11M4 18h12" ${st}/><path d="M10 12c-3 0-4.5-1.8-4.5-4 2.6 0 4.5 1.4 4.5 4zM10 11c0-2.6 1.6-4.3 4.3-4.3 0 2.5-1.8 4.3-4.3 4.3z" fill="${c}"/>`
+    : stage===2 ? `<path d="M10 18V5M4 18h12" ${st}/>${leafA}${leafB}<path d="M10 8c-2.2 0-3.4-1.3-3.4-3 1.9 0 3.4 1 3.4 3z" fill="${c}"/>`
+    : `<path d="M10 18V7M4 18h12" ${st}/>${leafA}${leafB}<circle cx="10" cy="5" r="2.6" fill="${on?'#E8B04B':'#C9CEC0'}"/><circle cx="10" cy="5" r="1" fill="#FFF6DD"/>`;
+  return `<svg class="hb-plant" width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">${body}</svg>`;
+}
+function _habitHarvest(D, habits) {
+  const hl = _getHlog(), base = new Date(D+'T12:00:00'), y = base.getFullYear(), m = base.getMonth();
+  const days = new Date(y, m+1, 0).getDate(), lead = (new Date(y, m, 1).getDay()+6)%7, today = todayStr(), ids = new Set(habits.map(x=>x.id));
+  let total = 0, cells = '';
+  for (let k=0; k<lead; k++) cells += '<i></i>';
+  for (let d=1; d<=days; d++) {
+    const ds = y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const n = Object.entries(hl[ds]||{}).filter(([k,v])=>v && ids.has(Number(k))).length;
+    total += n;
+    const lv = ds > today ? 'f' : !n ? 0 : n >= habits.length ? 3 : n/habits.length >= .5 ? 2 : 1;
+    cells += `<i class="l${lv}${ds===D?' t':''}" title="${d} · ${n} de ${habits.length}"></i>`;
+  }
+  return { total, month: base.toLocaleDateString('es-MX',{month:'long'}), grid: `<div class="hb-grid" aria-label="Cosecha del mes">${cells}</div>` };
+}
 function _habitStreak(id){
   const hl=_getHlog();let streak=0;const d=new Date();
   const t0=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -2420,14 +2469,18 @@ function renderLogDiario() {
 
   // Hábitos
   const habits = _getHabits(), dayLog = _getHlog()[D] || {};
+  const harvest = _habitHarvest(D, habits);
   const habitsHtml = `<div class="card dy-card">
     <div class="dy-sec"><div class="pl-q">Hábitos</div>
-      ${habits.length?`<button class="pl-link" style="margin:0" onclick="_habEdit=!_habEdit;renderLogDiario()">${_habEdit?'Listo':'Editar'}</button>`:''}</div>
-    <div class="dy-habits">${habits.map(hb=>{
-      const on = !!dayLog[hb.id], st = _habitStreak(hb.id);
-      const emo = '';
-      return `<span class="dy-hab${on?' on':''}" ${_habEdit?'':`onclick="toggleHabit(${hb.id})"`}>${on?'✓ ':''}${emo}${h(hb.text)}${st>1&&!_habEdit?`<span class="st">${st} días</span>`:''}${_habEdit?`<span class="x" onclick="event.stopPropagation();removeHabit(${hb.id})" title="Quitar hábito">✕</span>`:''}</span>`;
+      <div style="display:flex;align-items:center;gap:12px">
+        ${habits.length?`<span class="hb-total">Cosecha de ${harvest.month} · ${harvest.total}</span>`:''}
+        ${habits.length?`<button class="pl-link" style="margin:0" onclick="_habEdit=!_habEdit;renderLogDiario()">${_habEdit?'Listo':'Editar'}</button>`:''}
+      </div></div>
+    <div class="hb-wrap"><div class="dy-habits">${habits.map(hb=>{
+      const on = !!dayLog[hb.id], st = _habitStreak(hb.id), stg = _habitStage(st);
+      return `<span class="dy-hab hb2${on?' on':''}" ${_habEdit?'':`onclick="toggleHabit(${hb.id})"`}>${_plantSvg(stg[0], on)}<span class="hb-tx"><b>${h(hb.text)}</b><small>${stg[1]}</small></span>${_habEdit?`<span class="x" onclick="event.stopPropagation();removeHabit(${hb.id})" title="Quitar hábito">✕</span>`:''}</span>`;
     }).join('') || '<span class="pl-sub" style="margin:0">Sin hábitos todavía. Agrega el primero ↓</span>'}</div>
+      ${habits.length?harvest.grid:''}</div>
     ${_habEdit || !habits.length ? `<div style="display:flex;gap:6px;margin-top:12px">
       <input class="modal-input" id="hab-inp" placeholder="Nuevo hábito…" style="flex:1" onkeydown="if(event.key==='Enter')addHabit()"/>
       <button class="btn-sm" onclick="addHabit()">+</button>
