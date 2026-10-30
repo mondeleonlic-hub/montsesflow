@@ -747,6 +747,40 @@ html,body{max-width:100%;overflow-x:hidden}
 .dy-pill-ok{width:34px;height:34px;flex-shrink:0;border-radius:50%;border:none;background:#1C2018;color:#B9E26B;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}
 .dy-pill-ok:hover{transform:scale(1.06)}
 @media(max-width:520px){.dy-pill{padding-left:14px;gap:8px}.dy-pill-k{display:none}}
+
+/* ===== Menú de tarea v2 ===== */
+.eis-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.eis-row .eis-chip{width:100%;text-align:center;padding:9px 10px;border-radius:10px}
+.cat-add-link{display:inline-block;margin-top:5px;border:none;background:none;padding:0;font:inherit;font-size:.68rem;font-weight:700;color:var(--text2);cursor:pointer}
+.cat-add-link:hover{color:var(--accent)}
+.cat-add-row{display:none;gap:6px;margin-top:6px}
+.cat-add-row.on{display:flex}
+.cat-add-row input{flex:1;min-width:0;height:34px;border:1.5px solid var(--border);border-radius:8px;padding:0 10px;font:inherit;font-size:.8rem;outline:none}
+.cat-add-row input:focus{border-color:var(--accent)}
+.cat-add-row button{border:none;border-radius:8px;background:var(--accent-light);color:var(--accent);font:inherit;font-size:.75rem;font-weight:800;padding:0 12px;cursor:pointer}
+.rc-box{display:none;margin-top:-4px;padding:12px;border:1.5px solid var(--border);border-radius:10px;background:#fafbf8}
+.rc-box.on{display:block}
+.rc-line{display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:700;color:var(--text)}
+.rc-n{width:58px;height:34px;border:1.5px solid var(--border);border-radius:8px;padding:0 8px;font:inherit;font-size:.85rem}
+.rc-u{height:34px;border:1.5px solid var(--border);border-radius:8px;padding:0 8px;font:inherit;font-size:.82rem;background:#fff}
+.rc-days{display:flex;gap:6px;margin-top:10px}
+.rc-days.off{display:none}
+.rc-days button{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--border);background:#fff;font:inherit;font-size:.74rem;font-weight:800;color:var(--text2);cursor:pointer}
+.rc-days button.on{background:#1C2018;border-color:#1C2018;color:#B9E26B}
+.jam-flag{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#F2F9E4;border:1.5px solid #B9E26B;border-radius:10px;cursor:pointer}
+.jam-flag input{width:18px;height:18px;accent-color:#1C2018;cursor:pointer;flex-shrink:0}
+.jam-flag-t{font-size:.8rem;font-weight:800;color:#1C2018}
+.jam-flag-s{font-size:.65rem;color:var(--text2);margin-top:1px}
+.deleg-wa{display:none;gap:8px;margin-top:8px}
+.deleg-wa.on{display:flex}
+.deleg-wa .modal-input{flex:1;min-width:0}
+.wa-btn{flex-shrink:0;border:1.5px solid #bfe8cf;border-radius:10px;background:#EAF8F0;color:#11804A;font:inherit;font-size:.76rem;font-weight:800;padding:0 14px;cursor:pointer}
+.wa-btn:hover{background:#dcf3e6}
+.modal-actions{display:flex;gap:10px}
+.modal-actions .modal-btn{flex:1 1 0;width:auto;min-width:0;margin:0}
+.modal-btn.del{background:#FDECEC;color:#D93636;border:1.5px solid #F6C9C9}
+.modal-btn.del:hover{background:#fbdcdc}
+@media(max-width:420px){.deleg-wa{flex-wrap:wrap}.wa-btn{width:100%;height:40px}}
 </style>
 </head>
 <body>
@@ -852,13 +886,15 @@ html,body{max-width:100%;overflow-x:hidden}
     </div>
     <div class="modal-body">
       <div>
-        <label class="modal-label">Texto</label>
+        <label class="modal-label">Task</label>
         <input class="modal-input" id="add-text" placeholder="¿Qué tienes que hacer?"/>
       </div>
       <div class="modal-row">
         <div>
           <label class="modal-label">Categoría</label>
           <select class="modal-select" id="add-cat"></select>
+          <button type="button" class="cat-add-link" onclick="catAddOpen('add')">+ Agregar categoría</button>
+          <div class="cat-add-row" id="add-cat-add"><input id="add-cat-new" placeholder="Nombre de la categoría" onkeydown="if(event.key==='Enter'){event.preventDefault();catAddSave('add')}if(event.key==='Escape'){catAddClose('add')}"/><button type="button" onclick="catAddSave('add')">Agregar</button></div>
         </div>
         <div>
           <label class="modal-label">Tipo de tarea</label>
@@ -867,7 +903,6 @@ html,body{max-width:100%;overflow-x:hidden}
             <option value="compromisos">Compromisos</option>
             <option value="proyectos">Proyectos</option>
             <option value="extra">Extra</option>
-            <option value="semana">Semana</option>
           </select>
         </div>
       </div>
@@ -883,20 +918,28 @@ html,body{max-width:100%;overflow-x:hidden}
         </div>
         <div>
           <label class="modal-label">Recurrencia</label>
-          <select class="modal-select" id="add-recur">
+          <select class="modal-select" id="add-recur" onchange="rcToggle('add')">
             <option value="">Sin recurrencia</option>
             <option value="daily">Diario</option>
             <option value="weekly">Semanal</option>
+            <option value="biweekly">Cada 2 semanas</option>
+            <option value="monthly">Mensual</option>
+            <option value="custom">Personalizar…</option>
           </select>
         </div>
+      </div>
+      <div class="rc-box" id="add-rc">
+        <div class="rc-line">Cada <input type="number" min="1" value="1" id="add-rc-n" class="rc-n" oninput="rcToggle('add')"/>
+          <select id="add-rc-u" class="rc-u" onchange="rcToggle('add')"><option value="d">día(s)</option><option value="w" selected>semana(s)</option><option value="m">mes(es)</option></select></div>
+        <div class="rc-days" id="add-rc-days"><button type="button" data-d="1" onclick="this.classList.toggle('on')">L</button><button type="button" data-d="2" onclick="this.classList.toggle('on')">M</button><button type="button" data-d="3" onclick="this.classList.toggle('on')">M</button><button type="button" data-d="4" onclick="this.classList.toggle('on')">J</button><button type="button" data-d="5" onclick="this.classList.toggle('on')">V</button><button type="button" data-d="6" onclick="this.classList.toggle('on')">S</button><button type="button" data-d="0" onclick="this.classList.toggle('on')">D</button></div>
       </div>
       <div>
         <label class="modal-label">Clasificación (Eisenhower)</label>
         <div class="eis-row">
           <button class="eis-chip" id="add-chip-i"  type="button" onclick="setEis('add','i',true)">Importante</button>
-          <button class="eis-chip" id="add-chip-ni" type="button" onclick="setEis('add','i',false)">— No importante</button>
+          <button class="eis-chip" id="add-chip-ni" type="button" onclick="setEis('add','i',false)">No importante</button>
           <button class="eis-chip" id="add-chip-u"  type="button" onclick="setEis('add','u',true)">Urgente</button>
-          <button class="eis-chip" id="add-chip-nu" type="button" onclick="setEis('add','u',false)">— No urgente</button>
+          <button class="eis-chip" id="add-chip-nu" type="button" onclick="setEis('add','u',false)">No urgente</button>
         </div>
       </div>
       <div class="modal-row">
@@ -915,7 +958,11 @@ html,body{max-width:100%;overflow-x:hidden}
       </div>
       <div>
         <label class="modal-label">Delegado a (opcional)</label>
-        <input class="modal-input" id="add-delegado" placeholder="Nombre o equipo…"/>
+        <input class="modal-input" id="add-delegado" placeholder="Nombre o equipo…" list="deleg-names" autocomplete="off" oninput="delegInput('add')"/>
+        <div class="deleg-wa" id="add-deleg-wa">
+          <input class="modal-input" id="add-deleg-tel" type="tel" inputmode="tel" placeholder="WhatsApp (10 dígitos)"/>
+          <button type="button" class="wa-btn" onclick="sendWhats('add')">Enviar por WhatsApp</button>
+        </div>
       </div>
       <div>
         <label class="modal-label">Nota</label>
@@ -934,6 +981,7 @@ html,body{max-width:100%;overflow-x:hidden}
   </div>
 </div>
 
+<datalist id="deleg-names"></datalist>
 <!-- EDIT MODAL -->
 <div class="modal-overlay" id="edit-modal">
   <div class="modal-box">
@@ -944,13 +992,15 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="modal-body">
       <input type="hidden" id="edit-id"/>
       <div>
-        <label class="modal-label">Texto</label>
+        <label class="modal-label">Task</label>
         <input class="modal-input" id="edit-text"/>
       </div>
       <div class="modal-row">
         <div>
           <label class="modal-label">Categoría</label>
           <select class="modal-select" id="edit-cat"></select>
+          <button type="button" class="cat-add-link" onclick="catAddOpen('edit')">+ Agregar categoría</button>
+          <div class="cat-add-row" id="edit-cat-add"><input id="edit-cat-new" placeholder="Nombre de la categoría" onkeydown="if(event.key==='Enter'){event.preventDefault();catAddSave('edit')}if(event.key==='Escape'){catAddClose('edit')}"/><button type="button" onclick="catAddSave('edit')">Agregar</button></div>
         </div>
         <div>
           <label class="modal-label">Tipo de tarea</label>
@@ -959,7 +1009,6 @@ html,body{max-width:100%;overflow-x:hidden}
             <option value="compromisos">Compromisos</option>
             <option value="proyectos">Proyectos</option>
             <option value="extra">Extra</option>
-            <option value="semana">Semana</option>
           </select>
         </div>
       </div>
@@ -975,20 +1024,32 @@ html,body{max-width:100%;overflow-x:hidden}
         </div>
         <div>
           <label class="modal-label">Recurrencia</label>
-          <select class="modal-select" id="edit-recur">
+          <select class="modal-select" id="edit-recur" onchange="rcToggle('edit')">
             <option value="">Sin recurrencia</option>
             <option value="daily">Diario</option>
             <option value="weekly">Semanal</option>
+            <option value="biweekly">Cada 2 semanas</option>
+            <option value="monthly">Mensual</option>
+            <option value="custom">Personalizar…</option>
           </select>
         </div>
+      </div>
+      <div class="rc-box" id="edit-rc">
+        <div class="rc-line">Cada <input type="number" min="1" value="1" id="edit-rc-n" class="rc-n" oninput="rcToggle('edit')"/>
+          <select id="edit-rc-u" class="rc-u" onchange="rcToggle('edit')"><option value="d">día(s)</option><option value="w" selected>semana(s)</option><option value="m">mes(es)</option></select></div>
+        <div class="rc-days" id="edit-rc-days"><button type="button" data-d="1" onclick="this.classList.toggle('on')">L</button><button type="button" data-d="2" onclick="this.classList.toggle('on')">M</button><button type="button" data-d="3" onclick="this.classList.toggle('on')">M</button><button type="button" data-d="4" onclick="this.classList.toggle('on')">J</button><button type="button" data-d="5" onclick="this.classList.toggle('on')">V</button><button type="button" data-d="6" onclick="this.classList.toggle('on')">S</button><button type="button" data-d="0" onclick="this.classList.toggle('on')">D</button></div>
+      </div>
+      <div class="jam-flag" onclick="document.getElementById('edit-focus').checked=!document.getElementById('edit-focus').checked">
+        <input type="checkbox" id="edit-focus" onclick="event.stopPropagation()"/>
+        <div><div class="jam-flag-t">En Jam Sesh</div><div class="jam-flag-s">Aparece en Ahora toca de tu Log diario</div></div>
       </div>
       <div>
         <label class="modal-label">Clasificación (Eisenhower)</label>
         <div class="eis-row">
           <button class="eis-chip" id="edit-chip-i"  type="button" onclick="setEis('edit','i',true)">Importante</button>
-          <button class="eis-chip" id="edit-chip-ni" type="button" onclick="setEis('edit','i',false)">— No importante</button>
+          <button class="eis-chip" id="edit-chip-ni" type="button" onclick="setEis('edit','i',false)">No importante</button>
           <button class="eis-chip" id="edit-chip-u"  type="button" onclick="setEis('edit','u',true)">Urgente</button>
-          <button class="eis-chip" id="edit-chip-nu" type="button" onclick="setEis('edit','u',false)">— No urgente</button>
+          <button class="eis-chip" id="edit-chip-nu" type="button" onclick="setEis('edit','u',false)">No urgente</button>
         </div>
       </div>
       <div class="modal-row">
@@ -1007,7 +1068,11 @@ html,body{max-width:100%;overflow-x:hidden}
       </div>
       <div>
         <label class="modal-label">Delegado a (opcional)</label>
-        <input class="modal-input" id="edit-delegado" placeholder="Nombre o equipo…"/>
+        <input class="modal-input" id="edit-delegado" placeholder="Nombre o equipo…" list="deleg-names" autocomplete="off" oninput="delegInput('edit')"/>
+        <div class="deleg-wa" id="edit-deleg-wa">
+          <input class="modal-input" id="edit-deleg-tel" type="tel" inputmode="tel" placeholder="WhatsApp (10 dígitos)"/>
+          <button type="button" class="wa-btn" onclick="sendWhats('edit')">Enviar por WhatsApp</button>
+        </div>
       </div>
       <div>
         <label class="modal-label">Nota</label>
@@ -1021,15 +1086,10 @@ html,body{max-width:100%;overflow-x:hidden}
           <button type="button" onclick="addSubtask('edit')">+ Agregar</button>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--accent-light);border:1.5px solid #c8d8a8;border-radius:9px;margin-bottom:8px;cursor:pointer" onclick="document.getElementById('edit-focus').checked=!document.getElementById('edit-focus').checked">
-        <input type="checkbox" id="edit-focus" style="width:18px;height:18px;accent-color:var(--accent);cursor:pointer" onclick="event.stopPropagation()"/>
-        <div>
-          <div style="font-size:.8rem;font-weight:800;color:var(--accent)">En foco ahora</div>
-          <div style="font-size:.65rem;color:var(--text2);margin-top:1px">Esta tarea aparecerá primera en tu dashboard</div>
-        </div>
+      <div class="modal-actions">
+        <button class="modal-btn del" onclick="deleteItem()">Eliminar tarea</button>
+        <button class="modal-btn primary" onclick="saveEdit()">Guardar cambios</button>
       </div>
-      <button class="modal-btn primary" onclick="saveEdit()">Guardar cambios</button>
-      <button class="modal-btn danger" onclick="deleteItem()">Eliminar tarea</button>
     </div>
   </div>
 </div>
@@ -1398,8 +1458,21 @@ function normalizeCats() {
 // TAREAS REPETITIVAS
 // ============================================================
 function _ymd(d) { return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
-function _recurNext(ds, recur) {
+function _recurNext(ds, recur, rc) {
   const d = new Date(ds+'T12:00:00');
+  if (recur==='custom' && rc) {
+    const n = Math.max(1, rc.n||1);
+    if (rc.u==='d') d.setDate(d.getDate()+n);
+    else if (rc.u==='m') d.setMonth(d.getMonth()+n);
+    else if (rc.days && rc.days.length) {
+      // siguiente día marcado en esta misma semana (lunes a domingo); si no hay, primera fecha marcada n semanas después
+      const wd = x => (x+6)%7, order = rc.days.map(wd).sort((a,b)=>a-b), cur = wd(d.getDay());
+      const later = order.find(x=>x>cur);
+      if (later!==undefined) d.setDate(d.getDate()+(later-cur));
+      else d.setDate(d.getDate()-cur+7*n+order[0]);
+    } else d.setDate(d.getDate()+7*n);
+    return _ymd(d);
+  }
   if (recur==='daily') d.setDate(d.getDate()+1);
   else if (recur==='biweekly') d.setDate(d.getDate()+14);
   else if (recur==='monthly') d.setMonth(d.getMonth()+1);
@@ -1433,7 +1506,7 @@ function cleanMissedRecurring() {
     stale.forEach((i, idx) => {
       if (idx === 0 && !hasCurrent) {
         let nd = _itemDay(i);
-        while (nd < today) nd = _recurNext(nd, i.recur);
+        while (nd < today) nd = _recurNext(nd, i.recur, i.rc);
         _moveItemTo(i, nd);
       } else {
         i.archived = true; i.archivedReason = 'repetitiva-no-hecha';
@@ -1446,8 +1519,8 @@ function cleanMissedRecurring() {
 
 function _spawnNextRecurring(item) {
   const today = todayStr();
-  let nd = _recurNext(_itemDay(item) || today, item.recur);
-  while (nd <= today) nd = _recurNext(nd, item.recur);
+  let nd = _recurNext(_itemDay(item) || today, item.recur, item.rc);
+  while (nd <= today) nd = _recurNext(nd, item.recur, item.rc);
   const copy = JSON.parse(JSON.stringify(item));
   copy.id = nextId++;
   copy.done = false; copy.doneDate = null; copy.archived = false;
@@ -1478,6 +1551,97 @@ function dropNfcCat() {
   }
   seeds.push(KEY); save();
 }
+// ============================================================
+// MENÚ DE TAREA: categorías, repetición personalizada, WhatsApp
+// ============================================================
+const _CAT_COLORS = ['#6b7a4e','#2f6fb3','#b5532f','#7a4fa3','#2f8f7a','#c08a1e','#a3405f','#4b5563'];
+function catAddOpen(p) { const r = document.getElementById(p+'-cat-add'); r.classList.add('on'); setTimeout(()=>document.getElementById(p+'-cat-new').focus(), 30); }
+function catAddClose(p) { const r = document.getElementById(p+'-cat-add'); if (r) { r.classList.remove('on'); document.getElementById(p+'-cat-new').value = ''; } }
+function catAddSave(p) {
+  const name = document.getElementById(p+'-cat-new').value.trim();
+  if (!name) return;
+  let c = cats.find(x=>(x.name||'').toLowerCase()===name.toLowerCase());
+  if (!c) { c = { id:nextCatId++, name, color:_CAT_COLORS[cats.length % _CAT_COLORS.length], icon:_guessIcon(name) }; cats.push(c); save(); }
+  populateCatSelect(p+'-cat', c.id);
+  catAddClose(p);
+  showToast('Categoría agregada');
+}
+function rcToggle(p) {
+  const on = document.getElementById(p+'-recur').value === 'custom';
+  document.getElementById(p+'-rc').classList.toggle('on', on);
+  document.getElementById(p+'-rc-days').classList.toggle('off', document.getElementById(p+'-rc-u').value !== 'w');
+}
+function rcFill(p, rc) {
+  rc = rc || { n:1, u:'w', days:[] };
+  document.getElementById(p+'-rc-n').value = rc.n || 1;
+  document.getElementById(p+'-rc-u').value = rc.u || 'w';
+  document.querySelectorAll('#'+p+'-rc-days button').forEach(b=>b.classList.toggle('on', (rc.days||[]).includes(Number(b.dataset.d))));
+}
+function rcRead(p) {
+  if (document.getElementById(p+'-recur').value !== 'custom') return null;
+  const u = document.getElementById(p+'-rc-u').value;
+  return { n: Math.max(1, parseInt(document.getElementById(p+'-rc-n').value)||1), u,
+           days: u==='w' ? [...document.querySelectorAll('#'+p+'-rc-days button.on')].map(b=>Number(b.dataset.d)) : [] };
+}
+function _telClean(t) { return String(t||'').replace(/\D/g,''); }
+function _contacts() {
+  const m = {};
+  items.forEach(i=>{ if (i.delegado && i.delegadoTel) m[i.delegado.trim().toLowerCase()] = { name:i.delegado.trim(), tel:i.delegadoTel }; });
+  return m;
+}
+function delegInput(p, init) {
+  const name = document.getElementById(p+'-delegado').value.trim(), tel = document.getElementById(p+'-deleg-tel');
+  document.getElementById(p+'-deleg-wa').classList.toggle('on', !!name);
+  const c = _contacts()[name.toLowerCase()];
+  if (c && !tel.value) tel.value = c.tel;
+  if (init) document.getElementById('deleg-names').innerHTML = Object.values(_contacts()).map(c=>`<option value="${h(c.name)}">`).join('');
+}
+function sendWhats(p) {
+  const name = document.getElementById(p+'-delegado').value.trim();
+  let tel = _telClean(document.getElementById(p+'-deleg-tel').value);
+  if (tel.length === 10) tel = '52' + tel;
+  if (tel.length < 11) { showToast('Escribe su WhatsApp a 10 dígitos'); document.getElementById(p+'-deleg-tel').focus(); return; }
+  const g = id => (document.getElementById(p+'-'+id)||{}).value || '';
+  const fmt = ds => new Date(ds+'T12:00:00').toLocaleDateString('es-MX',{weekday:'long', day:'numeric', month:'long'});
+  const subs = (p==='add' ? window._addSubs : window._editSubs) || [];
+  let msg = `Hola ${name.split(' ')[0]}, te comparto esta tarea:\n\n*${g('text').trim()}*`;
+  if (g('date')) msg += `\nFecha: ${fmt(g('date'))}${g('time') ? ' a las '+g('time') : ''}`;
+  if (g('deadline')) msg += `\nFecha límite: ${fmt(g('deadline'))}`;
+  if (subs.filter(x=>!x.done).length) msg += `\n\nPendientes:\n` + subs.filter(x=>!x.done).map(x=>'- '+x.text).join('\n');
+  if (g('note').trim()) msg += `\n\nNota: ${g('note').trim()}`;
+  msg += `\n\nGracias.`;
+  window.open('https://wa.me/' + tel + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// Categorías definitivas (se ordena una sola vez; lo demás pasa a "Sin categoría")
+function catsV2() {
+  const KEY = 'cats-v2';
+  if (seeds.includes(KEY)) return;
+  const norm = x => String(x||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+  const PLAN = [
+    ['Personal',['personal'],'user'], ['Fitness',['fitness','salud'],'dumbbell'], ['Admon',['admon','administracion','finanzas'],'calc'],
+    ['Marketing',['marketing'],'megaphone'], ['Licencia',['licencia','josh'],'briefcase'], ['Recursos Humanos',['recursos humanos','rh'],'users'],
+    ['Sistemas',['sistemas'],'layers'], ['Estrategia',['estrategia'],'compass'], ['TRES Media',['tres media'],'camera'],
+    ['Operación Food',['operacion food','food operation','food'],'utensils'], ['Operación Carwash',['operacion carwash','carwash operacion','carwash operation','carwash'],'car'],
+    ['Mantenimiento',['mantenimiento'],'wrench'],
+  ];
+  const out = [], remap = {};
+  PLAN.forEach(([name, aliases, icon], k) => {
+    const found = cats.filter(c=>aliases.includes(norm(c.name)));
+    let keep = found[0];
+    if (keep) { keep.name = name; if (!keep.icon) keep.icon = icon; if (norm(name)==='licencia' || norm(name)==='fitness') keep.icon = icon; }
+    else keep = { id:nextCatId++, name, color:_CAT_COLORS[k % _CAT_COLORS.length], icon };
+    found.slice(1).forEach(c=>{ remap[c.id] = keep.id; });
+    out.push(keep);
+  });
+  const ok = new Set(out.map(c=>c.id));
+  cats.forEach(c=>{ if (!ok.has(c.id) && remap[c.id]===undefined) remap[c.id] = null; });
+  const fix = o => { if (o.cat!=null && remap[o.cat]!==undefined) o.cat = remap[o.cat]; };
+  items.forEach(i=>{ fix(i); if (i.cat_key==='semana') i.cat_key = 'todo'; });
+  goals.forEach(fix);
+  cats = out;
+  seeds.push(KEY); save();
+}
 function runMigrations() {
   normalizeCats();
   migrateIcons();
@@ -1487,6 +1651,7 @@ function runMigrations() {
   seedNfcProject();
   recoverLegacyCloud();
   dropNfcCat();
+  catsV2();
 }
 
 // ============================================================
@@ -2963,6 +3128,8 @@ function openAddModal() {
   document.getElementById('add-priority').value = '3';
   document.getElementById('add-tipo').value = 'todo';
   document.getElementById('add-recur').value = '';
+  rcFill('add', null); rcToggle('add');
+  document.getElementById('add-deleg-tel').value = ''; delegInput('add', true); catAddClose('add');
   ['add-chip-i','add-chip-ni','add-chip-u','add-chip-nu'].forEach(id=>{ document.getElementById(id).className='eis-chip'; });
   window._addSubs = [];
   renderSubList('add');
@@ -2984,6 +3151,8 @@ function addItem() {
     deadline: document.getElementById('add-deadline').value,
     delegado: document.getElementById('add-delegado').value.trim(),
     recur: document.getElementById('add-recur').value,
+    rc: rcRead('add'),
+    delegadoTel: _telClean(document.getElementById('add-deleg-tel').value),
     important: document.getElementById('add-chip-i').classList.contains('active-i') ? true : document.getElementById('add-chip-ni').classList.contains('active-no') ? false : null,
     urgent: document.getElementById('add-chip-u').classList.contains('active-u') ? true : document.getElementById('add-chip-nu').classList.contains('active-no') ? false : null,
     note: document.getElementById('add-note').value.trim(),
@@ -3020,8 +3189,10 @@ function openEditModal(id) {
   document.getElementById('edit-deadline').value = item.deadline||'';
   document.getElementById('edit-delegado').value = item.delegado||'';
   document.getElementById('edit-priority').value = item.priority||3;
-  document.getElementById('edit-tipo').value = item.cat_key||'todo';
+  document.getElementById('edit-tipo').value = (['todo','compromisos','proyectos','extra'].includes(item.cat_key) ? item.cat_key : 'todo');
   document.getElementById('edit-recur').value = item.recur||'';
+  rcFill('edit', item.rc); rcToggle('edit');
+  document.getElementById('edit-deleg-tel').value = item.delegadoTel||''; delegInput('edit', true); catAddClose('edit');
   window._editSubs = (item.subtasks||[]).map(s=>({...s}));
   renderSubList('edit');
   ['edit-chip-i','edit-chip-ni','edit-chip-u','edit-chip-nu'].forEach(id=>{ document.getElementById(id).className='eis-chip'; });
@@ -3046,6 +3217,8 @@ function saveEdit() {
   item.deadline = document.getElementById('edit-deadline').value;
   item.delegado = document.getElementById('edit-delegado').value.trim();
   item.recur = document.getElementById('edit-recur').value;
+  item.rc = rcRead('edit');
+  item.delegadoTel = _telClean(document.getElementById('edit-deleg-tel').value);
   item.important = document.getElementById('edit-chip-i').classList.contains('active-i') ? true : document.getElementById('edit-chip-ni').classList.contains('active-no') ? false : null;
   item.urgent = document.getElementById('edit-chip-u').classList.contains('active-u') ? true : document.getElementById('edit-chip-nu').classList.contains('active-no') ? false : null;
   item.note = document.getElementById('edit-note').value.trim();
