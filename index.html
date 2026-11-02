@@ -3944,6 +3944,16 @@ setInterval(()=>{ if (document.visibilityState==='visible') _checkInbox(); }, 45
     const stop = ev=>{ ev.stopPropagation(); ev.preventDefault(); }; document.addEventListener('click', stop, true); setTimeout(()=>document.removeEventListener('click', stop, true), 350);
   });
 })();
+// Enter guarda y cierra la ventana de tarea (salvo en Nota, subtareas y nueva categoría).
+document.addEventListener('keydown', e=>{
+  if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+  const m = e.target.closest && e.target.closest('#edit-modal.open, #add-modal.open');
+  if (!m) return;
+  const t = e.target, id = t.id || '';
+  if (t.tagName==='TEXTAREA' || /-sub-inp$|-cat-new$/.test(id) || t.tagName==='BUTTON') return;
+  e.preventDefault();
+  m.id==='edit-modal' ? saveEdit() : addItem();
+});
 </script>
 
 </body>
