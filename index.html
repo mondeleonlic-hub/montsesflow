@@ -3441,6 +3441,7 @@ function _focusLeft() { const f = window._jam; if (!f) return 0; return f.paused
 function _focusSave() { try { window._jam ? localStorage.setItem('mf_focus', JSON.stringify({id:_jam.id, totalSecs:_jam.totalSecs, endTime:_jam.endTime, paused:_jam.paused, left:_jam.left})) : localStorage.removeItem('mf_focus'); } catch(e) {} }
 function _mmss(t) { return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0'); }
 function startJamSesh(mins) {
+  _unlockAudio();
   const id = Number(document.getElementById('jam-task-id').value);
   closeModal('jam-modal');
   if (window._jam && window._jam.interval) clearInterval(window._jam.interval);
@@ -3457,10 +3458,10 @@ function _focusTick() {
   const f = window._jam;
   if (!f) return _renderIsland();
   const left = _focusLeft();
-  if (left <= 0 && !f.paused) { playJamAlarm(); const t = items.find(i=>i.id===f.id); stopJamSesh(); showToast('Tiempo cumplido' + (t ? ' · ' + t.text : ''), 3000); return; }
+  if (left <= 0 && !f.paused) { const t = items.find(i=>i.id===f.id); playJamAlarm(t && t.text); stopJamSesh(); showToast('Tiempo cumplido' + (t ? ' · ' + t.text : ''), 3000); return; }
   _renderIsland();
 }
-function pauseFocus() { const f = window._jam; if (!f) return; if (f.paused) { f.endTime = Date.now() + f.left*1000; f.paused = false; } else { f.left = _focusLeft(); f.paused = true; } _focusSave(); _renderIsland(); }
+function pauseFocus() { const f = window._jam; if (!f) return; _unlockAudio(); if (f.paused) { f.endTime = Date.now() + f.left*1000; f.paused = false; } else { f.left = _focusLeft(); f.paused = true; } _focusSave(); _renderIsland(); }
 function toggleIsland(e) { const el = document.getElementById('focus-island'); if (el && !e.target.closest('button')) el.classList.toggle('open'); }
 function _renderIsland() {
   let el = document.getElementById('focus-island');
@@ -3478,28 +3479,35 @@ function _renderIsland() {
     <button class="fi-btn" aria-label="Parar" onclick="stopJamSesh()"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/></svg></button>`;
 }
 
-function playJamAlarm() {
+// Alarma del JAM SESH. El audio se "desbloquea" al tocar Empezar (los navegadores
+// no dejan sonar nada que no haya iniciado un toque), y se reutiliza al terminar.
+let _jamCtx = null;
+function _unlockAudio() {
   try {
-    const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    // Three rising beeps
-    const pattern = [{f:520,t:0},{f:660,t:0.18},{f:800,t:0.36},{f:660,t:0.56},{f:800,t:0.7},{f:1000,t:0.86}];
-    pattern.forEach(({f,t})=>{
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.value = f;
-      gain.gain.setValueAtTime(0, ctx.currentTime+t);
-      gain.gain.linearRampToValueAtTime(0.4, ctx.currentTime+t+0.04);
-      gain.gain.linearRampToValueAtTime(0, ctx.currentTime+t+0.14);
-      osc.start(ctx.currentTime+t);
-      osc.stop(ctx.currentTime+t+0.16);
-    });
-    // Close context after alarm ends
-    setTimeout(()=>ctx.close(), 1500);
-  } catch(e) { /* silently ignore if audio not available */ }
-  // Also try vibration on mobile
+    if (!_jamCtx) _jamCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (_jamCtx.state === 'suspended') _jamCtx.resume();
+    const buf = _jamCtx.createBuffer(1, 1, 22050), src = _jamCtx.createBufferSource();
+    src.buffer = buf; src.connect(_jamCtx.destination); src.start(0);
+  } catch(e) {}
+  try { if ('Notification' in window && Notification.permission === 'default' && !navigator.standalone) Notification.requestPermission(); } catch(e) {}
+}
+function playJamAlarm(taskText) {
+  try {
+    const ctx = _jamCtx || (_jamCtx = new (window.AudioContext || window.webkitAudioContext)());
+    if (ctx.state === 'suspended') ctx.resume();
+    const t0 = ctx.currentTime + 0.05;
+    // Campanita de 3 notas, 3 veces (~3.5 s)
+    [0, 1.2, 2.4].forEach(r => [[1047,0],[1319,0.16],[1568,0.32]].forEach(([f,t]) => {
+      const o = ctx.createOscillator(), g = ctx.createGain(), at = t0 + r + t;
+      o.type = 'sine'; o.frequency.value = f; o.connect(g); g.connect(ctx.destination);
+      g.gain.setValueAtTime(0.0001, at);
+      g.gain.exponentialRampToValueAtTime(0.5, at + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, at + 0.9);
+      o.start(at); o.stop(at + 0.95);
+    }));
+  } catch(e) {}
   if (navigator.vibrate) navigator.vibrate([200,100,200,100,400]);
+  try { if (document.hidden && 'Notification' in window && Notification.permission === 'granted') new Notification('JAM SESH terminado', { body: taskText || 'Tiempo cumplido', icon: 'icons/icon-192-v2.png' }); } catch(e) {}
 }
 
 function stopJamSesh() {
