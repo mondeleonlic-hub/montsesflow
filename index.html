@@ -1678,7 +1678,7 @@ function seedAuditorias() {
   const KEY = 'auditorias-nov-dic-2026';
   if (seeds.includes(KEY)) return;
   if (items.some(i=>i.seed===KEY)) { seeds.push(KEY); save(); return; }
-  const cat = (cats.find(c=>/operaci[oó]n carwash/i.test(c.name||'')) || {}).id ?? null;
+  const cat = (cats.find(c=>/recursos humanos|^rh$/i.test(c.name||'')) || {}).id ?? null;
   const A = [
     ['2026-11-03','10:00','Nani','Refugio','8:00–14:00'], ['2026-11-05','11:00','Hugo','Álamos','8:00–19:00'],
     ['2026-11-09','12:00','Arturo','Álamos','8:00–19:00'], ['2026-11-11','16:00','Machiz','Refugio','8:00–19:00'],
@@ -1696,6 +1696,13 @@ function seedAuditorias() {
   });
   seeds.push(KEY); save();
 }
+function auditoriasToRH() {
+  const KEY = 'auditorias-rh';
+  if (seeds.includes(KEY)) return;
+  const rh = (cats.find(c=>/recursos humanos|^rh$/i.test(c.name||'')) || {}).id;
+  if (rh != null) items.forEach(i=>{ if (i.seed==='auditorias-nov-dic-2026') i.cat = rh; });
+  seeds.push(KEY); save();
+}
 function runMigrations() {
   normalizeCats();
   migrateIcons();
@@ -1707,6 +1714,7 @@ function runMigrations() {
   dropNfcCat();
   catsV2();
   seedAuditorias();
+  auditoriasToRH();
 }
 
 // ============================================================
