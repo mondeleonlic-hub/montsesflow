@@ -1673,6 +1673,29 @@ function catsV2() {
   cats = out;
   seeds.push(KEY); save();
 }
+// Auditorías a lavadores · nov–dic 2026 (2 por semana, 2 al mes por persona). Se agrega una sola vez.
+function seedAuditorias() {
+  const KEY = 'auditorias-nov-dic-2026';
+  if (seeds.includes(KEY)) return;
+  if (items.some(i=>i.seed===KEY)) { seeds.push(KEY); save(); return; }
+  const cat = (cats.find(c=>/operaci[oó]n carwash/i.test(c.name||'')) || {}).id ?? null;
+  const A = [
+    ['2026-11-03','10:00','Nani','Refugio','8:00–14:00'], ['2026-11-05','11:00','Hugo','Álamos','8:00–19:00'],
+    ['2026-11-09','12:00','Arturo','Álamos','8:00–19:00'], ['2026-11-11','16:00','Machiz','Refugio','8:00–19:00'],
+    ['2026-11-19','10:00','Nani','Refugio','8:00–14:00'], ['2026-11-21','12:00','Hugo','Álamos','8:00–19:00'],
+    ['2026-11-23','11:00','Arturo','Álamos','8:00–19:00'], ['2026-11-27','16:00','Machiz','Refugio','13:00–19:00'],
+    ['2026-12-01','10:00','Nani','Refugio','8:00–14:00'], ['2026-12-02','12:00','Hugo','Álamos','8:00–19:00'],
+    ['2026-12-08','11:00','Arturo','Álamos','8:00–19:00'], ['2026-12-10','16:00','Machiz','Refugio','13:00–19:00'],
+    ['2026-12-14','10:00','Nani','Refugio','8:00–14:00'], ['2026-12-18','11:00','Hugo','Álamos','8:00–19:00'],
+    ['2026-12-21','12:00','Arturo','Álamos','8:00–19:00'], ['2026-12-23','10:00','Machiz','Refugio','8:00–19:00'],
+  ];
+  A.forEach(([date, time, who, suc, turno]) => {
+    items.push({ id:nextId++, text:`Auditoría · ${who} (${suc})`, cat, cat_key:'todo', priority:2, date, time, deadline:'', delegado:'',
+      recur:'', important:true, urgent:null, note:`Turno de ${who} ese día: ${turno} en ${suc}.`, subtasks:[], done:false, archived:false,
+      seed:KEY, created:new Date().toISOString() });
+  });
+  seeds.push(KEY); save();
+}
 function runMigrations() {
   normalizeCats();
   migrateIcons();
@@ -1683,6 +1706,7 @@ function runMigrations() {
   recoverLegacyCloud();
   dropNfcCat();
   catsV2();
+  seedAuditorias();
 }
 
 // ============================================================
