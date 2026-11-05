@@ -814,37 +814,37 @@ html,body{max-width:100%;overflow-x:hidden}
 .ja-ok{background:#B9E26B;color:#1C2018}
 /* ===== Arranque del día ===== */
 body.ar-open{overflow:hidden}
-#arranque{position:fixed;inset:0;z-index:1500;background:#fff;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#arranque{position:fixed;inset:0;z-index:1500;background:linear-gradient(180deg,#FFFBF1 0%,#FBFCF6 45%,#F6FAEE 100%);overflow-y:auto;-webkit-overflow-scrolling:touch}
 .ar-wrap{max-width:440px;min-height:100%;margin:0 auto;box-sizing:border-box;padding:calc(22px + env(safe-area-inset-top)) 22px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
 .ar-top{display:flex;align-items:center;gap:10px}
-.ar-back{border:none;background:#F3F4F0;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1C2018;cursor:pointer;flex-shrink:0}
+.ar-back{border:none;background:rgba(107,122,78,.1);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1C2018;cursor:pointer;flex-shrink:0}
 .ar-dots{display:flex;gap:4px;flex:1}
 .ar-dots i{width:6px;height:6px;border-radius:99px;background:#E3E6DD;transition:all .2s}
-.ar-dots i.on{background:#1C2018}.ar-dots i.cur{width:18px;background:#1C2018}
+.ar-dots i.on{background:#B9CF8C}.ar-dots i.cur{width:18px;background:#6b7a4e}
 .ar-skip{border:none;background:none;font:inherit;font-size:.78rem;font-weight:600;color:#9AA08F;cursor:pointer;padding:6px 0}
 .ar-k{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#6b7a4e;margin-top:24px}
 .ar-q{font-size:1.6rem;font-weight:900;letter-spacing:-.02em;line-height:1.15;margin-top:8px;color:#1C2018}
 .ar-sub{font-size:.86rem;color:#6b7280;margin-top:8px;line-height:1.45}
 .ar-body{flex:1;margin:22px 0 14px;display:flex;flex-direction:column;gap:10px}
 .ar-note{font-size:.74rem;color:#8B9280;line-height:1.45;margin-bottom:12px}
-.ar-go{height:54px;border:none;border-radius:16px;background:#1C2018;color:#B9E26B;font:inherit;font-size:.95rem;font-weight:800;cursor:pointer;flex-shrink:0}
-.ar-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border:1.5px solid #E3E6DD;background:#fff;border-radius:16px;font:inherit;font-size:.95rem;font-weight:700;color:#1C2018;cursor:pointer}
+.ar-go{height:54px;border:none;border-radius:16px;background:#B9E26B;color:#24300F;box-shadow:0 8px 20px rgba(140,180,60,.28);font:inherit;font-size:.95rem;font-weight:800;cursor:pointer;flex-shrink:0}
+.ar-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border:1.5px solid #E7EADF;background:rgba(255,255,255,.85);border-radius:16px;font:inherit;font-size:.95rem;font-weight:700;color:#1C2018;cursor:pointer}
 .ar-opt.on{background:#F2F9E4;border-color:#B9E26B}
 .ar-box{width:24px;height:24px;border-radius:50%;border:1.8px solid #C9CEC0;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-sizing:border-box;color:#1C2018}
 .ar-opt.on .ar-box{background:#B9E26B;border-color:#B9E26B}
 .ar-ot{flex:1;min-width:0}
 .ar-tag{font-size:.68rem;font-weight:700;color:#6b7a4e}
-.ar-card{border:1.5px solid #E3E6DD;border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.ar-card{border:1.5px solid #E7EADF;background:rgba(255,255,255,.85);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
 .ar-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .ar-mut{font-size:.76rem;color:#6b7280}
 .ar-mut b{color:#1C2018}
 .ar-tt{font-size:.92rem;font-weight:700;color:#1C2018;min-width:0}
 .ar-count{display:flex;align-items:center;gap:12px}
-.ar-count button{width:36px;height:36px;border-radius:50%;border:none;background:#F3F4F0;font:inherit;font-size:1.1rem;font-weight:800;color:#1C2018;cursor:pointer}
+.ar-count button{width:36px;height:36px;border-radius:50%;border:none;background:rgba(107,122,78,.1);font:inherit;font-size:1.1rem;font-weight:800;color:#1C2018;cursor:pointer}
 .ar-big{font-size:2.1rem;font-weight:900;letter-spacing:-.03em;color:#1C2018}
 .ar-seg{display:flex;gap:6px}
-.ar-seg button{flex:1;padding:10px 4px;border-radius:12px;border:none;background:#F3F4F0;color:#4b5563;font:inherit;font-size:.76rem;font-weight:800;cursor:pointer}
-.ar-seg button.on{background:#1C2018;color:#B9E26B}
+.ar-seg button{flex:1;padding:10px 4px;border-radius:12px;border:1.5px solid transparent;background:rgba(28,32,24,.04);color:#4b5563;font:inherit;font-size:.76rem;font-weight:800;cursor:pointer}
+.ar-seg button.on{background:#EAF6D3;border-color:#B9E26B;color:#3F5320}
 .ar-date,.ar-times input,.ar-sel{height:42px;border:1.5px solid #E3E6DD;border-radius:12px;padding:0 12px;font:inherit;font-size:16px;color:#1C2018;background:#fff}
 .ar-times{display:flex;align-items:center;gap:10px}
 .ar-times input{flex:1;font-weight:800}
@@ -864,10 +864,10 @@ body.ar-open{overflow:hidden}
 .ar-bb{flex:1;min-width:0;border-radius:14px;padding:9px 13px;border:1.5px solid #E3E6DD;background:#fff}
 .ar-bb b{font-size:.85rem}
 .ar-bb.k-p{background:#F2F9E4;border-color:#B9E26B}
-.ar-bb.k-f{background:#1C2018;border-color:#1C2018;color:#fff}
+.ar-bb.k-f{background:#FDF0E1;border-color:#F4D3AE;color:#6E4318}
 .ar-bb.k-o{background:#FAFBF8;border-style:dashed;color:#6b7280}
 .ar-btag{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#5E7A2A;white-space:nowrap}
-.ar-bb.k-a .ar-btag{color:#9AA08F}.ar-bb.k-f .ar-btag{color:#B9E26B}
+.ar-bb.k-a .ar-btag{color:#9AA08F}.ar-bb.k-f .ar-btag{color:#B9772E}
 .ar-bh{font-size:.68rem;opacity:.7;margin-top:2px}
 .pz-arr{margin-top:6px;border:none;background:none;padding:0;font:inherit;font-size:.78rem;font-weight:700;color:var(--accent);cursor:pointer}
 .pz-arr:hover{text-decoration:underline}
@@ -2782,9 +2782,12 @@ function renderLogDiario() {
 
   const dayAll = items.filter(i=>!i.archived && (i.date===D || (i.done && i.doneDate===D && i.date!==D)));
   const _eis = i => (i.urgent===true && i.important===true) ? 0 : i.urgent===true ? 1 : i.important===true ? 2 : 3;
+  // Por hora del día: las que tienen hora van en su lugar; las que no, cuentan como "ahora" (hoy) o mediodía (otro día)
   const _pr = _dayPrio(D), _pi = i => { const k = _pr.indexOf(i.id); return k<0 ? 9 : k; };
+  const _nowM = (()=>{ const n = new Date(); return D===todayStr() ? n.getHours()*60+n.getMinutes() : 12*60; })();
+  const _tk = i => { if (!i.time) return _nowM; const [a,b] = i.time.split(':').map(Number); return a*60+(b||0); };
   const pend = dayAll.filter(i=>!i.done).sort((a,b)=>
-    _pi(a)-_pi(b) || _eis(a)-_eis(b) || (a.time||'99').localeCompare(b.time||'99') || (a.priority||3)-(b.priority||3));
+    _tk(a)-_tk(b) || (a.time?0:1)-(b.time?0:1) || _pi(a)-_pi(b) || _eis(a)-_eis(b) || (a.priority||3)-(b.priority||3));
   const dn = dayAll.filter(i=>i.done);
   const total = pend.length + dn.length;
 
