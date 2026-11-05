@@ -1680,7 +1680,7 @@ function seedAuditorias() {
   if (items.some(i=>i.seed===KEY)) { seeds.push(KEY); save(); return; }
   const cat = (cats.find(c=>/recursos humanos|^rh$/i.test(c.name||'')) || {}).id ?? null;
   const A = [
-    ['2026-11-03','10:00','Nani','Refugio','8:00–14:00'], ['2026-11-05','11:00','Hugo','Álamos','8:00–19:00'],
+    ['2026-11-03','10:00','Nani','Refugio','8:00–14:00'], ['2026-11-06','11:00','Hugo','Álamos','8:00–19:00'],
     ['2026-11-09','12:00','Arturo','Álamos','8:00–19:00'], ['2026-11-11','16:00','Machiz','Refugio','8:00–19:00'],
     ['2026-11-19','10:00','Nani','Refugio','8:00–14:00'], ['2026-11-21','12:00','Hugo','Álamos','8:00–19:00'],
     ['2026-11-23','11:00','Arturo','Álamos','8:00–19:00'], ['2026-11-27','16:00','Machiz','Refugio','13:00–19:00'],
@@ -1703,6 +1703,16 @@ function auditoriasToRH() {
   if (rh != null) items.forEach(i=>{ if (i.seed==='auditorias-nov-dic-2026') i.cat = rh; });
   seeds.push(KEY); save();
 }
+function hugoNoJueves() {
+  const KEY = 'hugo-no-jueves';
+  if (seeds.includes(KEY)) return;
+  items.forEach(i=>{
+    if (i.seed==='auditorias-nov-dic-2026' && /Hugo/.test(i.text) && !i.done && i.date && new Date(i.date+'T12:00:00').getDay()===4) {
+      const d = new Date(i.date+'T12:00:00'); d.setDate(d.getDate()+1); i.date = _ymd(d);
+    }
+  });
+  seeds.push(KEY); save();
+}
 function runMigrations() {
   normalizeCats();
   migrateIcons();
@@ -1715,6 +1725,7 @@ function runMigrations() {
   catsV2();
   seedAuditorias();
   auditoriasToRH();
+  hugoNoJueves();
 }
 
 // ============================================================
