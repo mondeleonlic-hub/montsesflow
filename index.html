@@ -1817,6 +1817,7 @@ async function pullFirebase() {
       d.goals = byId(d.goals, goals, 'id');
       d.cats = byId(d.cats, cats.filter(c=>!(d.cats||[]).some(x=>(x.name||'').toLowerCase()===(c.name||'').toLowerCase())), 'id');
       d.habits = byId(d.habits, _getHabits(), 'id');
+      d.journal = byId(d.journal, _getJournal(), 'id');
       const hl = d.hlog || {}; Object.entries(_getHlog()).forEach(([ds,v])=>{ hl[ds] = Object.assign({}, v, hl[ds]||{}); }); d.hlog = hl;
       d.nextId = Math.max(d.nextId||1, nextId, ...d.items.map(i=>(i.id<1e12?i.id+1:0)));
       d.nextCatId = Math.max(d.nextCatId||10, nextCatId);
@@ -1830,6 +1831,7 @@ async function pullFirebase() {
     seeds = d.seeds || [];
     if (d.habits) localStorage.setItem('mf_habits', JSON.stringify(d.habits));
     if (d.hlog) localStorage.setItem('mf_hlog', JSON.stringify(d.hlog));
+    if (d.journal) localStorage.setItem('mf_journal', JSON.stringify(d.journal));
     _db = true;
     save();
     try { localStorage.setItem('mf_fb_merged','1'); } catch(e) {}
@@ -1847,9 +1849,9 @@ function _fbUrl() { return `https://firestore.googleapis.com/v1/projects/${_fbPr
 function _pick(o) {
   o = o || {};
   return { items:o.items||[], goals:o.goals||[], cats:o.cats||[], nextId:o.nextId||1, nextCatId:o.nextCatId||10,
-           seeds:o.seeds||[], habits:o.habits||[], hlog:o.hlog||{} };
+           seeds:o.seeds||[], habits:o.habits||[], hlog:o.hlog||{}, journal:o.journal||[] };
 }
-function _snap() { return JSON.parse(JSON.stringify(_pick({items, goals, cats, nextId, nextCatId, seeds, habits:_getHabits(), hlog:_getHlog()}))); }
+function _snap() { return JSON.parse(JSON.stringify(_pick({items, goals, cats, nextId, nextCatId, seeds, habits:_getHabits(), hlog:_getHlog(), journal:_getJournal()}))); }
 function _merge3(base, loc, rem) {
   const S = x => x===undefined ? undefined : JSON.stringify(x);
   const list = (b, l, r) => {
@@ -1870,7 +1872,7 @@ function _merge3(base, loc, rem) {
   });
   return { items:list(base.items, loc.items, rem.items), goals:list(base.goals, loc.goals, rem.goals), cats:list(base.cats, loc.cats, rem.cats),
            nextId:Math.max(loc.nextId, rem.nextId), nextCatId:Math.max(loc.nextCatId, rem.nextCatId),
-           seeds:[...new Set([...loc.seeds, ...rem.seeds])], habits:list(base.habits, loc.habits, rem.habits), hlog:hl };
+           seeds:[...new Set([...loc.seeds, ...rem.seeds])], habits:list(base.habits, loc.habits, rem.habits), hlog:hl, journal:list(base.journal||[], loc.journal||[], rem.journal||[]) };
 }
 function _applySnap(m) {
   items = m.items; goals = m.goals; cats = m.cats; nextId = m.nextId; nextCatId = m.nextCatId; seeds = m.seeds;
@@ -1878,6 +1880,7 @@ function _applySnap(m) {
     localStorage.setItem('mf_v2', JSON.stringify({ items, goals, cats, nextId, nextCatId, seeds }));
     localStorage.setItem('mf_habits', JSON.stringify(m.habits));
     localStorage.setItem('mf_hlog', JSON.stringify(m.hlog));
+    localStorage.setItem('mf_journal', JSON.stringify(m.journal||[]));
   } catch(e) {}
   renderCurrent();
 }
@@ -2490,8 +2493,9 @@ function renderLogDiario() {
 
   const dayAll = items.filter(i=>!i.archived && (i.date===D || (i.done && i.doneDate===D && i.date!==D)));
   const _eis = i => (i.urgent===true && i.important===true) ? 0 : i.urgent===true ? 1 : i.important===true ? 2 : 3;
+  const _pr = _dayPrio(D), _pi = i => { const k = _pr.indexOf(i.id); return k<0 ? 9 : k; };
   const pend = dayAll.filter(i=>!i.done).sort((a,b)=>
-    _eis(a)-_eis(b) || (a.time||'99').localeCompare(b.time||'99') || (a.priority||3)-(b.priority||3));
+    _pi(a)-_pi(b) || _eis(a)-_eis(b) || (a.time||'99').localeCompare(b.time||'99') || (a.priority||3)-(b.priority||3));
   const dn = dayAll.filter(i=>i.done);
   const total = pend.length + dn.length;
 
