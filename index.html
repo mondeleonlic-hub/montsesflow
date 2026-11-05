@@ -812,6 +812,26 @@ html,body{max-width:100%;overflow-x:hidden}
 .ja-btns button{flex:1;height:46px;border-radius:14px;border:none;font:inherit;font-size:.9rem;font-weight:800;cursor:pointer}
 .ja-more{background:#2E3427;color:#fff}
 .ja-ok{background:#B9E26B;color:#1C2018}
+
+/* ===== Arranque del día ===== */
+.ad-card{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:18px 22px}
+.ad-col{display:flex;flex-direction:column;gap:10px;min-width:0}
+.ad-note{flex:1;min-height:92px;resize:vertical;border:1.5px solid #ECEEE7;border-radius:14px;padding:12px 14px;font:inherit;font-size:.88rem;line-height:1.5;color:var(--text);background:#FAFBF8;outline:none}
+.ad-note:focus{border-color:#B9E26B;background:#fff}
+.ad-slots{display:flex;flex-direction:column;gap:6px}
+.ad-slot{display:flex;align-items:center;gap:10px;min-height:38px;padding:0 6px 0 4px;border-bottom:1px solid #F1F3EE}
+.ad-slot:last-child{border-bottom:none}
+.ad-n{width:22px;font-size:.8rem;font-weight:900;color:#B9C2A6;text-align:center;flex-shrink:0}
+.ad-slot input{flex:1;min-width:0;border:none;background:none;font:inherit;font-size:.88rem;padding:8px 0;outline:none;color:var(--text)}
+.ad-slot input::placeholder{color:#B4BAA9}
+.ad-slot input::-webkit-calendar-picker-indicator{display:none!important;opacity:0}
+.ad-chk{width:20px;height:20px;flex-shrink:0;border-radius:50%;border:1.8px solid #C9CEC0;background:#fff;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.ad-slot.done .ad-chk{background:#6b7a4e;border-color:#6b7a4e}
+.ad-t{flex:1;min-width:0;font-size:.9rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.ad-slot.done .ad-t{color:var(--text2);text-decoration:line-through}
+.ad-x{border:none;background:none;color:#C4C9BB;cursor:pointer;padding:4px;display:flex;opacity:0;transition:opacity .15s}
+.ad-slot:hover .ad-x{opacity:1}
+@media(max-width:768px){.ad-card{grid-template-columns:1fr;gap:16px}.ad-x{opacity:1}}
 </style>
 </head>
 <body>
@@ -1817,6 +1837,7 @@ async function pullFirebase() {
       d.goals = byId(d.goals, goals, 'id');
       d.cats = byId(d.cats, cats.filter(c=>!(d.cats||[]).some(x=>(x.name||'').toLowerCase()===(c.name||'').toLowerCase())), 'id');
       d.habits = byId(d.habits, _getHabits(), 'id');
+      d.journal = byId(d.journal, _getJournal(), 'id');
       const hl = d.hlog || {}; Object.entries(_getHlog()).forEach(([ds,v])=>{ hl[ds] = Object.assign({}, v, hl[ds]||{}); }); d.hlog = hl;
       d.nextId = Math.max(d.nextId||1, nextId, ...d.items.map(i=>(i.id<1e12?i.id+1:0)));
       d.nextCatId = Math.max(d.nextCatId||10, nextCatId);
@@ -1830,6 +1851,7 @@ async function pullFirebase() {
     seeds = d.seeds || [];
     if (d.habits) localStorage.setItem('mf_habits', JSON.stringify(d.habits));
     if (d.hlog) localStorage.setItem('mf_hlog', JSON.stringify(d.hlog));
+    if (d.journal) localStorage.setItem('mf_journal', JSON.stringify(d.journal));
     _db = true;
     save();
     try { localStorage.setItem('mf_fb_merged','1'); } catch(e) {}
@@ -1847,9 +1869,9 @@ function _fbUrl() { return `https://firestore.googleapis.com/v1/projects/${_fbPr
 function _pick(o) {
   o = o || {};
   return { items:o.items||[], goals:o.goals||[], cats:o.cats||[], nextId:o.nextId||1, nextCatId:o.nextCatId||10,
-           seeds:o.seeds||[], habits:o.habits||[], hlog:o.hlog||{} };
+           seeds:o.seeds||[], habits:o.habits||[], hlog:o.hlog||{}, journal:o.journal||[] };
 }
-function _snap() { return JSON.parse(JSON.stringify(_pick({items, goals, cats, nextId, nextCatId, seeds, habits:_getHabits(), hlog:_getHlog()}))); }
+function _snap() { return JSON.parse(JSON.stringify(_pick({items, goals, cats, nextId, nextCatId, seeds, habits:_getHabits(), hlog:_getHlog(), journal:_getJournal()}))); }
 function _merge3(base, loc, rem) {
   const S = x => x===undefined ? undefined : JSON.stringify(x);
   const list = (b, l, r) => {
@@ -1870,7 +1892,7 @@ function _merge3(base, loc, rem) {
   });
   return { items:list(base.items, loc.items, rem.items), goals:list(base.goals, loc.goals, rem.goals), cats:list(base.cats, loc.cats, rem.cats),
            nextId:Math.max(loc.nextId, rem.nextId), nextCatId:Math.max(loc.nextCatId, rem.nextCatId),
-           seeds:[...new Set([...loc.seeds, ...rem.seeds])], habits:list(base.habits, loc.habits, rem.habits), hlog:hl };
+           seeds:[...new Set([...loc.seeds, ...rem.seeds])], habits:list(base.habits, loc.habits, rem.habits), hlog:hl, journal:list(base.journal||[], loc.journal||[], rem.journal||[]) };
 }
 function _applySnap(m) {
   items = m.items; goals = m.goals; cats = m.cats; nextId = m.nextId; nextCatId = m.nextCatId; seeds = m.seeds;
@@ -1878,6 +1900,7 @@ function _applySnap(m) {
     localStorage.setItem('mf_v2', JSON.stringify({ items, goals, cats, nextId, nextCatId, seeds }));
     localStorage.setItem('mf_habits', JSON.stringify(m.habits));
     localStorage.setItem('mf_hlog', JSON.stringify(m.hlog));
+    localStorage.setItem('mf_journal', JSON.stringify(m.journal||[]));
   } catch(e) {}
   renderCurrent();
 }
@@ -2281,6 +2304,45 @@ function _chipHtml(i, ds) {
   return `<div class="pz-chip${i.done?' done':''}${_sel.has(i.id)?' sel':''}" style="${style}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="taskClick(event,${i.id})" title="${h(i.text)} · ${h(c.name)}">${h(i.text)}</div>`;
 }
 
+// ---------- ARRANQUE DEL DÍA: cómo empiezo + 3 prioridades ----------
+function _getJournal(){ try { return JSON.parse(localStorage.getItem('mf_journal')||'[]'); } catch(e) { return []; } }
+function _saveJournal(j){ try { localStorage.setItem('mf_journal', JSON.stringify(j)); } catch(e) {} if (_db) _queuePush(); }
+function _dayEntry(ds){ return _getJournal().find(x=>x.id===ds) || { id:ds, text:'', prio:[] }; }
+function _putEntry(e){ const j = _getJournal().filter(x=>x.id!==e.id); e.at = new Date().toISOString(); j.push(e); _saveJournal(j.slice(-120)); }
+function _dayPrio(ds){ return (_dayEntry(ds).prio||[]).filter(id=>items.some(i=>i.id===id && !i.archived)); }
+let _jT = null;
+function jNote(v){ clearTimeout(_jT); _jT = setTimeout(()=>{ const e = _dayEntry(todayStr()); e.text = v; _putEntry(e); }, 500); }
+function jAddPrio(k, inp){
+  const v = inp.value.trim(); if (!v) return;
+  const today = todayStr(), e = _dayEntry(today); e.prio = _dayPrio(today);
+  let t = items.find(i=>_live(i) && i.text.trim().toLowerCase()===v.toLowerCase());
+  if (!t) { t = { id:nextId++, text:v.charAt(0).toUpperCase()+v.slice(1), cat:null, cat_key:'todo', priority:2, date:today, time:'', deadline:'', delegado:'', recur:'',
+                  important:null, urgent:null, note:'', subtasks:[], done:false, archived:false, created:new Date().toISOString() }; items.unshift(t); }
+  else if (t.date !== today) t.date = today;
+  e.prio = e.prio.filter(id=>id!==t.id); e.prio.splice(Math.min(k, e.prio.length), 0, t.id); e.prio = e.prio.slice(0,3);
+  _putEntry(e); save(); renderDash();
+  setTimeout(()=>{ const n = document.querySelector('.ad-slot input'); if (n) n.focus(); }, 30);
+}
+function jDropPrio(id){ const today = todayStr(), e = _dayEntry(today); e.prio = _dayPrio(today).filter(x=>x!==id); _putEntry(e); renderDash(); }
+function _arranqueHtml(){
+  const today = todayStr(), e = _dayEntry(today), prio = _dayPrio(today).map(id=>items.find(i=>i.id===id));
+  const opts = items.filter(i=>_live(i) && !prio.includes(i)).slice(0,250).map(i=>`<option value="${h(i.text)}">`).join('');
+  const slots = [0,1,2].map(k=>{
+    const t = prio[k];
+    if (t) return `<div class="ad-slot${t.done?' done':''}"><span class="ad-n">${k+1}</span>
+      <button class="ad-chk" onclick="toggleDone(${t.id})" aria-label="Marcar hecha">${t.done?ico('check',13):''}</button>
+      <span class="ad-t" onclick="openEditModal(${t.id})">${h(t.text)}</span>
+      <button class="ad-x" onclick="jDropPrio(${t.id})" title="Quitar de prioridades" aria-label="Quitar">${ico('x',12)}</button></div>`;
+    if (k > prio.length) return '';
+    return `<div class="ad-slot empty"><span class="ad-n">${k+1}</span><input list="ad-opts" placeholder="${k===0?'Lo que sí o sí tiene que salir hoy':'Otra prioridad'}" onkeydown="if(event.key==='Enter'){event.preventDefault();jAddPrio(${k},this)}"/></div>`;
+  }).join('');
+  return `<section class="pz-card ad-card">
+    <div class="ad-col"><div class="pz-lbl">Cómo empiezo hoy</div>
+      <textarea class="ad-note" placeholder="¿Cómo llegas hoy? ¿Qué traes en la cabeza?" oninput="jNote(this.value)">${h(e.text||'')}</textarea></div>
+    <div class="ad-col"><div class="pz-lbl">Prioridades de hoy</div><div class="ad-slots">${slots}</div>
+      <datalist id="ad-opts">${opts}</datalist></div>
+  </section>`;
+}
 function renderDash() {
   const el = document.getElementById('panel-dash');
   if (!el) return;
@@ -2417,11 +2479,14 @@ function renderDash() {
     </div>`:''}
   </section>`;
 
+  const _af = document.activeElement, _keep = _af && _af.classList && _af.classList.contains('ad-note') ? [_af.value, _af.selectionStart, _af.selectionEnd] : null;
   el.innerHTML = `<div class="pz">
     <div><div class="pl-week">Semana ${_fmtRange(mon,sun)} · ${h(dayName)} ${new Date(today+'T12:00:00').getDate()}</div><h1 class="pz-verdict">${verdict}</h1></div>
+    ${_arranqueHtml()}
     <div class="pz-top">${ringsHtml}<div class="pz-side">${goalCards}${energyHtml}</div></div>
     ${weekHtml}
   </div>`;
+  if (_keep) { const n = el.querySelector('.ad-note'); if (n) { n.value = _keep[0]; n.focus(); n.setSelectionRange(_keep[1], _keep[2]); } }
   if (_pzPlanOpen) { const q = document.getElementById('wk-q'); if (q) q.value = _planQ; _renderPlanList(); }
 }
 
@@ -2490,8 +2555,9 @@ function renderLogDiario() {
 
   const dayAll = items.filter(i=>!i.archived && (i.date===D || (i.done && i.doneDate===D && i.date!==D)));
   const _eis = i => (i.urgent===true && i.important===true) ? 0 : i.urgent===true ? 1 : i.important===true ? 2 : 3;
+  const _pr = _dayPrio(D), _pi = i => { const k = _pr.indexOf(i.id); return k<0 ? 9 : k; };
   const pend = dayAll.filter(i=>!i.done).sort((a,b)=>
-    _eis(a)-_eis(b) || (a.time||'99').localeCompare(b.time||'99') || (a.priority||3)-(b.priority||3));
+    _pi(a)-_pi(b) || _eis(a)-_eis(b) || (a.time||'99').localeCompare(b.time||'99') || (a.priority||3)-(b.priority||3));
   const dn = dayAll.filter(i=>i.done);
   const total = pend.length + dn.length;
 
