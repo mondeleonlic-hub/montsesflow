@@ -812,6 +812,65 @@ html,body{max-width:100%;overflow-x:hidden}
 .ja-btns button{flex:1;height:46px;border-radius:14px;border:none;font:inherit;font-size:.9rem;font-weight:800;cursor:pointer}
 .ja-more{background:#2E3427;color:#fff}
 .ja-ok{background:#B9E26B;color:#1C2018}
+/* ===== Arranque del día ===== */
+body.ar-open{overflow:hidden}
+#arranque{position:fixed;inset:0;z-index:1500;background:linear-gradient(180deg,#FFFBF1 0%,#FBFCF6 45%,#F6FAEE 100%);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.ar-wrap{max-width:440px;min-height:100%;margin:0 auto;box-sizing:border-box;padding:calc(22px + env(safe-area-inset-top)) 22px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
+.ar-top{display:flex;align-items:center;gap:10px}
+.ar-back{border:none;background:rgba(107,122,78,.1);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1C2018;cursor:pointer;flex-shrink:0}
+.ar-dots{display:flex;gap:4px;flex:1}
+.ar-dots i{width:6px;height:6px;border-radius:99px;background:#E3E6DD;transition:all .2s}
+.ar-dots i.on{background:#B9CF8C}.ar-dots i.cur{width:18px;background:#6b7a4e}
+.ar-skip{border:none;background:none;font:inherit;font-size:.78rem;font-weight:600;color:#9AA08F;cursor:pointer;padding:6px 0}
+.ar-k{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#6b7a4e;margin-top:24px}
+.ar-q{font-size:1.6rem;font-weight:900;letter-spacing:-.02em;line-height:1.15;margin-top:8px;color:#1C2018}
+.ar-sub{font-size:.86rem;color:#6b7280;margin-top:8px;line-height:1.45}
+.ar-body{flex:1;margin:22px 0 14px;display:flex;flex-direction:column;gap:10px}
+.ar-note{font-size:.74rem;color:#8B9280;line-height:1.45;margin-bottom:12px}
+.ar-go{height:54px;border:none;border-radius:16px;background:#B9E26B;color:#24300F;box-shadow:0 8px 20px rgba(140,180,60,.28);font:inherit;font-size:.95rem;font-weight:800;cursor:pointer;flex-shrink:0}
+.ar-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border:1.5px solid #E7EADF;background:rgba(255,255,255,.85);border-radius:16px;font:inherit;font-size:.95rem;font-weight:700;color:#1C2018;cursor:pointer}
+.ar-opt.on{background:#F2F9E4;border-color:#B9E26B}
+.ar-box{width:24px;height:24px;border-radius:50%;border:1.8px solid #C9CEC0;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-sizing:border-box;color:#1C2018}
+.ar-opt.on .ar-box{background:#B9E26B;border-color:#B9E26B}
+.ar-ot{flex:1;min-width:0}
+.ar-tag{font-size:.68rem;font-weight:700;color:#6b7a4e}
+.ar-card{border:1.5px solid #E7EADF;background:rgba(255,255,255,.85);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.ar-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.ar-mut{font-size:.76rem;color:#6b7280}
+.ar-mut b{color:#1C2018}
+.ar-tt{font-size:.92rem;font-weight:700;color:#1C2018;min-width:0}
+.ar-count{display:flex;align-items:center;gap:12px}
+.ar-count button{width:36px;height:36px;border-radius:50%;border:none;background:rgba(107,122,78,.1);font:inherit;font-size:1.1rem;font-weight:800;color:#1C2018;cursor:pointer}
+.ar-big{font-size:2.1rem;font-weight:900;letter-spacing:-.03em;color:#1C2018}
+.ar-seg{display:flex;gap:6px}
+.ar-seg button{flex:1;white-space:nowrap;padding:10px 4px;border-radius:12px;border:1.5px solid transparent;background:rgba(28,32,24,.04);color:#4b5563;font:inherit;font-size:.76rem;font-weight:800;cursor:pointer}
+.ar-seg button.on{background:#EAF6D3;border-color:#B9E26B;color:#3F5320}
+.ar-date,.ar-times input,.ar-sel{height:42px;border:1.5px solid #E3E6DD;border-radius:12px;padding:0 12px;font:inherit;font-size:16px;color:#1C2018;background:#fff}
+.ar-times{display:flex;align-items:center;gap:10px}
+.ar-times input{flex:1;font-weight:800}
+.ar-sel{flex:1;min-width:0}
+.ar-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ar-chip{padding:9px 13px;border-radius:99px;border:1.5px solid #E3E6DD;background:#fff;font:inherit;font-size:.82rem;font-weight:700;color:#1C2018;cursor:pointer}
+.ar-chip.on{background:#F2F9E4;border-color:#B9E26B}
+.ar-pr{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid #B9E26B;background:#F2F9E4;border-radius:16px}
+.ar-n{font-size:1.25rem;font-weight:900;color:#6b7a4e;width:18px;flex-shrink:0}
+.ar-why{font-size:.72rem;color:#5E7A2A;font-weight:600;margin-top:2px}
+.ar-link{border:none;background:none;font:inherit;font-size:.76rem;font-weight:700;color:#9AA08F;cursor:pointer;padding:4px}
+.ar-link:hover{color:#1C2018}
+.ar-empty{font-size:.85rem;color:#9AA08F;padding:8px 2px}
+.ar-plan{display:flex;flex-direction:column;gap:8px}
+.ar-b{display:flex;gap:12px}
+.ar-bt{width:42px;font-size:.74rem;font-weight:800;color:#6b7280;padding-top:10px;text-align:right;flex-shrink:0}
+.ar-bb{flex:1;min-width:0;border-radius:14px;padding:9px 13px;border:1.5px solid #E3E6DD;background:#fff}
+.ar-bb b{font-size:.85rem}
+.ar-bb.k-p{background:#F2F9E4;border-color:#B9E26B}
+.ar-bb.k-f{background:#FDF0E1;border-color:#F4D3AE;color:#6E4318}
+.ar-bb.k-o{background:#FAFBF8;border-style:dashed;color:#6b7280}
+.ar-btag{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#5E7A2A;white-space:nowrap}
+.ar-bb.k-a .ar-btag{color:#9AA08F}.ar-bb.k-f .ar-btag{color:#B9772E}
+.ar-bh{font-size:.68rem;opacity:.7;margin-top:2px}
+.pz-arr{margin-top:6px;border:none;background:none;padding:0;font:inherit;font-size:.78rem;font-weight:700;color:var(--accent);cursor:pointer}
+.pz-arr:hover{text-decoration:underline}
 </style>
 </head>
 <body>
@@ -1828,6 +1887,7 @@ async function pullFirebase() {
       d.goals = byId(d.goals, goals, 'id');
       d.cats = byId(d.cats, cats.filter(c=>!(d.cats||[]).some(x=>(x.name||'').toLowerCase()===(c.name||'').toLowerCase())), 'id');
       d.habits = byId(d.habits, _getHabits(), 'id');
+      d.journal = byId(d.journal, _getJournal(), 'id');
       const hl = d.hlog || {}; Object.entries(_getHlog()).forEach(([ds,v])=>{ hl[ds] = Object.assign({}, v, hl[ds]||{}); }); d.hlog = hl;
       d.nextId = Math.max(d.nextId||1, nextId, ...d.items.map(i=>(i.id<1e12?i.id+1:0)));
       d.nextCatId = Math.max(d.nextCatId||10, nextCatId);
@@ -1841,6 +1901,7 @@ async function pullFirebase() {
     seeds = d.seeds || [];
     if (d.habits) localStorage.setItem('mf_habits', JSON.stringify(d.habits));
     if (d.hlog) localStorage.setItem('mf_hlog', JSON.stringify(d.hlog));
+    if (d.journal) localStorage.setItem('mf_journal', JSON.stringify(d.journal));
     _db = true;
     save();
     try { localStorage.setItem('mf_fb_merged','1'); } catch(e) {}
@@ -1858,9 +1919,9 @@ function _fbUrl() { return `https://firestore.googleapis.com/v1/projects/${_fbPr
 function _pick(o) {
   o = o || {};
   return { items:o.items||[], goals:o.goals||[], cats:o.cats||[], nextId:o.nextId||1, nextCatId:o.nextCatId||10,
-           seeds:o.seeds||[], habits:o.habits||[], hlog:o.hlog||{} };
+           seeds:o.seeds||[], habits:o.habits||[], hlog:o.hlog||{}, journal:o.journal||[] };
 }
-function _snap() { return JSON.parse(JSON.stringify(_pick({items, goals, cats, nextId, nextCatId, seeds, habits:_getHabits(), hlog:_getHlog()}))); }
+function _snap() { return JSON.parse(JSON.stringify(_pick({items, goals, cats, nextId, nextCatId, seeds, habits:_getHabits(), hlog:_getHlog(), journal:_getJournal()}))); }
 function _merge3(base, loc, rem) {
   const S = x => x===undefined ? undefined : JSON.stringify(x);
   const list = (b, l, r) => {
@@ -1881,7 +1942,7 @@ function _merge3(base, loc, rem) {
   });
   return { items:list(base.items, loc.items, rem.items), goals:list(base.goals, loc.goals, rem.goals), cats:list(base.cats, loc.cats, rem.cats),
            nextId:Math.max(loc.nextId, rem.nextId), nextCatId:Math.max(loc.nextCatId, rem.nextCatId),
-           seeds:[...new Set([...loc.seeds, ...rem.seeds])], habits:list(base.habits, loc.habits, rem.habits), hlog:hl };
+           seeds:[...new Set([...loc.seeds, ...rem.seeds])], habits:list(base.habits, loc.habits, rem.habits), hlog:hl, journal:list(base.journal||[], loc.journal||[], rem.journal||[]) };
 }
 function _applySnap(m) {
   items = m.items; goals = m.goals; cats = m.cats; nextId = m.nextId; nextCatId = m.nextCatId; seeds = m.seeds;
@@ -1889,6 +1950,7 @@ function _applySnap(m) {
     localStorage.setItem('mf_v2', JSON.stringify({ items, goals, cats, nextId, nextCatId, seeds }));
     localStorage.setItem('mf_habits', JSON.stringify(m.habits));
     localStorage.setItem('mf_hlog', JSON.stringify(m.hlog));
+    localStorage.setItem('mf_journal', JSON.stringify(m.journal||[]));
   } catch(e) {}
   renderCurrent();
 }
@@ -2292,6 +2354,225 @@ function _chipHtml(i, ds) {
   return `<div class="pz-chip${i.done?' done':''}${_sel.has(i.id)?' sel':''}" style="${style}" draggable="true" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)" onclick="taskClick(event,${i.id})" title="${h(i.text)} · ${h(c.name)}">${h(i.text)}</div>`;
 }
 
+// ============================================================
+// ARRANQUE DEL DÍA · check-in guiado de 8 pasos (primera vez que abres Flow en el día)
+// ============================================================
+function _getJournal(){ try { return JSON.parse(localStorage.getItem('mf_journal')||'[]'); } catch(e) { return []; } }
+function _saveJournal(j){ try { localStorage.setItem('mf_journal', JSON.stringify(j)); } catch(e) {} if (_db) _queuePush(); }
+function _dayEntry(ds){ return _getJournal().find(x=>x.id===ds) || { id:ds, prio:[] }; }
+function _putEntry(e){ const j = _getJournal().filter(x=>x.id!==e.id); e.at = new Date().toISOString(); j.push(e); _saveJournal(j.slice(-120)); }
+function _dayPrio(ds){ return (_dayEntry(ds).prio||[]).filter(id=>items.some(i=>i.id===id && !i.archived)); }
+
+let _ar = null;   // estado del arranque mientras está abierto
+const AR_STEPS = 8;
+function _arNeed(ds){ const d = new Date(ds+'T12:00:00').getDay(); return (d===5||d===6||d===0) ? 9 : 7; }
+function _arAdd(ds, n){ const d = new Date(ds+'T12:00:00'); d.setDate(d.getDate()+n); return _ymd(d); }
+function _hm(m){ return Math.floor(m/60)+':'+String(m%60).padStart(2,'0'); }
+function _mins(t){ const [a,b] = String(t||'0:0').split(':').map(Number); return a*60+(b||0); }
+function _rhCat(){ return (cats.find(c=>/recursos humanos|^rh$/i.test(c.name||''))||{}).id ?? null; }
+
+function arranqueCheck(){
+  const today = todayStr(), e = _dayEntry(today);
+  if (e.arr && (e.arr.done || e.arr.skipped)) return;
+  openArranque();
+}
+function openArranque(){
+  const today = todayStr(), e = _dayEntry(today), prev = (e.arr && e.arr.ans) || {};
+  const last = (_getJournal().filter(x=>x.id<today && x.arr && x.arr.ans).sort((a,b)=>a.id<b.id?1:-1)[0]||{}).arr;
+  const need = _arNeed(today), lastFam = last && last.ans && last.ans.fam;
+  const late = items.filter(i=>_live(i) && i.date && i.date < today).sort((a,b)=>a.date<b.date?1:-1).slice(0,8);
+  _ar = Object.assign({
+    step: 1,
+    lav: { ref:{have:need, st:0}, ala:{have:need, st:0} },
+    late: Object.fromEntries(late.map(i=>[i.id, {to:'hoy', d:_arAdd(today,1)}])),
+    fam: { on:true, from:(lastFam&&lastFam.from)||'18:00', to:(lastFam&&lastFam.to)||'21:00' },
+    exCat: null, exTask: null, frog: null, prio: null, swap: null,
+  }, prev, { step:1 });
+  _ar.lateIds = late.map(i=>i.id).filter(id=>_ar.late[id]);
+  late.forEach(i=>{ if (!_ar.late[i.id]) _ar.late[i.id] = {to:'hoy', d:_arAdd(today,1)}; });
+  _ar.lateIds = late.map(i=>i.id);
+  _arRender();
+}
+function _arSaveDraft(){ const today = todayStr(), e = _dayEntry(today); const { step, swap, ...ans } = _ar; e.arr = Object.assign({}, e.arr, { ans }); _putEntry(e); }
+function arSkip(){ const today = todayStr(), e = _dayEntry(today); e.arr = Object.assign({}, e.arr, { skipped:true }); _putEntry(e); _arClose(); showToast('Puedes hacer tu arranque más tarde desde Pulso'); }
+function _arClose(){ _ar = null; const o = document.getElementById('arranque'); if (o) o.remove(); document.body.classList.remove('ar-open'); renderCurrent(); }
+function arBack(){ if (_ar.step > 1) { _ar.step--; _ar.swap = null; _arRender(); } }
+function arNext(){
+  if (_ar.step === 7 && !_arPrio().length) { showToast('Elige al menos una prioridad'); return; }
+  _arSaveDraft();
+  if (_ar.step < AR_STEPS) { _ar.step++; _ar.swap = null; _arRender(); } else arFinish();
+}
+
+// ---- candidatos
+function _arCoverTasks(){
+  const out = [];
+  [['ref','Refugio'],['ala','Álamos']].forEach(([k,n])=>{
+    const L = _ar.lav[k], need = _arNeed(todayStr()), miss = Math.max(0, need - L.have);
+    if (L.st===1 && miss) out.push({ key:'cover-'+k, text:`Cubrir ${miss} lavador${miss>1?'es':''} en ${n}`, why:'Faltan hoy', mins:30 });
+    if (L.st===2) out.push({ key:'recruit-'+k, text:`Reclutar lavadores · ${n}`, why:'Faltarán pronto', mins:45, later:true });
+  });
+  return out;
+}
+function _arExciteCats(){
+  const ids = new Set(items.filter(_live).map(i=>i.cat).filter(c=>c!=null));
+  return cats.filter(c=>ids.has(c.id));
+}
+function _arExciteTasks(){ return _ar.exCat==null ? [] : items.filter(i=>_live(i) && i.cat===_ar.exCat).sort((a,b)=>(a.date||'9')<(b.date||'9')?-1:1).slice(0,4); }
+function _arFrogTasks(){
+  const today = todayStr();
+  const pool = items.filter(i=>_live(i) && (i.date===today || (i.date && i.date<today && (_ar.late[i.id]||{}).to==='hoy') || i.urgent===true));
+  return pool.sort((a,b)=>((a.date&&a.date<today)?0:1)-((b.date&&b.date<today)?0:1)).slice(0,6);
+}
+function _arPrio(){
+  if (_ar.prio) return _ar.prio.filter(x=>x && (x.id ? items.some(i=>i.id===x.id && _live(i)) : true));
+  const list = [];
+  const push = x => { if (x && list.length<3 && !list.some(y=>(y.id&&y.id===x.id)||(y.key&&y.key===x.key))) list.push(x); };
+  if (_ar.frog) push({ id:_ar.frog, why:'No te emociona · va primero' });
+  _arCoverTasks().filter(c=>!c.later).forEach(c=>push(c));
+  if (_ar.exTask) push({ id:_ar.exTask, why:'Te emociona' });
+  items.filter(i=>_live(i) && i.date===todayStr() && i.urgent===true && i.important===true).forEach(i=>push({ id:i.id, why:'Urgente e importante' }));
+  items.filter(i=>_live(i) && i.date===todayStr()).forEach(i=>push({ id:i.id, why:'De tu día' }));
+  return list;
+}
+function _arLabel(x){ if (x.id) { const t = items.find(i=>i.id===x.id); return t ? t.text : ''; } return x.text; }
+
+// ---- plan con horas
+function _arPlan(){
+  const today = todayStr(), now = new Date(), nowM = now.getHours()*60+now.getMinutes();
+  let start = Math.max(9*60, Math.ceil((nowM+5)/30)*30);
+  const fixed = items.filter(i=>!i.archived && !i.done && i.date===today && i.time).map(i=>({ from:_mins(i.time), to:_mins(i.time)+60, text:i.text, kind:'a', id:i.id }));
+  const pr = _arPrio().filter(x=>!(x.id && fixed.some(f=>f.id===x.id)));
+  const fam = _ar.fam.on ? { from:_mins(_ar.fam.from), to:_mins(_ar.fam.to), text:'Family time', kind:'f' } : null;
+  const busy = fixed.concat(fam ? [fam] : []);
+  const blocks = [];
+  const clash = (a,b) => busy.some(x=>a < x.to && b > x.from) || blocks.some(x=>a < x.to && b > x.from);
+  pr.forEach((x,k)=>{
+    const dur = x.mins || (k===0 && x.id===_ar.frog ? 90 : 60);
+    let a = start; while (clash(a, a+dur) && a < 23*60) a += 30;
+    blocks.push({ from:a, to:a+dur, text:_arLabel(x), kind:'p', ref:x }); start = a+dur;
+  });
+  const prioIds = new Set(pr.map(x=>x.id).filter(Boolean));
+  const rest = items.filter(i=>_live(i) && i.date===today && !i.time && !prioIds.has(i.id)).length
+             + Object.entries(_ar.late).filter(([id,v])=>v.to==='hoy' && !prioIds.has(Number(id))).length;
+  const all = blocks.concat(fixed, fam ? [fam] : []).sort((a,b)=>a.from-b.from);
+  if (rest) { const endP = Math.max(start, ...fixed.map(f=>f.to)); const stop = fam ? fam.from : 18*60;
+    if (stop - endP >= 30) all.push({ from:endP, to:stop, text:`Lo demás de tu día · ${rest} tarea${rest>1?'s':''}`, kind:'o' }); }
+  return all.sort((a,b)=>a.from-b.from);
+}
+
+// ---- terminar
+function arFinish(){
+  const today = todayStr(), rh = _rhCat(), mk = (text, extra) => {
+    let t = items.find(i=>_live(i) && i.text.trim().toLowerCase()===text.toLowerCase());
+    if (!t) { t = Object.assign({ id:nextId++, text, cat:rh, cat_key:'todo', priority:2, date:today, time:'', deadline:'', delegado:'', recur:'',
+      important:true, urgent:null, note:'', subtasks:[], done:false, archived:false, created:new Date().toISOString() }, extra); items.unshift(t); }
+    return t;
+  };
+  // pendientes de ayer
+  Object.entries(_ar.late).forEach(([id,v])=>{ const t = items.find(i=>i.id===Number(id)); if (!t) return;
+    if (v.to==='hoy') t.date = today; else if (v.to==='otro') t.date = v.d || _arAdd(today,1); else if (v.to==='bandeja') { t.date = ''; t.time = ''; } });
+  // lavadores
+  const keyId = {};
+  _arCoverTasks().forEach(c=>{ const t = mk(c.text, c.later ? { date:_arAdd(today,1), important:true } : { urgent:true, important:true }); keyId[c.key] = t.id; });
+  // prioridades → ids reales
+  const prio = _arPrio().map(x=>x.id || keyId[x.key]).filter(Boolean).slice(0,3);
+  prio.forEach(id=>{ const t = items.find(i=>i.id===id); if (t && t.date!==today) t.date = today; });
+  // horas sugeridas a las prioridades
+  const plan = _arPlan();
+  plan.filter(b=>b.kind==='p').forEach(b=>{ const id = b.ref.id || keyId[b.ref.key]; const t = items.find(i=>i.id===id); if (t && !t.time) t.time = _hm(b.from).padStart(5,'0'); });
+  const e = _dayEntry(today); const { step, swap, ...ans } = _ar;
+  e.prio = prio; e.fam = _ar.fam.on ? { from:_ar.fam.from, to:_ar.fam.to } : null;
+  e.arr = { done:true, ans, at:new Date().toISOString() };
+  _putEntry(e); save();
+  _arClose(); switchTab('log');
+}
+
+// ---- acciones de cada paso
+function arHab(id){ const hl = _getHlog(), t = todayStr(); hl[t] = hl[t] || {}; hl[t][id] = !hl[t][id]; _saveHlog(hl); _arRender(); }
+function arLav(k, d){ const L = _ar.lav[k], need = _arNeed(todayStr()); L.have = Math.max(0, Math.min(15, L.have + d)); if (L.have < need && L.st===0) L.st = 1; if (L.have >= need && L.st===1) L.st = 0; _arRender(); }
+function arLavSt(k, st){ _ar.lav[k].st = st; _ar.prio = null; _arRender(); }
+function arLate(id, to){ _ar.late[id].to = to; _ar.prio = null; _arRender(); }
+function arLateD(id, v){ _ar.late[id].d = v; }
+function arFam(on){ _ar.fam.on = on; _arRender(); }
+function arFamT(k, v){ _ar.fam[k] = v; }
+function arExCat(id){ _ar.exCat = id; const t = _arExciteTasks(); _ar.exTask = t[0] ? t[0].id : null; _ar.prio = null; _arRender(); }
+function arExTask(id){ _ar.exTask = _ar.exTask===id ? null : id; _ar.prio = null; _arRender(); }
+function arFrog(id){ _ar.frog = _ar.frog===id ? null : id; _ar.prio = null; _arRender(); }
+function arSwap(k){ _ar.prio = _arPrio(); _ar.swap = k; _arRender(); }
+function arSwapTo(k, v){ const P = _arPrio(); const id = Number(v); if (id) P[k] = { id, why:'La elegiste tú' }; else P.splice(k,1); _ar.prio = P; _ar.swap = null; _arRender(); }
+function arAddPrio(){ _ar.prio = _arPrio(); _ar.swap = _ar.prio.length; _arRender(); }
+
+// ---- pantalla
+function _arOpt(on, text, click, right){ return `<button type="button" class="ar-opt${on?' on':''}" onclick="${click}"><span class="ar-box">${on?ico('check',14):''}</span><span class="ar-ot">${text}</span>${right||''}</button>`; }
+function _arSeg(list, sel, fn){ return `<div class="ar-seg">${list.map((t,k)=>`<button type="button" class="${k===sel?'on':''}" onclick="${fn(k)}">${t}</button>`).join('')}</div>`; }
+function _arRender(){
+  let o = document.getElementById('arranque');
+  if (!o) { o = document.createElement('div'); o.id = 'arranque'; document.body.appendChild(o); document.body.classList.add('ar-open'); }
+  const today = todayStr(), S = _ar.step, need = _arNeed(today), D = new Date(today+'T12:00:00');
+  const dayTxt = D.toLocaleDateString('es-MX',{weekday:'long'})+' '+D.getDate();
+  let q = '', sub = '', body = '', note = '', btn = 'Siguiente';
+  if (S===1) {
+    const hr = new Date().getHours();
+    q = `${hr<12?'Buenos días':hr<19?'Buenas tardes':'Buenas noches'}, Montse. ¿Ya hiciste tu morning ritual?`;
+    sub = 'Toca lo que ya hiciste. Se marca en tus hábitos.';
+    const hl = _getHlog()[today]||{}, hs = _getHabits();
+    body = hs.length ? hs.map(hb=>_arOpt(!!hl[hb.id], h(hb.text), `arHab(${hb.id})`)).join('') : '<div class="ar-empty">Aún no tienes hábitos. Agrégalos en el Log diario.</div>';
+  } else if (S===2) {
+    const dn = D.toLocaleDateString('es-MX',{weekday:'long'});
+    q = '¿Cómo estás de lavadores hoy?';
+    sub = `${dn.charAt(0).toUpperCase()+dn.slice(1)}: necesitas ${need} por sucursal. ${need===7?'Viernes a domingo, 9.':'Entre semana, 7.'}`;
+    body = [['ref','Refugio'],['ala','Álamos']].map(([k,n])=>{ const L = _ar.lav[k]; return `<div class="ar-card">
+      <div class="ar-row"><b>${n}</b><span class="ar-mut">hoy necesitas <b>${need}</b></span></div>
+      <div class="ar-count"><button type="button" onclick="arLav('${k}',-1)" aria-label="Menos">–</button><span class="ar-big">${L.have}</span><span class="ar-mut">de ${need} lavadores</span><button type="button" onclick="arLav('${k}',1)" aria-label="Más" style="margin-left:auto">+</button></div>
+      ${_arSeg(['Completos','Faltan hoy','Faltarán'], L.st, j=>`arLavSt('${k}',${j})`)}</div>`; }).join('');
+    const c = _arCoverTasks(); note = c.length ? 'Voy a crear: ' + c.map(x=>`"${x.text}"${x.later?' para esta semana':''}`).join(' y ') + '.' : '';
+  } else if (S===3) {
+    q = _ar.lateIds.length ? 'Esto quedó pendiente' : 'Nada quedó pendiente';
+    sub = _ar.lateIds.length ? '¿Lo traemos a hoy?' : 'Ayer cerraste todo. Bien.';
+    body = _ar.lateIds.map(id=>{ const t = items.find(i=>i.id===id); if (!t) return ''; const v = _ar.late[id];
+      const ago = Math.round((new Date(today) - new Date(t.date))/864e5);
+      return `<div class="ar-card"><div class="ar-row"><b class="ar-tt">${h(t.text)}</b><span class="ar-mut">${ago===1?'ayer':'hace '+ago+' días'}</span></div>
+        ${_arSeg(['A hoy','Otro día','A la Bandeja'], ['hoy','otro','bandeja'].indexOf(v.to), j=>`arLate(${id},'${['hoy','otro','bandeja'][j]}')`)}
+        ${v.to==='otro'?`<input type="date" class="ar-date" value="${v.d}" min="${_arAdd(today,1)}" onchange="arLateD(${id},this.value)"/>`:''}</div>`; }).join('');
+  } else if (S===4) {
+    q = '¿Hoy hay family time?'; sub = 'Lo aparto en tu día y no te acomodo tareas a esa hora.';
+    body = `${_arSeg(['Sí','Hoy no'], _ar.fam.on?0:1, j=>`arFam(${j===0})`)}
+      ${_ar.fam.on?`<div class="ar-card"><div class="ar-mut" style="font-weight:700">¿A qué hora?</div>
+      <div class="ar-times"><input type="time" value="${_ar.fam.from}" onchange="arFamT('from',this.value)"/><span class="ar-mut">a</span><input type="time" value="${_ar.fam.to}" onchange="arFamT('to',this.value)"/></div></div>`:''}`;
+  } else if (S===5) {
+    q = '¿Qué proyecto te emociona hoy?'; sub = 'Una tarea de ahí entra a tu día como recompensa.';
+    const cs = _arExciteCats();
+    body = `<div class="ar-chips">${cs.map(c=>`<button type="button" class="ar-chip${_ar.exCat===c.id?' on':''}" onclick="arExCat(${c.id})">${h(c.name)}</button>`).join('')}</div>
+      ${_ar.exCat!=null?`<div class="ar-mut" style="font-weight:700;margin-top:6px">Te propongo hoy</div>${_arExciteTasks().map(t=>_arOpt(_ar.exTask===t.id, h(t.text), `arExTask(${t.id})`)).join('')||'<div class="ar-empty">No hay tareas pendientes de este proyecto.</div>'}`:''}`;
+  } else if (S===6) {
+    q = '¿Qué no te emociona pero tiene que salir?'; sub = 'Va primero, para quitártela temprano.';
+    const ft = _arFrogTasks();
+    body = ft.map(t=>_arOpt(_ar.frog===t.id, h(t.text), `arFrog(${t.id})`, t.date && t.date<today ? '<span class="ar-tag">pendiente</span>' : '')).join('') || '<div class="ar-empty">No tienes tareas para hoy todavía. Puedes saltar este paso.</div>';
+  } else if (S===7) {
+    q = 'Tus 3 prioridades de hoy'; sub = 'Te las propuse con lo que contestaste. Cambia la que quieras.';
+    const P = _arPrio(), opts = items.filter(_live).slice(0,300);
+    const sel = k => `<select class="ar-sel" onchange="arSwapTo(${k},this.value)"><option value="">${P[k]?'Quitar esta prioridad':'Elige una tarea…'}</option>${opts.map(i=>`<option value="${i.id}">${h(i.text)}</option>`).join('')}</select>`;
+    body = P.map((x,k)=>_ar.swap===k ? `<div class="ar-pr"><span class="ar-n">${k+1}</span>${sel(k)}</div>` :
+      `<div class="ar-pr"><span class="ar-n">${k+1}</span><div style="flex:1;min-width:0"><div class="ar-tt">${h(_arLabel(x))}</div><div class="ar-why">${x.why||''}</div></div><button type="button" class="ar-link" onclick="arSwap(${k})">Cambiar</button></div>`).join('')
+      + (P.length<3 ? (_ar.swap===P.length ? `<div class="ar-pr"><span class="ar-n">${P.length+1}</span>${sel(P.length)}</div>` : `<button type="button" class="ar-link" style="align-self:flex-start;margin-top:4px" onclick="arAddPrio()">+ Agregar prioridad</button>`) : '');
+    btn = 'Ver mi día';
+  } else {
+    q = 'Así queda tu día'; sub = 'Con horas sugeridas. Puedes mover cualquier cosa en el Log diario.';
+    const tag = { p:'Prioridad', a:'Agendado', f:'Family time', o:'' };
+    body = `<div class="ar-plan">${_arPlan().map(b=>`<div class="ar-b"><div class="ar-bt">${_hm(b.from)}</div><div class="ar-bb k-${b.kind}"><div class="ar-row"><b>${h(b.text)}</b>${tag[b.kind]?`<span class="ar-btag">${tag[b.kind]}</span>`:''}</div><div class="ar-bh">${_hm(b.from)}–${_hm(b.to)}</div></div></div>`).join('') || '<div class="ar-empty">Tu día está libre.</div>'}</div>`;
+    btn = 'Empezar';
+  }
+  const dots = Array.from({length:AR_STEPS},(_,k)=>`<i class="${k+1===S?'cur':k+1<S?'on':''}"></i>`).join('');
+  o.innerHTML = `<div class="ar-wrap">
+    <div class="ar-top">${S>1?`<button type="button" class="ar-back" onclick="arBack()" aria-label="Atrás"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>`:''}<div class="ar-dots">${dots}</div><button type="button" class="ar-skip" onclick="arSkip()">Saltar por hoy</button></div>
+    <div class="ar-k">Arranque · ${h(dayTxt)}</div>
+    <div class="ar-q">${q}</div><div class="ar-sub">${sub}</div>
+    <div class="ar-body">${body}</div>
+    ${note?`<div class="ar-note">${h(note)}</div>`:''}
+    <button type="button" class="ar-go" onclick="arNext()">${btn}</button>
+  </div>`;
+}
+
 function renderDash() {
   const el = document.getElementById('panel-dash');
   if (!el) return;
@@ -2429,7 +2710,7 @@ function renderDash() {
   </section>`;
 
   el.innerHTML = `<div class="pz">
-    <div><div class="pl-week">Semana ${_fmtRange(mon,sun)} · ${h(dayName)} ${new Date(today+'T12:00:00').getDate()}</div><h1 class="pz-verdict">${verdict}</h1></div>
+    <div><div class="pl-week">Semana ${_fmtRange(mon,sun)} · ${h(dayName)} ${new Date(today+'T12:00:00').getDate()}</div><h1 class="pz-verdict">${verdict}</h1>${(()=>{ const a = _dayEntry(today).arr; return a&&a.done ? `<button class="pz-arr" onclick="openArranque()">Tu arranque de hoy · ver o rehacer</button>` : `<button class="pz-arr" onclick="openArranque()">Hacer mi arranque de hoy</button>`; })()}</div>
     <div class="pz-top">${ringsHtml}<div class="pz-side">${goalCards}${energyHtml}</div></div>
     ${weekHtml}
   </div>`;
@@ -2502,10 +2783,11 @@ function renderLogDiario() {
   const dayAll = items.filter(i=>!i.archived && (i.date===D || (i.done && i.doneDate===D && i.date!==D)));
   const _eis = i => (i.urgent===true && i.important===true) ? 0 : i.urgent===true ? 1 : i.important===true ? 2 : 3;
   // Por hora del día: las que tienen hora van en su lugar; las que no, cuentan como "ahora" (hoy) o mediodía (otro día)
+  const _pr = _dayPrio(D), _pi = i => { const k = _pr.indexOf(i.id); return k<0 ? 9 : k; };
   const _nowM = (()=>{ const n = new Date(); return D===todayStr() ? n.getHours()*60+n.getMinutes() : 12*60; })();
   const _tk = i => { if (!i.time) return _nowM; const [a,b] = i.time.split(':').map(Number); return a*60+(b||0); };
   const pend = dayAll.filter(i=>!i.done).sort((a,b)=>
-    _tk(a)-_tk(b) || (a.time?0:1)-(b.time?0:1) || _eis(a)-_eis(b) || (a.priority||3)-(b.priority||3));
+    _tk(a)-_tk(b) || (a.time?0:1)-(b.time?0:1) || _pi(a)-_pi(b) || _eis(a)-_eis(b) || (a.priority||3)-(b.priority||3));
   const dn = dayAll.filter(i=>i.done);
   const total = pend.length + dn.length;
 
@@ -3902,8 +4184,10 @@ window.addEventListener('DOMContentLoaded', () => {
   if (_fbKey && _fbProj) {
     document.getElementById('fb-key').value = _fbKey;
     document.getElementById('fb-proj').value = _fbProj;
-    pullFirebase().then(()=>{ runMigrations(); setSyncStatus('ok'); renderCurrent(); _checkInbox(); }).catch(()=>{ setSyncStatus('error'); runMigrations(); renderCurrent(); });
-  }
+    pullFirebase().then(()=>{ runMigrations(); setSyncStatus('ok'); renderCurrent(); _checkInbox(); arranqueCheck(); }).catch(()=>{ setSyncStatus('error'); runMigrations(); renderCurrent(); arranqueCheck(); });
+  } else { setTimeout(arranqueCheck, 300); }
+  // Si la app queda abierta y amanece otro día, el arranque aparece al volver
+  document.addEventListener('visibilitychange', ()=>{ if (document.visibilityState==='visible' && !_ar) setTimeout(arranqueCheck, 1200); });
   // Close modals on overlay click
   document.querySelectorAll('.modal-overlay').forEach(m=>{
     m.addEventListener('click', e=>{ if(e.target===m) m.classList.remove('open'); });
