@@ -843,7 +843,7 @@ body.ar-open{overflow:hidden}
 .ar-count button{width:36px;height:36px;border-radius:50%;border:none;background:rgba(107,122,78,.1);font:inherit;font-size:1.1rem;font-weight:800;color:#1C2018;cursor:pointer}
 .ar-big{font-size:2.1rem;font-weight:900;letter-spacing:-.03em;color:#1C2018}
 .ar-seg{display:flex;gap:6px}
-.ar-seg button{flex:1;padding:10px 4px;border-radius:12px;border:1.5px solid transparent;background:rgba(28,32,24,.04);color:#4b5563;font:inherit;font-size:.76rem;font-weight:800;cursor:pointer}
+.ar-seg button{flex:1;white-space:nowrap;padding:10px 4px;border-radius:12px;border:1.5px solid transparent;background:rgba(28,32,24,.04);color:#4b5563;font:inherit;font-size:.76rem;font-weight:800;cursor:pointer}
 .ar-seg button.on{background:#EAF6D3;border-color:#B9E26B;color:#3F5320}
 .ar-date,.ar-times input,.ar-sel{height:42px;border:1.5px solid #E3E6DD;border-radius:12px;padding:0 12px;font:inherit;font-size:16px;color:#1C2018;background:#fff}
 .ar-times{display:flex;align-items:center;gap:10px}
@@ -2524,7 +2524,7 @@ function _arRender(){
     body = [['ref','Refugio'],['ala','Álamos']].map(([k,n])=>{ const L = _ar.lav[k]; return `<div class="ar-card">
       <div class="ar-row"><b>${n}</b><span class="ar-mut">hoy necesitas <b>${need}</b></span></div>
       <div class="ar-count"><button type="button" onclick="arLav('${k}',-1)" aria-label="Menos">–</button><span class="ar-big">${L.have}</span><span class="ar-mut">de ${need} lavadores</span><button type="button" onclick="arLav('${k}',1)" aria-label="Más" style="margin-left:auto">+</button></div>
-      ${_arSeg(['Completos','Faltan hoy','Faltarán pronto'], L.st, j=>`arLavSt('${k}',${j})`)}</div>`; }).join('');
+      ${_arSeg(['Completos','Faltan hoy','Faltarán'], L.st, j=>`arLavSt('${k}',${j})`)}</div>`; }).join('');
     const c = _arCoverTasks(); note = c.length ? 'Voy a crear: ' + c.map(x=>`"${x.text}"${x.later?' para esta semana':''}`).join(' y ') + '.' : '';
   } else if (S===3) {
     q = _ar.lateIds.length ? 'Esto quedó pendiente' : 'Nada quedó pendiente';
