@@ -871,6 +871,83 @@ body.ar-open{overflow:hidden}
 .ar-bh{font-size:.68rem;opacity:.7;margin-top:2px}
 .pz-arr{margin-top:6px;border:none;background:none;padding:0;font:inherit;font-size:.78rem;font-weight:700;color:var(--accent);cursor:pointer}
 .pz-arr:hover{text-decoration:underline}
+
+/* =====================================================================
+   PALETA · verde olivo en detalles, verde claro para resaltar.
+   Nada de bloques grandes olivo, lima o negro.
+   ===================================================================== */
+:root{--hl:#EEF2E6;--hl2:#E3EAD5;--hl-bd:#CFDAB8;--soft:#F5F8EF}
+/* Navegación */
+.nav-item.active{background:var(--hl);color:var(--accent);font-weight:700}
+.nav-item.active svg{color:var(--accent)}
+.nav-item.active .badge{background:var(--accent);color:#fff}
+/* Fecha activa del Log */
+.log-date-card.active{background:var(--hl);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--hl-bd)}
+.log-date-card.active .ld-dot{background:var(--accent)}
+.log-date-card.active .ld-day{color:var(--accent)}
+/* Botones principales: claros con texto olivo */
+.modal-btn.primary,.add-btn-top,.dy-btn.solid,.pz-plan,.ai-send-btn{background:var(--hl);color:var(--accent);border:1.5px solid var(--hl-bd)}
+.modal-btn.primary:hover,.add-btn-top:hover,.dy-btn.solid:hover,.pz-plan:hover{background:var(--hl2)}
+.pz-plan.on{background:var(--hl2);color:var(--accent)}
+.live-badge{background:var(--hl);color:var(--accent)}
+.jam-btn:hover,.jam-btn.active{background:var(--hl);color:var(--accent)}
+.wk-db:hover:not(:disabled){background:var(--hl);color:var(--accent);border-color:var(--hl-bd)}
+/* Pestañas, filtros y chips seleccionados */
+.bq-tab.active,.pill.active,.bq-f.on{background:var(--hl);border-color:var(--hl-bd);color:var(--accent)}
+.rc-days button.on{background:var(--hl);border-color:var(--hl-bd);color:var(--accent)}
+/* Asistente */
+.ai-toggle{background:#fff;color:var(--accent);border:1.5px solid var(--hl-bd);box-shadow:0 6px 18px rgba(107,122,78,.16)}
+.ai-msg.user{background:var(--hl);color:var(--text)}
+/* Ahora toca */
+.dy-pill{background:#fff;color:var(--text);border:1.5px solid var(--hl-bd);box-shadow:0 10px 26px rgba(107,122,78,.16)}
+.dy-pill-k{color:var(--accent);opacity:1}
+.dy-pill-n{color:var(--accent);opacity:.8}
+.dy-pill-jam{background:var(--hl);color:var(--accent)}
+.dy-pill-jam:hover{background:var(--hl2)}
+.dy-pill-jam.on{background:var(--hl);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--hl-bd)}
+.dy-pill-jam.on i{background:var(--accent)}
+.dy-pill-ok{background:#fff;color:var(--accent);border:1.8px solid var(--accent)}
+.dy-pill-ok:hover{background:var(--hl)}
+/* Hábitos y cosecha */
+.dy-hab.hb2.on{background:var(--soft);border-color:var(--hl-bd)}
+.dy-hab.hb2:hover{border-color:var(--hl-bd)}
+.hb-grid i.l1{background:#E3EAD5}.hb-grid i.l2{background:#B7C59C}.hb-grid i.l3{background:var(--accent)}
+.hb-grid i.t{outline-color:var(--accent)}
+.pz-bar .m{background:var(--accent)}
+/* Barras flotantes: blancas con detalles olivo */
+#focus-island{background:#fff;color:var(--text);border:1.5px solid var(--hl-bd);box-shadow:0 10px 28px rgba(107,122,78,.18)}
+#focus-island .fi-name,#focus-island .fi-sub{color:var(--text2)}
+#focus-island .fi-btn{background:var(--hl);color:var(--accent)}
+#focus-island .fi-btn:hover{background:var(--hl2)}
+#clip-bar{background:#fff;color:var(--text);border:1.5px solid var(--hl-bd);box-shadow:0 10px 28px rgba(107,122,78,.18)}
+#clip-bar button{background:var(--hl);color:var(--accent)}
+/* Alarma del JAM SESH */
+.ja-box{background:#fff;color:var(--text);box-shadow:0 24px 60px rgba(28,32,24,.25)}
+.ja-ring{background:var(--hl);color:var(--accent);animation-name:jaPulseO}
+@keyframes jaPulseO{0%{box-shadow:0 0 0 0 rgba(107,122,78,.45);transform:scale(1)}15%{transform:scale(1.08)}30%{transform:scale(1)}100%{box-shadow:0 0 0 26px rgba(107,122,78,0)}}
+.ja-k{color:var(--accent)}
+.ja-more{background:#F3F4F0;color:var(--text)}
+.ja-ok{background:var(--hl);color:var(--accent);box-shadow:inset 0 0 0 1.5px var(--hl-bd)}
+/* Menú de tarea */
+.jam-flag{background:var(--soft);border-color:var(--hl-bd)}
+.jam-flag input{accent-color:var(--accent)}
+/* Arranque */
+#arranque{background:linear-gradient(180deg,#FDFCF6 0%,#FAFBF6 50%,#F5F8EF 100%)}
+.ar-dots i.on{background:var(--hl-bd)}.ar-dots i.cur{background:var(--accent)}
+.ar-go{background:var(--hl);color:var(--accent);border:1.5px solid var(--hl-bd);box-shadow:none}
+.ar-go:hover{background:var(--hl2)}
+.ar-opt.on,.ar-chip.on{background:var(--soft);border-color:var(--hl-bd)}
+.ar-opt.on .ar-box{background:var(--accent);border-color:var(--accent);color:#fff}
+.ar-seg button.on{background:var(--hl);border-color:var(--hl-bd);color:var(--accent)}
+.ar-pr,.ar-bb.k-p{background:var(--soft);border-color:var(--hl-bd)}
+.ar-n,.ar-why,.ar-btag{color:var(--accent)}
+.ar-back,.ar-count button{background:var(--hl);color:var(--accent)}
+/* Hoy en la semana de Pulso y selección: olivo, no azul */
+.pz-day.today{background:var(--soft);border-color:var(--hl-bd)}
+.pz-chip.sel,.dy-task.sel,.task-item.sel{outline-color:var(--accent)}
+.dy-task.sel{background:var(--soft)}
+.pz-paste{border-color:var(--accent);color:var(--accent)}
+.pz-paste:hover{background:var(--hl)}
 </style>
 </head>
 <body>
@@ -2334,7 +2411,7 @@ function _onColor(hex) { const L = _lum(hex); return (1.05/(L+.05)) >= ((L+.05)/
 
 // ---------- PULSO (A + C, claro) ----------
 let _pzPlanOpen = false;
-const RING = { t:'#FF2D55', h:'#34C759', m:'#0A84FF' };
+const RING = { t:'#56633A', h:'#9DB46A', m:'#C4AE78' };
 const RING_TXT = { t:'#C2003A', h:'#1F7A35', m:'#0060C7' };
 
 function _ringSvg(rings) {
@@ -3811,7 +3888,7 @@ function _renderIsland() {
   document.body.classList.toggle('has-focus', !!f);
   if (!f) { el.className = ''; el.innerHTML = ''; return; }
   const t = items.find(i=>i.id===f.id), left = _focusLeft(), done = 1 - left/f.totalSecs;
-  const C = 2*Math.PI*9, ring = `<svg class="fi-ring" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-90 12 12)" fill="none" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="9" stroke="#3A4030"/><circle cx="12" cy="12" r="9" stroke="#B9E26B" stroke-dasharray="${(C*done).toFixed(1)} ${C.toFixed(1)}"/></g></svg>`;
+  const C = 2*Math.PI*9, ring = `<svg class="fi-ring" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-90 12 12)" fill="none" stroke-width="3" stroke-linecap="round"><circle cx="12" cy="12" r="9" stroke="#E3EAD5"/><circle cx="12" cy="12" r="9" stroke="#6b7a4e" stroke-dasharray="${(C*done).toFixed(1)} ${C.toFixed(1)}"/></g></svg>`;
   const open = el.classList.contains('open');
   el.className = 'on' + (open ? ' open' : '') + (f.paused ? ' paused' : '');
   el.innerHTML = `${ring}
