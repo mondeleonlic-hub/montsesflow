@@ -2413,11 +2413,8 @@ function _arCoverTasks(){
   });
   return out;
 }
-function _arExciteCats(){
-  const ids = new Set(items.filter(_live).map(i=>i.cat).filter(c=>c!=null));
-  return cats.filter(c=>ids.has(c.id));
-}
-function _arExciteTasks(){ return _ar.exCat==null ? [] : items.filter(i=>_live(i) && i.cat===_ar.exCat).sort((a,b)=>(a.date||'9')<(b.date||'9')?-1:1).slice(0,4); }
+function _arProjects(){ return items.filter(i=>_live(i) && i.cat_key==='proyectos'); }
+function _arProjSubs(id){ const t = items.find(i=>i.id===id); return t ? (t.subtasks||[]).map((x,k)=>({...x, _k:k})).filter(x=>!x.done) : []; }
 function _arFrogTasks(){
   const today = todayStr();
   const pool = items.filter(i=>_live(i) && (i.date===today || (i.date && i.date<today && (_ar.late[i.id]||{}).to==='hoy') || i.urgent===true));
@@ -2429,7 +2426,7 @@ function _arPrio(){
   const push = x => { if (x && list.length<3 && !list.some(y=>(y.id&&y.id===x.id)||(y.key&&y.key===x.key))) list.push(x); };
   if (_ar.frog) push({ id:_ar.frog, why:'No te emociona · va primero' });
   _arCoverTasks().filter(c=>!c.later).forEach(c=>push(c));
-  if (_ar.exTask) push({ id:_ar.exTask, why:'Te emociona' });
+  if (_ar.exTask) { const sb = _arProjSubs(_ar.exTask).find(x=>x._k===_ar.exSub); push({ id:_ar.exTask, why:'Te emociona' + (sb ? ' · siguiente: ' + sb.text : '') }); }
   items.filter(i=>_live(i) && i.date===todayStr() && i.urgent===true && i.important===true).forEach(i=>push({ id:i.id, why:'Urgente e importante' }));
   items.filter(i=>_live(i) && i.date===todayStr()).forEach(i=>push({ id:i.id, why:'De tu día' }));
   return list;
@@ -2495,8 +2492,8 @@ function arLate(id, to){ _ar.late[id].to = to; _ar.prio = null; _arRender(); }
 function arLateD(id, v){ _ar.late[id].d = v; }
 function arFam(on){ _ar.fam.on = on; _arRender(); }
 function arFamT(k, v){ _ar.fam[k] = v; }
-function arExCat(id){ _ar.exCat = id; const t = _arExciteTasks(); _ar.exTask = t[0] ? t[0].id : null; _ar.prio = null; _arRender(); }
-function arExTask(id){ _ar.exTask = _ar.exTask===id ? null : id; _ar.prio = null; _arRender(); }
+function arExCat(id){ if (_ar.exTask===id) { _ar.exTask = null; _ar.exSub = null; } else { _ar.exTask = id; const s0 = _arProjSubs(id)[0]; _ar.exSub = s0 ? s0._k : null; } _ar.prio = null; _arRender(); }
+function arExSub(k){ _ar.exSub = k; _ar.prio = null; _arRender(); }
 function arFrog(id){ _ar.frog = _ar.frog===id ? null : id; _ar.prio = null; _arRender(); }
 function arSwap(k){ _ar.prio = _arPrio(); _ar.swap = k; _arRender(); }
 function arSwapTo(k, v){ const P = _arPrio(); const id = Number(v); if (id) P[k] = { id, why:'La elegiste tú' }; else P.splice(k,1); _ar.prio = P; _ar.swap = null; _arRender(); }
@@ -2540,10 +2537,13 @@ function _arRender(){
       ${_ar.fam.on?`<div class="ar-card"><div class="ar-mut" style="font-weight:700">¿A qué hora?</div>
       <div class="ar-times"><input type="time" value="${_ar.fam.from}" onchange="arFamT('from',this.value)"/><span class="ar-mut">a</span><input type="time" value="${_ar.fam.to}" onchange="arFamT('to',this.value)"/></div></div>`:''}`;
   } else if (S===5) {
-    q = '¿Qué proyecto te emociona hoy?'; sub = 'Una tarea de ahí entra a tu día como recompensa.';
-    const cs = _arExciteCats();
-    body = `<div class="ar-chips">${cs.map(c=>`<button type="button" class="ar-chip${_ar.exCat===c.id?' on':''}" onclick="arExCat(${c.id})">${h(c.name)}</button>`).join('')}</div>
-      ${_ar.exCat!=null?`<div class="ar-mut" style="font-weight:700;margin-top:6px">Te propongo hoy</div>${_arExciteTasks().map(t=>_arOpt(_ar.exTask===t.id, h(t.text), `arExTask(${t.id})`)).join('')||'<div class="ar-empty">No hay tareas pendientes de este proyecto.</div>'}`:''}`;
+    q = '¿Qué proyecto te emociona hoy?'; sub = 'Entra a tu día como recompensa.';
+    const ps = _arProjects();
+    body = ps.length ? `<div class="ar-chips">${ps.map(t=>`<button type="button" class="ar-chip${_ar.exTask===t.id?' on':''}" onclick="arExCat(${t.id})">${h(t.text)}</button>`).join('')}</div>
+      ${_ar.exTask!=null ? (()=>{ const subs = _arProjSubs(_ar.exTask);
+        return subs.length ? `<div class="ar-mut" style="font-weight:700;margin-top:6px">Siguiente paso</div>${subs.slice(0,4).map(x=>_arOpt(_ar.exSub===x._k, h(x.text), `arExSub(${x._k})`)).join('')}`
+                           : `<div class="ar-mut" style="margin-top:6px">Este proyecto no tiene pasos todavía; entra completo a tu día.</div>`; })() : ''}`
+      : '<div class="ar-empty">No tienes proyectos en la Bandeja (pestaña Proyectos). Puedes saltar este paso.</div>';
   } else if (S===6) {
     q = '¿Qué no te emociona pero tiene que salir?'; sub = 'Va primero, para quitártela temprano.';
     const ft = _arFrogTasks();
