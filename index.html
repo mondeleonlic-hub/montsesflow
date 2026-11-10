@@ -876,6 +876,9 @@ body.ar-open{overflow:hidden}
 .ar-bh{font-size:.68rem;opacity:.7;margin-top:2px}
 .pz-arr{margin-top:6px;border:none;background:none;padding:0;font:inherit;font-size:.78rem;font-weight:700;color:var(--accent);cursor:pointer}
 .pz-arr:hover{text-decoration:underline}
+
+/* Dejar presionada una tarea no debe abrir el menú de copiar del iPhone */
+#panel-log .dy-task .dy-text{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 </style>
 </head>
 <body>
@@ -3070,8 +3073,32 @@ function taskClick(e, id) {
     return;
   }
   if (_sel.size) { _sel.clear(); renderCurrent(); }
-  openEditModal(id);
+  // Esperar un instante: si llega un segundo clic es doble clic (JAM SESH), no editar
+  if (_lpFired) { _lpFired = false; return; }
+  clearTimeout(_tcT); _tcT = setTimeout(()=>openEditModal(id), 240);
 }
+let _tcT = null, _lpFired = false, _lpT = null;
+// Doble clic (Mac) o dejar presionada (celular) una tarea del Log → JAM SESH directo
+document.addEventListener('dblclick', e=>{
+  const row = e.target.closest && e.target.closest('#panel-log .dy-task:not(.done)');
+  if (!row || e.target.closest('button,.dy-check,.dy-grip')) return;
+  clearTimeout(_tcT); e.preventDefault(); window.getSelection && window.getSelection().removeAllRanges();
+  openJamModal(Number(row.dataset.id));
+});
+document.addEventListener('touchstart', e=>{
+  const row = e.target.closest && e.target.closest('#panel-log .dy-task:not(.done)');
+  if (!row || e.target.closest('button,.dy-check,.dy-grip') || e.touches.length>1) return;
+  const t = e.touches[0], x0 = t.clientX, y0 = t.clientY;
+  clearTimeout(_lpT);
+  _lpT = setTimeout(()=>{ _lpFired = true; if (navigator.vibrate) navigator.vibrate(15); openJamModal(Number(row.dataset.id));
+    // que el dedo al soltar no cierre el menú recién abierto
+    const eat = ev => { ev.stopPropagation(); ev.preventDefault(); };
+    document.addEventListener('click', eat, true); setTimeout(()=>{ document.removeEventListener('click', eat, true); _lpFired = false; }, 700); }, 500);
+  const cancel = ev => { const p = ev.touches && ev.touches[0]; if (!p || Math.abs(p.clientX-x0)>8 || Math.abs(p.clientY-y0)>8) { clearTimeout(_lpT); off(); } };
+  const end = () => { clearTimeout(_lpT); off(); };
+  const off = () => { document.removeEventListener('touchmove', cancel); document.removeEventListener('touchend', end); document.removeEventListener('touchcancel', end); };
+  document.addEventListener('touchmove', cancel, {passive:true}); document.addEventListener('touchend', end); document.addEventListener('touchcancel', end);
+}, {passive:true});
 function copySelection(ids) {
   const list = (ids || [..._sel]).map(id=>items.find(i=>i.id===id)).filter(Boolean);
   if (!list.length) return;
