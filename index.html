@@ -2764,7 +2764,7 @@ function _sortDayPend(list, D) {
   const _tk = i => { if (!i.time) return _nowM; const [a,b] = i.time.split(':').map(Number); return a*60+(b||0); };
   const _mo = _dayEntry(D).ord || [], _mi = i => { const k = _mo.indexOf(i.id); return k<0 ? 1e6 : k; };
   return list.sort((a,b)=>
-    _mi(a)-_mi(b) || _tk(a)-_tk(b) || (a.time?0:1)-(b.time?0:1) || _pi(a)-_pi(b) || _eis(a)-_eis(b) || (a.priority||3)-(b.priority||3));
+    _tk(a)-_tk(b) || (a.time?0:1)-(b.time?0:1) || _mi(a)-_mi(b) || _pi(a)-_pi(b) || _eis(a)-_eis(b) || (a.priority||3)-(b.priority||3));
 }
 
 function dayRowOver(e) {
@@ -2787,9 +2787,19 @@ function dayReorder(e, targetId, D) {
   const cur = _sortDayPend(items.filter(i=>!i.archived && !i.done && i.date===D), D).map(i=>i.id).filter(id=>id!==dragged.id);
   let idx = cur.indexOf(target.id); if (idx < 0) idx = cur.length; else if (after) idx++;
   cur.splice(idx, 0, dragged.id);
+  // La tarea toma la hora del lugar donde la sueltas
+  const get = x => items.find(i=>i.id===x), prev = get(cur[idx-1]), next = get(cur[idx+1]);
+  const mm = t => { const [a,b] = t.split(':').map(Number); return a*60+(b||0); };
+  const hh = m => { m = Math.max(6*60, Math.min(23*60+45, Math.round(m/15)*15)); return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); };
+  const old = dragged.time || '';
+  if (prev && prev.time && next && next.time) { dragged.time = hh((mm(prev.time)+mm(next.time))/2); if (mm(dragged.time) < mm(prev.time)) dragged.time = prev.time; }
+  else if (prev && prev.time) dragged.time = hh(mm(prev.time)+30);
+  else if (next && next.time) dragged.time = hh(mm(next.time)-30);
+  else dragged.time = '';
   const en = _dayEntry(D); en.ord = cur; _putEntry(en);
   _dragId = null;
   save(); renderCurrent();
+  if (dragged.time !== old) showToast(dragged.time ? 'Quedó a las ' + dragged.time : 'Quedó sin hora');
 }
 
 function renderLogDiario() {
