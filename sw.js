@@ -1,8 +1,8 @@
 // Montse's Flow · funciona sin internet y se actualiza sola.
 // 1) Al instalarse guarda una copia de la app (si algún archivo falla, guarda los demás).
 // 2) Al abrir: intenta la versión nueva, pero si la red no responde en 3 s usa la copia guardada.
-const CACHE = 'mf-v3';
-const SHELL = ['./', './index.html', './manifest.json', './icons/icon-192-v2.png', './icons/icon-512.png', './icons/apple-touch-icon-v2.png'];
+const CACHE = 'mf-v4';
+const SHELL = ['./', './index.html', './manifest.json', './icons/icon-192-v3.png', './icons/icon-512-v3.png', './icons/apple-touch-icon-v3.png', './icons/star.svg'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(SHELL.map(u => c.add(new Request(u, {cache: 'reload'})).catch(() => null)))));
   self.skipWaiting();
