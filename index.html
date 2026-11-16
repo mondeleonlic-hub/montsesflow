@@ -1787,6 +1787,56 @@ function hugoNoJueves() {
   });
   seeds.push(KEY); save();
 }
+// Pendientes que Montse pidió agregar a la Bandeja (16-nov-2026). Se agregan una sola vez, sin fecha.
+function seedBandejaNov16() {
+  const KEY = 'bandeja-2026-11-16';
+  if (seeds.includes(KEY)) return;
+  if (items.some(i=>i.seed===KEY)) { seeds.push(KEY); save(); return; }
+  const C = re => (cats.find(c=>re.test(c.name||'')) || {}).id ?? null;
+  const ADM = C(/^admon/i), EST = C(/estrategia/i), RH = C(/recursos humanos|^rh$/i), FOOD = C(/operaci[oó]n food/i), CW = C(/operaci[oó]n carwash/i), PER = C(/^personal/i);
+  const L = [
+    // Patio
+    ['Pedirle a Benji el corte de agosto a octubre', ADM],
+    ['Confirmar si se me pagó el 7.5% de mayo a julio ($15,278)', ADM],
+    ['Sacar el costo de comida de octubre (compras de Food ÷ ventas de Food)', FOOD],
+    ['Escribir quién es responsable de qué en Patio', EST],
+    ['Habilitar los 4 carriles extra en Refugio', CW],
+    ['Empezar la medición semanal de Food (costo de comida, tickets, ticket promedio, captura)', FOOD],
+    ['Contratar lavadores para Álamos', RH],
+    ['Definir el perfil del coordinador que sí prospera', RH],
+    ['Reclutar coordinadores solo de 90 puntos para arriba', RH],
+    ['Armar la propuesta a Benji: 85/15 firmado, sueldo por puesto, % de la mejora, colchón, base con el promedio anual', EST],
+    ['Firmar el acuerdo con Benji', EST],
+    ['Plan anti-lluvia: membresías, detallados, garantía de lluvia y flotillas', EST],
+    ['Negociar el descuento con Damián (PDLA) y liquidarlo', ADM],
+    ['Renegociar con AGLL y BPL', ADM],
+    // Deudas personales
+    ['Pedir mi reporte de Buró', PER],
+    ['Mandar la carta a la UNE de HSBC por el coche', PER, '', 'Correo: mexico_une@hsbc.com.mx'],
+    ['Recuperar la factura del coche', PER],
+    ['Hacer la lista de a quién le debo y cuánto ($95,000 en total)', PER],
+    // Con Bren
+    ['Proponerle a Bren la primera salida', PER],
+    ['Elegir club de pádel', PER],
+    ['Plan con Eunice, sin hablar de Patio', PER],
+    ['Apartar mi mitad del enganche (~$250,000)', PER],
+    // NFC
+    ['NFC · Dejar listo el kit', null],
+    ['NFC · Vender 5 tarjetas en un mes', null],
+    ['NFC · Facturar desde la primera venta', null],
+    // Hábitos recurrentes (sin fecha; la repetición arranca cuando la pongas en un día)
+    ['Salida chica con Bren', PER, 'weekly'],
+    ['Una idea: leer, escribir y conversar', PER, 'weekly'],
+    ['20 minutos con cada coordinador', RH, 'weekly'],
+    ['Medición de Food (lunes)', FOOD, 'weekly'],
+    ['Salida grande con Bren', PER, 'monthly'],
+    ['Revisar los números de Patio', ADM, 'monthly'],
+  ];
+  const now = new Date().toISOString();
+  L.forEach(([text, cat, recur, note]) => items.push({ id:nextId++, text, cat, cat_key:'todo', priority:3, date:'', time:'', deadline:'', delegado:'',
+    recur:recur||'', important:null, urgent:null, note:note||'', subtasks:[], done:false, archived:false, seed:KEY, created:now }));
+  seeds.push(KEY); save();
+}
 function runMigrations() {
   normalizeCats();
   migrateIcons();
@@ -1798,6 +1848,7 @@ function runMigrations() {
   dropNfcCat();
   catsV2();
   seedAuditorias();
+  seedBandejaNov16();
   auditoriasToRH();
   hugoNoJueves();
 }
