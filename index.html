@@ -886,6 +886,32 @@ body.ar-open{overflow:hidden}
 .dy-task{transition:transform .15s ease}
 .dy-task.dy-dragging{transition:none;position:relative;z-index:5;background:#fff;box-shadow:0 10px 24px rgba(107,122,78,.18);border-radius:12px}
 body.dy-noselect{user-select:none;-webkit-user-select:none}
+
+/* ===== Metas con número + compromiso semanal ===== */
+.pg-wrap{margin-top:16px}
+.pg-head{display:flex;align-items:baseline;justify-content:space-between;margin:0 2px 10px}
+.pg-head h2{font-size:1.05rem;font-weight:900;letter-spacing:-.01em;margin:0}
+.pg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.pg-card{cursor:pointer;margin:0}
+.pg-mid{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.pg-num{font-size:1.4rem;font-weight:900;letter-spacing:-.02em;line-height:1.15;min-width:0}
+.pg-num .pg-of{display:block;margin-top:1px}
+.pg-of{font-size:.85rem;font-weight:700;color:var(--text2);letter-spacing:0}
+.pg-add{border:1.5px solid #CFDAB8;background:#EEF2E6;color:var(--accent);font:inherit;font-size:.74rem;font-weight:800;border-radius:99px;padding:6px 12px;cursor:pointer;white-space:nowrap}
+.pg-add:hover{background:#E3EAD5}
+.pg-addbox{display:inline-flex;gap:6px;align-items:center}
+.pg-addbox input{width:86px;height:32px;border:1.5px solid #CFDAB8;border-radius:10px;padding:0 8px;font:inherit;font-size:16px}
+.pg-addbox button{height:32px;border:1.5px solid #CFDAB8;background:#EEF2E6;color:var(--accent);font:inherit;font-size:.74rem;font-weight:800;border-radius:10px;padding:0 10px;cursor:pointer}
+.pg-foot{display:flex;justify-content:space-between;gap:10px;margin-top:8px;font-size:.74rem;color:var(--text2)}
+.pg-foot b{color:var(--text);font-weight:700}
+.pg-st{font-weight:700;white-space:nowrap}
+.pg-ok{color:var(--accent)}.pg-warn{color:#B9772E}.pg-bad{color:#C0533A}
+.pg-card .pz-bar .f{background:var(--accent)}
+.hb-freq{margin-top:2px;border:1px solid #DADDD3;border-radius:6px;background:#fff;font:inherit;font-size:.66rem;padding:1px 4px;color:var(--text)}
+.ar-wkin{display:flex;align-items:center;gap:6px;font-weight:800;color:var(--accent)}
+.ar-wkin input{flex:1;height:42px;border:1.5px solid #E3E6DD;border-radius:12px;padding:0 12px;font:inherit;font-size:16px;font-weight:800;color:#1C2018;background:#fff}
+.ar-wkin small{font-size:.8rem;color:#6b7280;font-weight:600}
+#meta-mode-row .eis-chip.on-i{background:#EEF2E6;border-color:#CFDAB8;color:var(--accent)}
 </style>
 </head>
 <body>
@@ -1314,11 +1340,38 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
         <label class="modal-label">Descripción</label>
         <textarea class="modal-textarea" id="meta-note" placeholder="¿Por qué es importante?"></textarea>
       </div>
-      <div class="modal-row">
+      <div>
+        <label class="modal-label">¿Cómo mides el avance?</label>
+        <div class="eis-row" id="meta-mode-row">
+          <button type="button" class="eis-chip" data-m="num" onclick="metaMode('num')">Con número</button>
+          <button type="button" class="eis-chip" data-m="hitos" onclick="metaMode('hitos')">Con hitos</button>
+        </div>
+        <input type="hidden" id="meta-mode" value="num"/>
+      </div>
+      <div class="modal-row meta-num">
         <div>
+          <label class="modal-label">Llevo</label>
+          <input class="modal-input" type="number" id="meta-cur" min="0" value="0"/>
+        </div>
+        <div>
+          <label class="modal-label">Meta</label>
+          <input class="modal-input" type="number" id="meta-target" min="1" placeholder="20"/>
+        </div>
+      </div>
+      <div class="modal-row meta-num">
+        <div>
+          <label class="modal-label">Unidad</label>
+          <input class="modal-input" id="meta-unit" placeholder="tarjetas, $, semanas…"/>
+        </div>
+        <div>
+          <label class="modal-label">Botón rápido suma</label>
+          <input class="modal-input" type="number" id="meta-step" min="1" value="1"/>
+        </div>
+      </div>
+      <div class="modal-row">
+        <div class="meta-pctbox" style="display:none">
           <label class="modal-label">Progreso manual (%)</label>
           <input class="modal-input" type="number" id="meta-pct" min="0" max="100" value="0"/>
-          <div style="font-size:.65rem;color:var(--text2);margin-top:3px">Solo si no usas hitos</div>
         </div>
         <div>
           <label class="modal-label">Fecha límite</label>
@@ -1327,7 +1380,7 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
       </div>
       <label class="meta-ns"><input type="checkbox" id="meta-notstarted"/> Aún no empiezo <span>· la meta no corre hasta que lo quites</span></label>
       <div>
-        <label class="modal-label">Hitos / Pasos</label>
+        <label class="modal-label" id="meta-ms-lbl">Hitos / Pasos</label>
         <div class="sub-list" id="meta-ms-list"></div>
         <div style="display:flex;gap:6px;margin-top:6px">
           <input class="modal-input" id="meta-ms-inp" placeholder="Agregar hito…" style="flex:1" onkeydown="if(event.key==='Enter'){event.preventDefault();addMetaMilestone()}"/>
@@ -2246,6 +2299,9 @@ function _habitStreak(id){
   }
   return streak;
 }
+function _habFreq(hb){ return Number(hb && hb.freq) || 0; }   // 0 = diario; n = n veces por semana
+function _habWeekCount(id){ const hl = _getHlog(), mon = _weekStart(); return Object.entries(hl).filter(([d,v])=>d>=mon && v && v[id]).length; }
+function setHabFreq(id, v){ const hs = _getHabits(); const x = hs.find(y=>y.id===id); if (x) { x.freq = Number(v)||0; _saveHabits(hs); } renderLogDiario(); }
 function _habitWeek7(id){
   const hl=_getHlog(),res=[],now=new Date();
   for(let i=6;i>=0;i--){
@@ -2460,11 +2516,28 @@ function openArranque(){
   _ar.lateIds = late.map(i=>i.id);
   _arRender();
 }
-function _arSaveDraft(){ const today = todayStr(), e = _dayEntry(today); const { step, swap, ...ans } = _ar; e.arr = Object.assign({}, e.arr, { ans }); _putEntry(e); }
+function _arSaveDraft(){ const today = todayStr(), e = _dayEntry(today); const { step, swap, wk, wkDone, wkEdit, ...ans } = _ar; e.arr = Object.assign({}, e.arr, { ans }); _putEntry(e); }
 function arSkip(){ const today = todayStr(), e = _dayEntry(today); e.arr = Object.assign({}, e.arr, { skipped:true }); _putEntry(e); _arClose(); showToast('Puedes hacer tu arranque más tarde desde Pulso'); }
 function _arClose(){ _ar = null; const o = document.getElementById('arranque'); if (o) o.remove(); document.body.classList.remove('ar-open'); renderCurrent(); }
 function arBack(){ if (_ar.step > 1) { _ar.step--; _ar.swap = null; _arRender(); } }
+// ---- Metas en el Arranque
+function _arGoals(){ return goals.filter(g=>!g.notStarted && _metaPct(g) < 100); }
+function _arGoalToday(g){ const c = _weekCommit()[g.id];
+  if (_gMode(g)==='num' && c) { const falta = Math.max(0, c - _gWeek(g)); return falta ? `Esta semana te falta ${_gFmt(g, falta)}` : 'Compromiso de la semana cumplido'; }
+  const m = c ? (g.milestones||[]).find(x=>String(x.id)===String(c)) : null; if (m && !m.done) return 'Esta semana: ' + m.text;
+  const nx = _gNextMs(g); return nx ? 'Siguiente: ' + nx.text : (_gMode(g)==='num' ? `Llevas ${_gFmt(g, g.cur||0)} de ${_gFmt(g, g.target)}` : 'Sin pasos definidos'); }
+function _arGoalTask(g){ const c = _weekCommit()[g.id];
+  if (_gMode(g)==='num' && c) { const falta = Math.max(0, c - _gWeek(g)); if (falta) return `${g.title}: avanzar ${_gFmt(g, falta)}`; }
+  const m = (c ? (g.milestones||[]).find(x=>String(x.id)===String(c) && !x.done) : null) || _gNextMs(g);
+  return m ? `${g.title}: ${m.text}` : `${g.title}: avanzar`; }
+function arWk(id, v){ _ar.wk[id] = v; }
+function arWkSave(){ const w = _dayEntry('week-'+_weekStart()); w.commit = {};
+  Object.entries(_ar.wk||{}).forEach(([k,v])=>{ if (v!=='' && v!=null) w.commit[k] = isNaN(Number(v)) ? v : Number(v); });
+  _putEntry(w); _ar.wkDone = true; _ar.wkEdit = false; _ar.prio = null; _arRender(); }
+function arWkEdit(){ _ar.wkEdit = true; _ar.wkDone = false; _ar.wk = null; _arRender(); }
+function arExGoal(id){ _ar.exGoal = _ar.exGoal===id ? null : id; _ar.prio = null; _arRender(); }
 function arNext(){
+  if (_ar.step === 5 && _ar.wk && !_ar.wkDone) { arWkSave(); return; }
   if (_ar.step === 7 && !_arPrio().length) { showToast('Elige al menos una prioridad'); return; }
   _arSaveDraft();
   if (_ar.step < AR_STEPS) { _ar.step++; _ar.swap = null; _arRender(); } else arFinish();
@@ -2493,7 +2566,7 @@ function _arPrio(){
   const push = x => { if (x && list.length<3 && !list.some(y=>(y.id&&y.id===x.id)||(y.key&&y.key===x.key))) list.push(x); };
   if (_ar.frog) push({ id:_ar.frog, why:'No te emociona · va primero' });
   _arCoverTasks().filter(c=>!c.later).forEach(c=>push(c));
-  if (_ar.exTask) { const sb = _arProjSubs(_ar.exTask).find(x=>x._k===_ar.exSub); push({ id:_ar.exTask, why:'Te emociona' + (sb ? ' · siguiente: ' + sb.text : '') }); }
+  if (_ar.exGoal) { const g = goals.find(x=>x.id===_ar.exGoal); if (g) push({ key:'goal-'+g.id, text:_arGoalTask(g), why:'Empuja tu meta · ' + g.title, mins:60 }); }
   items.filter(i=>_live(i) && i.date===todayStr() && i.urgent===true && i.important===true).forEach(i=>push({ id:i.id, why:'Urgente e importante' }));
   items.filter(i=>_live(i) && i.date===todayStr()).forEach(i=>push({ id:i.id, why:'De tu día' }));
   return list;
@@ -2538,13 +2611,14 @@ function arFinish(){
   // lavadores
   const keyId = {};
   _arCoverTasks().forEach(c=>{ const t = mk(c.text, c.later ? { date:_arAdd(today,1), important:true } : { urgent:true, important:true }); keyId[c.key] = t.id; });
+  if (_ar.exGoal) { const g = goals.find(x=>x.id===_ar.exGoal); if (g) { const t = mk(_arGoalTask(g), { cat:null, goalId:g.id }); keyId['goal-'+g.id] = t.id; } }
   // prioridades → ids reales
   const prio = _arPrio().map(x=>x.id || keyId[x.key]).filter(Boolean).slice(0,3);
   prio.forEach(id=>{ const t = items.find(i=>i.id===id); if (t && t.date!==today) t.date = today; });
   // horas sugeridas a las prioridades
   const plan = _arPlan();
   plan.filter(b=>b.kind==='p').forEach(b=>{ const id = b.ref.id || keyId[b.ref.key]; const t = items.find(i=>i.id===id); if (t && !t.time) t.time = _hm(b.from).padStart(5,'0'); });
-  const e = _dayEntry(today); const { step, swap, ...ans } = _ar;
+  const e = _dayEntry(today); const { step, swap, wk, wkDone, wkEdit, ...ans } = _ar;
   e.prio = prio; e.fam = _ar.fam.on ? { from:_ar.fam.from, to:_ar.fam.to } : null;
   e.arr = { done:true, ans, at:new Date().toISOString() };
   _putEntry(e); save();
@@ -2604,13 +2678,21 @@ function _arRender(){
       ${_ar.fam.on?`<div class="ar-card"><div class="ar-mut" style="font-weight:700">¿A qué hora?</div>
       <div class="ar-times"><input type="time" value="${_ar.fam.from}" onchange="arFamT('from',this.value)"/><span class="ar-mut">a</span><input type="time" value="${_ar.fam.to}" onchange="arFamT('to',this.value)"/></div></div>`:''}`;
   } else if (S===5) {
-    q = '¿Qué proyecto te emociona hoy?'; sub = 'Entra a tu día como recompensa.';
-    const ps = _arProjects();
-    body = ps.length ? `<div class="ar-chips">${ps.map(t=>`<button type="button" class="ar-chip${_ar.exTask===t.id?' on':''}" onclick="arExCat(${t.id})">${h(t.text)}</button>`).join('')}</div>
-      ${_ar.exTask!=null ? (()=>{ const subs = _arProjSubs(_ar.exTask);
-        return subs.length ? `<div class="ar-mut" style="font-weight:700;margin-top:6px">Siguiente paso</div>${subs.slice(0,4).map(x=>_arOpt(_ar.exSub===x._k, h(x.text), `arExSub(${x._k})`)).join('')}`
-                           : `<div class="ar-mut" style="margin-top:6px">Este proyecto no tiene pasos todavía; entra completo a tu día.</div>`; })() : ''}`
-      : '<div class="ar-empty">No tienes proyectos en la Bandeja (pestaña Proyectos). Puedes saltar este paso.</div>';
+    const gl = _arGoals(), wk = _weekCommit(), needWeek = gl.length && (new Date(today+'T12:00:00').getDay()===1 || !Object.keys(wk).length || _ar.wkEdit);
+    if (!gl.length) { q = '¿Qué meta empujas hoy?'; sub = 'Aún no tienes metas activas.'; body = '<div class="ar-empty">Crea tus metas en la pestaña Metas y aquí te ayudo a empujarlas cada día.</div>'; }
+    else if (needWeek && !_ar.wkDone) {
+      if (!_ar.wk) { _ar.wk = {}; gl.forEach(g=>{ const prev = wk[g.id]; _ar.wk[g.id] = prev!=null ? prev : (_gMode(g)==='num' ? (g.step||1) : ((_gNextMs(g)||{}).id ?? '')); }); }
+      q = 'Tu compromiso de esta semana'; sub = 'Cuánto empujas cada meta de lunes a domingo.';
+      body = gl.map(g=>{ const num = _gMode(g)==='num';
+        const ctl = num ? `<span class="ar-wkin">${(g.unit||'').trim()==='$'?'$':''}<input type="number" min="0" value="${_ar.wk[g.id]}" onchange="arWk(${g.id},this.value)"/>${(g.unit||'').trim()&&(g.unit||'').trim()!=='$'?` <small>${h(g.unit)}</small>`:''}</span>`
+          : `<select class="ar-sel" onchange="arWk(${g.id},this.value)"><option value="">Sin compromiso</option>${(g.milestones||[]).filter(m=>!m.done).map(m=>`<option value="${m.id}"${String(m.id)===String(_ar.wk[g.id])?' selected':''}>${h(m.text)}</option>`).join('')}</select>`;
+        return `<div class="ar-card" style="gap:8px"><div class="ar-row"><b class="ar-tt">${h(g.title)}</b><span class="ar-mut">${num?`llevas ${h(_gFmt(g,g.cur||0))}`:''}</span></div>${ctl}</div>`; }).join('');
+      btn = 'Guardar mi semana';
+    } else {
+      q = '¿Qué meta empujas hoy?'; sub = 'Entra a tu día como prioridad.';
+      body = gl.map(g=>_arOpt(_ar.exGoal===g.id, `${h(g.title)}<div class="ar-why" style="font-weight:600">${h(_arGoalToday(g))}</div>`, `arExGoal(${g.id})`)).join('')
+        + `<button type="button" class="ar-link" style="align-self:flex-start;margin-top:4px" onclick="arWkEdit()">Cambiar mi compromiso de la semana</button>`;
+    }
   } else if (S===6) {
     q = '¿Qué no te emociona pero tiene que salir?'; sub = 'Va primero, para quitártela temprano.';
     const ft = _arFrogTasks();
@@ -2663,8 +2745,9 @@ function renderDash() {
   const habits = _getHabits();
   let hRate = 0, hLevel = 'na', hMarks = 0;
   if (habits.length) {
-    hMarks = habits.reduce((s,hb)=>s+_habitWeek7(hb.id).filter(w=>w.done).length, 0);
-    hRate = Math.round(hMarks/(habits.length*7)*100);
+    hMarks = habits.reduce((s,hb)=>s+Math.min(_habFreq(hb)||7, _habitWeek7(hb.id).filter(w=>w.done).length), 0);
+    var hTarget = habits.reduce((s,hb)=>s+(_habFreq(hb)||7), 0);
+    hRate = Math.round(hMarks/hTarget*100);
     hLevel = hRate>=70 ? 'ok' : hRate>=40 ? 'warn' : 'bad';
   }
 
@@ -2686,34 +2769,32 @@ function renderDash() {
       <div class="pz-li"><i style="background:${RING.t}"></i><div><div class="pz-k" style="color:${RING_TXT.t}">Tareas</div>
         <div class="pz-v">${pDone}<small> / ${planned.length}</small></div><div class="pz-s">${tSub}</div></div></div>
       <div class="pz-li"><i style="background:${RING.h}"></i><div><div class="pz-k" style="color:${RING_TXT.h}">Hábitos</div>
-        ${habits.length ? `<div class="pz-v">${hRate}%</div><div class="pz-s">${hMarks} de ${habits.length*7} marcas en 7 días</div>`
+        ${habits.length ? `<div class="pz-v">${hRate}%</div><div class="pz-s">${hMarks} de ${hTarget} marcas en 7 días</div>`
           : `<div class="pz-v" style="font-size:1.1rem">Sin hábitos</div><div class="pz-s"><a href="#" onclick="_habEdit=true;switchTab('log');return false">Agrégalos en Log diario</a></div>`}</div></div>
       <div class="pz-li"><i style="background:${RING.m}"></i><div><div class="pz-k" style="color:${RING_TXT.m}">Metas</div>
         <div class="pz-v">${mWord}</div><div class="pz-s">${gs.length?`${gs.length} meta${_s(gs.length)} activa${_s(gs.length)} · ${mPct}% en promedio`:'<a href="#" onclick="switchTab(\'metas\');return false">Crea tu primera meta</a>'}</div></div></div>
     </div>
   </section>`;
 
-  // Metas (cuadritos + barra con línea de ritmo)
-  const goalCards = gs.slice(0,2).map(({g,s})=>{
-    const col = g.color || RING.m;
-    const total = s.total && s.total <= 40 ? s.total : 0;
-    const expN = s.expected!==null && total ? Math.min(total, Math.round(s.expected/100*total)) : null;
-    const squares = total ? `<div class="pz-sq">${Array.from({length:total}).map((_,k)=>{
-      if (k < s.done) return `<span style="background:${col}"></span>`;
-      if (expN && k === expN-1 && expN > s.done) return `<span style="background:#fff;box-shadow:inset 0 0 0 2px ${col}" title="A hoy deberías ir aquí"></span>`;
-      return '<span></span>';
-    }).join('')}</div>` : '';
+  // Metas: todas, con su número, botón para sumar y compromiso de la semana
+  const goalCards = gs.filter(x=>x.s.pct<100 || _gAdd===x.g.id).map(({g,s})=>{
+    const num = _gMode(g)==='num' && g.target;
     const days = g.due ? Math.max(0, Math.round((new Date(g.due+'T12:00:00') - new Date(today+'T12:00:00'))/86400000)) : null;
-    const head = total ? `${s.done} de ${total}` : `${s.pct}%`;
-    const paceTxt = s.expected!==null && s.pct<100 ? (total ? `La línea: a hoy deberías llevar ${expN}` : `La línea: a hoy deberías ir en ${s.expected}%`) : s.label;
-    return `<section class="pz-card" style="cursor:pointer" onclick="switchTab('metas')">
+    const head = num ? `${_gFmt(g, g.cur||0)} <span class="pg-of">de ${_gFmt(g, g.target)}</span>` : (s.total ? `${s.done} de ${s.total} <span class="pg-of">hitos</span>` : `${s.pct}%`);
+    const commit = _gCommitTxt(g), nx = _gNextMs(g);
+    const line = commit ? `Esta semana: <b>${h(commit)}</b>` : (nx ? `Siguiente: <b>${h(nx.text)}</b>` : '');
+    const add = num ? (_gAdd===g.id
+      ? `<span class="pg-addbox" onclick="event.stopPropagation()"><input id="gadd-${g.id}" type="number" value="${g.step||1}" onkeydown="if(event.key==='Enter')goalAddSave(${g.id},event);if(event.key==='Escape')goalAddOpen(${g.id},event)"/><button onclick="goalAddSave(${g.id},event)">Sumar</button></span>`
+      : `<button class="pg-add" onclick="goalAddOpen(${g.id},event)">+ ${h(_gFmt(g, g.step||1))}</button>`) : '';
+    return `<section class="pz-card pg-card" onclick="openMetaModal(${g.id})">
       <div class="pz-row"><div class="pz-lbl">${h(g.title)}</div><div class="pz-s" style="margin:0;white-space:nowrap">${g.due?`vence ${fmtDate(g.due)} · ${days} día${_s(days)}`:'sin fecha'}</div></div>
-      <div style="font-size:1rem;font-weight:800;margin-top:6px">${head} <span style="font-weight:600;color:var(--text2);font-size:.82rem">· ${s.label}</span></div>
-      ${squares}
-      <div class="pz-bar"><div class="f" style="width:${s.pct}%;background:${col}"></div>${s.expected!==null&&s.pct<100?`<div class="m" style="left:calc(${s.expected}% - 1px)"></div>`:''}</div>
-      <div class="pz-row pz-s" style="margin:0"><span>0</span><span>${paceTxt}</span><span>${total||'100%'}</span></div>
+      <div class="pg-mid"><div class="pg-num">${head}</div>${add}</div>
+      <div class="pz-bar"><div class="f" style="width:${s.pct}%"></div>${s.expected!==null&&s.pct<100?`<div class="m" style="left:calc(${s.expected}% - 1px)" title="A hoy deberías ir aquí"></div>`:''}</div>
+      <div class="pg-foot"><span>${line}</span><span class="pg-st pg-${s.level}">${s.label}</span></div>
     </section>`;
-  }).join('') || `<section class="pz-card"><div class="pz-lbl">Metas</div><div class="pz-s">Aún no tienes metas. <a href="#" onclick="switchTab('metas');return false">Crear una</a></div></section>`;
+  }).join('');
+  const metasHtml = goalCards ? `<section class="pg-wrap"><div class="pg-head"><h2>Tus metas</h2><button class="pl-link" style="margin:0" onclick="switchTab('metas')">Ver todas</button></div><div class="pg-grid">${goalCards}</div></section>`
+    : `<section class="pz-card"><div class="pz-lbl">Metas</div><div class="pz-s">Aún no tienes metas. <a href="#" onclick="switchTab('metas');return false">Crear una</a></div></section>`;
 
   // Energía
   let pool = items.filter(i=>i.done && inWk(i.doneDate)), basis = 'hecha';
@@ -2778,7 +2859,8 @@ function renderDash() {
 
   el.innerHTML = `<div class="pz">
     <div><div class="pl-week">Semana ${_fmtRange(mon,sun)} · ${h(dayName)} ${new Date(today+'T12:00:00').getDate()}</div><h1 class="pz-verdict">${verdict}</h1>${(()=>{ const a = _dayEntry(today).arr; return a&&a.done ? `<button class="pz-arr" onclick="openArranque()">Tu arranque de hoy · ver o rehacer</button>` : `<button class="pz-arr" onclick="openArranque()">Hacer mi arranque de hoy</button>`; })()}</div>
-    <div class="pz-top">${ringsHtml}<div class="pz-side">${goalCards}${energyHtml}</div></div>
+    <div class="pz-top">${ringsHtml}<div class="pz-side">${energyHtml}</div></div>
+    ${metasHtml}
     ${weekHtml}
   </div>`;
   if (_pzPlanOpen) { const q = document.getElementById('wk-q'); if (q) q.value = _planQ; _renderPlanList(); }
@@ -2957,8 +3039,12 @@ function renderLogDiario() {
         ${habits.length?`<button class="pl-link" style="margin:0" onclick="_habEdit=!_habEdit;renderLogDiario()">${_habEdit?'Listo':'Editar'}</button>`:''}
       </div></div>
     <div class="hb-wrap"><div class="dy-habits">${habits.map(hb=>{
-      const on = !!dayLog[hb.id], st = _habitStreak(hb.id), stg = _habitStage(st);
-      return `<span class="dy-hab hb2${on?' on':''}" ${_habEdit?'':`onclick="toggleHabit(${hb.id})"`}>${_plantSvg(stg[0], on)}<span class="hb-tx"><b>${h(hb.text)}</b><small>${stg[1]}</small></span>${_habEdit?`<span class="x" onclick="event.stopPropagation();removeHabit(${hb.id})" title="Quitar hábito">✕</span>`:''}</span>`;
+      const on = !!dayLog[hb.id], f = _habFreq(hb);
+      let stg;
+      if (f) { const c = _habWeekCount(hb.id); stg = [c>=f ? 3 : c>=Math.ceil(f/2) ? 2 : c ? 1 : 0, `${c} de ${f} esta semana`]; }
+      else { const st = _habitStreak(hb.id); stg = _habitStage(st); stg = [stg[0], 'Diario · ' + stg[1].replace(/^Semilla$/,'empieza hoy')]; }
+      const fsel = _habEdit ? `<select class="hb-freq" onclick="event.stopPropagation()" onchange="setHabFreq(${hb.id},this.value)">${[[0,'Diario'],[1,'1 por semana'],[2,'2 por semana'],[3,'3 por semana'],[4,'4 por semana'],[5,'5 por semana'],[6,'6 por semana']].map(([v,t])=>`<option value="${v}"${v===f?' selected':''}>${t}</option>`).join('')}</select>` : '';
+      return `<span class="dy-hab hb2${on?' on':''}" ${_habEdit?'':`onclick="toggleHabit(${hb.id})"`}>${_plantSvg(stg[0], on)}<span class="hb-tx"><b>${h(hb.text)}</b>${_habEdit?fsel:`<small>${stg[1]}</small>`}</span>${_habEdit?`<span class="x" onclick="event.stopPropagation();removeHabit(${hb.id})" title="Quitar hábito">✕</span>`:''}</span>`;
     }).join('') || '<span class="pl-sub" style="margin:0">Sin hábitos todavía. Agrega el primero ↓</span>'}</div>
       ${habits.length?harvest.grid:''}</div>
     ${_habEdit || !habits.length ? `<div style="display:flex;gap:6px;margin-top:12px">
@@ -3325,7 +3411,29 @@ function taskCard(item, showDone=false) {
 // ============================================================
 // METAS
 // ============================================================
+function _gMode(g){ return g.mode || (g.target ? 'num' : 'hitos'); }
+function _gFmt(g, v){ v = Math.round((Number(v)||0)*100)/100; const u = (g.unit||'').trim();
+  if (u==='$' || /^pesos?$/i.test(u)) return '$' + v.toLocaleString('es-MX');
+  return v.toLocaleString('es-MX') + (u ? ' ' + (Math.abs(v)===1 && /[^s]s$/i.test(u) ? u.slice(0,-1) : u) : ''); }
+function _gWeek(g){ const mon = _weekStart(); return (g.log||[]).filter(x=>x.d>=mon).reduce((a,x)=>a+(Number(x.v)||0),0); }
+function _gNextMs(g){ return (g.milestones||[]).find(m=>!m.done); }
+function metaMode(m){ document.getElementById('meta-mode').value = m;
+  document.querySelectorAll('#meta-mode-row .eis-chip').forEach(b=>b.classList.toggle('on-i', b.dataset.m===m));
+  document.querySelectorAll('.meta-num').forEach(x=>x.style.display = m==='num' ? '' : 'none');
+  const l = document.getElementById('meta-ms-lbl'); if (l) l.textContent = m==='num' ? 'Pasos (opcional, para saber qué sigue)' : 'Hitos / Pasos'; }
+let _gAdd = null;
+function goalAddOpen(id, ev){ if (ev) ev.stopPropagation(); _gAdd = _gAdd===id ? null : id; renderCurrent();
+  setTimeout(()=>{ const n = document.getElementById('gadd-'+id); if (n) { n.focus(); n.select(); } }, 30); }
+function goalAddSave(id, ev){ if (ev) ev.stopPropagation(); const g = goals.find(x=>x.id===id); const n = document.getElementById('gadd-'+id);
+  const v = Number(n && n.value); if (!g || !v) return;
+  g.cur = Math.round(((Number(g.cur)||0) + v)*100)/100; (g.log = g.log||[]).push({ d:todayStr(), v });
+  _gAdd = null; save(); renderCurrent(); showToast(`${v>0?'+':''}${_gFmt(g, v)} · llevas ${_gFmt(g, g.cur)}`); }
+function _weekCommit(){ return _dayEntry('week-'+_weekStart()).commit || {}; }
+function _gCommitTxt(g){ const c = _weekCommit()[g.id]; if (c==null || c==='') return '';
+  if (_gMode(g)==='num') return `${_gFmt(g, _gWeek(g))} de ${_gFmt(g, c)}`;
+  const m = (g.milestones||[]).find(x=>x.id==c); return m ? m.text + (m.done ? ' · listo' : '') : ''; }
 function _metaPct(g) {
+  if (_gMode(g)==='num' && g.target) return Math.max(0, Math.min(100, Math.round((Number(g.cur)||0)/g.target*100)));
   if (g.milestones && g.milestones.length) return Math.round(g.milestones.filter(m=>m.done).length/g.milestones.length*100);
   if (g.pct !== undefined && g.pct !== null) return Number(g.pct);
   if (!g.milestones || !g.milestones.length) return 0;
@@ -3454,6 +3562,11 @@ function openMetaModal(id) {
     document.getElementById('meta-due').value = g.due||'';
     document.getElementById('meta-notstarted').checked = !!g.notStarted;
     _metaMilestones = (g.milestones||[]).map(m=>({...m}));
+    document.getElementById('meta-cur').value = g.cur||0;
+    document.getElementById('meta-target').value = g.target||'';
+    document.getElementById('meta-unit').value = g.unit||'';
+    document.getElementById('meta-step').value = g.step||1;
+    metaMode(_gMode(g));
     delBtn.style.display = '';
   } else {
     document.getElementById('meta-modal-title').textContent = 'Nueva meta';
@@ -3468,6 +3581,9 @@ function openMetaModal(id) {
     document.getElementById('meta-due').value = '';
     document.getElementById('meta-notstarted').checked = false;
     _metaMilestones = [];
+    ['meta-cur','meta-target','meta-unit'].forEach(x=>document.getElementById(x).value = x==='meta-cur'?0:'');
+    document.getElementById('meta-step').value = 1;
+    metaMode('num');
     delBtn.style.display = 'none';
   }
   _renderMetaEmojiGrid(selIcon);
@@ -3490,7 +3606,13 @@ function saveMeta() {
     due: document.getElementById('meta-due').value,
     milestones: _metaMilestones.map(m=>({...m})),
     notStarted: document.getElementById('meta-notstarted').checked,
+    mode: document.getElementById('meta-mode').value,
+    cur: Number(document.getElementById('meta-cur').value)||0,
+    target: Number(document.getElementById('meta-target').value)||0,
+    unit: document.getElementById('meta-unit').value.trim(),
+    step: Number(document.getElementById('meta-step').value)||1,
   };
+  if (data.mode==='num' && !data.target) { showToast('Pon a cuánto quieres llegar'); return; }
   if (_metaMilestones.length) data.pct = null;
   { const prev = id ? goals.find(g=>g.id===Number(id)) : null;
     if (prev && prev.notStarted && !data.notStarted) data.start = todayStr(); }
