@@ -914,7 +914,22 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 #meta-mode-row .eis-chip.on-i{background:#EEF2E6;border-color:#CFDAB8;color:var(--accent)}
 
 /* MI JARDÍN */
-.jd{max-width:1100px}
+.jd{max-width:none}
+.jd-stage.jd-full{position:fixed;inset:0;z-index:500;border:0;border-radius:0;display:flex;flex-direction:column}
+.jd-full .jd-box{flex:1;min-height:0;background:#F6F8F0;overflow:hidden}
+.jd-full .jd-scene{height:100%}
+.jd-full #jd-scene{width:100%;height:100%;min-width:0;overflow:visible}
+.jd-full .jd-scene{overflow:hidden}
+.jd-full .jd-swipe{display:none}
+.jd-fs{width:42px;height:42px;border-radius:12px;border:1.5px solid var(--border);background:#fff;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.jd-fs:hover{color:var(--accent);border-color:#CFDAB8}
+.jd-hh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.jd-hh .jd-h{margin:0}
+.jd-link{border:0;background:none;color:var(--accent);font:inherit;font-size:.74rem;font-weight:800;cursor:pointer;padding:0}
+.jd-un .jd-left{display:block;color:var(--accent);font-weight:700}
+.jd-un input{width:64px;height:30px;border:1.5px solid var(--border);border-radius:8px;font:inherit;font-size:.78rem;font-weight:700;padding:0 8px;margin-right:6px;outline:none}
+.jd-un input:focus{border-color:var(--accent)}
+.jd-save{margin-top:12px;height:36px;border-radius:10px;border:1.5px solid #CFDAB8;background:var(--accent-light);color:var(--accent);font:inherit;font-size:.78rem;font-weight:800;padding:0 14px;cursor:pointer}
 .jd-stage{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden}
 .jd-box{position:relative}
 .jd-scene{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -927,7 +942,7 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 .jd-total b{display:block;font-size:1.4rem;font-weight:900;letter-spacing:-.02em;line-height:1.1;color:var(--text)}
 .jd-total span{font-size:.68rem;font-weight:700;color:var(--text2)}
 .jd-swipe{display:none;font-size:.7rem;color:var(--text2);text-align:center;padding:6px 0 0}
-.jd-time{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 18px;border-top:1px solid var(--border)}
+.jd-time{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:14px;align-items:center;padding:12px 18px;border-top:1px solid var(--border)}
 .jd-play{width:42px;height:42px;border-radius:50%;border:1.5px solid #CFDAB8;background:var(--accent-light);color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center}
 .jd-play:hover{border-color:var(--accent)}
 .jd-tl{display:grid;gap:2px}
@@ -972,7 +987,7 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 @keyframes jdFlap{from{transform:scaleX(1)}to{transform:scaleX(.25)}}
 .jd-fade{transition:opacity .6s}
 .jd-zone{cursor:pointer}
-@media(max-width:900px){.jd-row{grid-template-columns:1fr}.jd-time{grid-template-columns:auto minmax(0,1fr)}.jd-yrs{grid-column:1/-1}.jd-swipe{display:block}}
+@media(max-width:900px){.jd-row{grid-template-columns:1fr}.jd-time{grid-template-columns:auto minmax(0,1fr) auto}.jd-yrs{grid-column:1/-1}.jd-swipe{display:block}.jd-full .jd-yrs{display:none}.jd-full .jd-time{padding:8px 14px}}
 @media(prefers-reduced-motion:reduce){.jd-sw,.jd-bf,.jd-wg{animation:none}.jd-gw{transition:none}}
 </style>
 </head>
@@ -2254,7 +2269,7 @@ function switchTab(tab) {
   if (tab==='dash') renderDash();
   if (tab==='cats') renderCatsPanel();
   if (tab==='metas') renderMetas();
-  if (tab==='jardin') renderJardin(); else if (typeof jdStop==='function') jdStop();
+  if (tab==='jardin') renderJardin(); else if (typeof jdStop==='function') { jdStop(); document.body.style.overflow = ''; }
   if (tab==='log') renderLogDiario();
   if (tab==='bandeja') renderBandeja();
   if (tab==='todo') renderPanel('todo');
@@ -2502,13 +2517,13 @@ function _jdZones(){
 
 function renderJardin(){
   const el = document.getElementById('panel-jardin'); if (!el) return;
-  _jd.H = _jdData();
+  _jd.H = _jdData(); _jd.editH = false;
   if (!_jd.H.length) { el.innerHTML = `<div class="empty-state"><p>Agrega tus hábitos en el Log diario y aquí empezará a crecer tu jardín.</p></div>`; return; }
   const now = new Date(), MES = now.toLocaleDateString('es-MX',{month:'short'}).replace('.','');
   el.innerHTML = `<div class="jd">
     <div class="jd-stage">
       <div class="jd-box">
-        <div class="jd-scene" id="jd-scene-wrap"><svg id="jd-scene" viewBox="0 150 1200 410" role="img" aria-label="Mi jardín"></svg></div>
+        <div class="jd-scene" id="jd-scene-wrap"><svg id="jd-scene" viewBox="0 150 1200 410" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Mi jardín"></svg></div>
         <div class="jd-when"><b id="jd-year"></b><span id="jd-sub"></span></div>
         <div class="jd-total"><b id="jd-days"></b><span>días cuidados en total</span></div>
       </div>
@@ -2517,13 +2532,14 @@ function renderJardin(){
         <button class="jd-play" id="jd-play" onclick="jdPlay()" aria-label="Ver crecer"><svg viewBox="0 0 16 16" width="15" height="15"><path id="jd-play-ic" d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg></button>
         <div class="jd-tl"><input type="range" id="jd-tl" min="0" max="${_jdMax()}" value="${_jd.months}" oninput="jdSeek(this.value)" aria-label="Línea del tiempo">
           <div class="jd-tl-lab"><span>Hoy · ${MES} ${now.getFullYear()}</span><b id="jd-tl-end"></b></div></div>
+        <button class="jd-fs" id="jd-fs" onclick="jdFull()" aria-label="Pantalla completa" title="Pantalla completa"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path id="jd-fs-ic" d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg></button>
         <label class="jd-yrs">Ver a <select onchange="jdYears(this.value)">${[1,3,5,10,20].map(y=>`<option value="${y}" ${y===_jd.yrs?'selected':''}>${y===1?'1 año':y+' años'}</option>`).join('')}</select></label>
       </div>
     </div>
     <div class="jd-chips"><button class="pill${_jd.names?' active':''}" id="jd-names" onclick="jdNames()">Ver nombres</button><button class="pill" onclick="jdSeek(0)">Hoy</button><button class="pill" onclick="jdSeek(${_jdMax()})">Saltar al final</button></div>
     <div class="jd-row">
       <div class="jd-grid" id="jd-grid"></div>
-      <aside class="jd-side"><div class="jd-h">Lo que vas desbloqueando</div><ul class="jd-un" id="jd-un"></ul>
+      <aside class="jd-side"><div class="jd-hh"><div class="jd-h">Lo que vas desbloqueando</div><button class="jd-link" id="jd-edit" onclick="jdEditHitos()">Editar</button></div><ul class="jd-un" id="jd-un"></ul>
         <p class="jd-how">Tu jardín crece con las marcas de tus hábitos. Hacia adelante, la línea del tiempo te muestra cómo se vería si sigues a tu ritmo de las últimas 4 semanas.</p></aside>
     </div>
   </div>`;
@@ -2561,9 +2577,12 @@ function _jdBuild(){
   const sr = _jdRng(7), ivy = Array.from({length:22}, (_,k) => ({ x: 30 + sr() * 1140, y: 262 + sr() * 62, k }));
   let s = `<defs><linearGradient id="jd-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3F6EC"/><stop offset="1" stop-color="#FBFBF7"/></linearGradient>
     <linearGradient id="jd-gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DCD2BE"/><stop offset="1" stop-color="#E6DECD"/></linearGradient></defs>
-    <rect y="150" width="1200" height="410" fill="url(#jd-sky)"/>
-    <rect x="0" y="250" width="1200" height="${GY-244}" fill="#ECE5D8"/><rect x="0" y="244" width="1200" height="10" rx="2" fill="#E2D9C8"/>
-    <rect x="0" y="${GY}" width="1200" height="${560-GY}" fill="url(#jd-gr)"/>`;
+    <rect x="-2000" y="-900" width="5200" height="1460" fill="#F6F8F0"/><rect x="-2000" y="150" width="5200" height="100" fill="url(#jd-sky)"/>
+    <g class="jd-sky-x"><circle cx="960" cy="40" r="44" fill="#F4E3B0" opacity=".55"/>
+      <g fill="#fff" opacity=".9"><ellipse cx="260" cy="60" rx="70" ry="16"/><ellipse cx="300" cy="48" rx="44" ry="18"/><ellipse cx="640" cy="-10" rx="60" ry="13"/><ellipse cx="670" cy="-20" rx="36" ry="15"/><ellipse cx="1120" cy="110" rx="56" ry="12"/></g></g>
+    <path d="M-2000 250V214C-1200 196-600 222 0 204C160 188 300 200 420 212C560 226 700 186 860 196C1000 205 1100 186 1200 198C1800 210 2600 196 3200 206V250Z" fill="#E3E8D8"/>
+    <rect x="-2000" y="250" width="5200" height="${GY-244}" fill="#ECE5D8"/><rect x="-2000" y="244" width="5200" height="10" rx="2" fill="#E2D9C8"/>
+    <rect x="-2000" y="${GY}" width="5200" height="${560-GY+600}" fill="url(#jd-gr)"/>`;
   s += ivy.map(v => { const r = _jdRng(v.k*31+5); let g = ''; for (let j=0;j<16;j++) g += `<ellipse cx="${_f1(v.x+(r()-.5)*44)}" cy="${_f1(v.y+(r()-.5)*26)}" rx="${_f1(2.6+r()*2)}" ry="${_f1(1.8+r()*1.4)}" transform="rotate(${Math.round(r()*180)} ${_f1(v.x)} ${_f1(v.y)})" fill="${_jdPick(r,['#7E9466','#93A87A','#6E8458'])}" opacity=".85"/>`; return `<g class="jd-fade" data-ivy="${v.k}" opacity="0">${g}</g>`; }).join('');
   s += `<g id="jd-stones" class="jd-fade" opacity="0">${Array.from({length:12},(_,k)=>`<ellipse cx="${150+k*78+(k%2)*10}" cy="${548-(k%2)*3}" rx="22" ry="6" fill="#D2C9B8"/>`).join('')}</g>`;
   s += `<g id="jd-bench" class="jd-fade" opacity="0"><rect x="28" y="478" width="92" height="7" rx="2" fill="#8B7259"/><rect x="30" y="458" width="88" height="6" rx="2" fill="#8B7259"/><rect x="34" y="485" width="5" height="30" fill="#6F5A45"/><rect x="109" y="485" width="5" height="30" fill="#6F5A45"/><rect x="34" y="462" width="4" height="20" fill="#6F5A45"/><rect x="110" y="462" width="4" height="20" fill="#6F5A45"/></g>`;
@@ -2579,14 +2598,20 @@ function _jdBuild(){
   svg.innerHTML = s;
   _jdUpdate();
 }
+const JD_HITOS = [
+  { k:'hiedra', t:'Hiedra en el muro', d:15, every:true },
+  { k:'piedras', t:'Camino de piedras', d:30 },
+  { k:'banca', t:'Banca para sentarte', d:75 },
+  { k:'bebedero', t:'Bebedero de pájaros', d:150 },
+];
+function _jdHitos(){ const c = (_dayEntry('jardin').hitos) || {}; const o = {}; JD_HITOS.forEach(x => { o[x.k] = Math.max(1, Number(c[x.k]) || x.d); }); return o; }
 function _jdUnlocks(total, m){
   const bugs = _jd.H.some(h => JD_SP[h.sp].bugs && _jdCount(h,m)/JD_SP[h.sp].maxN > .45 && h.rate >= .4);
   const birds = _jd.H.some(h => JD_SP[h.sp].birds && _jd.slots.some(o=>o.h===h&&o.i===0&&_jdSize(o,m)>.7));
+  const H = _jdHitos();
   return [
-    { on: total >= 300, t:'Hiedra en el muro', d:'Sube un poco cada 300 días cuidados' },
-    { on: total >= 365, t:'Camino de piedras', d:'Al llegar a 365 días' },
-    { on: total >= 1500, t:'Banca para sentarte', d:'A los 1,500 días' },
-    { on: total >= 3000, t:'Bebedero de pájaros', d:'A los 3,000 días' },
+    ...JD_HITOS.map(x => { const n = H[x.k], on = total >= n, left = Math.ceil(n - total);
+      return { k:x.k, n, on, t:x.t, d: x.every ? `Crece cada ${n} días cuidados` : `A los ${n.toLocaleString('es-MX')} días cuidados`, left: on ? '' : `te faltan ${left}` }; }),
     { on: bugs, t:'Mariposas', d:'Cuando tu lavanda, romero o cempasúchil se llena' },
     { on: birds, t:'Pájaros en el olivo', d:'Cuando el primer olivo madura' },
   ];
@@ -2596,7 +2621,7 @@ function _jdUpdate(){
   const m = _jd.months;
   svg.querySelectorAll('.jd-gw').forEach(g => { g.style.transform = `scale(${_jdSize(_jd.slots[g.dataset.k], m)})`; });
   const total = _jd.H.reduce((a,h)=>a+_jdCare(h,m),0);
-  svg.querySelectorAll('[data-ivy]').forEach(g => g.setAttribute('opacity', total >= 300 * (+g.dataset.ivy + 1) ? 1 : 0));
+  const iv = _jdHitos().hiedra; svg.querySelectorAll('[data-ivy]').forEach(g => g.setAttribute('opacity', total >= iv * (+g.dataset.ivy + 1) ? 1 : 0));
   const U = _jdUnlocks(total, m), set = (id, on) => { const e = document.getElementById(id); if (e) e.setAttribute('opacity', on ? 1 : 0); };
   set('jd-stones', U[1].on); set('jd-bench', U[2].on); set('jd-bath', U[3].on);
   _jd.H.forEach((h, hi) => {
@@ -2609,7 +2634,7 @@ function _jdUpdate(){
   document.getElementById('jd-sub').textContent = m === 0 ? 'Hoy' : `${d.toLocaleDateString('es-MX',{month:'short'}).replace('.','')} · en ${m < 12 ? m + (m===1?' mes':' meses') : yrs + (yrs===1?' año':' años')}, a tu ritmo`;
   document.getElementById('jd-days').textContent = Math.round(total).toLocaleString('es-MX');
   const end = document.getElementById('jd-tl-end'); if (end) end.textContent = `En ${_jd.yrs===1?'1 año':_jd.yrs+' años'} · ${new Date().getFullYear()+_jd.yrs}`;
-  const un = document.getElementById('jd-un'); if (un) un.innerHTML = U.map(u => `<li class="${u.on?'on':''}"><i></i><span><b>${u.t}</b>${u.d}</span></li>`).join('');
+  const un = document.getElementById('jd-un'); if (un && !_jd.editH) un.innerHTML = U.map(u => `<li class="${u.on?'on':''}"><i></i><span><b>${u.t}</b>${u.d}${u.left?`<span class="jd-left">${u.left}</span>`:''}</span></li>`).join('') + `<li style="display:block;font-size:.7rem">Cuentan los días de todos tus hábitos juntos.</li>`;
   const top = _jdTop();
   document.querySelectorAll('.jd-card').forEach(c => { const on = !!top && String(top.id) === c.dataset.h; c.classList.toggle('top', on); c.querySelector('.jd-tag').hidden = !on; });
 }
@@ -2626,6 +2651,25 @@ function jdYears(v){ _jd.yrs = Number(v)||5; jdStop(); if (_jd.months > _jdMax()
 function jdNames(){ _jd.names = !_jd.names; const n = document.getElementById('jd-names'); if (n) n.style.display = _jd.names ? '' : 'none'; const b = document.querySelector('.jd-chips .pill'); if (b) b.classList.toggle('active', _jd.names); }
 function jdToggle(id, ds){ const hl = _getHlog(); if (!hl[ds]) hl[ds] = {}; hl[ds][id] = !hl[ds][id]; _saveHlog(hl); _jd.H = _jdData(); _jdCards(); _jdBuild(); }
 function jdSetPlant(id, v){ const hs = _getHabits(), x = hs.find(y => y.id === id); if (x) { x.plant = v; _saveHabits(hs); } _jd.H = _jdData(); _jdCards(); _jdBuild(); }
+function jdEditHitos(){
+  const un = document.getElementById('jd-un'), b = document.getElementById('jd-edit'); if (!un) return;
+  if (_jd.editH){ _jd.editH = false; b.textContent = 'Editar'; _jdUpdate(); return; }
+  _jd.editH = true; b.textContent = 'Cancelar'; const H = _jdHitos();
+  un.innerHTML = JD_HITOS.map(x => `<li style="grid-template-columns:minmax(0,1fr)"><span><b>${x.t}</b><span style="display:flex;align-items:center;margin-top:4px">${x.every?'Cada ':'A los '}<input type="number" min="1" inputmode="numeric" data-hito="${x.k}" value="${H[x.k]}" style="margin:0 6px"> días cuidados</span></span></li>`).join('')
+    + `<li style="display:block"><button class="jd-save" onclick="jdSaveHitos()">Guardar</button></li>`;
+}
+function jdSaveHitos(){
+  const e = _dayEntry('jardin'), h = {};
+  document.querySelectorAll('[data-hito]').forEach(i => { const v = Math.round(Number(i.value)); if (v > 0) h[i.dataset.hito] = v; });
+  e.hitos = h; _putEntry(e); _jd.editH = false; const b = document.getElementById('jd-edit'); if (b) b.textContent = 'Editar'; _jdUpdate();
+}
+function jdFull(){
+  const st = document.querySelector('.jd-stage'); if (!st) return;
+  const on = !st.classList.contains('jd-full'); st.classList.toggle('jd-full', on); document.body.style.overflow = on ? 'hidden' : '';
+  const ic = document.getElementById('jd-fs-ic'); if (ic) ic.setAttribute('d', on ? 'M6 2.5V6H2.5M13.5 6H10V2.5M10 13.5V10h3.5M2.5 10H6v3.5' : 'M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10');
+  const b = document.getElementById('jd-fs'); if (b) b.setAttribute('aria-label', on ? 'Salir de pantalla completa' : 'Pantalla completa');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.querySelector('.jd-stage.jd-full')) jdFull(); });
 function jdFocus(id){ const c = document.querySelector(`.jd-card[data-h="${id}"]`); if (!c) return; c.scrollIntoView({behavior:'smooth', block:'center'}); c.animate([{boxShadow:'0 0 0 6px #CFDAB8'},{boxShadow:'0 0 0 0 transparent'}],{duration:900}); }
 
 function selectLogDay(ds) {
@@ -2799,7 +2843,9 @@ function _chipHtml(i, ds) {
 function _getJournal(){ try { return JSON.parse(localStorage.getItem('mf_journal')||'[]'); } catch(e) { return []; } }
 function _saveJournal(j){ try { localStorage.setItem('mf_journal', JSON.stringify(j)); } catch(e) {} if (_db) _queuePush(); }
 function _dayEntry(ds){ return _getJournal().find(x=>x.id===ds) || { id:ds, prio:[] }; }
-function _putEntry(e){ const j = _getJournal().filter(x=>x.id!==e.id); e.at = new Date().toISOString(); j.push(e); _saveJournal(j.slice(-120)); }
+function _putEntry(e){ const j = _getJournal().filter(x=>x.id!==e.id); e.at = new Date().toISOString(); j.push(e);
+  const isDay = x => /^\d{4}-|^week-/.test(x.id);   // los días se recortan; ajustes como 'jardin' se quedan
+  _saveJournal([...j.filter(x=>!isDay(x)), ...j.filter(isDay).slice(-120)]); }
 function _dayPrio(ds){ return (_dayEntry(ds).prio||[]).filter(id=>items.some(i=>i.id===id && !i.archived)); }
 
 let _ar = null;   // estado del arranque mientras está abierto
