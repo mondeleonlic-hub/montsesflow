@@ -1053,6 +1053,18 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 @media (hover:none),(pointer:coarse){.lg-tl .dy-task::before{left:90px}}
 @media (hover:none) and (max-width:520px),(pointer:coarse) and (max-width:520px){.lg-tl .dy-task::before{left:82px}}
 @media(max-width:520px){.dy-tm{width:38px}.lg-now b{width:38px}.lg .dy-acts{display:none}}
+
+.lg-area{display:flex;justify-content:space-between;align-items:baseline;font-size:.64rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding:12px 0 2px}
+.lg-area:empty{display:none}
+.lg-area span{font-size:.64rem;letter-spacing:0;text-transform:none;color:var(--text2);font-weight:700}
+.lg-habs .lg-area + .lg-hb{border-top:0}
+.lg-sels{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.jd-ah{grid-column:1/-1;display:flex;align-items:baseline;gap:10px;padding:6px 2px 0;border-radius:8px}
+.jd-ah b{font-size:.95rem;font-weight:900}
+.jd-ah span{font-size:.72rem;color:var(--text2);font-weight:600}
+.jd-ah i{font-style:normal;font-size:.62rem;font-weight:800;color:var(--accent);background:var(--accent-light);border:1px solid #CFDAB8;border-radius:99px;padding:1px 8px}
+.jd-sels{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.jd-sels select{width:100%}
 </style>
 </head>
 <body>
@@ -2375,6 +2387,7 @@ function renderCurrent() {
   else if (activeTab==='done') renderDone();
   else if (activeTab==='settings') renderSettings();
   else if (activeTab==='bandeja') renderBandeja();
+  else if (activeTab==='jardin') renderJardin();
   else renderPanel(activeTab);
   updateSidebarBadges();
   _renderClipBar();
@@ -2445,6 +2458,29 @@ function _habitStreak(id){
   }
   return streak;
 }
+// Áreas de vida: cada cosa de tu jardín pertenece a un área
+const AREAS_DEF = ['Salud','Mente','Relaciones','Dinero','Trabajo','Crecimiento'];
+function _areas(){ const e = _dayEntry('jardin'); return (e.areas && e.areas.length) ? e.areas : AREAS_DEF.slice(); }
+function _habArea(hb){
+  if (hb.area !== undefined && hb.area !== null) return hb.area;
+  const t = hb.text || '';
+  if (/werk|gym|stretch|strech|ejerc|entren|yoga|correr|run|padel|agua|dorm/i.test(t)) return 'Salud';
+  if (/read|leer|libro|medit|journal|escrib|estudi/i.test(t)) return 'Mente';
+  if (/ahorr|dinero|gasto|finanz|invert/i.test(t)) return 'Dinero';
+  return '';
+}
+function setHabArea(id, v){
+  if (v === '__new') { const n = (prompt('Nombre de la nueva área') || '').trim(); if (!n) { renderCurrent(); return; }
+    const e = _dayEntry('jardin'); e.areas = [..._areas().filter(a => a !== n), n]; _putEntry(e); v = n; }
+  const hs = _getHabits(), x = hs.find(y => y.id === id); if (x) { x.area = v; _saveHabits(hs); }
+  renderCurrent();
+}
+function _areaSel(hb, cls){ const a = _habArea(hb), list = _areas(); if (a && !list.includes(a)) list.push(a);
+  return `<select class="${cls||'hb-freq'}" onclick="event.stopPropagation()" onchange="setHabArea(${hb.id},this.value)" aria-label="Área">${list.map(x=>`<option value="${h(x)}"${x===a?' selected':''}>${h(x)}</option>`).join('')}<option value=""${!a?' selected':''}>Sin área</option><option value="__new">+ Nueva área…</option></select>`; }
+// Agrupa por área, en el orden de tus áreas; lo que no tiene área va al final
+function _byArea(list, getHb){ const order = _areas(), g = {};
+  list.forEach(x => { const a = _habArea(getHb(x)) || ''; (g[a] = g[a] || []).push(x); });
+  return [...order.filter(a => g[a]), ...Object.keys(g).filter(a => a && !order.includes(a)), ...(g[''] ? [''] : [])].map(a => [a, g[a]]); }
 function _habFreq(hb){ return Number(hb && hb.freq) || 0; }   // 0 = diario; n = n veces por semana
 function _habWeekCount(id){ const hl = _getHlog(), mon = _weekStart(); return Object.entries(hl).filter(([d,v])=>d>=mon && v && v[id]).length; }
 function setHabFreq(id, v){ const hs = _getHabits(); const x = hs.find(y=>y.id===id); if (x) { x.freq = Number(v)||0; _saveHabits(hs); } renderLogDiario(); }
@@ -2560,9 +2596,14 @@ function _jdData(){
     const win = Math.min(28, since), recent = dates.filter(d => d >= d28).length;
     const fr = _habFreq(hb) || 7, target = fr * win / 7;
     const rate = care ? Math.min(1, recent / Math.max(1, target)) : 0;
-    return { hb, id, name: hb.text || 'Hábito', sp: _jdPlantOf(hb, i), fr, care, rate, perYear: fr * 52 * rate };
+    return { hb, id, name: hb.text || 'Hábito', area: _habArea(hb), sp: _jdPlantOf(hb, i), fr, care, rate, perYear: fr * 52 * rate };
   });
 }
+function _jdSorted(H){ return _byArea(H, x => x.hb).flatMap(([a, l]) => l); }
+// El área donde más empeño pones: la de mejor ritmo de las últimas 4 semanas
+function _jdTopArea(){ let best = null, bv = -1;
+  _byArea(_jd.H.filter(h => h.care), x => x.hb).forEach(([a, l]) => { const v = l.reduce((s,h)=>s+h.rate,0)/l.length + l.reduce((s,h)=>s+h.care,0)/1e5; if (v > bv) { bv = v; best = a; } });
+  return best; }
 const _jdCare = (h, m) => h.care + h.perYear * m / 12;
 // las primeras plantas salen más rápido, para que el jardín se sienta vivo desde el inicio
 const _jdBorn = (sp, i) => i <= 3 ? i * .35 * sp.perN : (1.05 + (i - 3)) * sp.perN;
@@ -2581,7 +2622,7 @@ function _jdZones(){
 
 function renderJardin(){
   const el = document.getElementById('panel-jardin'); if (!el) return;
-  _jd.H = _jdData(); _jd.editH = false;
+  _jd.H = _jdSorted(_jdData()); _jd.editH = false;
   if (!_jd.H.length) { el.innerHTML = `<div class="empty-state"><p>Agrega tus hábitos en el Log diario y aquí empezará a crecer tu jardín.</p></div>`; return; }
   _jd.months = 0; jdStop();
   el.innerHTML = `<div class="jd">
@@ -2608,15 +2649,17 @@ function renderJardin(){
 function _jdCards(){
   const g = document.getElementById('jd-grid'); if (!g) return;
   const hl = _getHlog(), mon = new Date(_weekStart()+'T12:00:00'), today = todayStr(), DL = ['L','M','M','J','V','S','D'];
-  g.innerHTML = _jd.H.map(h => {
+  const topA = _jdTopArea();
+  g.innerHTML = _byArea(_jd.H, x => x.hb).map(([area, list]) => `<div class="jd-ah${area===topA?' top':''}" data-a="${_jdEsc(area)}"><b>${area?_jdEsc(area):'Sin área'}</b><span>${list.reduce((s,x)=>s+x.care,0)} días cuidados</span>${area===topA?'<i>Más empeño</i>':''}</div>` + list.map(h => {
     const days = DL.map((l,k) => { const d = new Date(mon); d.setDate(mon.getDate()+k); const ds = _ymd(d), on = !!(hl[ds] && hl[ds][h.id]);
       return `<button class="jd-day${on?' on':''}${ds===today?' today':''}" ${ds>today?'disabled':''} onclick="jdToggle(${h.id},'${ds}')" aria-pressed="${on}" aria-label="${_jdEsc(h.name)} ${l}">${l}</button>`; }).join('');
     const wk = _habWeekCount(h.id), sp = JD_SP[h.sp], n = _jdCount(h, 0);
     return `<div class="jd-card" data-h="${h.id}"><span class="jd-tag" hidden>Más empeño</span>
-      <div class="jd-ch"><span class="jd-nm">${_jdEsc(h.name)}</span><select onchange="jdSetPlant(${h.id},this.value)" aria-label="Planta">${JD_ORDER.map(k=>`<option value="${k}" ${k===h.sp?'selected':''}>${JD_SP[k].name}</option>`).join('')}</select></div>
+      <div class="jd-ch"><span class="jd-nm">${_jdEsc(h.name)}</span></div>
+      <div class="jd-sels"><select onchange="jdSetPlant(${h.id},this.value)" aria-label="Planta">${JD_ORDER.map(k=>`<option value="${k}" ${k===h.sp?'selected':''}>${JD_SP[k].name}</option>`).join('')}</select>${_areaSel(h.hb, '')}</div>
       <div class="jd-days">${days}</div>
       <div class="jd-stat"><b>${wk}</b> de ${h.fr} esta semana · <b>${h.care}</b> días cuidados · <b>${n}</b> ${n===1?sp.name.toLowerCase():sp.plural}${h.care && h.rate<.4?' · se está secando':''}</div></div>`;
-  }).join('');
+  }).join('')).join('');
 }
 function _jdBuild(){
   const svg = document.getElementById('jd-scene'); if (!svg) return;
@@ -2650,9 +2693,10 @@ function _jdBuild(){
     if (sp.bugs) return `<g class="jd-fade" data-bugs="${hi}" opacity="0">${[0,1,2].map(j => `<g transform="translate(${_f1(z.x0 + 30 + j*(z.x1-z.x0-80)/3)} ${400 + j*22})"><g class="jd-bf" style="animation-delay:${-j*3}s;animation-duration:${8+j*1.5}s"><g class="jd-wg"><ellipse cx="-4" cy="0" rx="5" ry="3.6" fill="${j%2?'#F0C766':'#B7A3E6'}"/><ellipse cx="4" cy="0" rx="5" ry="3.6" fill="${j%2?'#F0C766':'#B7A3E6'}"/></g><rect x="-.8" y="-3" width="1.6" height="6" rx=".8" fill="#4A4F3C"/></g></g>`).join('')}</g>`;
     if (sp.birds){ const t = _jd.slots.find(o => o.h === h && o.i === 0); return t ? `<g class="jd-fade" data-birds="${hi}" opacity="0"><path d="M${_f1(t.x-20)} ${_f1(t.y-150*t.p)}q6-6 12 0q6-6 12 0" stroke="#4A4F3C" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M${_f1(t.x+26)} ${_f1(t.y-178*t.p)}q5-5 10 0q5-5 10 0" stroke="#4A4F3C" stroke-width="2" fill="none" stroke-linecap="round"/></g>` : ''; }
     return ''; }).join('');
-  const top = _jdTop();
-  s += `<g id="jd-names" style="${_jd.names?'':'display:none'}">${_jd.H.map((h, hi) => { const z = zs[hi], cx = (z.x0+z.x1)/2, isTop = h === top, w = Math.max(90, h.name.length*7.4+28);
-    return `<g class="jd-zone" onclick="jdFocus(${h.id})"><rect x="${_f1(cx-w/2)}" y="256" width="${_f1(w)}" height="24" rx="12" fill="${isTop?'#EEF2E6':'rgba(255,255,255,.78)'}" stroke="${isTop?'#6B7A4E':'#CFDAB8'}" stroke-width="1.2"/><text x="${_f1(cx)}" y="272.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="800" fill="${isTop?'#6B7A4E':'#4A5040'}">${_jdEsc(h.name)}</text>${isTop?`<text x="${_f1(cx)}" y="249" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="800" fill="#6B7A4E">MÁS EMPEÑO</text>`:''}</g>`; }).join('')}</g>`;
+  const topA = _jdTopArea(), groups = [];
+  _jd.H.forEach((h, hi) => { const g = groups[groups.length-1]; if (g && g.a === h.area) g.x1 = zs[hi].x1; else groups.push({ a: h.area, x0: zs[hi].x0, x1: zs[hi].x1 }); });
+  s += `<g id="jd-names" style="${_jd.names?'':'display:none'}">${groups.map(g => { const name = g.a || 'Sin área', cx = (g.x0+g.x1)/2, isTop = g.a === topA, w = Math.max(80, name.length*7.6+30), h = { name };
+    return `<g class="jd-zone" onclick="jdFocusArea('${_jdEsc(g.a).replace(/'/g,"&#39;")}')"><rect x="${_f1(cx-w/2)}" y="256" width="${_f1(w)}" height="24" rx="12" fill="${isTop?'#EEF2E6':'rgba(255,255,255,.78)'}" stroke="${isTop?'#6B7A4E':'#CFDAB8'}" stroke-width="1.2"/><text x="${_f1(cx)}" y="272.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="800" fill="${isTop?'#6B7A4E':'#4A5040'}">${_jdEsc(h.name)}</text>${isTop?`<text x="${_f1(cx)}" y="249" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="800" fill="#6B7A4E">MÁS EMPEÑO</text>`:''}</g>`; }).join('')}</g>`;
   svg.innerHTML = s;
   _jdUpdate();
 }
@@ -2693,8 +2737,7 @@ function _jdUpdate(){
   document.getElementById('jd-days').textContent = Math.round(total).toLocaleString('es-MX');
   const end = null; if (end) end.textContent = `En ${_jd.yrs===1?'1 año':_jd.yrs+' años'} · ${new Date().getFullYear()+_jd.yrs}`;
   const un = document.getElementById('jd-un'); if (un && !_jd.editH) un.innerHTML = U.map(u => `<li class="${u.on?'on':''}"><i></i><span><b>${u.t}</b>${u.d}${u.left?`<span class="jd-left">${u.left}</span>`:''}</span></li>`).join('') + `<li style="display:block;font-size:.7rem">Cuentan los días de todos tus hábitos juntos.</li>`;
-  const top = _jdTop();
-  document.querySelectorAll('.jd-card').forEach(c => { const on = !!top && String(top.id) === c.dataset.h; c.classList.toggle('top', on); c.querySelector('.jd-tag').hidden = !on; });
+
 }
 function _jdIcon(on){ const p = document.getElementById('jd-play-ic'); if (p) p.setAttribute('d', on ? 'M4 2.5h3v11H4zM9 2.5h3v11H9z' : 'M4 2.5v11l9-5.5z'); }
 function jdStop(){ clearInterval(_jd.timer); _jd.timer = null; _jdIcon(false); }
@@ -2707,8 +2750,8 @@ function jdPlay(){
 function jdSeek(v){ jdStop(); _jd.months = Math.max(0, Math.min(_jdMax(), Number(v)||0)); const tl = document.getElementById('jd-tl'); if (tl) tl.value = _jd.months; _jdUpdate(); }
 function jdYears(v){ _jd.yrs = Number(v)||5; jdStop(); if (_jd.months > _jdMax()) _jd.months = _jdMax(); renderJardin(); }
 function jdNames(){ _jd.names = !_jd.names; const n = document.getElementById('jd-names'); if (n) n.style.display = _jd.names ? '' : 'none'; const b = document.querySelector('.jd-chips .pill'); if (b) b.classList.toggle('active', _jd.names); }
-function jdToggle(id, ds){ const hl = _getHlog(); if (!hl[ds]) hl[ds] = {}; hl[ds][id] = !hl[ds][id]; _saveHlog(hl); _jd.H = _jdData(); _jdCards(); _jdBuild(); }
-function jdSetPlant(id, v){ const hs = _getHabits(), x = hs.find(y => y.id === id); if (x) { x.plant = v; _saveHabits(hs); } _jd.H = _jdData(); _jdCards(); _jdBuild(); }
+function jdToggle(id, ds){ const hl = _getHlog(); if (!hl[ds]) hl[ds] = {}; hl[ds][id] = !hl[ds][id]; _saveHlog(hl); _jd.H = _jdSorted(_jdData()); _jdCards(); _jdBuild(); }
+function jdSetPlant(id, v){ const hs = _getHabits(), x = hs.find(y => y.id === id); if (x) { x.plant = v; _saveHabits(hs); } _jd.H = _jdSorted(_jdData()); _jdCards(); _jdBuild(); }
 function jdEditHitos(){
   const un = document.getElementById('jd-un'), b = document.getElementById('jd-edit'); if (!un) return;
   if (_jd.editH){ _jd.editH = false; b.textContent = 'Editar'; _jdUpdate(); return; }
@@ -2728,6 +2771,7 @@ function jdFull(){
   const b = document.getElementById('jd-fs'); if (b) b.setAttribute('aria-label', on ? 'Salir de pantalla completa' : 'Pantalla completa');
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.querySelector('.jd-stage.jd-full')) jdFull(); });
+function jdFocusArea(a){ const c = [...document.querySelectorAll('.jd-ah')].find(x => x.dataset.a === a); if (!c) return; c.scrollIntoView({behavior:'smooth', block:'center'}); c.animate([{background:'#EEF2E6'},{background:'transparent'}],{duration:1000}); }
 function jdFocus(id){ const c = document.querySelector(`.jd-card[data-h="${id}"]`); if (!c) return; c.scrollIntoView({behavior:'smooth', block:'center'}); c.animate([{boxShadow:'0 0 0 6px #CFDAB8'},{boxShadow:'0 0 0 0 transparent'}],{duration:900}); }
 
 function selectLogDay(ds) {
@@ -3471,23 +3515,23 @@ function renderLogDiario() {
   const _mon = (()=>{ const d = new Date(D+'T12:00:00'); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d; })(), _hl = _getHlog();
   const _wk = Array.from({length:7}, (_,k)=>{ const d = new Date(_mon); d.setDate(_mon.getDate()+k); return _ymd(d); });
   const habitsHtml = `<div class="card dy-card lg-habs">
-    <div class="dy-sec"><div class="lg-k" style="margin:0">Hábitos</div>
+    <div class="dy-sec"><div class="lg-k" style="margin:0">Mi jardín</div>
       ${habits.length?`<button class="pl-link" style="margin:0" onclick="_habEdit=!_habEdit;renderLogDiario()">${_habEdit?'Listo':'Editar'}</button>`:''}</div>
-    ${habits.map(hb=>{
+    ${_byArea(habits, x=>x).map(([area, list]) => `<div class="lg-area">${area?h(area):(_byArea(habits,x=>x).length>1?'Sin área':'')}${area||_byArea(habits,x=>x).length>1?`<span>${list.filter(x=>dayLog[x.id]).length} de ${list.length}</span>`:''}</div>` + list.map(hb=>{
       const on = !!dayLog[hb.id], f = _habFreq(hb);
       const sub = f ? `${_habWeekCount(hb.id)} de ${f} esta semana` : (()=>{ const st = _habitStreak(hb.id); return st ? `Diario · ${st===1?'1 día':st+' días'} seguidos` : 'Diario · empieza hoy'; })();
       const fsel = `<select class="hb-freq" onclick="event.stopPropagation()" onchange="setHabFreq(${hb.id},this.value)">${[[0,'Diario'],[1,'1 por semana'],[2,'2 por semana'],[3,'3 por semana'],[4,'4 por semana'],[5,'5 por semana'],[6,'6 por semana']].map(([v,t])=>`<option value="${v}"${v===f?' selected':''}>${t}</option>`).join('')}</select>`;
       const dots = _wk.map(ds=>`<i class="${_hl[ds]&&_hl[ds][hb.id]?'on':''}${ds===D?' t':''}"></i>`).join('');
       return `<div class="lg-hb">
         ${_habEdit ? `<span class="lg-x" onclick="removeHabit(${hb.id})" title="Quitar hábito">${ico('x',14)}</span>` : `<button class="dy-check${on?' done':''}" onclick="toggleHabit(${hb.id})" aria-pressed="${on}" aria-label="Marcar ${h(hb.text)}">${on?ico('check',13):''}</button>`}
-        <div class="lg-hn"><b>${h(hb.text)}</b>${_habEdit?fsel:`<small>${sub}</small>`}</div>
+        <div class="lg-hn"><b>${h(hb.text)}</b>${_habEdit?`<span class="lg-sels">${_areaSel(hb)}${fsel}</span>`:`<small>${sub}</small>`}</div>
         ${_habEdit?'':`<div class="lg-dots" aria-hidden="true">${dots}</div>`}
       </div>`;
-    }).join('') || '<div class="pl-sub" style="margin:0">Sin hábitos todavía. Agrega el primero.</div>'}
+    }).join('')).join('') || '<div class="pl-sub" style="margin:0">Todavía no siembras nada. Agrega lo primero que quieres cuidar.</div>'}
     ${_habEdit || !habits.length ? `<div style="display:flex;gap:6px;margin-top:12px">
-      <input class="modal-input" id="hab-inp" placeholder="Nuevo hábito…" style="flex:1" onkeydown="if(event.key==='Enter')addHabit()"/>
+      <input class="modal-input" id="hab-inp" placeholder="Algo nuevo que quieras cuidar…" style="flex:1" onkeydown="if(event.key==='Enter')addHabit()"/>
       <button class="btn-sm" onclick="addHabit()">+</button>
-    </div>` : `<button class="lg-garden" onclick="switchTab('jardin')">Cada marca riega tu jardín ${ico('next',13)}</button>`}
+    </div>` : `<button class="lg-garden" onclick="switchTab('jardin')">Ver mi jardín ${ico('next',13)}</button>`}
   </div>`;
 
   // Tareas del día
