@@ -921,7 +921,7 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 .jd-full #jd-scene{width:100%;height:100%;min-width:0;overflow:visible}
 .jd-full .jd-scene{overflow:hidden}
 .jd-full .jd-swipe{display:none}
-.jd-fs{width:42px;height:42px;border-radius:12px;border:1.5px solid var(--border);background:#fff;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.jd-fs{position:absolute;right:14px;bottom:14px;width:40px;height:40px;border-radius:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.9);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center}
 .jd-fs:hover{color:var(--accent);border-color:#CFDAB8}
 .jd-hh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
 .jd-hh .jd-h{margin:0}
@@ -989,6 +989,70 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 .jd-zone{cursor:pointer}
 @media(max-width:900px){.jd-row{grid-template-columns:1fr}.jd-time{grid-template-columns:auto minmax(0,1fr) auto}.jd-yrs{grid-column:1/-1}.jd-swipe{display:block}.jd-full .jd-yrs{display:none}.jd-full .jd-time{padding:8px 14px}}
 @media(prefers-reduced-motion:reduce){.jd-sw,.jd-bf,.jd-wg{animation:none}.jd-gw{transition:none}}
+
+/* LOG DIARIO · Línea del día */
+.log-dates{gap:6px;background:none;border:0;padding:2px;border-radius:0}
+.log-date-card{border:1px solid var(--border);background:#fff;border-radius:14px}
+.log-date-card.active{background:var(--accent-light);color:var(--accent);border-color:#CFDAB8}
+.log-date-card.active .ld-day{color:var(--accent)}
+.log-date-card.active .ld-dot{background:var(--accent)}
+.lg{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+.lg-side{display:grid;gap:12px}
+.lg-side .dy-card,.lg-main .dy-card{margin:0}
+.lg-main{display:grid;gap:12px}
+.lg .card{border-radius:18px;box-shadow:none}
+.lg .dy-head{align-items:center;margin-bottom:6px}
+.lg .dy-title{font-size:1.1rem}
+.lg .dy-count{margin-top:2px}
+.dy-ring{width:44px;height:44px;flex-shrink:0}
+.lg-k{font-size:.62rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#9CA39A;margin-bottom:4px}
+.lg-focus{background:#F5F8EF;border-color:#CFDAB8}
+.lg-focus .lg-k{color:var(--accent)}
+.lg-ft{font-size:1.02rem;font-weight:800;line-height:1.3;color:var(--text);cursor:pointer;margin-bottom:2px}
+.lg-bts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.lg-btn{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:11px;border:1.5px solid #CFDAB8;background:#fff;color:var(--accent);font:inherit;font-size:.78rem;font-weight:800;cursor:pointer;white-space:nowrap}
+.lg-btn:hover{border-color:var(--accent)}
+.lg-btn.pri{background:var(--accent-light)}
+.lg-btn.on{background:var(--accent-light);cursor:default}
+.lg-btn.on i{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:dyPulse 1.4s ease-in-out infinite}
+.lg-nudge{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;background:#F5F8EF;border:1px solid #CFDAB8;border-radius:14px;padding:10px 12px 10px 14px;margin:10px 0 4px;font-size:.8rem;color:var(--text)}
+.lg-nudge b{font-weight:800}
+.lg-tl .dy-task{position:relative;border-top:0;padding:9px 2px;align-items:flex-start}
+.lg-tl .dy-task::before{content:"";position:absolute;top:0;bottom:0;width:1.5px;background:#ECEEE7;left:66px}
+.lg-tl .dy-task:first-child::before{top:20px}
+.dy-tm{width:44px;flex-shrink:0;text-align:right;font-size:.72rem;font-weight:700;color:var(--text2);padding-top:3px;font-variant-numeric:tabular-nums}
+.lg-tl .dy-check{position:relative;z-index:1}
+.dy-check.done{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
+.dy-cat{display:inline-flex;align-items:center;font-weight:600}
+.dy-cat .pz-dot{width:7px;height:7px;margin-right:5px}
+.dy-late{color:#B0874A;font-weight:600}
+.lg .dy-meta{font-size:.68rem;gap:4px 10px}
+.lg .dy-acts{opacity:0;transition:opacity .15s}
+.lg .dy-task:hover .dy-acts,.lg .dy-task:focus-within .dy-acts{opacity:1}
+@media (hover:none),(pointer:coarse){.lg .dy-acts{opacity:1}}
+.lg-now{display:flex;align-items:center;gap:10px;margin:2px 0;padding-left:2px}
+.lg-now b{width:44px;text-align:right;font-size:.7rem;font-weight:800;color:var(--accent);flex-shrink:0}
+.lg-now span{flex:1;height:2px;background:var(--accent);border-radius:2px;position:relative}
+.lg-now span::before{content:"";position:absolute;left:6px;top:-4px;width:10px;height:10px;border-radius:50%;background:var(--accent)}
+.lg .dy-empty{border-top:0;gap:10px}
+.lg .dy-tools{padding-top:12px;border-top:1px solid #F1F3EE}
+.dy-btn.on{background:var(--accent-light)}
+.lg-hb{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid #F1F3EE}
+.lg-hb:first-of-type{border-top:0}
+.lg-hb .dy-check{margin:0}
+.lg-hn{flex:1;min-width:0;line-height:1.25}
+.lg-hn b{display:block;font-size:.82rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lg-hn small{font-size:.66rem;font-weight:600;color:var(--text2)}
+.lg-dots{display:flex;gap:4px;flex-shrink:0}
+.lg-dots i{width:8px;height:8px;border-radius:50%;background:#ECEEE7}
+.lg-dots i.on{background:var(--accent)}
+.lg-dots i.t{box-shadow:0 0 0 2px #fff,0 0 0 3.5px #CFDAB8}
+.lg-x{width:22px;height:22px;display:flex;align-items:center;justify-content:center;color:#B0874A;cursor:pointer;flex-shrink:0}
+.lg-garden{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:0;margin-top:10px;font:inherit;font-size:.7rem;font-weight:700;color:var(--accent);cursor:pointer}
+@media(max-width:900px){.lg{grid-template-columns:1fr}.lg-side{order:-1}}
+@media (hover:none),(pointer:coarse){.lg-tl .dy-task::before{left:90px}}
+@media (hover:none) and (max-width:520px),(pointer:coarse) and (max-width:520px){.lg-tl .dy-task::before{left:82px}}
+@media(max-width:520px){.dy-tm{width:38px}.lg-now b{width:38px}.lg .dy-acts{display:none}}
 </style>
 </head>
 <body>
@@ -2519,28 +2583,22 @@ function renderJardin(){
   const el = document.getElementById('panel-jardin'); if (!el) return;
   _jd.H = _jdData(); _jd.editH = false;
   if (!_jd.H.length) { el.innerHTML = `<div class="empty-state"><p>Agrega tus hábitos en el Log diario y aquí empezará a crecer tu jardín.</p></div>`; return; }
-  const now = new Date(), MES = now.toLocaleDateString('es-MX',{month:'short'}).replace('.','');
+  _jd.months = 0; jdStop();
   el.innerHTML = `<div class="jd">
     <div class="jd-stage">
       <div class="jd-box">
         <div class="jd-scene" id="jd-scene-wrap"><svg id="jd-scene" viewBox="0 150 1200 410" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Mi jardín"></svg></div>
         <div class="jd-when"><b id="jd-year"></b><span id="jd-sub"></span></div>
         <div class="jd-total"><b id="jd-days"></b><span>días cuidados en total</span></div>
+        <button class="jd-fs" id="jd-fs" onclick="jdFull()" aria-label="Pantalla completa" title="Pantalla completa"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path id="jd-fs-ic" d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg></button>
       </div>
       <div class="jd-swipe">Desliza para recorrer tu jardín</div>
-      <div class="jd-time">
-        <button class="jd-play" id="jd-play" onclick="jdPlay()" aria-label="Ver crecer"><svg viewBox="0 0 16 16" width="15" height="15"><path id="jd-play-ic" d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg></button>
-        <div class="jd-tl"><input type="range" id="jd-tl" min="0" max="${_jdMax()}" value="${_jd.months}" oninput="jdSeek(this.value)" aria-label="Línea del tiempo">
-          <div class="jd-tl-lab"><span>Hoy · ${MES} ${now.getFullYear()}</span><b id="jd-tl-end"></b></div></div>
-        <button class="jd-fs" id="jd-fs" onclick="jdFull()" aria-label="Pantalla completa" title="Pantalla completa"><svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path id="jd-fs-ic" d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"/></svg></button>
-        <label class="jd-yrs">Ver a <select onchange="jdYears(this.value)">${[1,3,5,10,20].map(y=>`<option value="${y}" ${y===_jd.yrs?'selected':''}>${y===1?'1 año':y+' años'}</option>`).join('')}</select></label>
-      </div>
     </div>
-    <div class="jd-chips"><button class="pill${_jd.names?' active':''}" id="jd-names" onclick="jdNames()">Ver nombres</button><button class="pill" onclick="jdSeek(0)">Hoy</button><button class="pill" onclick="jdSeek(${_jdMax()})">Saltar al final</button></div>
+    <div class="jd-chips"><button class="pill${_jd.names?' active':''}" id="jd-names" onclick="jdNames()">Ver nombres</button><button class="pill" onclick="jdFull()">Pantalla completa</button></div>
     <div class="jd-row">
       <div class="jd-grid" id="jd-grid"></div>
       <aside class="jd-side"><div class="jd-hh"><div class="jd-h">Lo que vas desbloqueando</div><button class="jd-link" id="jd-edit" onclick="jdEditHitos()">Editar</button></div><ul class="jd-un" id="jd-un"></ul>
-        <p class="jd-how">Tu jardín crece con las marcas de tus hábitos. Hacia adelante, la línea del tiempo te muestra cómo se vería si sigues a tu ritmo de las últimas 4 semanas.</p></aside>
+        <p class="jd-how">Tu jardín crece con las marcas de tus hábitos, en el Log o aquí.</p></aside>
     </div>
   </div>`;
   _jdCards(); _jdBuild();
@@ -2631,9 +2689,9 @@ function _jdUpdate(){
   const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + m);
   const yrs = Math.floor(m/12);
   document.getElementById('jd-year').textContent = d.getFullYear();
-  document.getElementById('jd-sub').textContent = m === 0 ? 'Hoy' : `${d.toLocaleDateString('es-MX',{month:'short'}).replace('.','')} · en ${m < 12 ? m + (m===1?' mes':' meses') : yrs + (yrs===1?' año':' años')}, a tu ritmo`;
+  document.getElementById('jd-sub').textContent = m === 0 ? 'Hoy · ' + new Date().toLocaleDateString('es-MX',{day:'numeric',month:'long'}) : `${d.toLocaleDateString('es-MX',{month:'short'}).replace('.','')} · en ${m < 12 ? m + (m===1?' mes':' meses') : yrs + (yrs===1?' año':' años')}, a tu ritmo`;
   document.getElementById('jd-days').textContent = Math.round(total).toLocaleString('es-MX');
-  const end = document.getElementById('jd-tl-end'); if (end) end.textContent = `En ${_jd.yrs===1?'1 año':_jd.yrs+' años'} · ${new Date().getFullYear()+_jd.yrs}`;
+  const end = null; if (end) end.textContent = `En ${_jd.yrs===1?'1 año':_jd.yrs+' años'} · ${new Date().getFullYear()+_jd.yrs}`;
   const un = document.getElementById('jd-un'); if (un && !_jd.editH) un.innerHTML = U.map(u => `<li class="${u.on?'on':''}"><i></i><span><b>${u.t}</b>${u.d}${u.left?`<span class="jd-left">${u.left}</span>`:''}</span></li>`).join('') + `<li style="display:block;font-size:.7rem">Cuentan los días de todos tus hábitos juntos.</li>`;
   const top = _jdTop();
   document.querySelectorAll('.jd-card').forEach(c => { const on = !!top && String(top.id) === c.dataset.h; c.classList.toggle('top', on); c.querySelector('.jd-tag').hidden = !on; });
@@ -3237,16 +3295,16 @@ function _dayRow(i, D) {
   const late = !i.done && i.date && i.date < today;
   const nextLbl = D < today ? 'hoy' : 'mañana';
   return `<div class="dy-task${i.done?' done':''}${_sel.has(i.id)?' sel':''}" draggable="true" data-id="${i.id}" ondragstart="dragStart(event,${i.id})" ondragend="dragEnd(event)"${i.done?'':` ondragover="dayRowOver(event)" ondragleave="dayRowLeave(event)" ondrop="dayReorder(event,${i.id},'${D}')"`}>
-    ${!i.done?`<span class="dy-grip" ontouchstart="dyGrip(event,${i.id},'${D}')" aria-label="Arrastrar para ordenar"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor" aria-hidden="true"><circle cx="2.5" cy="3" r="1.4"/><circle cx="7.5" cy="3" r="1.4"/><circle cx="2.5" cy="8" r="1.4"/><circle cx="7.5" cy="8" r="1.4"/><circle cx="2.5" cy="13" r="1.4"/><circle cx="7.5" cy="13" r="1.4"/></svg></span>`:''}
-    <div class="dy-check${i.done?' done':''}" onclick="toggleDone(${i.id})" title="${i.done?'Marcar pendiente':'Marcar hecha'}">${i.done?'✓':''}</div>
+    ${!i.done?`<span class="dy-grip" ontouchstart="dyGrip(event,${i.id},'${D}')" aria-label="Arrastrar para ordenar"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor" aria-hidden="true"><circle cx="2.5" cy="3" r="1.4"/><circle cx="7.5" cy="3" r="1.4"/><circle cx="2.5" cy="8" r="1.4"/><circle cx="7.5" cy="8" r="1.4"/><circle cx="2.5" cy="13" r="1.4"/><circle cx="7.5" cy="13" r="1.4"/></svg></span>`:'<span class="dy-grip" style="visibility:hidden" aria-hidden="true"></span>'}
+    <div class="dy-tm">${i.time?h(i.time):''}</div>
+    <div class="dy-check${i.done?' done':''}" onclick="toggleDone(${i.id})" title="${i.done?'Marcar pendiente':'Marcar hecha'}">${i.done?ico('check',13):''}</div>
     <div style="flex:1;min-width:0">
       <div class="dy-text" onclick="taskClick(event,${i.id})">${h(i.text)}</div>
       <div class="dy-meta">
-        <span class="dy-chip">${catIco(cat,12)}${h(cat.name)}</span>
-        ${i.time?`<span class="dy-mi">${ico('clock',12)} ${h(i.time)}</span>`:''}
-        ${subs.length?`<span>${subs.filter(s=>s.done).length}/${subs.length} acciones</span>`:''}
-        ${i.recur?`<span class="dy-mi" title="Repetitiva">${ico('repeat',12)} repite</span>`:''}
-        ${late?`<span style="color:#ef4444;font-weight:700">Vencida ${fmtDate(i.date)}</span>`:''}
+        <span class="dy-cat">${catDot(cat)}${h(cat.name)}</span>
+        ${subs.length?`<span>${subs.filter(s=>s.done).length} de ${subs.length} acciones</span>`:''}
+        ${i.recur?`<span class="dy-mi" title="Repetitiva">${ico('repeat',12)} se repite</span>`:''}
+        ${late?`<span class="dy-late">Vencida ${fmtDate(i.date)}</span>`:_dyLateToday(i, D)?'<span class="dy-late">pendiente de la mañana</span>':''}
       </div>
     </div>
     ${!i.done?`<div class="dy-acts">
@@ -3335,6 +3393,23 @@ function dyGrip(e, id, D){
   document.addEventListener('touchmove', move, {passive:false}); document.addEventListener('touchend', up); document.addEventListener('touchcancel', up);
 }
 
+// ¿Ya pasó su hora hoy? (media hora de gracia)
+function _dyMin(t){ const [a,b] = String(t||'').split(':').map(Number); return a*60+(b||0); }
+function _dyNowMin(){ const n = new Date(); return n.getHours()*60+n.getMinutes(); }
+function _dyLateToday(i, D){ return !i.done && D===todayStr() && i.time && _dyMin(i.time)+30 < _dyNowMin(); }
+// Acomodar en la tarde lo que se quedó pendiente de la mañana
+function dayReflow(){
+  const D = todayStr(), late = items.filter(i=>!i.archived && i.date===D && _dyLateToday(i, D)).sort((a,b)=>_dyMin(a.time)-_dyMin(b.time));
+  if (!late.length) return;
+  const taken = new Set(items.filter(i=>!i.archived && !i.done && i.date===D && i.time && !late.includes(i)).map(i=>_dyMin(i.time)));
+  let m = Math.ceil((_dyNowMin()+10)/30)*30; const first = m;
+  late.forEach(i=>{ while (taken.has(m) && m < 23*60) m += 30; m = Math.min(m, 23*60+30); i.time = String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0'); taken.add(m); m += 30; });
+  save(); renderCurrent();
+  showToast(`Acomodé ${late.length} ${late.length===1?'tarea':'tareas'} desde las ${String(Math.floor(first/60)).padStart(2,'0')}:${String(first%60).padStart(2,'0')}`);
+}
+function _dyRing(d, t){ const C = 2*Math.PI*18, p = t ? d/t : 0;
+  return `<svg class="dy-ring" viewBox="0 0 44 44" aria-label="${d} de ${t} hechas"><circle cx="22" cy="22" r="18" fill="none" stroke="#ECEEE7" stroke-width="4"/>${d?`<circle cx="22" cy="22" r="18" fill="none" stroke="#6b7a4e" stroke-width="4" stroke-linecap="round" stroke-dasharray="${(C*p).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 22 22)"/>`:''}<text x="22" y="26.5" text-anchor="middle" font-size="12" font-weight="800" fill="#1C2018" font-family="Inter,sans-serif">${d}/${t}</text></svg>`; }
+
 function renderLogDiario() {
   const el = document.getElementById('panel-log');
   if (!el) return;
@@ -3374,63 +3449,67 @@ function renderLogDiario() {
   const dn = dayAll.filter(i=>i.done);
   const total = pend.length + dn.length;
 
-  // Ahora toca (solo hoy)
+  // Ahora toca (solo hoy) — tarjeta a un lado
   let heroHtml = '';
   if (isToday) {
     const f = pend.find(i=>i.focus) || items.find(i=>i.focus && _live(i)) || pend[0];
     if (f) {
-      const subs = f.subtasks||[], ds_ = subs.filter(s=>s.done).length;
+      const subs = f.subtasks||[], ds_ = subs.filter(s=>s.done).length, fc = getCat(f.cat);
       const jamOn = window._jam && window._jam.id===f.id;
-      heroHtml = `<div class="dy-now"><div class="dy-pill">
-        <span class="dy-pill-k">Ahora toca</span>
-        <span class="dy-pill-t" onclick="openEditModal(${f.id})" title="${f.focus?'Fijada por ti':'Fija otra con el pin'}">${h(f.text)}</span>
-        ${subs.length?`<span class="dy-pill-n">${ds_}/${subs.length}</span>`:''}
-        ${jamOn ? `<span class="dy-pill-jam on"><i></i>JAM SESH</span>` : `<button class="dy-pill-jam" onclick="openJamModal(${f.id})">${ico('clock',13)} JAM SESH</button>`}
-        <button class="dy-pill-ok" onclick="toggleDone(${f.id})" title="Marcar como hecha" aria-label="Marcar como hecha">${ico('check',16)}</button>
-      </div></div>`;
-    }
+      heroHtml = `<div class="card dy-card lg-focus"><div class="lg-k">Ahora toca${f.focus?' · fijada por ti':''}</div>
+        <div class="lg-ft" onclick="openEditModal(${f.id})">${h(f.text)}</div>
+        <div class="dy-meta"><span class="dy-cat">${catDot(fc)}${h(fc.name)}</span>${subs.length?`<span>${ds_} de ${subs.length} acciones</span>`:''}${f.time?`<span>${h(f.time)}</span>`:''}</div>
+        <div class="lg-bts">${jamOn ? `<span class="lg-btn on"><i></i>En JAM SESH</span>` : `<button class="lg-btn pri" onclick="openJamModal(${f.id})">${ico('clock',14)} JAM SESH</button>`}<button class="lg-btn" onclick="toggleDone(${f.id})">${ico('check',14)} Listo</button></div>
+      </div>`;
+    } else heroHtml = `<div class="card dy-card lg-focus"><div class="lg-k">Ahora toca</div><div class="lg-ft" style="cursor:default">Nada pendiente. Buen día.</div></div>`;
   }
 
   // Hábitos
   const habits = _getHabits(), dayLog = _getHlog()[D] || {};
-  const harvest = _habitHarvest(D, habits);
-  const habitsHtml = `<div class="card dy-card">
-    <div class="dy-sec"><div class="pl-q">Hábitos</div>
-      <div style="display:flex;align-items:center;gap:12px">
-        ${habits.length?`<span class="hb-total">Cosecha de ${harvest.month} · ${harvest.total}</span>`:''}
-        ${habits.length?`<button class="pl-link" style="margin:0" onclick="_habEdit=!_habEdit;renderLogDiario()">${_habEdit?'Listo':'Editar'}</button>`:''}
-      </div></div>
-    <div class="hb-wrap"><div class="dy-habits">${habits.map(hb=>{
+  const _mon = (()=>{ const d = new Date(D+'T12:00:00'); d.setDate(d.getDate()-((d.getDay()+6)%7)); return d; })(), _hl = _getHlog();
+  const _wk = Array.from({length:7}, (_,k)=>{ const d = new Date(_mon); d.setDate(_mon.getDate()+k); return _ymd(d); });
+  const habitsHtml = `<div class="card dy-card lg-habs">
+    <div class="dy-sec"><div class="lg-k" style="margin:0">Hábitos</div>
+      ${habits.length?`<button class="pl-link" style="margin:0" onclick="_habEdit=!_habEdit;renderLogDiario()">${_habEdit?'Listo':'Editar'}</button>`:''}</div>
+    ${habits.map(hb=>{
       const on = !!dayLog[hb.id], f = _habFreq(hb);
-      let stg;
-      if (f) { const c = _habWeekCount(hb.id); stg = [c>=f ? 3 : c>=Math.ceil(f/2) ? 2 : c ? 1 : 0, `${c} de ${f} esta semana`]; }
-      else { const st = _habitStreak(hb.id); stg = _habitStage(st); stg = [stg[0], 'Diario · ' + stg[1].replace(/^Semilla$/,'empieza hoy')]; }
-      const fsel = _habEdit ? `<select class="hb-freq" onclick="event.stopPropagation()" onchange="setHabFreq(${hb.id},this.value)">${[[0,'Diario'],[1,'1 por semana'],[2,'2 por semana'],[3,'3 por semana'],[4,'4 por semana'],[5,'5 por semana'],[6,'6 por semana']].map(([v,t])=>`<option value="${v}"${v===f?' selected':''}>${t}</option>`).join('')}</select>` : '';
-      return `<span class="dy-hab hb2${on?' on':''}" ${_habEdit?'':`onclick="toggleHabit(${hb.id})"`}>${_plantSvg(stg[0], on)}<span class="hb-tx"><b>${h(hb.text)}</b>${_habEdit?fsel:`<small>${stg[1]}</small>`}</span>${_habEdit?`<span class="x" onclick="event.stopPropagation();removeHabit(${hb.id})" title="Quitar hábito">✕</span>`:''}</span>`;
-    }).join('') || '<span class="pl-sub" style="margin:0">Sin hábitos todavía. Agrega el primero ↓</span>'}</div>
-      ${habits.length?harvest.grid:''}</div>
+      const sub = f ? `${_habWeekCount(hb.id)} de ${f} esta semana` : (()=>{ const st = _habitStreak(hb.id); return st ? `Diario · ${st===1?'1 día':st+' días'} seguidos` : 'Diario · empieza hoy'; })();
+      const fsel = `<select class="hb-freq" onclick="event.stopPropagation()" onchange="setHabFreq(${hb.id},this.value)">${[[0,'Diario'],[1,'1 por semana'],[2,'2 por semana'],[3,'3 por semana'],[4,'4 por semana'],[5,'5 por semana'],[6,'6 por semana']].map(([v,t])=>`<option value="${v}"${v===f?' selected':''}>${t}</option>`).join('')}</select>`;
+      const dots = _wk.map(ds=>`<i class="${_hl[ds]&&_hl[ds][hb.id]?'on':''}${ds===D?' t':''}"></i>`).join('');
+      return `<div class="lg-hb">
+        ${_habEdit ? `<span class="lg-x" onclick="removeHabit(${hb.id})" title="Quitar hábito">${ico('x',14)}</span>` : `<button class="dy-check${on?' done':''}" onclick="toggleHabit(${hb.id})" aria-pressed="${on}" aria-label="Marcar ${h(hb.text)}">${on?ico('check',13):''}</button>`}
+        <div class="lg-hn"><b>${h(hb.text)}</b>${_habEdit?fsel:`<small>${sub}</small>`}</div>
+        ${_habEdit?'':`<div class="lg-dots" aria-hidden="true">${dots}</div>`}
+      </div>`;
+    }).join('') || '<div class="pl-sub" style="margin:0">Sin hábitos todavía. Agrega el primero.</div>'}
     ${_habEdit || !habits.length ? `<div style="display:flex;gap:6px;margin-top:12px">
       <input class="modal-input" id="hab-inp" placeholder="Nuevo hábito…" style="flex:1" onkeydown="if(event.key==='Enter')addHabit()"/>
       <button class="btn-sm" onclick="addHabit()">+</button>
-    </div>` : ''}
+    </div>` : `<button class="lg-garden" onclick="switchTab('jardin')">Cada marca riega tu jardín ${ico('next',13)}</button>`}
   </div>`;
 
   // Tareas del día
   const free = Math.max(0, DAY_GOAL - total);
   const pctDay = Math.round(dn.length / Math.max(total, DAY_GOAL) * 100);
+  const _nm = _dyNowMin(), _nowAt = isToday ? (()=>{ const k = pend.findIndex(i=>!i.time || _dyMin(i.time) > _nm); return k<0 ? pend.length : k; })() : -1;
+  const _nowLine = `<div class="lg-now"><b>${String(Math.floor(_nm/60)).padStart(2,'0')}:${String(_nm%60).padStart(2,'0')}</b><span></span></div>`;
+  const _lateN = isToday && _nm < 22*60 ? pend.filter(i=>_dyLateToday(i, D)).length : 0;
+  const _nxt = pend.find(i=>i.time && _dyMin(i.time) > _nm);
+  const _nextTxt = !total ? 'Día libre' : !pend.length ? `Día completo · ${dn.length} hecha${_s(dn.length)}` : isToday ? `Te ${pend.length===1?'queda':'quedan'} ${pend.length}${_nxt?` · la siguiente a las ${_nxt.time}`:''}` : `${dn.length} de ${total} hecha${_s(total)}`;
   const dayHtml = `<div class="card dy-card">
     <div class="dy-head">
-      <div class="dy-title">${isToday?'Hoy · ':''}${_fmtLong(D)}</div>
-      <div class="dy-count">${dn.length} de ${total} hecha${_s(total)}${total<DAY_GOAL?` · tu meta: ${DAY_GOAL}`:''}</div>
+      <div><div class="dy-title">${isToday?'Hoy · ':''}${_fmtLong(D)}</div>
+        <div class="dy-count">${_nextTxt}</div></div>
+      ${_dyRing(dn.length, total)}
     </div>
-    <div class="dy-prog"><div class="pl-fill" style="width:${pctDay}%"></div></div>
-    <div ondragover="event.preventDefault()" ondrop="dropOnDay(event,'${D}')">
-      ${pend.map(i=>_dayRow(i,D)).join('')}
-      ${Array.from({length:free}).map(()=>`<div class="dy-empty" onclick="openDayPick()"><span class="o"></span><span>Espacio libre · trae algo de la bandeja</span></div>`).join('')}
+    ${_lateN ? `<div class="lg-nudge"><span><b>${_lateN} ${_lateN===1?'tarea':'tareas'} de la mañana</b> ${_lateN===1?'sigue pendiente':'siguen pendientes'}. ¿Las acomodo en tu tarde?</span><button class="lg-btn pri" onclick="dayReflow()">Acomodar en la tarde</button></div>` : ''}
+    <div class="lg-tl" ondragover="event.preventDefault()" ondrop="dropOnDay(event,'${D}')">
+      ${pend.map((i,k)=>(_nowAt===k?_nowLine:'')+_dayRow(i,D)).join('')}${_nowAt===pend.length?_nowLine:''}
+      ${free ? `<div class="dy-empty" onclick="openDayPick()"><span class="dy-tm"></span><span class="o"></span><span>${free===1?'Te queda espacio para 1 más':'Espacio para '+free+' más'} · trae algo de la bandeja</span></div>` : ''}
       ${dn.map(i=>_dayRow(i,D)).join('')}
     </div>
     <div class="dy-tools">
-      <button class="dy-btn${_dayPickOpen?' solid':''}" onclick="toggleDayPick()">${ico('bandeja',15)} ${_dayPickOpen?'Cerrar bandeja':'Traer de la bandeja'}</button>
+      <button class="dy-btn${_dayPickOpen?' on':''}" onclick="toggleDayPick()">${ico('bandeja',15)} ${_dayPickOpen?'Cerrar bandeja':'Traer de la bandeja'}</button>
       <button class="dy-btn" onclick="openAddModalWithDate('${D}')">+ Nueva tarea</button>
       ${_clip.length?`<button class="dy-btn solid" onclick="pasteTo('${D}')">${ico('copy',15)} Pegar ${_clip.length} aquí</button>`:''}
     </div>
@@ -3449,7 +3528,7 @@ function renderLogDiario() {
     <button class="dy-btn" onclick="dayDropAll()">Regresar a la bandeja</button>
   </div>` : '';
 
-  el.innerHTML = `<div class="log-dates">${dateCards}</div>${jamHtml}${heroHtml}${habitsHtml}${dayHtml}${closeHtml}`;
+  el.innerHTML = `<div class="log-dates">${dateCards}</div>${jamHtml}<div class="lg"><div class="lg-main">${dayHtml}${closeHtml}</div><aside class="lg-side">${heroHtml}${habitsHtml}</aside></div>`;
   if (_dayPickOpen) _renderPickList();
 }
 
