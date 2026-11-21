@@ -912,6 +912,68 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 .ar-wkin input{flex:1;height:42px;border:1.5px solid #E3E6DD;border-radius:12px;padding:0 12px;font:inherit;font-size:16px;font-weight:800;color:#1C2018;background:#fff}
 .ar-wkin small{font-size:.8rem;color:#6b7280;font-weight:600}
 #meta-mode-row .eis-chip.on-i{background:#EEF2E6;border-color:#CFDAB8;color:var(--accent)}
+
+/* MI JARDÍN */
+.jd{max-width:1100px}
+.jd-stage{background:#fff;border:1px solid var(--border);border-radius:18px;overflow:hidden}
+.jd-box{position:relative}
+.jd-scene{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.jd-scene::-webkit-scrollbar{display:none}
+#jd-scene{display:block;width:100%;min-width:780px;height:auto}
+.jd-when{position:absolute;left:18px;top:12px;pointer-events:none}
+.jd-when b{display:block;font-size:clamp(1.7rem,3.6vw,2.6rem);font-weight:900;letter-spacing:-.03em;line-height:1;color:var(--text)}
+.jd-when span{font-size:.72rem;font-weight:700;color:var(--accent)}
+.jd-total{position:absolute;right:18px;top:14px;text-align:right;pointer-events:none}
+.jd-total b{display:block;font-size:1.4rem;font-weight:900;letter-spacing:-.02em;line-height:1.1;color:var(--text)}
+.jd-total span{font-size:.68rem;font-weight:700;color:var(--text2)}
+.jd-swipe{display:none;font-size:.7rem;color:var(--text2);text-align:center;padding:6px 0 0}
+.jd-time{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 18px;border-top:1px solid var(--border)}
+.jd-play{width:42px;height:42px;border-radius:50%;border:1.5px solid #CFDAB8;background:var(--accent-light);color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.jd-play:hover{border-color:var(--accent)}
+.jd-tl{display:grid;gap:2px}
+.jd-tl input{width:100%;accent-color:var(--accent);height:26px;margin:0;cursor:pointer}
+.jd-tl-lab{display:flex;justify-content:space-between;font-size:.68rem;font-weight:700;color:var(--text2)}
+.jd-tl-lab b{color:var(--accent)}
+.jd-yrs{display:flex;align-items:center;gap:8px;font-size:.75rem;font-weight:700;color:var(--text2);white-space:nowrap}
+.jd select{font:inherit;font-size:.78rem;font-weight:700;color:var(--text);background:#fff;border:1.5px solid var(--border);border-radius:9px;height:34px;padding:0 8px;outline:none}
+.jd select:focus{border-color:var(--accent)}
+.jd-chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}
+.jd-chips .pill.active{background:var(--accent-light);color:var(--accent);border-color:#CFDAB8}
+.jd-row{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:16px;margin-top:16px;align-items:start}
+.jd-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.jd-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px;display:grid;gap:10px;position:relative}
+.jd-card.top{border-color:#CFDAB8;box-shadow:0 0 0 3px var(--accent-light)}
+.jd-tag{position:absolute;top:-10px;left:12px;background:var(--accent-light);border:1px solid #CFDAB8;color:var(--accent);font-size:.62rem;font-weight:800;padding:1px 8px;border-radius:99px}
+.jd-ch{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.jd-nm{font-weight:800;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.jd-days{display:flex;gap:5px}
+.jd-day{flex:1;max-width:38px;aspect-ratio:1;border-radius:50%;border:1.5px solid var(--border);background:#fff;color:var(--text2);font:inherit;font-size:.68rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;transition:transform .15s}
+.jd-day.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.jd-day.today{box-shadow:0 0 0 2px #CFDAB8}
+.jd-day:disabled{opacity:.35;cursor:default}
+.jd-day:active:not(:disabled){transform:scale(.9)}
+.jd-stat{font-size:.74rem;color:var(--text2);background:#F5F8EF;border-radius:9px;padding:7px 10px;line-height:1.5}
+.jd-stat b{color:var(--text)}
+.jd-side{background:#fff;border:1px solid var(--border);border-radius:16px;padding:14px 16px}
+.jd-h{font-size:.85rem;font-weight:900;margin-bottom:10px}
+.jd-un{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.jd-un li{display:grid;grid-template-columns:20px minmax(0,1fr);gap:9px;font-size:.74rem;color:var(--text2)}
+.jd-un li i{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);display:block}
+.jd-un li.on{color:var(--text)}
+.jd-un li.on i{background:var(--accent);border-color:var(--accent);box-shadow:inset 0 0 0 4px #fff}
+.jd-un li b{display:block;font-weight:800}
+.jd-how{font-size:.72rem;color:var(--text2);margin:12px 0 0;padding-top:10px;border-top:1px solid var(--border)}
+.jd-gw{transition:transform .7s cubic-bezier(.3,1.3,.5,1)}
+.jd-sw{animation:jdSway 5s ease-in-out infinite alternate}
+@keyframes jdSway{from{transform:rotate(-1.6deg)}to{transform:rotate(1.8deg)}}
+.jd-bf{animation:jdFly 9s ease-in-out infinite}
+.jd-wg{animation:jdFlap .28s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes jdFly{0%{transform:translate(0,0)}25%{transform:translate(38px,-26px)}50%{transform:translate(74px,4px)}75%{transform:translate(30px,18px)}100%{transform:translate(0,0)}}
+@keyframes jdFlap{from{transform:scaleX(1)}to{transform:scaleX(.25)}}
+.jd-fade{transition:opacity .6s}
+.jd-zone{cursor:pointer}
+@media(max-width:900px){.jd-row{grid-template-columns:1fr}.jd-time{grid-template-columns:auto minmax(0,1fr)}.jd-yrs{grid-column:1/-1}.jd-swipe{display:block}}
+@media(prefers-reduced-motion:reduce){.jd-sw,.jd-bf,.jd-wg{animation:none}.jd-gw{transition:none}}
 </style>
 </head>
 <body>
@@ -928,6 +990,7 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
   <div class="sidebar-section">Organizar</div>
   <div class="nav-item" id="nav-bandeja" onclick="switchTab('bandeja')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l3-8h12l3 8v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 13h5l1.5 3h5L16 13h5"/></svg><span class="nav-label">Bandeja</span> <span class="badge" id="badge-bandeja">0</span></div>
   <div class="nav-item" id="nav-metas" onclick="switchTab('metas')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg><span class="nav-label">Metas</span></div>
+  <div class="nav-item" id="nav-jardin" onclick="switchTab('jardin')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12c0-4 2.5-6.5 7-6.5 0 4-2.5 6.5-7 6.5z"/><path d="M12 14.5c0-3.2-2-5.2-5.6-5.2 0 3.2 2 5.2 5.6 5.2z"/><path d="M5 21h14"/></svg><span class="nav-label">Jardín</span></div>
   <div class="nav-item" id="nav-done" onclick="switchTab('done')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.7 2.7L16 9.5"/></svg><span class="nav-label">Completadas</span></div>
   <div class="sidebar-section">Configuración</div>
   <div class="nav-item" id="nav-cats" onclick="switchTab('cats')"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8" r="1.3"/></svg><span class="nav-label">Categorías</span></div>
@@ -973,6 +1036,8 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
     <div class="panel" id="panel-done"></div>
     <!-- METAS -->
     <div class="panel" id="panel-metas"></div>
+    <!-- JARDÍN -->
+    <div class="panel" id="panel-jardin"></div>
     <!-- CATS -->
     <div class="panel" id="panel-cats"></div>
     <!-- SETTINGS -->
@@ -987,6 +1052,7 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
     <button class="tab" id="tab-log" onclick="switchTab('log')"><span class="tab-icon"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 9.5l2 2 4-4M8 16h8"/></svg></span><span>Log</span></button>
     <button class="tab" id="tab-bandeja" onclick="switchTab('bandeja')"><span class="tab-icon"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l3-8h12l3 8v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M3 13h5l1.5 3h5L16 13h5"/></svg></span><span>Bandeja</span></button>
     <button class="tab" id="tab-metas" onclick="switchTab('metas')"><span class="tab-icon"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.2"/></svg></span><span>Metas</span></button>
+    <button class="tab" id="tab-jardin" onclick="switchTab('jardin')"><span class="tab-icon"><svg class="ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-9"/><path d="M12 12c0-4 2.5-6.5 7-6.5 0 4-2.5 6.5-7 6.5z"/><path d="M12 14.5c0-3.2-2-5.2-5.6-5.2 0 3.2 2 5.2 5.6 5.2z"/><path d="M5 21h14"/></svg></span><span>Jardín</span></button>
   </div>
 </div>
 
@@ -2154,7 +2220,7 @@ const PANEL_TITLES = {
   dash:'Pulso', log:'Log diario', semana:'Semana', bandeja:'Bandeja',
   todo:'To Do', compromisos:'Compromisos', proyectos:'Proyectos',
   extra:'Extra', done:'Completadas', metas:'Metas '+new Date().getFullYear(),
-  cats:'Categorías', settings:'Ajustes'
+  cats:'Categorías', settings:'Ajustes', jardin:'Mi jardín'
 };
 
 function _dashHeaderHtml() {
@@ -2188,6 +2254,7 @@ function switchTab(tab) {
   if (tab==='dash') renderDash();
   if (tab==='cats') renderCatsPanel();
   if (tab==='metas') renderMetas();
+  if (tab==='jardin') renderJardin(); else if (typeof jdStop==='function') jdStop();
   if (tab==='log') renderLogDiario();
   if (tab==='bandeja') renderBandeja();
   if (tab==='todo') renderPanel('todo');
@@ -2311,6 +2378,255 @@ function _habitWeek7(id){
   }
   return res;
 }
+
+// ============================================================
+// MI JARDÍN — cada hábito siembra su planta; crece con los días que lo cuidas
+// ============================================================
+const _jd = { months:0, yrs:5, names:true, timer:null, slots:[], H:[] };
+const _jdHash = s => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
+const _jdRng = seed => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+const _jdPick = (r, a) => a[Math.floor(r() * a.length)];
+const _f1 = n => Math.round(n * 10) / 10;
+const _jdEsc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function _jdLav(r, dry){
+  let s = '';
+  for (let k = 0; k < 16; k++){ const a = (r()-.5)*1.7, L = 14 + r()*12, x = Math.sin(a)*L, y = -Math.cos(a)*L;
+    s += `<path d="M0 0Q${_f1(x*.3)} ${_f1(y*.6)} ${_f1(x)} ${_f1(y)}" stroke="${dry?'#B3A887':'#9DAE89'}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`; }
+  const n = dry ? 9 : 17;
+  for (let k = 0; k < n; k++){ const a = (r()-.5)*1.35, L = 50 + r()*32, ex = Math.sin(a)*L*.75, ey = -Math.cos(a)*L;
+    s += `<path d="M0 0Q${_f1(ex*.15)} ${_f1(ey*.55)} ${_f1(ex)} ${_f1(ey)}" stroke="${dry?'#B5A782':'#7F956B'}" stroke-width="1.3" fill="none"/>`;
+    if (dry && r() > .35) continue;
+    let dx = ex - ex*.15, dy = ey - ey*.55; const m = Math.hypot(dx,dy); dx/=m; dy/=m;
+    for (let j = 0; j < 6; j++){ const c = dry ? '#BCA98A' : _jdPick(r, ['#8B7BC8','#9C8AD6','#7A68B8','#A898DE']);
+      s += `<circle cx="${_f1(ex+dx*j*3.1)}" cy="${_f1(ey+dy*j*3.1)}" r="${_f1(2.9-j*.25)}" fill="${c}"/>`; }
+  }
+  return s;
+}
+function _jdGrass(r, dry){
+  let s = '';
+  for (let k = 0; k < 26; k++){ const a = (r()-.5)*2.3, h = 60 + r()*50, ex = Math.sin(a)*h*.85, ey = -h*(1-Math.abs(a)*.28);
+    s += `<path d="M0 0Q${_f1(ex*.1)} ${_f1(ey*.85)} ${_f1(ex)} ${_f1(ey)}" stroke="${dry?'#C4B690':_jdPick(r,['#8FA56C','#A3B57F','#7F9660'])}" stroke-width="1.5" fill="none" stroke-linecap="round"/>`; }
+  const n = dry ? 3 : 9;
+  for (let k = 0; k < n; k++){ const a = (r()-.5)*1.5, h = 100 + r()*38, ex = Math.sin(a)*h*.62, ey = -h;
+    s += `<path d="M0 0Q${_f1(ex*.15)} ${_f1(ey*.6)} ${_f1(ex)} ${_f1(ey)}" stroke="${dry?'#C9BC98':'#AEB894'}" stroke-width="1.2" fill="none"/>`;
+    const x1 = ex*.8, y1 = ey*.8, x2 = ex*1.07, y2 = ey*1.06;
+    s += `<path d="M${_f1(x1)} ${_f1(y1)}L${_f1(x2)} ${_f1(y2)}" stroke="${dry?'#D8CBA8':'#EAD6CE'}" stroke-width="8" stroke-linecap="round" opacity=".92"/>`;
+    s += `<path d="M${_f1(x1)} ${_f1(y1)}L${_f1(x2)} ${_f1(y2)}" stroke="${dry?'#CDBE96':'#D9BCB1'}" stroke-width="3" stroke-linecap="round"/>`;
+  }
+  return s;
+}
+function _jdOlive(r, dry){
+  let s = `<path d="M-6 0C-10-28 6-52-3-92L5-92C13-52-1-28 7 0Z" fill="#7B6B5A"/><path d="M0-78L-34-112M1-84L30-118M0-90L4-136" stroke="#7B6B5A" stroke-width="3.5" stroke-linecap="round"/>`;
+  const cols = dry ? ['#B5A980','#A69669','#C1B48E'] : ['#8C9A6F','#A2AE86','#7B895F','#B3BC98'];
+  for (let k = 0; k < 26; k++) s += `<ellipse cx="${_f1((r()-.5)*118)}" cy="${_f1(-124+(r()-.5)*62)}" rx="${_f1(14+r()*12)}" ry="${_f1(9+r()*7)}" fill="${_jdPick(r,cols)}" opacity=".92"/>`;
+  if (!dry) for (let k = 0; k < 9; k++) s += `<circle cx="${_f1((r()-.5)*90)}" cy="${_f1(-118+(r()-.5)*44)}" r="2.3" fill="#4F5A37"/>`;
+  return s;
+}
+function _jdRomero(r, dry){
+  let s = '';
+  for (let k = 0; k < 11; k++){ const a = (r()-.5)*.9, L = 42 + r()*30, ex = Math.sin(a)*L, ey = -Math.cos(a)*L;
+    s += `<path d="M0 0Q${_f1(ex*.3)} ${_f1(ey*.5)} ${_f1(ex)} ${_f1(ey)}" stroke="${dry?'#A48F6A':'#7A6A55'}" stroke-width="1.4" fill="none"/>`;
+    for (let j = 2; j < 14; j++){ const t = j/14, x = ex*t*t*.7 + ex*t*.3, y = ey*t, side = j%2 ? 1 : -1, len = 6 - t*2.5;
+      s += `<path d="M${_f1(x)} ${_f1(y)}l${_f1(side*len*.9)} ${_f1(-len*.55)}" stroke="${dry?'#B3A27C':_jdPick(r,['#4F6B4A','#5E7A55','#6A845E'])}" stroke-width="1.6" stroke-linecap="round"/>`;
+      if (!dry && t > .55 && r() < .22) s += `<circle cx="${_f1(x+side*2)}" cy="${_f1(y-2)}" r="1.9" fill="${_jdPick(r,['#A9BCE0','#B9C6EA','#9AAEDB'])}"/>`; }
+  }
+  return s;
+}
+function _jdSilver(r, dry){
+  let s = '';
+  for (let k = 0; k < 40; k++){ const t = Math.PI + r()*Math.PI, d = Math.sqrt(r()), x = Math.cos(t)*30*d, y = Math.sin(t)*18*d;
+    s += `<ellipse cx="${_f1(x)}" cy="${_f1(y)}" rx="4.2" ry="2.6" transform="rotate(${Math.round(r()*180)} ${_f1(x)} ${_f1(y)})" fill="${dry?'#CDBF9C':_jdPick(r,['#B9C3AC','#CBD3BF','#A9B59B'])}"/>`; }
+  if (!dry) for (let k = 0; k < 4; k++) s += `<circle cx="${_f1((r()-.5)*36)}" cy="${_f1(-12-r()*10)}" r="2.6" fill="#E3C766"/>`;
+  return s;
+}
+function _jdAgave(r, dry){
+  let s = '';
+  for (let k = 0; k < 11; k++){ const a = -1.35 + k/10*2.7 + (r()-.5)*.15, L = 38 + (1-Math.abs(a)/1.35)*30, tx = Math.sin(a)*L, ty = -Math.cos(a)*L*.95, c = Math.cos(a)*5;
+    s += `<path d="M${_f1(-c)} 0Q${_f1(tx*.5-c)} ${_f1(ty*.5)} ${_f1(tx)} ${_f1(ty)}Q${_f1(tx*.5+c)} ${_f1(ty*.5)} ${_f1(c)} 0Z" fill="${dry?'#BCAA82':_jdPick(r,['#86A19A','#9BB3AC','#76918A'])}"/>`; }
+  return s;
+}
+function _jdCempa(r, dry){
+  let s = '';
+  for (let k = 0; k < 18; k++){ const a = (r()-.5)*2, L = 12 + r()*14, x = Math.sin(a)*L, y = -Math.cos(a)*L;
+    s += `<path d="M0 0L${_f1(x)} ${_f1(y)}" stroke="${dry?'#A99A70':'#5F7A45'}" stroke-width="2.4" stroke-linecap="round"/>`; }
+  const n = dry ? 2 : 7;
+  for (let k = 0; k < n; k++){ const x = (r()-.5)*40, y = -16 - r()*18;
+    s += `<circle cx="${_f1(x)}" cy="${_f1(y)}" r="5.8" fill="${dry?'#A4824F':'#E8922B'}"/><circle cx="${_f1(x)}" cy="${_f1(y)}" r="3" fill="${dry?'#B3925C':'#F2B24C'}"/>`; }
+  return s;
+}
+const JD_SP = {
+  lavanda:  { name:'Lavanda', plural:'lavandas', maxN:16, perN:110, full:520, minS:.35, depth:[.35,1], w:1, draw:_jdLav, bugs:true },
+  pasto:    { name:'Pasto plumoso', plural:'matas de pasto plumoso', maxN:12, perN:140, full:540, minS:.3, depth:[.02,.7], w:1, draw:_jdGrass },
+  olivo:    { name:'Olivo', plural:'olivos', maxN:3, perN:520, full:1200, minS:.24, depth:[0,.3], w:1.25, draw:_jdOlive, birds:true },
+  romero:   { name:'Romero', plural:'romeros', maxN:12, perN:120, full:560, minS:.32, depth:[.25,.95], w:.95, draw:_jdRomero, bugs:true },
+  plateada: { name:'Hoja plateada', plural:'matas de hoja plateada', maxN:26, perN:55, full:260, minS:.4, depth:[.4,1], w:.9, draw:_jdSilver },
+  agave:    { name:'Agave', plural:'agaves', maxN:7, perN:220, full:820, minS:.3, depth:[.2,.9], w:.9, draw:_jdAgave },
+  cempa:    { name:'Cempasúchil', plural:'cempasúchiles', maxN:18, perN:70, full:200, minS:.4, depth:[.4,1], w:.9, draw:_jdCempa, bugs:true },
+};
+const JD_ORDER = ['lavanda','pasto','olivo','romero','plateada','agave','cempa'];
+function _jdPlantOf(hb, i){
+  if (hb.plant && JD_SP[hb.plant]) return hb.plant;
+  if (/werk|gym|ejerc|entren|run|correr|padel|hiit/i.test(hb.text||'')) return 'olivo';
+  return JD_ORDER.filter(k => k !== 'olivo')[i % 6];
+}
+// Datos reales de cada hábito: días cuidados y ritmo de las últimas 4 semanas
+function _jdData(){
+  const hl = _getHlog(), today = todayStr(), habs = _getHabits();
+  const t28 = new Date(); t28.setDate(t28.getDate() - 27); const d28 = _ymd(t28);
+  return habs.map((hb, i) => {
+    const id = hb.id, dates = Object.keys(hl).filter(d => d <= today && hl[d] && hl[d][id]).sort();
+    const care = dates.length, first = dates[0] || today;
+    const since = Math.max(1, Math.round((new Date(today+'T12:00:00') - new Date(first+'T12:00:00')) / 864e5) + 1);
+    const win = Math.min(28, since), recent = dates.filter(d => d >= d28).length;
+    const fr = _habFreq(hb) || 7, target = fr * win / 7;
+    const rate = care ? Math.min(1, recent / Math.max(1, target)) : 0;
+    return { hb, id, name: hb.text || 'Hábito', sp: _jdPlantOf(hb, i), fr, care, rate, perYear: fr * 52 * rate };
+  });
+}
+const _jdCare = (h, m) => h.care + h.perYear * m / 12;
+// las primeras plantas salen más rápido, para que el jardín se sienta vivo desde el inicio
+const _jdBorn = (sp, i) => i <= 3 ? i * .35 * sp.perN : (1.05 + (i - 3)) * sp.perN;
+const _jdMax = () => _jd.yrs * 12;
+function _jdSize(o, m){
+  const sp = JD_SP[o.h.sp], cd = _jdCare(o.h, m), born = _jdBorn(sp, o.i);
+  if (cd <= born || cd <= 0) return 0;
+  return _f1((sp.minS + (1 - sp.minS) * Math.min(1, (cd - born) / sp.full)) * 100) / 100;
+}
+const _jdCount = (h, m) => { const sp = JD_SP[h.sp], cd = _jdCare(h, m); let n = 0; while (n < sp.maxN && cd > _jdBorn(sp, n)) n++; return n; };
+function _jdTop(){ let b = null; _jd.H.forEach(h => { if (h.care && (!b || h.rate > b.rate || (h.rate === b.rate && h.care > b.care))) b = h; }); return b; }
+function _jdZones(){
+  const X0 = 140, X1 = 1060, W = _jd.H.reduce((a,h)=>a+JD_SP[h.sp].w,0); let x = X0;
+  return _jd.H.map(h => { const w = (X1-X0) * JD_SP[h.sp].w / W; const z = { x0:x, x1:x+w }; x += w; return z; });
+}
+
+function renderJardin(){
+  const el = document.getElementById('panel-jardin'); if (!el) return;
+  _jd.H = _jdData();
+  if (!_jd.H.length) { el.innerHTML = `<div class="empty-state"><p>Agrega tus hábitos en el Log diario y aquí empezará a crecer tu jardín.</p></div>`; return; }
+  const now = new Date(), MES = now.toLocaleDateString('es-MX',{month:'short'}).replace('.','');
+  el.innerHTML = `<div class="jd">
+    <div class="jd-stage">
+      <div class="jd-box">
+        <div class="jd-scene" id="jd-scene-wrap"><svg id="jd-scene" viewBox="0 150 1200 410" role="img" aria-label="Mi jardín"></svg></div>
+        <div class="jd-when"><b id="jd-year"></b><span id="jd-sub"></span></div>
+        <div class="jd-total"><b id="jd-days"></b><span>días cuidados en total</span></div>
+      </div>
+      <div class="jd-swipe">Desliza para recorrer tu jardín</div>
+      <div class="jd-time">
+        <button class="jd-play" id="jd-play" onclick="jdPlay()" aria-label="Ver crecer"><svg viewBox="0 0 16 16" width="15" height="15"><path id="jd-play-ic" d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg></button>
+        <div class="jd-tl"><input type="range" id="jd-tl" min="0" max="${_jdMax()}" value="${_jd.months}" oninput="jdSeek(this.value)" aria-label="Línea del tiempo">
+          <div class="jd-tl-lab"><span>Hoy · ${MES} ${now.getFullYear()}</span><b id="jd-tl-end"></b></div></div>
+        <label class="jd-yrs">Ver a <select onchange="jdYears(this.value)">${[1,3,5,10,20].map(y=>`<option value="${y}" ${y===_jd.yrs?'selected':''}>${y===1?'1 año':y+' años'}</option>`).join('')}</select></label>
+      </div>
+    </div>
+    <div class="jd-chips"><button class="pill${_jd.names?' active':''}" id="jd-names" onclick="jdNames()">Ver nombres</button><button class="pill" onclick="jdSeek(0)">Hoy</button><button class="pill" onclick="jdSeek(${_jdMax()})">Saltar al final</button></div>
+    <div class="jd-row">
+      <div class="jd-grid" id="jd-grid"></div>
+      <aside class="jd-side"><div class="jd-h">Lo que vas desbloqueando</div><ul class="jd-un" id="jd-un"></ul>
+        <p class="jd-how">Tu jardín crece con las marcas de tus hábitos. Hacia adelante, la línea del tiempo te muestra cómo se vería si sigues a tu ritmo de las últimas 4 semanas.</p></aside>
+    </div>
+  </div>`;
+  _jdCards(); _jdBuild();
+  // en el celular, abrir el jardín centrado
+  requestAnimationFrame(() => { const w = document.getElementById('jd-scene-wrap'); if (w && w.scrollWidth > w.clientWidth) w.scrollLeft = (w.scrollWidth - w.clientWidth) / 2; });
+}
+function _jdCards(){
+  const g = document.getElementById('jd-grid'); if (!g) return;
+  const hl = _getHlog(), mon = new Date(_weekStart()+'T12:00:00'), today = todayStr(), DL = ['L','M','M','J','V','S','D'];
+  g.innerHTML = _jd.H.map(h => {
+    const days = DL.map((l,k) => { const d = new Date(mon); d.setDate(mon.getDate()+k); const ds = _ymd(d), on = !!(hl[ds] && hl[ds][h.id]);
+      return `<button class="jd-day${on?' on':''}${ds===today?' today':''}" ${ds>today?'disabled':''} onclick="jdToggle(${h.id},'${ds}')" aria-pressed="${on}" aria-label="${_jdEsc(h.name)} ${l}">${l}</button>`; }).join('');
+    const wk = _habWeekCount(h.id), sp = JD_SP[h.sp], n = _jdCount(h, 0);
+    return `<div class="jd-card" data-h="${h.id}"><span class="jd-tag" hidden>Más empeño</span>
+      <div class="jd-ch"><span class="jd-nm">${_jdEsc(h.name)}</span><select onchange="jdSetPlant(${h.id},this.value)" aria-label="Planta">${JD_ORDER.map(k=>`<option value="${k}" ${k===h.sp?'selected':''}>${JD_SP[k].name}</option>`).join('')}</select></div>
+      <div class="jd-days">${days}</div>
+      <div class="jd-stat"><b>${wk}</b> de ${h.fr} esta semana · <b>${h.care}</b> días cuidados · <b>${n}</b> ${n===1?sp.name.toLowerCase():sp.plural}${h.care && h.rate<.4?' · se está secando':''}</div></div>`;
+  }).join('');
+}
+function _jdBuild(){
+  const svg = document.getElementById('jd-scene'); if (!svg) return;
+  const GY = 335, GH = 212, zs = _jdZones(); _jd.slots = [];
+  _jd.H.forEach((h, hi) => {
+    const sp = JD_SP[h.sp], z = zs[hi], w = z.x1 - z.x0, dryFrac = h.rate < .4 ? (.4 - h.rate) / .4 : 0;
+    for (let i = 0; i < sp.maxN; i++){
+      const r = _jdRng(_jdHash(String(h.id) + h.sp + i));
+      const d = sp.depth[0] + r() * (sp.depth[1] - sp.depth[0]);
+      const x = sp.maxN <= 3 ? z.x0 + (i + .5) / sp.maxN * w + (r()-.5) * 30 : z.x0 + 24 + r() * (w - 48);
+      const dry = r() < dryFrac;
+      _jd.slots.push({ h, i, x, y: GY + d * GH, p: (.55 + .5 * d) * 1.22, dry, svg: sp.draw(r, dry), sway: 4 + r() * 3, delay: -r() * 6 });
+    }
+  });
+  _jd.slots.sort((a,b) => a.y - b.y);
+  const sr = _jdRng(7), ivy = Array.from({length:22}, (_,k) => ({ x: 30 + sr() * 1140, y: 262 + sr() * 62, k }));
+  let s = `<defs><linearGradient id="jd-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3F6EC"/><stop offset="1" stop-color="#FBFBF7"/></linearGradient>
+    <linearGradient id="jd-gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DCD2BE"/><stop offset="1" stop-color="#E6DECD"/></linearGradient></defs>
+    <rect y="150" width="1200" height="410" fill="url(#jd-sky)"/>
+    <rect x="0" y="250" width="1200" height="${GY-244}" fill="#ECE5D8"/><rect x="0" y="244" width="1200" height="10" rx="2" fill="#E2D9C8"/>
+    <rect x="0" y="${GY}" width="1200" height="${560-GY}" fill="url(#jd-gr)"/>`;
+  s += ivy.map(v => { const r = _jdRng(v.k*31+5); let g = ''; for (let j=0;j<16;j++) g += `<ellipse cx="${_f1(v.x+(r()-.5)*44)}" cy="${_f1(v.y+(r()-.5)*26)}" rx="${_f1(2.6+r()*2)}" ry="${_f1(1.8+r()*1.4)}" transform="rotate(${Math.round(r()*180)} ${_f1(v.x)} ${_f1(v.y)})" fill="${_jdPick(r,['#7E9466','#93A87A','#6E8458'])}" opacity=".85"/>`; return `<g class="jd-fade" data-ivy="${v.k}" opacity="0">${g}</g>`; }).join('');
+  s += `<g id="jd-stones" class="jd-fade" opacity="0">${Array.from({length:12},(_,k)=>`<ellipse cx="${150+k*78+(k%2)*10}" cy="${548-(k%2)*3}" rx="22" ry="6" fill="#D2C9B8"/>`).join('')}</g>`;
+  s += `<g id="jd-bench" class="jd-fade" opacity="0"><rect x="28" y="478" width="92" height="7" rx="2" fill="#8B7259"/><rect x="30" y="458" width="88" height="6" rx="2" fill="#8B7259"/><rect x="34" y="485" width="5" height="30" fill="#6F5A45"/><rect x="109" y="485" width="5" height="30" fill="#6F5A45"/><rect x="34" y="462" width="4" height="20" fill="#6F5A45"/><rect x="110" y="462" width="4" height="20" fill="#6F5A45"/></g>`;
+  s += `<g id="jd-bath" class="jd-fade" opacity="0"><rect x="1130" y="470" width="12" height="70" fill="#D2C9B8"/><ellipse cx="1136" cy="540" rx="22" ry="6" fill="#D2C9B8"/><path d="M1104 464h64l-8 14h-48z" fill="#D2C9B8"/><ellipse cx="1136" cy="465" rx="30" ry="5" fill="#BFD3D6"/></g>`;
+  s += _jd.slots.map((o, k) => `<g transform="translate(${_f1(o.x)} ${_f1(o.y)}) scale(${_f1(o.p*100)/100})"><g class="jd-gw" data-k="${k}" style="transform:scale(${_jdSize(o, _jd.months)})"><g class="jd-sw" style="animation-duration:${_f1(o.sway)}s;animation-delay:${_f1(o.delay)}s">${o.svg}</g></g></g>`).join('');
+  s += _jd.H.map((h, hi) => { const sp = JD_SP[h.sp], z = zs[hi];
+    if (sp.bugs) return `<g class="jd-fade" data-bugs="${hi}" opacity="0">${[0,1,2].map(j => `<g transform="translate(${_f1(z.x0 + 30 + j*(z.x1-z.x0-80)/3)} ${400 + j*22})"><g class="jd-bf" style="animation-delay:${-j*3}s;animation-duration:${8+j*1.5}s"><g class="jd-wg"><ellipse cx="-4" cy="0" rx="5" ry="3.6" fill="${j%2?'#F0C766':'#B7A3E6'}"/><ellipse cx="4" cy="0" rx="5" ry="3.6" fill="${j%2?'#F0C766':'#B7A3E6'}"/></g><rect x="-.8" y="-3" width="1.6" height="6" rx=".8" fill="#4A4F3C"/></g></g>`).join('')}</g>`;
+    if (sp.birds){ const t = _jd.slots.find(o => o.h === h && o.i === 0); return t ? `<g class="jd-fade" data-birds="${hi}" opacity="0"><path d="M${_f1(t.x-20)} ${_f1(t.y-150*t.p)}q6-6 12 0q6-6 12 0" stroke="#4A4F3C" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M${_f1(t.x+26)} ${_f1(t.y-178*t.p)}q5-5 10 0q5-5 10 0" stroke="#4A4F3C" stroke-width="2" fill="none" stroke-linecap="round"/></g>` : ''; }
+    return ''; }).join('');
+  const top = _jdTop();
+  s += `<g id="jd-names" style="${_jd.names?'':'display:none'}">${_jd.H.map((h, hi) => { const z = zs[hi], cx = (z.x0+z.x1)/2, isTop = h === top, w = Math.max(90, h.name.length*7.4+28);
+    return `<g class="jd-zone" onclick="jdFocus(${h.id})"><rect x="${_f1(cx-w/2)}" y="256" width="${_f1(w)}" height="24" rx="12" fill="${isTop?'#EEF2E6':'rgba(255,255,255,.78)'}" stroke="${isTop?'#6B7A4E':'#CFDAB8'}" stroke-width="1.2"/><text x="${_f1(cx)}" y="272.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="800" fill="${isTop?'#6B7A4E':'#4A5040'}">${_jdEsc(h.name)}</text>${isTop?`<text x="${_f1(cx)}" y="249" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="800" fill="#6B7A4E">MÁS EMPEÑO</text>`:''}</g>`; }).join('')}</g>`;
+  svg.innerHTML = s;
+  _jdUpdate();
+}
+function _jdUnlocks(total, m){
+  const bugs = _jd.H.some(h => JD_SP[h.sp].bugs && _jdCount(h,m)/JD_SP[h.sp].maxN > .45 && h.rate >= .4);
+  const birds = _jd.H.some(h => JD_SP[h.sp].birds && _jd.slots.some(o=>o.h===h&&o.i===0&&_jdSize(o,m)>.7));
+  return [
+    { on: total >= 300, t:'Hiedra en el muro', d:'Sube un poco cada 300 días cuidados' },
+    { on: total >= 365, t:'Camino de piedras', d:'Al llegar a 365 días' },
+    { on: total >= 1500, t:'Banca para sentarte', d:'A los 1,500 días' },
+    { on: total >= 3000, t:'Bebedero de pájaros', d:'A los 3,000 días' },
+    { on: bugs, t:'Mariposas', d:'Cuando tu lavanda, romero o cempasúchil se llena' },
+    { on: birds, t:'Pájaros en el olivo', d:'Cuando el primer olivo madura' },
+  ];
+}
+function _jdUpdate(){
+  const svg = document.getElementById('jd-scene'); if (!svg) return;
+  const m = _jd.months;
+  svg.querySelectorAll('.jd-gw').forEach(g => { g.style.transform = `scale(${_jdSize(_jd.slots[g.dataset.k], m)})`; });
+  const total = _jd.H.reduce((a,h)=>a+_jdCare(h,m),0);
+  svg.querySelectorAll('[data-ivy]').forEach(g => g.setAttribute('opacity', total >= 300 * (+g.dataset.ivy + 1) ? 1 : 0));
+  const U = _jdUnlocks(total, m), set = (id, on) => { const e = document.getElementById(id); if (e) e.setAttribute('opacity', on ? 1 : 0); };
+  set('jd-stones', U[1].on); set('jd-bench', U[2].on); set('jd-bath', U[3].on);
+  _jd.H.forEach((h, hi) => {
+    const b = svg.querySelector(`[data-bugs="${hi}"]`); if (b) b.setAttribute('opacity', _jdCount(h,m)/JD_SP[h.sp].maxN > .45 && h.rate >= .4 ? 1 : 0);
+    const bd = svg.querySelector(`[data-birds="${hi}"]`), t0 = _jd.slots.find(o=>o.h===h&&o.i===0); if (bd) bd.setAttribute('opacity', t0 && _jdSize(t0, m) > .7 ? 1 : 0);
+  });
+  const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + m);
+  const yrs = Math.floor(m/12);
+  document.getElementById('jd-year').textContent = d.getFullYear();
+  document.getElementById('jd-sub').textContent = m === 0 ? 'Hoy' : `${d.toLocaleDateString('es-MX',{month:'short'}).replace('.','')} · en ${m < 12 ? m + (m===1?' mes':' meses') : yrs + (yrs===1?' año':' años')}, a tu ritmo`;
+  document.getElementById('jd-days').textContent = Math.round(total).toLocaleString('es-MX');
+  const end = document.getElementById('jd-tl-end'); if (end) end.textContent = `En ${_jd.yrs===1?'1 año':_jd.yrs+' años'} · ${new Date().getFullYear()+_jd.yrs}`;
+  const un = document.getElementById('jd-un'); if (un) un.innerHTML = U.map(u => `<li class="${u.on?'on':''}"><i></i><span><b>${u.t}</b>${u.d}</span></li>`).join('');
+  const top = _jdTop();
+  document.querySelectorAll('.jd-card').forEach(c => { const on = !!top && String(top.id) === c.dataset.h; c.classList.toggle('top', on); c.querySelector('.jd-tag').hidden = !on; });
+}
+function _jdIcon(on){ const p = document.getElementById('jd-play-ic'); if (p) p.setAttribute('d', on ? 'M4 2.5h3v11H4zM9 2.5h3v11H9z' : 'M4 2.5v11l9-5.5z'); }
+function jdStop(){ clearInterval(_jd.timer); _jd.timer = null; _jdIcon(false); }
+function jdPlay(){
+  if (_jd.timer) return jdStop();
+  if (_jd.months >= _jdMax()) _jd.months = 0;
+  _jdIcon(true); const step = Math.max(1, Math.round(_jdMax() / 40));
+  _jd.timer = setInterval(() => { _jd.months = Math.min(_jdMax(), _jd.months + step); const tl = document.getElementById('jd-tl'); if (!tl) return jdStop(); tl.value = _jd.months; _jdUpdate(); if (_jd.months >= _jdMax()) jdStop(); }, 160);
+}
+function jdSeek(v){ jdStop(); _jd.months = Math.max(0, Math.min(_jdMax(), Number(v)||0)); const tl = document.getElementById('jd-tl'); if (tl) tl.value = _jd.months; _jdUpdate(); }
+function jdYears(v){ _jd.yrs = Number(v)||5; jdStop(); if (_jd.months > _jdMax()) _jd.months = _jdMax(); renderJardin(); }
+function jdNames(){ _jd.names = !_jd.names; const n = document.getElementById('jd-names'); if (n) n.style.display = _jd.names ? '' : 'none'; const b = document.querySelector('.jd-chips .pill'); if (b) b.classList.toggle('active', _jd.names); }
+function jdToggle(id, ds){ const hl = _getHlog(); if (!hl[ds]) hl[ds] = {}; hl[ds][id] = !hl[ds][id]; _saveHlog(hl); _jd.H = _jdData(); _jdCards(); _jdBuild(); }
+function jdSetPlant(id, v){ const hs = _getHabits(), x = hs.find(y => y.id === id); if (x) { x.plant = v; _saveHabits(hs); } _jd.H = _jdData(); _jdCards(); _jdBuild(); }
+function jdFocus(id){ const c = document.querySelector(`.jd-card[data-h="${id}"]`); if (!c) return; c.scrollIntoView({behavior:'smooth', block:'center'}); c.animate([{boxShadow:'0 0 0 6px #CFDAB8'},{boxShadow:'0 0 0 0 transparent'}],{duration:900}); }
 
 function selectLogDay(ds) {
   activeLogDate = ds;
