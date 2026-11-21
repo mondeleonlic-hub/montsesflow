@@ -3449,19 +3449,21 @@ function renderLogDiario() {
   const dn = dayAll.filter(i=>i.done);
   const total = pend.length + dn.length;
 
-  // Ahora toca (solo hoy) — tarjeta a un lado
+  // Ahora toca (solo hoy) — cápsula flotante
   let heroHtml = '';
   if (isToday) {
     const f = pend.find(i=>i.focus) || items.find(i=>i.focus && _live(i)) || pend[0];
     if (f) {
-      const subs = f.subtasks||[], ds_ = subs.filter(s=>s.done).length, fc = getCat(f.cat);
+      const subs = f.subtasks||[], ds_ = subs.filter(s=>s.done).length;
       const jamOn = window._jam && window._jam.id===f.id;
-      heroHtml = `<div class="card dy-card lg-focus"><div class="lg-k">Ahora toca${f.focus?' · fijada por ti':''}</div>
-        <div class="lg-ft" onclick="openEditModal(${f.id})">${h(f.text)}</div>
-        <div class="dy-meta"><span class="dy-cat">${catDot(fc)}${h(fc.name)}</span>${subs.length?`<span>${ds_} de ${subs.length} acciones</span>`:''}${f.time?`<span>${h(f.time)}</span>`:''}</div>
-        <div class="lg-bts">${jamOn ? `<span class="lg-btn on"><i></i>En JAM SESH</span>` : `<button class="lg-btn pri" onclick="openJamModal(${f.id})">${ico('clock',14)} JAM SESH</button>`}<button class="lg-btn" onclick="toggleDone(${f.id})">${ico('check',14)} Listo</button></div>
-      </div>`;
-    } else heroHtml = `<div class="card dy-card lg-focus"><div class="lg-k">Ahora toca</div><div class="lg-ft" style="cursor:default">Nada pendiente. Buen día.</div></div>`;
+      heroHtml = `<div class="dy-now"><div class="dy-pill">
+        <span class="dy-pill-k">Ahora toca</span>
+        <span class="dy-pill-t" onclick="openEditModal(${f.id})" title="${f.focus?'Fijada por ti':'Fija otra con el pin'}">${h(f.text)}</span>
+        ${subs.length?`<span class="dy-pill-n">${ds_}/${subs.length}</span>`:''}
+        ${jamOn ? `<span class="dy-pill-jam on"><i></i>JAM SESH</span>` : `<button class="dy-pill-jam" onclick="openJamModal(${f.id})">${ico('clock',13)} JAM SESH</button>`}
+        <button class="dy-pill-ok" onclick="toggleDone(${f.id})" title="Marcar como hecha" aria-label="Marcar como hecha">${ico('check',16)}</button>
+      </div></div>`;
+    }
   }
 
   // Hábitos
@@ -3528,7 +3530,7 @@ function renderLogDiario() {
     <button class="dy-btn" onclick="dayDropAll()">Regresar a la bandeja</button>
   </div>` : '';
 
-  el.innerHTML = `<div class="log-dates">${dateCards}</div>${jamHtml}<div class="lg"><div class="lg-main">${dayHtml}${closeHtml}</div><aside class="lg-side">${heroHtml}${habitsHtml}</aside></div>`;
+  el.innerHTML = `<div class="log-dates">${dateCards}</div>${jamHtml}${heroHtml}<div class="lg"><div class="lg-main">${dayHtml}${closeHtml}</div><aside class="lg-side">${habitsHtml}</aside></div>`;
   if (_dayPickOpen) _renderPickList();
 }
 
