@@ -1065,6 +1065,41 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 .jd-ah i{font-style:normal;font-size:.62rem;font-weight:800;color:var(--accent);background:var(--accent-light);border:1px solid #CFDAB8;border-radius:99px;padding:1px 8px}
 .jd-sels{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .jd-sels select{width:100%}
+
+/* ===== UI unificada con Pulso ===== */
+.pz-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.pz-head .pz-verdict{margin-top:6px}
+.pz-head-a{display:flex;gap:8px;align-items:center}
+.pz > .log-dates,.pz > .lg,.pz > .jd,.pz > .dy-now{margin:0}
+.dy-card,.jd-stage,.jd-card,.jd-side,.goal-card,.cat-card,.settings-section,.timeline-bar-wrap,.lg .card{background:#fff;border:1px solid #E8EAE3;border-radius:22px;box-shadow:0 1px 2px rgba(16,24,40,.04),0 6px 20px rgba(16,24,40,.04)}
+.dy-card,.jd-side,.settings-section,.timeline-bar-wrap{padding:22px 24px}
+.timeline-bar-wrap,.settings-section{margin-bottom:0}
+.pz .settings-section + .settings-section{margin-top:0}
+.goal-card,.cat-card,.jd-card{padding:18px 20px}
+.lg-focus{background:#fff}
+.lg .dy-head .pz-h2{margin:0}
+.settings-title,.jd-h{font-size:1.2rem;font-weight:900;letter-spacing:-.02em;color:var(--text);margin-bottom:12px}
+.jd-ah b{font-size:1.2rem;letter-spacing:-.02em}
+.btn-sm{border-radius:10px;height:36px;padding:0 14px;font-weight:800}
+.pz-list > *{box-shadow:none}
+.log-date-card{border-color:#E8EAE3;border-radius:16px;box-shadow:0 1px 2px rgba(16,24,40,.04)}
+.goals-grid,.cat-grid{gap:16px}
+.jd-stage:not(.jd-full) .jd-when,.jd-stage:not(.jd-full) .jd-total{display:none}
+.pz-plan svg{flex-shrink:0}
+/* Arranque con la misma piel */
+#arranque{background:#F7F8F4}
+.ar-k{color:var(--text2)}
+.ar-q{font-size:2.1rem;letter-spacing:-.035em;line-height:1.08}
+.ar-opt,.ar-card,.ar-bb{background:#fff;border:1px solid #E8EAE3;box-shadow:0 1px 2px rgba(16,24,40,.04),0 6px 20px rgba(16,24,40,.04)}
+.ar-opt{border-radius:18px}
+.ar-card{border-radius:22px}
+.ar-opt.on,.ar-chip.on,.ar-pr{background:var(--accent-light);border-color:#CFDAB8}
+.ar-opt.on .ar-box{background:var(--accent);border-color:var(--accent);color:#fff}
+.ar-seg button.on{background:var(--accent-light);border-color:#CFDAB8;color:var(--accent)}
+.ar-go{background:var(--accent);color:#fff;border-radius:14px;box-shadow:0 6px 20px rgba(107,122,78,.25)}
+.ar-why{color:var(--accent)}
+.ar-dots i.on{background:#CFDAB8}
+@media(max-width:480px){.ar-q{font-size:1.6rem}.dy-card,.jd-side,.settings-section,.timeline-bar-wrap{padding:18px}}
 </style>
 </head>
 <body>
@@ -2625,7 +2660,8 @@ function renderJardin(){
   _jd.H = _jdSorted(_jdData()); _jd.editH = false;
   if (!_jd.H.length) { el.innerHTML = `<div class="empty-state"><p>Agrega tus hábitos en el Log diario y aquí empezará a crecer tu jardín.</p></div>`; return; }
   _jd.months = 0; jdStop();
-  el.innerHTML = `<div class="jd">
+  const _ta = _jdTopArea(), _tot = _jd.H.reduce((a,x)=>a+x.care,0);
+  el.innerHTML = `<div class="pz">${_pzHead(`Mi jardín · ${_tot} ${_tot===1?'día cuidado':'días cuidados'}`, _tot ? (_ta ? `${_jdEsc(_ta)} es lo que más cuidas.` : 'Tu jardín va creciendo.') : 'Tu jardín empieza hoy.')}<div class="jd">
     <div class="jd-stage">
       <div class="jd-box">
         <div class="jd-scene" id="jd-scene-wrap"><svg id="jd-scene" viewBox="0 150 1200 410" preserveAspectRatio="xMidYMax meet" role="img" aria-label="Mi jardín"></svg></div>
@@ -2641,7 +2677,7 @@ function renderJardin(){
       <aside class="jd-side"><div class="jd-hh"><div class="jd-h">Lo que vas desbloqueando</div><button class="jd-link" id="jd-edit" onclick="jdEditHitos()">Editar</button></div><ul class="jd-un" id="jd-un"></ul>
         <p class="jd-how">Tu jardín crece con las marcas de tus hábitos, en el Log o aquí.</p></aside>
     </div>
-  </div>`;
+  </div></div>`;
   _jdCards(); _jdBuild();
   // en el celular, abrir el jardín centrado
   requestAnimationFrame(() => { const w = document.getElementById('jd-scene-wrap'); if (w && w.scrollWidth > w.clientWidth) w.scrollLeft = (w.scrollWidth - w.clientWidth) / 2; });
@@ -3544,7 +3580,7 @@ function renderLogDiario() {
   const _nextTxt = !total ? 'Día libre' : !pend.length ? `Día completo · ${dn.length} hecha${_s(dn.length)}` : isToday ? `Te ${pend.length===1?'queda':'quedan'} ${pend.length}${_nxt?` · la siguiente a las ${_nxt.time}`:''}` : `${dn.length} de ${total} hecha${_s(total)}`;
   const dayHtml = `<div class="card dy-card">
     <div class="dy-head">
-      <div><div class="dy-title">${isToday?'Hoy · ':''}${_fmtLong(D)}</div>
+      <div><h2 class="pz-h2">${isToday?'Tu día':'Ese día'}</h2>
         <div class="dy-count">${_nextTxt}</div></div>
       ${_dyRing(dn.length, total)}
     </div>
@@ -3574,7 +3610,9 @@ function renderLogDiario() {
     <button class="dy-btn" onclick="dayDropAll()">Regresar a la bandeja</button>
   </div>` : '';
 
-  el.innerHTML = `<div class="log-dates">${dateCards}</div>${jamHtml}${heroHtml}<div class="lg"><div class="lg-main">${dayHtml}${closeHtml}</div><aside class="lg-side">${habitsHtml}</aside></div>`;
+  const _dLbl = new Date(D+'T12:00:00').toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'short'}).replace('.','');
+  const _lVerd = !total ? (isToday ? 'Hoy tienes el día libre.' : 'Día libre.') : !pend.length ? 'Día completo.' : isToday ? `Hoy te ${pend.length===1?'queda 1':'quedan '+pend.length}.` : `${pend.length} ${pend.length===1?'pendiente':'pendientes'} ese día.`;
+  el.innerHTML = `<div class="pz">${_pzHead(`Log diario · ${isToday?'hoy, ':''}${_dLbl}`, _lVerd)}<div class="log-dates">${dateCards}</div>${jamHtml}${heroHtml}<div class="lg"><div class="lg-main">${dayHtml}${closeHtml}</div><aside class="lg-side">${habitsHtml}</aside></div></div>`;
   if (_dayPickOpen) _renderPickList();
 }
 
@@ -3679,6 +3717,10 @@ function _bqSort(a, b) {
   return (a.priority||3)-(b.priority||3);
 }
 function bqClear() { _bqF = {q:'',cat:'',imp:false,urg:false,nodate:false,late:false,sort:_bqF.sort||''}; _bqSave(); renderBandeja(); }
+// Encabezado igual al de Pulso: etiqueta chica + frase grande + acción opcional
+function _pzHead(eye, title, action){
+  return `<div class="pz-head"><div><div class="pl-week">${eye}</div><h1 class="pz-verdict">${title}</h1></div>${action?`<div class="pz-head-a">${action}</div>`:''}</div>`;
+}
 function renderBandeja() {
   const el = document.getElementById('panel-bandeja');
   if (!el) return;
@@ -3686,7 +3728,8 @@ function renderBandeja() {
   const catCounts = {}; live.forEach(i=>{ catCounts[i.cat] = (catCounts[i.cat]||0)+1; });
   const catOpts = cats.filter(c=>catCounts[c.id]).map(c=>`<option value="${c.id}"${String(_bqF.cat)===String(c.id)?' selected':''}>${h(c.name)} (${catCounts[c.id]})</option>`).join('');
   const chip = (k,lbl,icn) => `<button class="bq-f${_bqF[k]?' on':''}" onclick="bqToggle('${k}')">${icn?ico(icn,14):''}${lbl}</button>`;
-  el.innerHTML = `<div class="bq-tabs" id="bq-tabs"></div>
+  el.innerHTML = `<div class="pz">${_pzHead('Bandeja · por planear', `${live.length} ${live.length===1?'cosa espera':'cosas esperan'} su día.`, `<button class="pz-plan" onclick="openAddModalInList('${_bandejaTab}')">${ico('plus',15)} Agregar</button>`)}
+    <section class="pz-card"><div class="bq-tabs" id="bq-tabs"></div>
     <div class="bq-filters">
       <div class="bq-search">${ico('search',15)}<input id="bq-q" type="search" placeholder="Buscar tarea…" value="${h(_bqF.q)}" oninput="_bqF.q=this.value;_renderBq()"/></div>
       <select class="bq-sel" onchange="bqSetCat(this.value)" aria-label="Categoría"><option value="">Todas las categorías</option>${catOpts}</select>
@@ -3696,9 +3739,8 @@ function renderBandeja() {
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
       <div style="font-size:.85rem;color:var(--text2)" id="bq-count"></div>
-      <button class="btn-sm" onclick="openAddModalInList('${_bandejaTab}')">+ Agregar</button>
     </div>
-    <div id="bq-list"></div>`;
+    <div id="bq-list"></div></section></div>`;
   _renderBq();
 }
 function _renderBq() {
@@ -3857,11 +3899,10 @@ function renderDone() {
   const el = document.getElementById('panel-done');
   if (!el) return;
   const list = items.filter(i=>i.done).sort((a,b)=>(b.doneDate||'').localeCompare(a.doneDate||''));
-  if (!list.length) {
-    el.innerHTML = `<div class="empty-state"><p>Nada completado aún</p></div>`;
-    return;
-  }
-  el.innerHTML = `<div>${list.map(i=>taskCard(i,true)).join('')}</div>`;
+  const ws = _weekStart(), wk = list.filter(i=>(i.doneDate||'')>=ws).length;
+  const head = _pzHead(`Completadas · ${list.length} en total`, wk ? `Esta semana llevas ${wk} ${wk===1?'hecha':'hechas'}.` : 'Esta semana aún no hay hechas.');
+  if (!list.length) { el.innerHTML = `<div class="pz">${head}<section class="pz-card"><div class="pz-s">Nada completado aún.</div></section></div>`; return; }
+  el.innerHTML = `<div class="pz">${head}<section class="pz-card pz-list">${list.map(i=>taskCard(i,true)).join('')}</section></div>`;
 }
 
 function taskCard(item, showDone=false) {
@@ -3937,11 +3978,8 @@ function renderMetas() {
 
   const avgMeta = goals.length ? Math.round(goals.reduce((s,g)=>s+_metaPct(g),0)/goals.length) : 0;
 
-  el.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:1rem;font-weight:900">Metas ${now.getFullYear()}</div>
-      <button class="btn-sm" onclick="openMetaModal()">+ Nueva meta</button>
-    </div>
+  const mVerd = !goals.length ? 'Ponte tu primera meta.' : avgMeta >= yearPct ? 'Tus metas van a tiempo.' : `Tus metas van ${avgMeta}% con ${yearPct}% del año.`;
+  el.innerHTML = `<div class="pz">${_pzHead(`Metas ${now.getFullYear()} · ${goals.length} ${goals.length===1?'activa':'activas'}`, mVerd, `<button class="pz-plan" onclick="openMetaModal()">${ico('plus',15)} Nueva meta</button>`)}
     <div class="timeline-bar-wrap">
       <div class="timeline-label">
         <span>Año ${now.getFullYear()}</span>
@@ -3955,7 +3993,7 @@ function renderMetas() {
       </div>
     </div>
     ${goals.length ? `<div class="goals-grid">${goals.map(g=>goalCard(g)).join('')}</div>` :
-      `<div class="empty-state"><p>Sin metas aún. ¡Agrega tu primera!</p></div>`}`;
+      `<section class="pz-card"><div class="pz-s">Sin metas aún. Agrega la primera.</div></section>`}</div>`;
 }
 
 function goalCard(g) {
@@ -4138,11 +4176,7 @@ function toggleMilestone(goalId, msId) {
 function renderCatsPanel() {
   const el = document.getElementById('panel-cats');
   if (!el) return;
-  el.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:1rem;font-weight:900">Categorías</div>
-      <button class="btn-sm" onclick="openCatModal()">+ Nueva</button>
-    </div>
+  el.innerHTML = `<div class="pz">${_pzHead(`Categorías · ${cats.length}`, 'Dónde se va tu energía.', `<button class="pz-plan" onclick="openCatModal()">${ico('plus',15)} Nueva</button>`)}
     <div class="cat-grid">
       ${cats.map(c=>`
         <div class="cat-card" onclick="openCatModal(${c.id})" style="cursor:pointer" title="Editar">
@@ -4153,7 +4187,7 @@ function renderCatsPanel() {
           </div>
           <div style="font-size:.75rem;color:var(--text2)">${items.filter(i=>i.cat===c.id&&!i.done&&!i.archived).length} pendientes</div>
         </div>`).join('')}
-    </div>`;
+    </div></div>`;
 }
 
 const CAT_EMOJIS = PICK_ICONS;
@@ -4224,7 +4258,7 @@ function renderSettings() {
   const el = document.getElementById('panel-settings');
   if (!el) return;
   const providerName = {groq:'Groq (gratis)',openai:'ChatGPT/OpenAI',gemini:'Google Gemini','':'No configurado'}[_aiProvider]||_aiProvider;
-  el.innerHTML = `
+  el.innerHTML = `<div class="pz">${_pzHead('Ajustes', 'Tu Flow, a tu manera.')}
     <div class="settings-section">
       <div class="settings-title">Asistente IA</div>
       <div class="settings-row">
@@ -4251,7 +4285,7 @@ function renderSettings() {
         <button class="btn-sm" onclick="exportData()">Exportar JSON</button>
         <button class="btn-sm" style="background:#ef4444" onclick="clearAllData()">Borrar todo</button>
       </div>
-    </div>`;
+    </div></div>`;
   document.getElementById('fb-key').value = _fbKey;
   document.getElementById('fb-proj').value = _fbProj;
 }
