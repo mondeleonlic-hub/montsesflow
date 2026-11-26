@@ -865,6 +865,15 @@ body.ar-open{overflow:hidden}
 .ar-dt{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
 .ar-md{position:absolute;inset:0;display:none;z-index:20}.ar-md.o{display:block}.ar-mdc{position:absolute;inset:0;background:rgba(28,32,24,.3)}
 .ar-mds{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:26px 26px 0 0;padding:20px 18px calc(16px + env(safe-area-inset-bottom));max-height:80%;overflow:auto;box-shadow:0 -8px 30px rgba(16,24,40,.14)}
+@media (min-width:860px){
+#arranque{background:#fff}
+.ar-app{max-width:1320px;flex-direction:row;gap:0;background:transparent;padding:18px 18px 18px}
+.ar-view{flex:1 1 auto;min-height:0;border-radius:28px;box-shadow:0 4px 24px rgba(16,24,40,.10)}
+.ar-sheet{flex:none;width:460px;height:auto;margin:0 0 0 18px;border-radius:28px;box-shadow:0 4px 24px rgba(16,24,40,.08);padding:32px 30px 24px}
+.ar-hh{font-size:1rem;margin-bottom:18px}
+.ar-dots{bottom:22px}
+.ar-md{position:fixed}.ar-mds{left:50%;right:auto;bottom:auto;top:50%;transform:translate(-50%,-50%);width:440px;border-radius:26px}
+}
 .pz-arr{margin-top:6px;border:none;background:none;padding:0;font:inherit;font-size:.78rem;font-weight:700;color:var(--accent);cursor:pointer}
 .pz-arr:hover{text-decoration:underline}
 
@@ -2987,7 +2996,7 @@ function _arBodyHtml(S){
       return `<button type="button" class="${on?'on':''}" onclick="arHab(${hb.id})"><div class="s"><span class="ck">${_arCk}</span>${_arSvg(AR_HIC[_arHKind(hb.text)], on?'#1C2018':'#9aa08f', 34)}</div><b>${h(_arHShort(hb))}</b></button>`; }).join('')}</div>`
       : '<div class="ar-empty">Aún no tienes hábitos. Agrégalos en el Log diario.</div>';
   } else if (S===2) {
-    const gs = _arGoals().slice(0,6).map(g=>({ k:'g', id:g.id, t:g.title })), ps = _arProjects().slice(0, Math.max(0, 6-gs.length)).map(t=>({ k:'t', id:t.id, t:t.text }));
+    const gs = _arGoals().map(g=>({ k:'g', id:g.id, t:g.title })), ps = _arProjects().map(t=>({ k:'t', id:t.id, t:t.text }));
     const L = gs.concat(ps);
     b = L.length ? `<div class="ar-g3">${L.map(m=>{ const on = m.k==='g' ? _ar.exGoal===m.id : _ar.exTask===m.id;
       return _arT({ on, click:`arProj('${m.k}',${m.id})`, html:`<span>${_arSvg(AR_PIC[_arPIcon(m.t)], on?'#1C2018':'#9aa08f')}</span><span>${h(m.t)}</span>` }); }).join('')}</div>`
