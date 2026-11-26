@@ -2786,6 +2786,7 @@ function openArranque(){
   _ar.lateIds = late.map(i=>i.id).filter(id=>_ar.late[id]);
   late.forEach(i=>{ if (!_ar.late[i.id]) _ar.late[i.id] = {to:'hoy', d:_arAdd(today,1)}; });
   _ar.lateIds = late.map(i=>i.id);
+  _ar.lav = { ref:{have:need, st:0}, ala:{have:need, st:0} }; _ar.fam = Object.assign({}, _ar.fam, { on:false }); _ar.comp = _ar.comp || {};
   _ar.md = null; _ar$.raf = 0; _ar$.labT = 0;
   _arGarden();
   _arRender();
@@ -2807,6 +2808,8 @@ function arNext(){
 }
 
 // ---- candidatos
+const _arToday = i => (_ar.comp && _ar.comp[i.id]!==undefined) ? !!_ar.comp[i.id] : i.date===todayStr();
+function _arComps(){ const t = todayStr(); return items.filter(i=>_live(i) && i.cat_key==='compromisos').sort((a,b)=>((b.date===t)-(a.date===t)) || String(a.date||'9').localeCompare(String(b.date||'9'))).slice(0,9); }
 function _arCoverTasks(){
   const out = [];
   [['ref','Refugio'],['ala','Álamos']].forEach(([k,n])=>{
@@ -2820,7 +2823,7 @@ function _arProjects(){ return items.filter(i=>_live(i) && i.cat_key==='proyecto
 function _arProjSubs(id){ const t = items.find(i=>i.id===id); return t ? (t.subtasks||[]).map((x,k)=>({...x, _k:k})).filter(x=>!x.done) : []; }
 function _arFrogTasks(){
   const today = todayStr();
-  const pool = items.filter(i=>_live(i) && (i.date===today || (i.date && i.date<today && (_ar.late[i.id]||{}).to==='hoy') || i.urgent===true));
+  const pool = items.filter(i=>_live(i) && (_arToday(i) || (i.date && i.date<today && (_ar.late[i.id]||{}).to==='hoy') || i.urgent===true));
   return pool.sort((a,b)=>((a.date&&a.date<today)?0:1)-((b.date&&b.date<today)?0:1)).slice(0,6);
 }
 function _arPrio(){
@@ -2834,8 +2837,8 @@ function _arPrioAuto(){
   _arCoverTasks().filter(c=>!c.later).forEach(c=>push(c));
   if (_ar.exGoal) { const g = goals.find(x=>x.id===_ar.exGoal); if (g) push({ key:'goal-'+g.id, text:_arGoalTask(g), why:'Empuja tu meta · ' + g.title, mins:60 }); }
   if (_ar.exTask) { const t = items.find(i=>i.id===_ar.exTask); if (t && _live(t)) push({ id:t.id, why:'Empuja tu proyecto' }); }
-  items.filter(i=>_live(i) && i.date===todayStr() && i.urgent===true && i.important===true).forEach(i=>push({ id:i.id, why:'Urgente e importante' }));
-  items.filter(i=>_live(i) && i.date===todayStr()).forEach(i=>push({ id:i.id, why:'De tu día' }));
+  items.filter(i=>_live(i) && _arToday(i) && i.urgent===true && i.important===true).forEach(i=>push({ id:i.id, why:'Urgente e importante' }));
+  items.filter(i=>_live(i) && _arToday(i)).forEach(i=>push({ id:i.id, why:'De tu día' }));
   return list;
 }
 function _arLabel(x){ if (x.id) { const t = items.find(i=>i.id===x.id); return t ? t.text : ''; } return x.text; }
@@ -2844,7 +2847,7 @@ function _arLabel(x){ if (x.id) { const t = items.find(i=>i.id===x.id); return t
 function _arPlan(){
   const today = todayStr(), now = new Date(), nowM = now.getHours()*60+now.getMinutes();
   let start = Math.max(9*60, Math.ceil((nowM+5)/30)*30);
-  const fixed = items.filter(i=>!i.archived && !i.done && i.date===today && i.time).map(i=>({ from:_mins(i.time), to:_mins(i.time)+60, text:i.text, kind:'a', id:i.id }));
+  const fixed = items.filter(i=>!i.archived && !i.done && _arToday(i) && i.time).map(i=>({ from:_mins(i.time), to:_mins(i.time)+60, text:i.text, kind:'a', id:i.id }));
   const pr = _arPrio().filter(x=>!(x.id && fixed.some(f=>f.id===x.id)));
   const fam = _ar.fam.on ? { from:_mins(_ar.fam.from), to:_mins(_ar.fam.to), text:'Family time', kind:'f' } : null;
   const busy = fixed.concat(fam ? [fam] : []);
@@ -2856,7 +2859,7 @@ function _arPlan(){
     blocks.push({ from:a, to:a+dur, text:_arLabel(x), kind:'p', ref:x }); start = a+dur;
   });
   const prioIds = new Set(pr.map(x=>x.id).filter(Boolean));
-  const rest = items.filter(i=>_live(i) && i.date===today && !i.time && !prioIds.has(i.id)).length
+  const rest = items.filter(i=>_live(i) && _arToday(i) && !i.time && !prioIds.has(i.id)).length
              + Object.entries(_ar.late).filter(([id,v])=>v.to==='hoy' && !prioIds.has(Number(id))).length;
   const all = blocks.concat(fixed, fam ? [fam] : []).sort((a,b)=>a.from-b.from);
   if (rest) { const endP = Math.max(start, ...fixed.map(f=>f.to)); const stop = fam ? fam.from : 18*60;
@@ -2875,6 +2878,8 @@ function arFinish(){
   // pendientes de ayer
   Object.entries(_ar.late).forEach(([id,v])=>{ const t = items.find(i=>i.id===Number(id)); if (!t) return;
     if (v.to==='hoy') t.date = today; else if (v.to==='otro') t.date = v.d || _arAdd(today,1); else if (v.to==='bandeja') { t.date = ''; t.time = ''; } });
+  // compromisos que me tocan hoy
+  Object.entries(_ar.comp||{}).forEach(([id,on])=>{ const t = items.find(i=>i.id===Number(id)); if (!t) return; if (on) { t.date = today; } else if (t.date===today) { t.date = ''; t.time = ''; } });
   // lavadores
   const keyId = {};
   _arCoverTasks().forEach(c=>{ const t = mk(c.text, c.later ? { date:_arAdd(today,1), important:true } : { urgent:true, important:true }); keyId[c.key] = t.id; });
@@ -2960,7 +2965,7 @@ function _arCands(){
   _arCoverTasks().filter(c=>!c.later).forEach(c=>add({ key:c.key, text:c.text, tag:'faltan hoy', mins:c.mins }));
   if (_ar.exGoal) { const g = goals.find(x=>x.id===_ar.exGoal); if (g) add({ key:'goal-'+g.id, text:_arGoalTask(g), tag:'proyecto', mins:60 }); }
   if (_ar.exTask) { const t = items.find(i=>i.id===_ar.exTask); if (t && _live(t)) add({ id:t.id, text:t.text, tag:'proyecto' }); }
-  items.filter(i=>_live(i) && ((i.date && i.date<today && (_ar.late[i.id]||{}).to==='hoy') || i.date===today))
+  items.filter(i=>_live(i) && ((i.date && i.date<today && (_ar.late[i.id]||{}).to==='hoy') || _arToday(i)))
     .sort((a,b)=>(a.date<today?0:1)-(b.date<today?0:1)).forEach(i=>add({ id:i.id, text:i.text, tag:i.date<today?'pendiente':(i.time||'de hoy') }));
   const au = _arPrioAuto(), rank = c => { const k = au.findIndex(x=>_arSame(x,c)); return k<0 ? 99 : k; };
   return out.map((c,k)=>({c,k})).sort((x,y)=>(rank(x.c)-rank(y.c)) || (x.k-y.k)).map(x=>x.c).slice(0,10);
@@ -2971,6 +2976,7 @@ function arTp(k){ const c = _arCands()[k]; if (!c) return; let p = _arPrio().sli
   _ar.prio = p; _arRender(); }
 function arProj(kind, id){ const same = (kind==='g' && _ar.exGoal===id) || (kind==='t' && _ar.exTask===id);
   _ar.exGoal = null; _ar.exTask = null; if (!same) { if (kind==='g') _ar.exGoal = id; else _ar.exTask = id; } _ar.prio = null; _arRender(); }
+function arComp(id){ _ar.comp = _ar.comp || {}; const i = items.find(x=>x.id===id); if (!i) return; _ar.comp[id] = !_arToday(i); _ar.prio = null; _arRender(); }
 function arMd(k){ _ar.md = k; _arRender(); }
 function arMdClose(){ _ar.md = null; _arRender(); }
 function arLavSt2(k, j){ _ar.lav[k].st = j===0 ? 1 : 2; _ar.prio = null; _arRender(); }
@@ -2990,10 +2996,9 @@ function _arBodyHtml(S){
     b = ft.length ? `<div class="ar-g2">${ft.map(t=>_arT({ on:_ar.frog===t.id, click:`arFrog(${t.id})`, html:`<span>${h(t.text)}</span><small>${t.date && t.date<today ? 'pendiente' : 'de hoy'}</small>` })).join('')}</div>`
       : '<div class="ar-empty">No tienes tareas para hoy todavía.</div>';
   } else if (S===4) {
-    const miss = k => Math.max(0, need - _ar.lav[k].have), nLate = _ar.lateIds.length;
-    b = `<div class="ar-g2">${[['ref','Refugio'],['ala','Álamos']].map(([k,n])=>_arT({ on:!miss(k), bad:!!miss(k), click:`arMd('${k}')`, html:`<small>Lavadores · ${n}</small><span class="v">${_ar.lav[k].have}/${need}</span>` })).join('')}
-      ${_arT({ on:_ar.fam.on, click:"arMd('fam')", html:`<small>Family time</small><span class="v">${_ar.fam.on?_ar.fam.from:'No'}</span>` })}
-      ${_arT({ on:true, click:"arMd('pen')", html:`<small>Pendientes de ayer</small><span class="v">${nLate}</span>` })}</div>`;
+    const nLate = _ar.lateIds.length, tg = i => i.time ? i.time : (_arToday(i) ? 'hoy' : (i.date ? fmtDate(i.date) : 'sin fecha'));
+    b = `<div class="ar-g2">${_arComps().map(i=>_arT({ on:_arToday(i), click:`arComp(${i.id})`, html:`<span>${h(i.text)}</span><small>${h(tg(i))}</small>` })).join('')}
+      ${_arT({ on:nLate>0, click:"arMd('pen')", html:`<small>Pendientes de ayer</small><span class="v">${nLate}</span>` })}</div>`;
   } else if (S===5) { const p = _arPrio();
     b = `<div class="ar-g2">${_arCands().map((c,k)=>{ const i = p.findIndex(x=>_arSame(x,c));
       return _arT({ on:i>=0, click:`arTp(${k})`, html:`${i>=0?`<span class="bg">${i+1}</span>`:''}<span>${h(c.text)}</span><small>${h(c.tag||'de hoy')}</small>` }); }).join('') || '<div class="ar-empty">No hay tareas para hoy todavía.</div>'}</div>`;
@@ -3008,12 +3013,7 @@ const _arIsProj = x => !!x && ((x.key && String(x.key).indexOf('goal-')===0) || 
 function _arModal(){
   const k = _ar.md, today = todayStr(), need = _arNeed(today); if (!k) return '';
   let b = '';
-  if (k==='ref' || k==='ala') { const L = _ar.lav[k], miss = Math.max(0, need-L.have), n = k==='ref'?'Refugio':'Álamos';
-    b = `<div class="ar-eb">Lavadores · ${n}</div><div class="ar-stp" style="margin:18px 0 10px"><button type="button" onclick="arLav('${k}',-1)">–</button><b>${L.have}</b><span class="ar-mut">de ${need}</span><button type="button" onclick="arLav('${k}',1)" style="margin-left:auto">+</button></div>
-      ${miss ? `<div style="margin:6px 0 10px">${_arSeg(['Cubrir hoy','Más adelante'], L.st===2?1:0, j=>`arLavSt2('${k}',${j})`)}</div><div class="ar-mut" style="color:#C4003C">Faltan ${miss} · creo una tarea${L.st===2?' para esta semana':' para hoy'}.</div>` : '<div class="ar-mut" style="color:#15803d">Completos.</div>'}`;
-  } else if (k==='fam') {
-    b = `<div class="ar-eb">Family time</div><div style="margin:14px 0">${_arSeg(['Sí','Hoy no'], _ar.fam.on?0:1, j=>`arFam(${j===0})`)}</div>${_ar.fam.on?`<div class="ar-times"><input type="time" value="${_ar.fam.from}" onchange="arFamT('from',this.value);_arRender()"/><span class="ar-mut">a</span><input type="time" value="${_ar.fam.to}" onchange="arFamT('to',this.value);_arRender()"/></div>`:''}`;
-  } else {
+  if (k==='pen') {
     b = `<div class="ar-eb">Pendientes de ayer</div><div style="margin-top:12px">${_ar.lateIds.map(id=>{ const t = items.find(i=>i.id===id); if (!t) return ''; const v = _ar.late[id], ago = Math.round((new Date(today)-new Date(t.date))/864e5);
       return `<div class="ar-card"><div class="ar-row" style="margin-bottom:10px"><span style="font-size:.9rem;font-weight:400;min-width:0">${h(t.text)}</span><span class="ar-mut" style="white-space:nowrap">${ago===1?'ayer':'hace '+ago+' d'}</span></div>${_arSeg(['A hoy','Otro día','Bandeja'], ['hoy','otro','bandeja'].indexOf(v.to), j=>`arLate(${id},'${['hoy','otro','bandeja'][j]}')`)}${v.to==='otro'?`<input type="date" style="margin-top:8px" value="${v.d}" min="${_arAdd(today,1)}" onchange="arLateD(${id},this.value)"/>`:''}</div>`; }).join('') || '<div class="ar-empty">Nada quedó pendiente. Bien.</div>'}</div>`;
   }
