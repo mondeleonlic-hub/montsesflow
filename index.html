@@ -1015,6 +1015,48 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 .jd-zone{cursor:pointer}
 @media(max-width:900px){.jd-row{grid-template-columns:1fr}.jd-time{grid-template-columns:auto minmax(0,1fr)}.jd-yrs{grid-column:1/-1}.jd-swipe{display:block}}
 @media(prefers-reduced-motion:reduce){.jd-sw,.jd-bf,.jd-wg{animation:none}.jd-gw{transition:none}}
+/* ===== FORMATO UNIFICADO · mismo lenguaje en Pulso, Log, Bandeja, Metas y Jardín =====
+   encabezado: etiqueta gris + título grueso · tarjetas blancas con sombra suave · lo activo, con contorno verde
+   texto delgado · sin rellenos de color ni contornos grises · primario: píldora olivo */
+:root{--uni-soft:0 1px 3px rgba(16,24,40,.07),0 4px 14px rgba(16,24,40,.05);--uni-gr:#34C759}
+#header-title{display:none}.main-header .capture-row-top{margin-left:auto}
+.main-header{border-bottom:0}
+.capture-row-top input{border:0;box-shadow:var(--uni-soft);font-weight:300}
+.panel .pz-card,.panel .pg-card,.panel .goal-card,.panel .task-item,.panel .timeline-bar-wrap,.panel .jd-card{background:#fff;border:0;border-radius:22px;box-shadow:var(--uni-soft)}
+.panel .task-item:hover,.panel .goal-card:hover{box-shadow:var(--uni-soft);border:0}
+.panel .pz-lbl,.panel .pz-k,.panel .pz-week-h,.panel .pz-h2{font-weight:300;letter-spacing:.16em;text-transform:uppercase}
+.panel .pz-day{background:#fff;border:0;box-shadow:var(--uni-soft);border-radius:18px}
+.panel .pz-day.today{background:#fff;box-shadow:inset 0 0 0 1.5px var(--uni-gr),var(--uni-soft)}.panel .pz-day.today .pz-dn{color:var(--text)}
+.panel .pz-chip{background:#fff!important;color:var(--text)!important;font-weight:300;border-style:solid!important;border-width:0 0 0 3px!important;border-radius:10px;box-shadow:var(--uni-soft)}
+.panel .pz-chip.done{color:#9aa08f!important;text-decoration:none}
+.panel .pz-ib{border:0;box-shadow:var(--uni-soft);background:#fff;border-radius:50%}
+/* Bandeja */
+.bq-tab,.bq-f,.bq-clear{border:0;background:#fff;box-shadow:var(--uni-soft);font-weight:300;letter-spacing:.02em;color:var(--text)}
+.bq-tab:hover,.bq-f:hover{border:0}
+.bq-tab.active,.bq-f.on{background:#fff;color:var(--text);box-shadow:inset 0 0 0 1.5px var(--uni-gr),var(--uni-soft)}
+.bq-tab b,.bq-tab.active b{background:none;padding:0;font-weight:400;color:#6b7280}
+.bq-search,.bq-sel{border:0;background:#fff;box-shadow:var(--uni-soft);border-radius:99px;font-weight:300}
+.bq-sel{padding:0 14px}
+.panel .task-check{width:26px;height:26px;border-radius:50%;border:0;background:#fff;box-shadow:var(--uni-soft)}
+.panel .task-check.done{background:#fff;color:var(--uni-gr);box-shadow:inset 0 0 0 1.5px var(--uni-gr),var(--uni-soft)}
+.panel .task-text{font-weight:300;font-size:.95rem}.panel .task-item.is-done .task-text{text-decoration:none;color:#9aa08f}
+.eis-tag{background:none!important;padding:0;font-weight:400;letter-spacing:.02em;font-size:.66rem}
+.eis-tag.i{color:#B9772E}.eis-tag.u{color:#C4003C}
+.panel .sub-row,.panel .task-cat{font-weight:300}
+/* Metas */
+.panel .goal-title{font-weight:400}
+.goal-tag{background:none;padding:0;font-weight:400;letter-spacing:.04em;font-size:.68rem;color:#6b7280}
+.goal-progress-track,.timeline-track{border:0;background:#EEF0EA;height:5px}
+.timeline-label{font-weight:300}
+/* Jardín */
+.jd-chips .pill{border:0;background:#fff;box-shadow:var(--uni-soft);font-weight:300}
+.jd-chips .pill.active{background:#fff;color:var(--text);box-shadow:inset 0 0 0 1.5px var(--uni-gr),var(--uni-soft)}
+.jd-day{border:0;background:#fff;box-shadow:var(--uni-soft)}
+.jd-day.on{background:#fff;color:var(--text);box-shadow:inset 0 0 0 1.5px var(--uni-gr),var(--uni-soft)}.jd-day.today{box-shadow:var(--uni-soft)}.jd-day.today.on{box-shadow:inset 0 0 0 1.5px var(--uni-gr),var(--uni-soft)}
+.jd-stat{background:none;padding:0}.jd-nm{font-weight:400}
+.btn-sm{font-weight:400;letter-spacing:.02em}
+.dl-pl{border:0;background:#fff;box-shadow:0 1px 3px rgba(16,24,40,.07),0 4px 14px rgba(16,24,40,.05);border-radius:99px;font-weight:300;letter-spacing:.02em;cursor:pointer;font-family:inherit;color:var(--text)}
+.bq-sel{-webkit-appearance:none;appearance:none}
 </style>
 </head>
 <body>
@@ -2605,6 +2647,7 @@ function renderJardin(){
   const mx = Math.max(0, ...H.map(h=>h.care));
   JD_VIEWS = JD_ALL.filter(v => mx >= v[2]);
   el.innerHTML = `<div class="jd">
+    <div class="dl-hd"><div class="dl-eb">${mx} días de constancia</div><div class="dl-h1">Mi jardín</div></div>
     <div class="jg-view"><canvas id="jd-cv"></canvas><div class="jg-days" id="jd-days"></div></div>
     <div class="jd-chips">${JD_VIEWS.map((v,k)=>`<button class="pill${k===JD_VIEWS.length-1?' active':''}" onclick="jdView(${k})">${v[0]}</button>`).join('')}</div>
     <div class="jd-grid" id="jd-grid" style="margin-top:14px"></div>
@@ -3513,7 +3556,7 @@ function renderBandeja() {
   const catCounts = {}; live.forEach(i=>{ catCounts[i.cat] = (catCounts[i.cat]||0)+1; });
   const catOpts = cats.filter(c=>catCounts[c.id]).map(c=>`<option value="${c.id}"${String(_bqF.cat)===String(c.id)?' selected':''}>${h(c.name)} (${catCounts[c.id]})</option>`).join('');
   const chip = (k,lbl,icn) => `<button class="bq-f${_bqF[k]?' on':''}" onclick="bqToggle('${k}')">${icn?ico(icn,14):''}${lbl}</button>`;
-  el.innerHTML = `<div class="bq-tabs" id="bq-tabs"></div>
+  el.innerHTML = `<div class="dl-hd"><div class="dl-eb">${live.length} pendientes</div><div class="dl-h1">Bandeja</div></div><div class="bq-tabs" id="bq-tabs"></div>
     <div class="bq-filters">
       <div class="bq-search">${ico('search',15)}<input id="bq-q" type="search" placeholder="Buscar tarea…" value="${h(_bqF.q)}" oninput="_bqF.q=this.value;_renderBq()"/></div>
       <select class="bq-sel" onchange="bqSetCat(this.value)" aria-label="Categoría"><option value="">Todas las categorías</option>${catOpts}</select>
@@ -3765,8 +3808,7 @@ function renderMetas() {
   const avgMeta = goals.length ? Math.round(goals.reduce((s,g)=>s+_metaPct(g),0)/goals.length) : 0;
 
   el.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:1rem;font-weight:900">Metas ${now.getFullYear()}</div>
+    <div class="dl-hd" style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px"><div><div class="dl-eb">${yearPct}% del año · ${avgMeta}% de tus metas</div><div class="dl-h1">Metas ${now.getFullYear()}</div></div>
       <button class="btn-sm" onclick="openMetaModal()">+ Nueva meta</button>
     </div>
     <div class="timeline-bar-wrap">
@@ -3804,7 +3846,7 @@ function goalCard(g) {
         <div class="ms-dot"></div><span>${h(m.text)}</span>
       </div>`).join('')}</div>`:''}
     <div style="display:flex;gap:6px;margin-top:12px">
-      <button onclick="openMetaModal(${g.id})" style="flex:1;padding:7px;background:var(--accent-light);color:var(--accent);border:none;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer">Editar</button>
+      <button onclick="openMetaModal(${g.id})" class="dl-pl" style="flex:none;padding:8px 18px;font-size:.74rem">Editar</button>
     </div>
   </div>`;
 }
