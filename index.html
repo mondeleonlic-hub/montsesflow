@@ -819,61 +819,52 @@ html,body{max-width:100%;overflow-x:hidden}
 .ja-ok{background:#B9E26B;color:#1C2018}
 /* ===== Arranque del día ===== */
 body.ar-open{overflow:hidden}
-#arranque{position:fixed;inset:0;z-index:1500;background:linear-gradient(180deg,#FFFBF1 0%,#FBFCF6 45%,#F6FAEE 100%);overflow-y:auto;-webkit-overflow-scrolling:touch}
-.ar-wrap{max-width:440px;min-height:100%;margin:0 auto;box-sizing:border-box;padding:calc(22px + env(safe-area-inset-top)) 22px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
-.ar-top{display:flex;align-items:center;gap:10px}
-.ar-back{border:none;background:rgba(107,122,78,.1);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1C2018;cursor:pointer;flex-shrink:0}
-.ar-dots{display:flex;gap:4px;flex:1}
-.ar-dots i{width:6px;height:6px;border-radius:99px;background:#E3E6DD;transition:all .2s}
-.ar-dots i.on{background:#B9CF8C}.ar-dots i.cur{width:18px;background:#6b7a4e}
-.ar-skip{border:none;background:none;font:inherit;font-size:.78rem;font-weight:600;color:#9AA08F;cursor:pointer;padding:6px 0}
-.ar-k{font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#6b7a4e;margin-top:24px}
-.ar-q{font-size:1.6rem;font-weight:900;letter-spacing:-.02em;line-height:1.15;margin-top:8px;color:#1C2018}
-.ar-sub{font-size:.86rem;color:#6b7280;margin-top:8px;line-height:1.45}
-.ar-body{flex:1;margin:22px 0 14px;display:flex;flex-direction:column;gap:10px}
-.ar-note{font-size:.74rem;color:#8B9280;line-height:1.45;margin-bottom:12px}
-.ar-go{height:54px;border:none;border-radius:16px;background:#B9E26B;color:#24300F;box-shadow:0 8px 20px rgba(140,180,60,.28);font:inherit;font-size:.95rem;font-weight:800;cursor:pointer;flex-shrink:0}
-.ar-opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:14px 16px;border:1.5px solid #E7EADF;background:rgba(255,255,255,.85);border-radius:16px;font:inherit;font-size:.95rem;font-weight:700;color:#1C2018;cursor:pointer}
-.ar-opt.on{background:#F2F9E4;border-color:#B9E26B}
-.ar-box{width:24px;height:24px;border-radius:50%;border:1.8px solid #C9CEC0;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-sizing:border-box;color:#1C2018}
-.ar-opt.on .ar-box{background:#B9E26B;border-color:#B9E26B}
-.ar-ot{flex:1;min-width:0}
-.ar-tag{font-size:.68rem;font-weight:700;color:#6b7a4e}
-.ar-card{border:1.5px solid #E7EADF;background:rgba(255,255,255,.85);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
-.ar-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.ar-mut{font-size:.76rem;color:#6b7280}
-.ar-mut b{color:#1C2018}
-.ar-tt{font-size:.92rem;font-weight:700;color:#1C2018;min-width:0}
-.ar-count{display:flex;align-items:center;gap:12px}
-.ar-count button{width:36px;height:36px;border-radius:50%;border:none;background:rgba(107,122,78,.1);font:inherit;font-size:1.1rem;font-weight:800;color:#1C2018;cursor:pointer}
-.ar-big{font-size:2.1rem;font-weight:900;letter-spacing:-.03em;color:#1C2018}
-.ar-seg{display:flex;gap:6px}
-.ar-seg button{flex:1;white-space:nowrap;padding:10px 4px;border-radius:12px;border:1.5px solid transparent;background:rgba(28,32,24,.04);color:#4b5563;font:inherit;font-size:.76rem;font-weight:800;cursor:pointer}
-.ar-seg button.on{background:#EAF6D3;border-color:#B9E26B;color:#3F5320}
-.ar-date,.ar-times input,.ar-sel{height:42px;border:1.5px solid #E3E6DD;border-radius:12px;padding:0 12px;font:inherit;font-size:16px;color:#1C2018;background:#fff}
-.ar-times{display:flex;align-items:center;gap:10px}
-.ar-times input{flex:1;font-weight:800}
-.ar-sel{flex:1;min-width:0}
-.ar-chips{display:flex;flex-wrap:wrap;gap:8px}
-.ar-chip{padding:9px 13px;border-radius:99px;border:1.5px solid #E3E6DD;background:#fff;font:inherit;font-size:.82rem;font-weight:700;color:#1C2018;cursor:pointer}
-.ar-chip.on{background:#F2F9E4;border-color:#B9E26B}
-.ar-pr{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid #B9E26B;background:#F2F9E4;border-radius:16px}
-.ar-n{font-size:1.25rem;font-weight:900;color:#6b7a4e;width:18px;flex-shrink:0}
-.ar-why{font-size:.72rem;color:#5E7A2A;font-weight:600;margin-top:2px}
-.ar-link{border:none;background:none;font:inherit;font-size:.76rem;font-weight:700;color:#9AA08F;cursor:pointer;padding:4px}
-.ar-link:hover{color:#1C2018}
+#arranque{position:fixed;inset:0;z-index:1500;background:#fff;--ink:#1C2018;--mut:#6b7280;--ol:#6b7a4e;--gr:#34C759;--soft:0 1px 3px rgba(16,24,40,.07),0 4px 14px rgba(16,24,40,.05);color:var(--ink)}
+#arranque *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:where(#arranque) button{font:inherit;color:inherit;cursor:pointer}
+.ar-app{height:100%;display:flex;flex-direction:column;max-width:520px;margin:0 auto;position:relative;background:#fff}
+.ar-view{position:relative;flex:1 1 auto;min-height:200px;overflow:hidden;background:#e9a86a}
+.ar-view canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ar-top{position:absolute;left:14px;right:14px;top:max(12px,env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ar-pill{font-size:.72rem;font-weight:400;letter-spacing:.06em;text-transform:uppercase;background:rgba(255,255,255,.94);color:var(--ink);border-radius:99px;padding:7px 12px;box-shadow:0 2px 10px rgba(16,24,40,.12);border:0}
+.ar-pill.b{color:var(--mut);letter-spacing:.02em;text-transform:none;font-weight:700}
+.ar-dots{position:absolute;left:0;right:0;bottom:30px;display:flex;justify-content:center;gap:5px}
+.ar-dots i{width:22px;height:4px;background:rgba(255,255,255,.5);border-radius:4px}.ar-dots i.on{background:#fff}.ar-dots i.cur{background:#B9E26B;box-shadow:0 0 0 1px rgba(28,32,24,.5)}
+.ar-lab{position:absolute;transform:translate(-50%,0);font-size:.74rem;font-weight:800;color:var(--ink);background:#fff;border-radius:99px;padding:6px 11px 6px 9px;opacity:0;transition:opacity .4s;pointer-events:none;white-space:nowrap;box-shadow:0 2px 10px rgba(16,24,40,.18);display:flex;align-items:center;gap:6px}
+.ar-lab::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--gr)}
+.ar-sheet{flex:none;background:#fff;border-radius:26px 26px 0 0;margin-top:-26px;position:relative;padding:18px 18px calc(14px + env(safe-area-inset-bottom));height:54%;display:flex;flex-direction:column;box-shadow:0 -6px 24px rgba(16,24,40,.10)}
+.ar-eb{font-size:.7rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.ar-hh{margin:6px 0 12px;font-size:.92rem;font-weight:300;letter-spacing:.16em;text-transform:uppercase;line-height:1.35}
+.ar-bd{overflow:auto;flex:1;padding:2px 2px 6px;margin:0 -2px}
+.ar-nav{display:flex;gap:8px;margin-top:8px}
+.ar-go{width:100%;border:0;background:var(--ol);color:#fff;border-radius:99px;padding:14px;font-size:.95rem;font-weight:400;letter-spacing:.02em}
+.ar-go.ghost{flex:none;width:50px;border-radius:14px;font-size:1.2rem;padding:0;background:#fff;color:var(--ink);box-shadow:var(--soft)}
+.ar-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ar-tiles button{border:0;background:none;padding:0;text-align:center}
+.ar-tiles .s{aspect-ratio:1;border-radius:22px;background:#fff;box-shadow:var(--soft);display:grid;place-items:center;position:relative}
+.ar-tiles .on .s{box-shadow:inset 0 0 0 1.5px var(--gr),var(--soft)}
+.ar-tiles b{display:block;font-size:.85rem;font-weight:300;margin-top:8px}
+.ar-tiles .ck{position:absolute;right:8px;top:8px;display:none}.ar-tiles .on .ck{display:block}
+.ar-tl{border:0;background:#fff;box-shadow:var(--soft);border-radius:20px;padding:14px;text-align:left;min-height:96px;display:flex;flex-direction:column;justify-content:space-between;gap:8px;position:relative;font-weight:300;font-size:.88rem;line-height:1.25}
+.ar-tl.on{box-shadow:inset 0 0 0 1.5px var(--gr),var(--soft)}.ar-tl.bad{box-shadow:inset 0 0 0 1.5px #FF2D55,var(--soft)}
+.ar-tl small{font-size:.7rem;color:var(--mut);font-weight:400}.ar-tl .v{font-size:1.6rem;font-weight:300;letter-spacing:-.03em}
+.ar-tl .bg{position:absolute;right:12px;top:10px;color:#15803d;font-size:.8rem;font-weight:600}
+.ar-tl .bg ~ span{padding-right:18px}
+.ar-g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.ar-g3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.ar-g3 .ar-tl{aspect-ratio:1;min-height:0;font-size:.78rem}
 .ar-empty{font-size:.85rem;color:#9AA08F;padding:8px 2px}
-.ar-plan{display:flex;flex-direction:column;gap:8px}
-.ar-b{display:flex;gap:12px}
-.ar-bt{width:42px;font-size:.74rem;font-weight:800;color:#6b7280;padding-top:10px;text-align:right;flex-shrink:0}
-.ar-bb{flex:1;min-width:0;border-radius:14px;padding:9px 13px;border:1.5px solid #E3E6DD;background:#fff}
-.ar-bb b{font-size:.85rem}
-.ar-bb.k-p{background:#F2F9E4;border-color:#B9E26B}
-.ar-bb.k-f{background:#FDF0E1;border-color:#F4D3AE;color:#6E4318}
-.ar-bb.k-o{background:#FAFBF8;border-style:dashed;color:#6b7280}
-.ar-btag{font-size:.6rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#5E7A2A;white-space:nowrap}
-.ar-bb.k-a .ar-btag{color:#9AA08F}.ar-bb.k-f .ar-btag{color:#B9772E}
-.ar-bh{font-size:.68rem;opacity:.7;margin-top:2px}
+.ar-seg{display:flex;gap:6px}.ar-seg button{flex:1;border:0;background:#fff;box-shadow:var(--soft);padding:9px 4px;border-radius:12px;font-size:.8rem;font-weight:300;white-space:nowrap}
+.ar-seg button.on{box-shadow:inset 0 0 0 1.5px var(--gr),var(--soft)}
+.ar-stp{display:flex;align-items:center;gap:14px}.ar-stp button{width:36px;height:36px;border-radius:10px;border:0;background:#fff;box-shadow:var(--soft);font-size:1.15rem;line-height:1;padding:0}
+.ar-stp b{font-size:1.9rem;font-weight:300;letter-spacing:-.03em;min-width:26px;text-align:center}
+.ar-mut{color:var(--mut);font-size:.78rem;font-weight:600}
+.ar-card{background:#fff;box-shadow:var(--soft);border-radius:18px;padding:14px 16px;margin-bottom:8px}
+.ar-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ar-times{display:flex;align-items:center;gap:10px}
+#arranque input[type=time],#arranque input[type=date]{border:0;border-radius:10px;padding:9px 11px;font:inherit;font-weight:700;background:#fff;box-shadow:var(--soft);color:var(--ink)}
+.ar-pl{display:flex;align-items:center;gap:12px;padding:12px 0;font-size:.92rem;font-weight:300}
+.ar-pl .h{width:44px;color:var(--mut);font-size:.76rem;font-weight:800}
+.ar-dt{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+.ar-md{position:absolute;inset:0;display:none;z-index:20}.ar-md.o{display:block}.ar-mdc{position:absolute;inset:0;background:rgba(28,32,24,.3)}
+.ar-mds{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:26px 26px 0 0;padding:20px 18px calc(16px + env(safe-area-inset-bottom));max-height:80%;overflow:auto;box-shadow:0 -8px 30px rgba(16,24,40,.14)}
 .pz-arr{margin-top:6px;border:none;background:none;padding:0;font:inherit;font-size:.78rem;font-weight:700;color:var(--accent);cursor:pointer}
 .pz-arr:hover{text-decoration:underline}
 
@@ -908,9 +899,6 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 .pg-ok{color:var(--accent)}.pg-warn{color:#B9772E}.pg-bad{color:#C0533A}
 .pg-card .pz-bar .f{background:var(--accent)}
 .hb-freq{margin-top:2px;border:1px solid #DADDD3;border-radius:6px;background:#fff;font:inherit;font-size:.66rem;padding:1px 4px;color:var(--text)}
-.ar-wkin{display:flex;align-items:center;gap:6px;font-weight:800;color:var(--accent)}
-.ar-wkin input{flex:1;height:42px;border:1.5px solid #E3E6DD;border-radius:12px;padding:0 12px;font:inherit;font-size:16px;font-weight:800;color:#1C2018;background:#fff}
-.ar-wkin small{font-size:.8rem;color:#6b7280;font-weight:600}
 #meta-mode-row .eis-chip.on-i{background:#EEF2E6;border-color:#CFDAB8;color:var(--accent)}
 
 /* MI JARDÍN */
@@ -937,6 +925,7 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 .jd-yrs{display:flex;align-items:center;gap:8px;font-size:.75rem;font-weight:700;color:var(--text2);white-space:nowrap}
 .jd select{font:inherit;font-size:.78rem;font-weight:700;color:var(--text);background:#fff;border:1.5px solid var(--border);border-radius:9px;height:34px;padding:0 8px;outline:none}
 .jd select:focus{border-color:var(--accent)}
+.jg-view{position:relative;height:min(56vh,440px);border-radius:22px;overflow:hidden;background:#e9a86a;box-shadow:0 1px 3px rgba(16,24,40,.07),0 4px 14px rgba(16,24,40,.05);touch-action:none}.jg-view canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}.jg-days{position:absolute;left:14px;top:14px;background:rgba(255,255,255,.94);border-radius:99px;padding:7px 12px;font-size:.72rem;letter-spacing:.04em;box-shadow:0 2px 10px rgba(16,24,40,.12)}.jg-days b{font-weight:800}
 .jd-chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}
 .jd-chips .pill.active{background:var(--accent-light);color:var(--accent);border-color:#CFDAB8}
 .jd-row{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:16px;margin-top:16px;align-items:start}
@@ -1482,6 +1471,167 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
   </div>
 </div>
 
+<script>/* Mi jardín · escena procedural en canvas */
+(function(){
+const W=1800,H=1440;
+const HAB=[];
+function rng(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const pick=(r,a)=>a[Math.floor(r()*a.length)];
+const mk=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c};
+const HZ=360,WALLY=470,GY=520; // horizonte, base del muro, inicio del suelo
+// ---------- cielo, colinas, muro (siempre) ----------
+function sky(g){const r=rng(2);
+ let gr=g.createLinearGradient(0,0,0,HZ+40);gr.addColorStop(0,'#c9a4a0');gr.addColorStop(.25,'#e8a98a');gr.addColorStop(.6,'#f3a95a');gr.addColorStop(.9,'#ffd27e');gr.addColorStop(1,'#ffe3a4');g.fillStyle=gr;g.fillRect(0,0,W,HZ+60);
+ // nubes alargadas
+ for(let i=0;i<46;i++){const x=r()*W,y=40+r()*250,w=160+r()*420,h=6+r()*16;g.save();g.filter='blur(8px)';g.fillStyle=`rgba(${pick(r,['255,206,170','255,225,190','232,160,150','255,190,120'])},${.18+r()*.25})`;g.beginPath();g.ellipse(x,y,w,h,0,0,7);g.fill();g.restore()}
+ // sol
+ const sx=1500,sy=312;gr=g.createRadialGradient(sx,sy,0,sx,sy,420);gr.addColorStop(0,'rgba(255,248,210,.95)');gr.addColorStop(.06,'rgba(255,224,150,.8)');gr.addColorStop(.3,'rgba(255,190,100,.35)');gr.addColorStop(1,'rgba(255,170,90,0)');g.fillStyle=gr;g.fillRect(0,0,W,HZ+60);
+ g.fillStyle='#fffbe8';g.beginPath();g.arc(sx,sy,14,0,7);g.fill();
+ // colinas en capas
+ const hill=(base,amp,col,seed,hz)=>{const rr=rng(seed);g.fillStyle=col;g.beginPath();g.moveTo(0,HZ+40);let y=base;for(let x=0;x<=W;x+=20){y=base+Math.sin(x*.004+seed)*amp+Math.sin(x*.013+seed*2)*amp*.4+(rr()-.5)*3;g.lineTo(x,y)}g.lineTo(W,HZ+60);g.closePath();g.fill()};
+ hill(HZ-4,10,'#a2707a',3);hill(HZ+6,9,'#8a5a66',5);hill(HZ+16,7,'#6e4a52',8);
+ // arboles lejanos
+ for(let i=0;i<220;i++){const x=r()*W,y=HZ+14+r()*40;g.fillStyle=pick(r,['#5a5a3a','#4a4a30','#6a6040','#3e4630']);g.beginPath();g.ellipse(x,y,5+r()*12,4+r()*7,0,0,7);g.fill()}
+ // cipres
+ const cx=1722;g.fillStyle='#2a3a22';g.beginPath();g.moveTo(cx,150);g.bezierCurveTo(cx+30,230,cx+32,330,cx+20,400);g.lineTo(cx-20,400);g.bezierCurveTo(cx-32,330,cx-30,230,cx,150);g.fill();
+ g.fillStyle='rgba(255,170,90,.25)';g.beginPath();g.moveTo(cx,150);g.bezierCurveTo(cx+30,230,cx+32,330,cx+20,400);g.lineTo(cx+6,400);g.bezierCurveTo(cx+14,330,cx+10,230,cx,150);g.fill();
+ // arbustos de fondo
+ for(let i=0;i<120;i++){const x=r()*W,y=HZ+40+r()*80;g.fillStyle=pick(r,['#4c5a34','#5b6a3c','#3c4a2c','#6a7240']);g.beginPath();g.ellipse(x,y,20+r()*40,10+r()*20,0,0,7);g.fill()}
+}
+function wall(g){const r=rng(9);
+ let gr=g.createLinearGradient(0,HZ+30,0,WALLY+60);gr.addColorStop(0,'#5a5a3a');gr.addColorStop(1,'#3c4a2c');g.fillStyle=gr;g.fillRect(0,HZ+50,W,WALLY+40-HZ-50);
+ for(let i=0;i<420;i++){const x=r()*W,y=HZ+50+Math.pow(r(),.8)*(WALLY+40-HZ-50),rr=16+r()*34;g.fillStyle=pick(r,['#4c5a34','#5b6a3c','#3c4a2c','#6a7240','#7a8348','#455330']);g.beginPath();g.ellipse(x,y,rr*1.2,rr*.8,0,0,7);g.fill();
+  g.fillStyle='rgba(255,190,110,.18)';g.beginPath();g.ellipse(x+rr*.3,y-rr*.3,rr*.6,rr*.3,0,0,7);g.fill()}
+ for(let i=0;i<9;i++){const x=120+r()*1500,h=70+r()*70;g.fillStyle='#2a3a22';g.beginPath();g.ellipse(x,WALLY-h*.2,16+r()*10,h,0,0,7);g.fill()}
+ gr=g.createLinearGradient(0,WALLY-20,0,WALLY+50);gr.addColorStop(0,'rgba(30,20,10,0)');gr.addColorStop(1,'rgba(30,20,10,.35)');g.fillStyle=gr;g.fillRect(0,WALLY-20,W,80)}
+function pot(g,x,y,s){const r=rng(x);g.fillStyle='#c5774f';g.beginPath();g.moveTo(x-38*s,y-52*s);g.lineTo(x+38*s,y-52*s);g.lineTo(x+28*s,y);g.lineTo(x-28*s,y);g.closePath();g.fill();
+ g.fillStyle='rgba(255,200,130,.4)';g.fillRect(x+12*s,y-52*s,10*s,52*s);g.fillStyle='#d58a5e';g.fillRect(x-42*s,y-62*s,84*s,12*s);
+ for(let i=0;i<90;i++){const a=r()*Math.PI*2,d=Math.sqrt(r())*46*s;g.fillStyle=pick(r,['#3c5a30','#4c6a38','#d85a78','#e8789a','#f0a8b8']);g.beginPath();g.arc(x+Math.cos(a)*d*1.1,y-70*s-Math.abs(Math.sin(a))*d*.8,4.5*s+r()*4*s,0,7);g.fill()}}
+// ---------- suelo de grava ----------
+function ground(g){const r=rng(5);g.fillStyle='#a88a64';g.fillRect(0,GY,W,H-GY);
+ const cols=['#c9ae86','#b89b73','#d4ba92','#9c805c','#e0c8a0','#8a7050','#c2a47a','#a38760'];
+ const arr=[];for(let i=0;i<46000;i++)arr.push({x:r()*W,y:GY+Math.pow(r(),1.3)*(H-GY),c:pick(r,cols),k:r()});
+ arr.sort((a,b)=>a.y-b.y);
+ for(const p of arr){const t=(p.y-GY)/(H-GY),s=1.5+t*7*(.6+p.k*.8);g.fillStyle=p.c;g.beginPath();g.ellipse(p.x,p.y,s*(.8+p.k*.5),s*.7,p.k*3,0,7);g.fill();
+  g.fillStyle='rgba(40,25,10,.25)';g.beginPath();g.ellipse(p.x+s*.2,p.y+s*.45,s*.8,s*.25,0,0,7);g.fill();g.fillStyle='rgba(255,215,150,.35)';g.beginPath();g.ellipse(p.x-s*.2,p.y-s*.25,s*.35,s*.2,0,0,7);g.fill()}
+ // sombra del muro
+ const gr=g.createLinearGradient(0,GY,0,GY+70);gr.addColorStop(0,'rgba(40,25,10,.35)');gr.addColorStop(1,'rgba(40,25,10,0)');g.fillStyle=gr;g.fillRect(0,GY,W,70)}
+// ---------- plantas ----------
+function drawPlant(sp,seed,R){const Wc=Math.ceil(R*3.2),Hc=Math.ceil(R*3.0),c=mk(Wc,Hc),g=c.getContext('2d'),r=rng(seed),u=R/100,bx=Wc/2,by=Hc-R*.28;g.lineCap='round';
+ g.save();g.scale(1,.22);const sh=g.createRadialGradient(bx,(by+4*u)/.22,0,bx,(by+4*u)/.22,R*.95);sh.addColorStop(0,'rgba(35,20,8,.4)');sh.addColorStop(1,'rgba(35,20,8,0)');g.fillStyle=sh;g.beginPath();g.arc(bx,(by+4*u)/.22,R*.95,0,7);g.fill();g.restore();
+ const curve=(x0,y0,cx,cy,tx,ty,t)=>[(1-t)*(1-t)*x0+2*(1-t)*t*cx+t*t*tx,(1-t)*(1-t)*y0+2*(1-t)*t*cy+t*t*ty];
+ if(sp=='lav'){const st=[];for(let i=0;i<85;i++)st.push({a:(r()-.5)*1.7,l:R*(1+r()*.75),b:(r()-.5)*.5,o:(r()-.5)*R*.55});st.sort((a,b)=>Math.abs(b.a)-Math.abs(a.a));
+  for(const s of st){const x0=bx+s.o,y0=by,tx=x0+Math.sin(s.a)*s.l,ty=y0-Math.cos(s.a)*s.l,cx=x0+Math.sin(s.a)*s.l*.35+s.b*s.l*.4,cy=y0-s.l*.55;
+   g.strokeStyle=pick(r,['#5d6b3a','#74804a','#4d5a2f']);g.lineWidth=1.3*u;g.beginPath();g.moveTo(x0,y0);g.quadraticCurveTo(cx,cy,tx,ty);g.stroke();
+   const nb=12;for(let b=0;b<nb;b++){const t=1-.32*(1-b/nb),[px,py]=curve(x0,y0,cx,cy,tx,ty,t),w=(3.6-b/nb*1.5)*u,h=4.6*u;g.save();g.translate(px,py);g.rotate(s.a+(r()-.5)*.5);
+    g.fillStyle=pick(r,['#3b2170','#4e2b8a','#6a3fa8','#2c1859','#7d4eb5','#5a3699']);g.beginPath();g.ellipse(0,0,w,h,0,0,7);g.fill();g.fillStyle='rgba(255,190,110,.3)';g.beginPath();g.ellipse(w*.45,-h*.35,w*.45,h*.4,0,0,7);g.fill();g.restore()}}
+ }else if(sp=='rom'){const st=[];for(let i=0;i<50;i++)st.push({a:(r()-.5)*1.0,l:R*(.95+r()*.7),o:(r()-.5)*R*.7,b:(r()-.5)*.4});st.sort((a,b)=>Math.abs(b.a)-Math.abs(a.a));
+  for(const s of st){const x0=bx+s.o,y0=by,tx=x0+Math.sin(s.a)*s.l,ty=y0-Math.cos(s.a)*s.l,cx=x0+Math.sin(s.a)*s.l*.4+s.b*s.l*.3,cy=y0-s.l*.55;g.strokeStyle='#3f4a2a';g.lineWidth=1.6*u;g.beginPath();g.moveTo(x0,y0);g.quadraticCurveTo(cx,cy,tx,ty);g.stroke();
+   const n=Math.floor(s.l/(2.3*u));for(let k=3;k<=n;k++){const t=k/n,[px,py]=curve(x0,y0,cx,cy,tx,ty,t),tg=Math.atan2(2*(1-t)*(cx-x0)+2*t*(tx-cx),-(2*(1-t)*(cy-y0)+2*t*(ty-cy)));
+    for(const sd of[-1,1]){const a=tg+sd*(.5+r()*.35),L=(8+r()*5)*u*(1-t*.2);g.strokeStyle=pick(r,['#4c5d33','#5c703c','#3f4e2b','#7a9050']);g.lineWidth=1.25*u;g.beginPath();g.moveTo(px,py);g.lineTo(px+Math.sin(a)*L,py-Math.cos(a)*L);g.stroke()}
+    if(t>.62&&r()<.28){g.fillStyle=pick(r,['#8a9ee0','#a8b7ee','#7388d0','#bfc9f2']);g.beginPath();g.ellipse(px+(r()-.5)*5*u,py+(r()-.5)*3*u,2.3*u,3.2*u,tg,0,7);g.fill()}}}
+ }else{for(let i=0;i<80;i++){const a=(r()-.5)*2,l=R*(.8+r()*.8),x0=bx+(r()-.5)*R*.4,tx=x0+Math.sin(a)*l*1.1,ty=by-Math.cos(a)*l*.85+l*.15*Math.abs(Math.sin(a)),cx=x0+Math.sin(a)*l*.35,cy=by-l*.75;g.strokeStyle=pick(r,['#6f7a38','#8a8f48','#a9a35a','#5e6a30','#c2b46e']);g.lineWidth=1.0*u;g.beginPath();g.moveTo(x0,by);g.quadraticCurveTo(cx,cy,tx,ty);g.stroke()}
+  for(let i=0;i<30;i++){const a=(r()-.5)*1.6,l=R*(1.15+r()*.6),x0=bx+(r()-.5)*R*.35,tx=x0+Math.sin(a)*l,ty=by-Math.cos(a)*l,cx=x0+Math.sin(a)*l*.25,cy=by-l*.8;g.strokeStyle='#8a8d4e';g.lineWidth=1.1*u;g.beginPath();g.moveTo(x0,by);g.quadraticCurveTo(cx,cy,tx,ty);g.stroke();
+   const L=(30+r()*12)*u,col=pick(r,['#c98b97','#d9a7ad','#e6cdb5','#d8b68c','#b97a8c']);for(let k=0;k<64;k++){const t=Math.max(0,1-(L/l)*(k/64)),[px,py]=curve(x0,by,cx,cy,tx,ty,t),tg=Math.atan2(tx-cx,-(ty-cy)),aa=tg+(r()-.5)*.9,hl=(7+r()*7)*u*(1-k/90);
+    g.strokeStyle=col;g.globalAlpha=.55;g.lineWidth=.9*u;g.beginPath();g.moveTo(px,py);g.lineTo(px+Math.sin(aa)*hl,py-Math.cos(aa)*hl);g.stroke();if(r()<.12){g.strokeStyle='rgba(255,225,170,.75)';g.beginPath();g.moveTo(px,py);g.lineTo(px+Math.sin(aa)*hl*.8,py-Math.cos(aa)*hl*.8);g.stroke()}g.globalAlpha=1}}}
+ g.globalCompositeOperation='source-atop';let lg=g.createLinearGradient(0,0,Wc,Hc*.6);lg.addColorStop(0,'rgba(255,170,90,0)');lg.addColorStop(1,'rgba(255,170,90,.18)');g.fillStyle=lg;g.fillRect(0,0,Wc,Hc);
+ const dk=g.createLinearGradient(0,Hc*.55,0,Hc);dk.addColorStop(0,'rgba(20,10,30,0)');dk.addColorStop(1,'rgba(20,10,30,.35)');g.fillStyle=dk;g.fillRect(0,0,Wc,Hc);g.globalCompositeOperation='source-over';return{c,bx,by}}
+// ---------- laguito ----------
+const POND={cx:1400,cy:815,rx:400,ry:195};
+function pond(p){const c=mk(W,H),g=c.getContext('2d'),r=rng(21);if(p<=0)return c;const s=.35+.65*p,cx=POND.cx,cy=POND.cy,rx=POND.rx*s,ry=POND.ry*s;
+ // borde de piedras
+ const n=Math.round(60*p);for(let i=0;i<n;i++){const a=Math.PI*2*(i/60)+ (r()-.5)*.08,x=cx+Math.cos(a)*(rx+10),y=cy+Math.sin(a)*(ry+6),w=30+r()*34,h=20+r()*14;
+  if(Math.sin(a)<0&&r()<0)continue;g.save();g.translate(x,y);g.rotate(Math.cos(a)*.3);g.fillStyle=pick(r,['#6c5f55','#8a7864','#5a5048','#9a8670','#7b6d60']);g.beginPath();g.roundRect(-w/2,-h/2,w,h,9);g.fill();g.fillStyle='rgba(255,200,130,.3)';g.fillRect(-w/2+4,-h/2+2,w*.6,4);g.restore()}
+ // agua
+ g.save();g.beginPath();g.ellipse(cx,cy,rx,ry,0,0,7);g.clip();
+ let gr=g.createLinearGradient(0,cy-ry,0,cy+ry);gr.addColorStop(0,'#3a3a3c');gr.addColorStop(.35,'#c98a4a');gr.addColorStop(.7,'#f3a84e');gr.addColorStop(1,'#d98a44');g.fillStyle=gr;g.fillRect(cx-rx,cy-ry,rx*2,ry*2);
+ for(let i=0;i<40;i++){const x=cx+(r()-.5)*rx*1.8,y=cy-ry*.8+r()*ry*.6;g.fillStyle='rgba(30,30,30,.35)';g.fillRect(x,y,4+r()*8,20+r()*50)} // reflejos de arboles
+ for(let i=0;i<30;i++){g.strokeStyle='rgba(255,225,170,.3)';g.lineWidth=1.5;g.beginPath();const y=cy-ry*.3+r()*ry*1.2,x=cx+(r()-.5)*rx*1.6;g.moveTo(x,y);g.lineTo(x+30+r()*60,y)}
+ g.stroke();g.restore();
+ // nenufares
+ if(p>.4){const q=(p-.4)/.6,m=Math.round(16*q);for(let i=0;i<m;i++){const a=r()*Math.PI*2,d=Math.sqrt(r())*.78,x=cx+Math.cos(a)*rx*d,y=cy+Math.sin(a)*ry*d+10,w=34+r()*18;
+  g.fillStyle=pick(r,['#3f6a30','#4d7a38','#335a28']);g.beginPath();g.ellipse(x,y,w,w*.4,0,.25,Math.PI*2-.15);g.lineTo(x,y);g.fill();
+  if(r()<.55){const col=pick(r,['#f4b6c6','#fff2f0','#f08aa8','#fff']);for(let k=0;k<8;k++){const aa=(k/8)*Math.PI-Math.PI;g.fillStyle=col;g.beginPath();g.ellipse(x+Math.cos(aa)*w*.28,y-w*.18+Math.sin(aa)*w*.1,w*.16,w*.32,Math.cos(aa)*.9,0,7);g.fill()}g.fillStyle='#f6d34a';g.beginPath();g.arc(x,y-w*.2,w*.1,0,7);g.fill()}}}
+ return c}
+// ---------- pergola ----------
+function pergola(p){const c=mk(W,H),g=c.getContext('2d'),r=rng(31);if(p<=0)return c;
+ const posts=[[130,GY+90,160],[610,GY+60,130],[870,GY+60,130],[1120,GY+70,140]]; // x, base y, ancho
+ const wood=(x,y,w,h,vert)=>{const gr=vert?g.createLinearGradient(x,0,x+w,0):g.createLinearGradient(0,y,0,y+h);gr.addColorStop(0,'#6e5238');gr.addColorStop(.5,'#4a3524');gr.addColorStop(1,'#2e2018');g.fillStyle=gr;g.fillRect(x,y,w,h);g.fillStyle='rgba(255,190,110,.18)';vert?g.fillRect(x+w*.7,y,w*.15,h):g.fillRect(x,y+h*.08,w,h*.15)};
+ const k1=Math.min(1,p/.2);
+ // postes
+ [[150,GY+95,30,0],[640,GY+70,26,0],[900,GY+70,26,0],[1140,GY+80,30,0]].forEach(([x,y,w],i)=>{if(k1>i*.2)wood(x-w/2,70,w,y-70,true)});
+ // vigas
+ if(p>.2){const q=Math.min(1,(p-.2)/.2);wood(60,76,1160*q,26,false);wood(60,106,1160*q,12,false);for(let x=80;x<1200*q;x+=46){wood(x,52,14,26,false)}}
+ // columpios
+ if(p>.4){const q=Math.min(1,(p-.4)/.15);g.globalAlpha=q;[[420,GY-10],[1020,GY-10]].forEach(([x,y])=>{g.strokeStyle='#3a2c22';g.lineWidth=3;[-95,95].forEach(dx=>{g.beginPath();g.moveTo(x+dx,110);g.lineTo(x+dx,y-130);g.stroke()});
+  g.fillStyle='#f1ece0';g.beginPath();g.roundRect(x-120,y-82,240,26,6);g.fill();g.fillStyle='#e2dccd';g.fillRect(x-120,y-56,240,8);for(let i=0;i<9;i++){g.fillStyle='#ece6d8';g.fillRect(x-112+i*26,y-160,16,80)}g.fillStyle='#f3ece0';g.fillRect(x-130,y-175,12,100);g.fillRect(x+118,y-175,12,100);
+  g.fillStyle='#e8d9bf';g.beginPath();g.roundRect(x-92,y-148,70,56,12);g.fill();g.beginPath();g.roundRect(x+22,y-148,70,56,12);g.fill();g.fillStyle='rgba(255,190,110,.25)';g.fillRect(x-92,y-148,70,10);g.fillRect(x+22,y-148,70,10);
+  g.fillStyle='rgba(40,25,10,.25)';g.beginPath();g.ellipse(x,y,130,10,0,0,7);g.fill()});g.globalAlpha=1}
+ // helechos colgantes
+ if(p>.58){const q=Math.min(1,(p-.58)/.2);[[360,160],[760,150],[1110,150]].forEach(([x,y],j)=>{const rr=rng(100+j);g.globalAlpha=q;g.strokeStyle='#3a2c22';g.lineWidth=2;g.beginPath();g.moveTo(x,118);g.lineTo(x,y);g.stroke();g.fillStyle='#9a6a40';g.beginPath();g.moveTo(x-36,y);g.lineTo(x+36,y);g.lineTo(x+26,y+30);g.lineTo(x-26,y+30);g.fill();
+  for(let i=0;i<70;i++){const a=-Math.PI*(.05+.9*rr()),l=60+rr()*60;g.strokeStyle=pick(rr,['#3e6a2a','#4e7e34','#5a8a3a','#2f5a22']);g.lineWidth=2+rr()*2;g.beginPath();g.moveTo(x,y+4);g.quadraticCurveTo(x+Math.cos(a)*l*.6,y+Math.sin(a)*l*.9-10,x+Math.cos(a)*l*1.2,y+Math.sin(a)*l*.2+40);g.stroke()}});g.globalAlpha=1}
+ // enredadera
+ const pv=Math.max(0,(p-.55)/.45),nv=Math.round(2600*pv);for(let i=0;i<nv;i++){let x,y;const t=r();
+  if(t<.55){x=60+r()*1170;y=40+r()*95;}else{const px=[150,640,900,1140][Math.floor(r()*4)];x=px+(r()-.5)*50+Math.sin(r()*6)*10;y=100+r()*(GY-20-100)}
+  const gen=r()<.04;g.fillStyle=gen?'#f6f2e6':pick(r,['#3a5a24','#4a6a2c','#5a7a34','#2c4a1c','#6a8a3a','#4e6e30']);g.beginPath();g.ellipse(x,y,gen?4:6+r()*7,gen?4:3+r()*4,r()*3,0,7);g.fill()}
+ return c}
+// ---------- composicion (modulo reutilizable) ----------
+let baseL,STAT=new Map(),SPOTS={},PC=new Map();
+const Garden={cnt:{},marked:{},D:0,hoy:null,FULL:null,fctx:null,subs:[],
+ on(f){this.subs.push(f)},emit(){this.subs.forEach(f=>f())}};
+const rad=y=>{const t=Math.max(0,Math.min(1,(y-GY-120)/(H-GY-120)));return 46+150*Math.pow(t,1.1)};
+const inPond=(x,y)=>((x-POND.cx)/(POND.rx+50))**2+((y-POND.cy)/(y>POND.cy?POND.ry+120:POND.ry+25))**2<1;
+const onPath=(x,y)=>{const t=(y-GY)/(H-GY),xc=930+t*260,w=70+t*150;return Math.abs(x-xc)<w};
+const ZLAV=[[40,620,720,1040],[960,900,1320,1150]];
+function gauss(r){return Math.sqrt(-2*Math.log(r()+1e-9))*Math.cos(6.2832*r())}
+function buildSpots(){HAB.forEach((h,i)=>{const r=rng(11+i*31),out=[];let g=0,f=1;
+  const C=[];if(h.sp!='lav'){const cols=6,rows=3;for(let ci=0;ci<cols;ci++)for(let ri=0;ri<rows;ri++){let t=0;while(t++<60){const x=60+(ci+r())/cols*(W-120),y=650+(ri+r())/rows*(H-700);if(inPond(x,y)||onPath(x,y))continue;C.push({x,y,rw:ri});break}}}
+  while(out.length<(h.sp=='lav'?60:h.sp=='plu'?52:85)&&g<200000){g++;if(g%3000==0)f*=.9;let x,y;
+   if(h.sp=='lav'){const z=ZLAV[r()<.78?0:1];x=z[0]+r()*(z[2]-z[0]);y=z[1]+r()*(z[3]-z[1])}
+   else{if(r()<.18){x=60+r()*(W-120);y=640+r()*(H-700)}else{const c=C[Math.floor(r()*C.length)];x=c.x+gauss(r)*130;y=c.y+gauss(r)*70}}
+   if(x<30||x>W-30||y<620||y>H-10||inPond(x,y)||onPath(x,y))continue;const R=rad(y)*(h.sp=='plu'?.95:1);
+   if(out.every(o=>Math.hypot(o.x-x,(o.y-y)*1.6)>(o.R+R)*.4*f))out.push({x,y,R,seed:Math.floor(r()*1e9)})}
+  SPOTS[h.id]=out})}
+const plant=(id,i)=>{const k=id+i;if(!PC.has(k)){const s=SPOTS[id][i];PC.set(k,drawPlant(HAB.find(h=>h.id==id).sp,s.seed,s.R))}return PC.get(k)};
+function layer(name,p,fn){const q=Math.round(p*12)/12,k=name+q;if(!STAT.has(k))STAT.set(k,fn(q));return STAT.get(k)}
+Garden.draw=function(extra){const ctx=this.fctx,cnt=this.cnt;ctx.clearRect(0,0,W,H);ctx.drawImage(baseL,0,0);
+ const d=this.D,pr=(a,b)=>Math.max(0,Math.min(1,(d-a)/(b-a)));
+ ctx.drawImage(layer('pond',pr(60,130),pond),0,0);ctx.drawImage(layer('perg',pr(110,260),pergola),0,0);
+ const items=[];HAB.forEach(h=>{const n=Math.min(cnt[h.id],SPOTS[h.id].length);for(let i=0;i<n;i++){const age=cnt[h.id]-1-i;items.push({id:h.id,i,y:SPOTS[h.id][i].y,s:.3+.7*Math.min(1,age/30)+.2*Math.min(1,Math.max(0,age-30)/150)})}});
+ items.sort((a,b)=>a.y-b.y);
+ for(const v of items){const s=SPOTS[v.id][v.i],o=plant(v.id,v.i);let sc=v.s,al=1;if(extra&&extra.id==v.id&&extra.i==v.i){sc=extra.sc;al=extra.al}
+  ctx.globalAlpha=al;ctx.drawImage(o.c,s.x-o.bx*sc,s.y-o.by*sc,o.c.width*sc,o.c.height*sc);ctx.globalAlpha=1}
+ if(extra&&extra.ring){const s=SPOTS[extra.id][extra.i];ctx.lineWidth=4;ctx.strokeStyle=`rgba(107,122,78,${extra.ring})`;const e=1+(1-extra.ring)*.6;ctx.beginPath();ctx.ellipse(s.x,s.y-s.R*.3,(s.R*.4+20)*e,(s.R*.5+26)*e,0,0,7);ctx.stroke()}
+ let gr=ctx.createRadialGradient(W*.84,HZ-30,60,W*.84,HZ-30,W*.9);gr.addColorStop(0,'rgba(255,190,100,.16)');gr.addColorStop(1,'rgba(255,150,80,0)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,H);
+ gr=ctx.createLinearGradient(0,H*.6,0,H);gr.addColorStop(0,'rgba(30,15,30,0)');gr.addColorStop(1,'rgba(30,15,30,.18)');ctx.fillStyle=gr;ctx.fillRect(0,0,W,H);
+ this.emit()};
+// Marca un habito: planta una mata nueva (con animacion). Devuelve el spot o null.
+Garden.mark=function(id,after){const cnt=this.cnt;if(this.marked&&this.marked[id])return null;(this.marked=this.marked||{})[id]=1;
+ cnt[id]++;const i=cnt[id]-1;if(i>=SPOTS[id].length){this.draw();return null}
+ const s=SPOTS[id][i],t0=performance.now();this.last={id,i,x:s.x,y:s.y,R:s.R};
+ const step=now=>{const u=Math.min(1,(now-t0)/1600),e=1-Math.pow(1-u,3);this.draw({id,i,sc:.06+.24*e,al:Math.min(1,e*1.4),ring:1-u});if(u<1)requestAnimationFrame(step);else{this.draw();after&&after()}};requestAnimationFrame(step);return s};
+Garden.unmark=function(id){if(!(this.marked&&this.marked[id]))return;this.marked[id]=0;this.cnt[id]--;this.draw()};
+Garden.init=function(){if(this.FULL)return;const c=mk(W,H);this.FULL=c;this.fctx=c.getContext('2d');
+ baseL=mk(W,H);const g=baseL.getContext('2d');sky(g);wall(g);ground(g);pot(g,1040,GY+45,.85);pot(g,1730,GY+50,.9);buildSpots();this.draw()};
+// dibuja un recorte (sx,sy,sw) del jardin en un canvas, manteniendo la proporcion del canvas
+Garden.blit=function(cv,cx,cy,sw){const dpr=Math.min(2,window.devicePixelRatio||1),w=cv.clientWidth||cv.width,h=cv.clientHeight||cv.height;
+ if(cv.width!=Math.round(w*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr)}
+ sw=Math.min(sw,H*cv.width/cv.height);const sh=sw*cv.height/cv.width;let sx=Math.max(0,Math.min(W-sw,cx-sw/2)),sy=Math.max(0,Math.min(H-sh,cy-sh/2));
+ const g=cv.getContext('2d');g.drawImage(this.FULL,sx,sy,sw,sh,0,0,cv.width,cv.height)};
+
+// ---- integración con Flow: una especie por hábito, cada marca = una mata
+Garden.sync=function(habs,hl,today){
+ const SP=['lav','plu','rom'],kind=t=>/wake|despert|strech|stretch|levant/i.test(t)?0:/coffee|caf[eé]|read|lee|lectur/i.test(t)?1:/werk|work|gym|ejerc|entren|run|corr|padel|hiit/i.test(t)?2:-1;
+ const used=new Set(),list=habs.slice(0,5).map((hb,i)=>{let k=kind(hb.text||'');if(k<0||used.has(k)){k=[0,1,2].find(x=>!used.has(x));if(k===undefined)k=i%3}used.add(k);return{id:String(hb.id),sp:SP[k],nom:['lavanda','pasto plumoso','romero'][k],name:hb.text||''}});
+ const sig=list.map(h=>h.id+h.sp).join();
+ if(sig!==this._sig){this._sig=sig;HAB.length=0;list.forEach(h=>HAB.push(h));SPOTS={};PC.clear();buildSpots()}
+ this.cnt={};this.marked={};let mx=0;
+ list.forEach(h=>{let n=0;for(const d in hl){if(d<=today&&hl[d]&&hl[d][h.id])n++}this.cnt[h.id]=n;this.marked[h.id]=(hl[today]&&hl[today][h.id])?1:0;mx=Math.max(mx,n)});
+ this.D=mx;this.last=null;this.habs=list;this.draw()};
+
+window.Garden=Garden;
+})();
+</script>
 <script>
 
 // ============================================================
@@ -2380,253 +2530,59 @@ function _habitWeek7(id){
 }
 
 // ============================================================
-// MI JARDÍN — cada hábito siembra su planta; crece con los días que lo cuidas
+// MI JARDÍN — una especie por hábito; cada día que lo marcas nace una mata nueva
 // ============================================================
-const _jd = { months:0, yrs:5, names:true, timer:null, slots:[], H:[] };
-const _jdHash = s => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
-const _jdRng = seed => () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
-const _jdPick = (r, a) => a[Math.floor(r() * a.length)];
-const _f1 = n => Math.round(n * 10) / 10;
-const _jdEsc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-
-function _jdLav(r, dry){
-  let s = '';
-  for (let k = 0; k < 16; k++){ const a = (r()-.5)*1.7, L = 14 + r()*12, x = Math.sin(a)*L, y = -Math.cos(a)*L;
-    s += `<path d="M0 0Q${_f1(x*.3)} ${_f1(y*.6)} ${_f1(x)} ${_f1(y)}" stroke="${dry?'#B3A887':'#9DAE89'}" stroke-width="1.8" fill="none" stroke-linecap="round"/>`; }
-  const n = dry ? 9 : 17;
-  for (let k = 0; k < n; k++){ const a = (r()-.5)*1.35, L = 50 + r()*32, ex = Math.sin(a)*L*.75, ey = -Math.cos(a)*L;
-    s += `<path d="M0 0Q${_f1(ex*.15)} ${_f1(ey*.55)} ${_f1(ex)} ${_f1(ey)}" stroke="${dry?'#B5A782':'#7F956B'}" stroke-width="1.3" fill="none"/>`;
-    if (dry && r() > .35) continue;
-    let dx = ex - ex*.15, dy = ey - ey*.55; const m = Math.hypot(dx,dy); dx/=m; dy/=m;
-    for (let j = 0; j < 6; j++){ const c = dry ? '#BCA98A' : _jdPick(r, ['#8B7BC8','#9C8AD6','#7A68B8','#A898DE']);
-      s += `<circle cx="${_f1(ex+dx*j*3.1)}" cy="${_f1(ey+dy*j*3.1)}" r="${_f1(2.9-j*.25)}" fill="${c}"/>`; }
-  }
-  return s;
-}
-function _jdGrass(r, dry){
-  let s = '';
-  for (let k = 0; k < 26; k++){ const a = (r()-.5)*2.3, h = 60 + r()*50, ex = Math.sin(a)*h*.85, ey = -h*(1-Math.abs(a)*.28);
-    s += `<path d="M0 0Q${_f1(ex*.1)} ${_f1(ey*.85)} ${_f1(ex)} ${_f1(ey)}" stroke="${dry?'#C4B690':_jdPick(r,['#8FA56C','#A3B57F','#7F9660'])}" stroke-width="1.5" fill="none" stroke-linecap="round"/>`; }
-  const n = dry ? 3 : 9;
-  for (let k = 0; k < n; k++){ const a = (r()-.5)*1.5, h = 100 + r()*38, ex = Math.sin(a)*h*.62, ey = -h;
-    s += `<path d="M0 0Q${_f1(ex*.15)} ${_f1(ey*.6)} ${_f1(ex)} ${_f1(ey)}" stroke="${dry?'#C9BC98':'#AEB894'}" stroke-width="1.2" fill="none"/>`;
-    const x1 = ex*.8, y1 = ey*.8, x2 = ex*1.07, y2 = ey*1.06;
-    s += `<path d="M${_f1(x1)} ${_f1(y1)}L${_f1(x2)} ${_f1(y2)}" stroke="${dry?'#D8CBA8':'#EAD6CE'}" stroke-width="8" stroke-linecap="round" opacity=".92"/>`;
-    s += `<path d="M${_f1(x1)} ${_f1(y1)}L${_f1(x2)} ${_f1(y2)}" stroke="${dry?'#CDBE96':'#D9BCB1'}" stroke-width="3" stroke-linecap="round"/>`;
-  }
-  return s;
-}
-function _jdOlive(r, dry){
-  let s = `<path d="M-6 0C-10-28 6-52-3-92L5-92C13-52-1-28 7 0Z" fill="#7B6B5A"/><path d="M0-78L-34-112M1-84L30-118M0-90L4-136" stroke="#7B6B5A" stroke-width="3.5" stroke-linecap="round"/>`;
-  const cols = dry ? ['#B5A980','#A69669','#C1B48E'] : ['#8C9A6F','#A2AE86','#7B895F','#B3BC98'];
-  for (let k = 0; k < 26; k++) s += `<ellipse cx="${_f1((r()-.5)*118)}" cy="${_f1(-124+(r()-.5)*62)}" rx="${_f1(14+r()*12)}" ry="${_f1(9+r()*7)}" fill="${_jdPick(r,cols)}" opacity=".92"/>`;
-  if (!dry) for (let k = 0; k < 9; k++) s += `<circle cx="${_f1((r()-.5)*90)}" cy="${_f1(-118+(r()-.5)*44)}" r="2.3" fill="#4F5A37"/>`;
-  return s;
-}
-function _jdRomero(r, dry){
-  let s = '';
-  for (let k = 0; k < 11; k++){ const a = (r()-.5)*.9, L = 42 + r()*30, ex = Math.sin(a)*L, ey = -Math.cos(a)*L;
-    s += `<path d="M0 0Q${_f1(ex*.3)} ${_f1(ey*.5)} ${_f1(ex)} ${_f1(ey)}" stroke="${dry?'#A48F6A':'#7A6A55'}" stroke-width="1.4" fill="none"/>`;
-    for (let j = 2; j < 14; j++){ const t = j/14, x = ex*t*t*.7 + ex*t*.3, y = ey*t, side = j%2 ? 1 : -1, len = 6 - t*2.5;
-      s += `<path d="M${_f1(x)} ${_f1(y)}l${_f1(side*len*.9)} ${_f1(-len*.55)}" stroke="${dry?'#B3A27C':_jdPick(r,['#4F6B4A','#5E7A55','#6A845E'])}" stroke-width="1.6" stroke-linecap="round"/>`;
-      if (!dry && t > .55 && r() < .22) s += `<circle cx="${_f1(x+side*2)}" cy="${_f1(y-2)}" r="1.9" fill="${_jdPick(r,['#A9BCE0','#B9C6EA','#9AAEDB'])}"/>`; }
-  }
-  return s;
-}
-function _jdSilver(r, dry){
-  let s = '';
-  for (let k = 0; k < 40; k++){ const t = Math.PI + r()*Math.PI, d = Math.sqrt(r()), x = Math.cos(t)*30*d, y = Math.sin(t)*18*d;
-    s += `<ellipse cx="${_f1(x)}" cy="${_f1(y)}" rx="4.2" ry="2.6" transform="rotate(${Math.round(r()*180)} ${_f1(x)} ${_f1(y)})" fill="${dry?'#CDBF9C':_jdPick(r,['#B9C3AC','#CBD3BF','#A9B59B'])}"/>`; }
-  if (!dry) for (let k = 0; k < 4; k++) s += `<circle cx="${_f1((r()-.5)*36)}" cy="${_f1(-12-r()*10)}" r="2.6" fill="#E3C766"/>`;
-  return s;
-}
-function _jdAgave(r, dry){
-  let s = '';
-  for (let k = 0; k < 11; k++){ const a = -1.35 + k/10*2.7 + (r()-.5)*.15, L = 38 + (1-Math.abs(a)/1.35)*30, tx = Math.sin(a)*L, ty = -Math.cos(a)*L*.95, c = Math.cos(a)*5;
-    s += `<path d="M${_f1(-c)} 0Q${_f1(tx*.5-c)} ${_f1(ty*.5)} ${_f1(tx)} ${_f1(ty)}Q${_f1(tx*.5+c)} ${_f1(ty*.5)} ${_f1(c)} 0Z" fill="${dry?'#BCAA82':_jdPick(r,['#86A19A','#9BB3AC','#76918A'])}"/>`; }
-  return s;
-}
-function _jdCempa(r, dry){
-  let s = '';
-  for (let k = 0; k < 18; k++){ const a = (r()-.5)*2, L = 12 + r()*14, x = Math.sin(a)*L, y = -Math.cos(a)*L;
-    s += `<path d="M0 0L${_f1(x)} ${_f1(y)}" stroke="${dry?'#A99A70':'#5F7A45'}" stroke-width="2.4" stroke-linecap="round"/>`; }
-  const n = dry ? 2 : 7;
-  for (let k = 0; k < n; k++){ const x = (r()-.5)*40, y = -16 - r()*18;
-    s += `<circle cx="${_f1(x)}" cy="${_f1(y)}" r="5.8" fill="${dry?'#A4824F':'#E8922B'}"/><circle cx="${_f1(x)}" cy="${_f1(y)}" r="3" fill="${dry?'#B3925C':'#F2B24C'}"/>`; }
-  return s;
-}
-const JD_SP = {
-  lavanda:  { name:'Lavanda', plural:'lavandas', maxN:16, perN:110, full:520, minS:.35, depth:[.35,1], w:1, draw:_jdLav, bugs:true },
-  pasto:    { name:'Pasto plumoso', plural:'matas de pasto plumoso', maxN:12, perN:140, full:540, minS:.3, depth:[.02,.7], w:1, draw:_jdGrass },
-  olivo:    { name:'Olivo', plural:'olivos', maxN:3, perN:520, full:1200, minS:.24, depth:[0,.3], w:1.25, draw:_jdOlive, birds:true },
-  romero:   { name:'Romero', plural:'romeros', maxN:12, perN:120, full:560, minS:.32, depth:[.25,.95], w:.95, draw:_jdRomero, bugs:true },
-  plateada: { name:'Hoja plateada', plural:'matas de hoja plateada', maxN:26, perN:55, full:260, minS:.4, depth:[.4,1], w:.9, draw:_jdSilver },
-  agave:    { name:'Agave', plural:'agaves', maxN:7, perN:220, full:820, minS:.3, depth:[.2,.9], w:.9, draw:_jdAgave },
-  cempa:    { name:'Cempasúchil', plural:'cempasúchiles', maxN:18, perN:70, full:200, minS:.4, depth:[.4,1], w:.9, draw:_jdCempa, bugs:true },
-};
-const JD_ORDER = ['lavanda','pasto','olivo','romero','plateada','agave','cempa'];
-function _jdPlantOf(hb, i){
-  if (hb.plant && JD_SP[hb.plant]) return hb.plant;
-  if (/werk|gym|ejerc|entren|run|correr|padel|hiit/i.test(hb.text||'')) return 'olivo';
-  return JD_ORDER.filter(k => k !== 'olivo')[i % 6];
-}
-// Datos reales de cada hábito: días cuidados y ritmo de las últimas 4 semanas
+const _jd = { cam:{x:900,y:720,sw:1270}, tg:{x:900,y:720,sw:1270}, raf:0, drag:null };
+const JD_ALL = [['Plantas',{x:520,y:960,sw:1000},0],['Pérgola',{x:700,y:420,sw:1150},110],['Laguito',{x:1400,y:800,sw:1000},60],['Macetas',{x:1390,y:660,sw:1000},0],['Todo',{x:900,y:720,sw:1270},0]];
+let JD_VIEWS = JD_ALL;
+const JD_NOM = { lav:'lavanda', plu:'pasto plumoso', rom:'romero' };
+function jdStop(){ _jd.raf = 0; }
+function _jdPaint(){ const cv = document.getElementById('jd-cv'); if (cv && typeof Garden !== 'undefined') Garden.blit(cv, _jd.cam.x, _jd.cam.y, _jd.cam.sw); }
+function _jdTick(){ let m = 0; for (const a of ['x','y','sw']) { const d = _jd.tg[a]-_jd.cam[a]; _jd.cam[a] += d*.14; m = Math.max(m, Math.abs(d)); }
+  _jdPaint(); _jd.raf = (m > 1 && document.getElementById('jd-cv')) ? requestAnimationFrame(_jdTick) : 0; }
+function jdView(k){ _jd.tg = Object.assign({}, JD_VIEWS[k][1]); document.querySelectorAll('.jd-chips .pill').forEach((b,i)=>b.classList.toggle('active', i===k)); if (!_jd.raf) _jd.raf = requestAnimationFrame(_jdTick); }
 function _jdData(){
-  const hl = _getHlog(), today = todayStr(), habs = _getHabits();
-  const t28 = new Date(); t28.setDate(t28.getDate() - 27); const d28 = _ymd(t28);
-  return habs.map((hb, i) => {
-    const id = hb.id, dates = Object.keys(hl).filter(d => d <= today && hl[d] && hl[d][id]).sort();
-    const care = dates.length, first = dates[0] || today;
-    const since = Math.max(1, Math.round((new Date(today+'T12:00:00') - new Date(first+'T12:00:00')) / 864e5) + 1);
-    const win = Math.min(28, since), recent = dates.filter(d => d >= d28).length;
-    const fr = _habFreq(hb) || 7, target = fr * win / 7;
-    const rate = care ? Math.min(1, recent / Math.max(1, target)) : 0;
-    return { hb, id, name: hb.text || 'Hábito', sp: _jdPlantOf(hb, i), fr, care, rate, perYear: fr * 52 * rate };
-  });
+  const hl = _getHlog(), today = todayStr();
+  return _getHabits().map(hb => ({ hb, id:hb.id, name:hb.text||'Hábito', fr:_habFreq(hb)||7,
+    care:Object.keys(hl).filter(d => d <= today && hl[d] && hl[d][hb.id]).length }));
 }
-const _jdCare = (h, m) => h.care + h.perYear * m / 12;
-// las primeras plantas salen más rápido, para que el jardín se sienta vivo desde el inicio
-const _jdBorn = (sp, i) => i <= 3 ? i * .35 * sp.perN : (1.05 + (i - 3)) * sp.perN;
-const _jdMax = () => _jd.yrs * 12;
-function _jdSize(o, m){
-  const sp = JD_SP[o.h.sp], cd = _jdCare(o.h, m), born = _jdBorn(sp, o.i);
-  if (cd <= born || cd <= 0) return 0;
-  return _f1((sp.minS + (1 - sp.minS) * Math.min(1, (cd - born) / sp.full)) * 100) / 100;
-}
-const _jdCount = (h, m) => { const sp = JD_SP[h.sp], cd = _jdCare(h, m); let n = 0; while (n < sp.maxN && cd > _jdBorn(sp, n)) n++; return n; };
-function _jdTop(){ let b = null; _jd.H.forEach(h => { if (h.care && (!b || h.rate > b.rate || (h.rate === b.rate && h.care > b.care))) b = h; }); return b; }
-function _jdZones(){
-  const X0 = 140, X1 = 1060, W = _jd.H.reduce((a,h)=>a+JD_SP[h.sp].w,0); let x = X0;
-  return _jd.H.map(h => { const w = (X1-X0) * JD_SP[h.sp].w / W; const z = { x0:x, x1:x+w }; x += w; return z; });
-}
-
 function renderJardin(){
   const el = document.getElementById('panel-jardin'); if (!el) return;
-  _jd.H = _jdData();
-  if (!_jd.H.length) { el.innerHTML = `<div class="empty-state"><p>Agrega tus hábitos en el Log diario y aquí empezará a crecer tu jardín.</p></div>`; return; }
-  const now = new Date(), MES = now.toLocaleDateString('es-MX',{month:'short'}).replace('.','');
+  const H = _jdData();
+  if (!H.length || typeof Garden === 'undefined') { el.innerHTML = `<div class="empty-state"><p>Agrega tus hábitos en el Log diario y aquí empezará a crecer tu jardín.</p></div>`; return; }
+  const mx = Math.max(0, ...H.map(h=>h.care));
+  JD_VIEWS = JD_ALL.filter(v => mx >= v[2]);
   el.innerHTML = `<div class="jd">
-    <div class="jd-stage">
-      <div class="jd-box">
-        <div class="jd-scene" id="jd-scene-wrap"><svg id="jd-scene" viewBox="0 150 1200 410" role="img" aria-label="Mi jardín"></svg></div>
-        <div class="jd-when"><b id="jd-year"></b><span id="jd-sub"></span></div>
-        <div class="jd-total"><b id="jd-days"></b><span>días cuidados en total</span></div>
-      </div>
-      <div class="jd-swipe">Desliza para recorrer tu jardín</div>
-      <div class="jd-time">
-        <button class="jd-play" id="jd-play" onclick="jdPlay()" aria-label="Ver crecer"><svg viewBox="0 0 16 16" width="15" height="15"><path id="jd-play-ic" d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg></button>
-        <div class="jd-tl"><input type="range" id="jd-tl" min="0" max="${_jdMax()}" value="${_jd.months}" oninput="jdSeek(this.value)" aria-label="Línea del tiempo">
-          <div class="jd-tl-lab"><span>Hoy · ${MES} ${now.getFullYear()}</span><b id="jd-tl-end"></b></div></div>
-        <label class="jd-yrs">Ver a <select onchange="jdYears(this.value)">${[1,3,5,10,20].map(y=>`<option value="${y}" ${y===_jd.yrs?'selected':''}>${y===1?'1 año':y+' años'}</option>`).join('')}</select></label>
-      </div>
-    </div>
-    <div class="jd-chips"><button class="pill${_jd.names?' active':''}" id="jd-names" onclick="jdNames()">Ver nombres</button><button class="pill" onclick="jdSeek(0)">Hoy</button><button class="pill" onclick="jdSeek(${_jdMax()})">Saltar al final</button></div>
-    <div class="jd-row">
-      <div class="jd-grid" id="jd-grid"></div>
-      <aside class="jd-side"><div class="jd-h">Lo que vas desbloqueando</div><ul class="jd-un" id="jd-un"></ul>
-        <p class="jd-how">Tu jardín crece con las marcas de tus hábitos. Hacia adelante, la línea del tiempo te muestra cómo se vería si sigues a tu ritmo de las últimas 4 semanas.</p></aside>
-    </div>
+    <div class="jg-view"><canvas id="jd-cv"></canvas><div class="jg-days" id="jd-days"></div></div>
+    <div class="jd-chips">${JD_VIEWS.map((v,k)=>`<button class="pill${k===JD_VIEWS.length-1?' active':''}" onclick="jdView(${k})">${v[0]}</button>`).join('')}</div>
+    <div class="jd-grid" id="jd-grid" style="margin-top:14px"></div>
   </div>`;
-  _jdCards(); _jdBuild();
-  // en el celular, abrir el jardín centrado
-  requestAnimationFrame(() => { const w = document.getElementById('jd-scene-wrap'); if (w && w.scrollWidth > w.clientWidth) w.scrollLeft = (w.scrollWidth - w.clientWidth) / 2; });
+  Garden.init(); Garden.subs = []; Garden.sync(_getHabits(), _getHlog(), todayStr()); Garden.on(()=>{ if (!_jd.raf) _jdPaint(); });
+  const cv = document.getElementById('jd-cv'), W = () => cv.clientWidth || 360;
+  cv.onpointerdown = e => { _jd.drag = { x:e.clientX, y:e.clientY, cx:_jd.tg.x, cy:_jd.tg.y }; cv.setPointerCapture(e.pointerId); };
+  cv.onpointermove = e => { const d = _jd.drag; if (!d) return; const k = _jd.tg.sw / W();
+    _jd.tg.x = d.cx - (e.clientX-d.x)*k; _jd.tg.y = d.cy - (e.clientY-d.y)*k; _jd.cam = Object.assign({}, _jd.tg); _jdPaint(); };
+  cv.onpointerup = cv.onpointercancel = () => { _jd.drag = null; };
+  _jd.cam = Object.assign({}, JD_VIEWS[JD_VIEWS.length-1][1]); _jd.tg = Object.assign({}, _jd.cam);
+  _jdCards(); requestAnimationFrame(_jdPaint);
 }
 function _jdCards(){
   const g = document.getElementById('jd-grid'); if (!g) return;
-  const hl = _getHlog(), mon = new Date(_weekStart()+'T12:00:00'), today = todayStr(), DL = ['L','M','M','J','V','S','D'];
-  g.innerHTML = _jd.H.map(h => {
-    const days = DL.map((l,k) => { const d = new Date(mon); d.setDate(mon.getDate()+k); const ds = _ymd(d), on = !!(hl[ds] && hl[ds][h.id]);
+  const hl = _getHlog(), mon = new Date(_weekStart()+'T12:00:00'), today = todayStr(), DL = ['L','M','M','J','V','S','D'], H = _jdData();
+  const total = Math.max(0, ...H.map(h=>h.care)), d = document.getElementById('jd-days'), nx = total < 60 ? ['el laguito', 60] : total < 110 ? ['la pérgola', 110] : null;
+  if (d) d.innerHTML = `<b>${total}</b> días` + (nx ? ` · ${nx[0]} en ${nx[1]-total}` : '');
+  g.innerHTML = H.map(h => {
+    const days = DL.map((l,k) => { const x = new Date(mon); x.setDate(mon.getDate()+k); const ds = _ymd(x), on = !!(hl[ds] && hl[ds][h.id]);
       return `<button class="jd-day${on?' on':''}${ds===today?' today':''}" ${ds>today?'disabled':''} onclick="jdToggle(${h.id},'${ds}')" aria-pressed="${on}" aria-label="${_jdEsc(h.name)} ${l}">${l}</button>`; }).join('');
-    const wk = _habWeekCount(h.id), sp = JD_SP[h.sp], n = _jdCount(h, 0);
-    return `<div class="jd-card" data-h="${h.id}"><span class="jd-tag" hidden>Más empeño</span>
-      <div class="jd-ch"><span class="jd-nm">${_jdEsc(h.name)}</span><select onchange="jdSetPlant(${h.id},this.value)" aria-label="Planta">${JD_ORDER.map(k=>`<option value="${k}" ${k===h.sp?'selected':''}>${JD_SP[k].name}</option>`).join('')}</select></div>
+    const sp = (Garden.habs||[]).find(x=>x.id===String(h.id)), wk = _habWeekCount(h.id);
+    return `<div class="jd-card"><div class="jd-ch"><span class="jd-nm">${_jdEsc(h.name)}</span><span class="ar-mut" style="font-size:.74rem">${sp?JD_NOM[sp.sp]:''}</span></div>
       <div class="jd-days">${days}</div>
-      <div class="jd-stat"><b>${wk}</b> de ${h.fr} esta semana · <b>${h.care}</b> días cuidados · <b>${n}</b> ${n===1?sp.name.toLowerCase():sp.plural}${h.care && h.rate<.4?' · se está secando':''}</div></div>`;
+      <div class="jd-stat"><b>${wk}</b> de ${h.fr} esta semana · <b>${h.care}</b> días cuidados</div></div>`;
   }).join('');
 }
-function _jdBuild(){
-  const svg = document.getElementById('jd-scene'); if (!svg) return;
-  const GY = 335, GH = 212, zs = _jdZones(); _jd.slots = [];
-  _jd.H.forEach((h, hi) => {
-    const sp = JD_SP[h.sp], z = zs[hi], w = z.x1 - z.x0, dryFrac = h.rate < .4 ? (.4 - h.rate) / .4 : 0;
-    for (let i = 0; i < sp.maxN; i++){
-      const r = _jdRng(_jdHash(String(h.id) + h.sp + i));
-      const d = sp.depth[0] + r() * (sp.depth[1] - sp.depth[0]);
-      const x = sp.maxN <= 3 ? z.x0 + (i + .5) / sp.maxN * w + (r()-.5) * 30 : z.x0 + 24 + r() * (w - 48);
-      const dry = r() < dryFrac;
-      _jd.slots.push({ h, i, x, y: GY + d * GH, p: (.55 + .5 * d) * 1.22, dry, svg: sp.draw(r, dry), sway: 4 + r() * 3, delay: -r() * 6 });
-    }
-  });
-  _jd.slots.sort((a,b) => a.y - b.y);
-  const sr = _jdRng(7), ivy = Array.from({length:22}, (_,k) => ({ x: 30 + sr() * 1140, y: 262 + sr() * 62, k }));
-  let s = `<defs><linearGradient id="jd-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3F6EC"/><stop offset="1" stop-color="#FBFBF7"/></linearGradient>
-    <linearGradient id="jd-gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DCD2BE"/><stop offset="1" stop-color="#E6DECD"/></linearGradient></defs>
-    <rect y="150" width="1200" height="410" fill="url(#jd-sky)"/>
-    <rect x="0" y="250" width="1200" height="${GY-244}" fill="#ECE5D8"/><rect x="0" y="244" width="1200" height="10" rx="2" fill="#E2D9C8"/>
-    <rect x="0" y="${GY}" width="1200" height="${560-GY}" fill="url(#jd-gr)"/>`;
-  s += ivy.map(v => { const r = _jdRng(v.k*31+5); let g = ''; for (let j=0;j<16;j++) g += `<ellipse cx="${_f1(v.x+(r()-.5)*44)}" cy="${_f1(v.y+(r()-.5)*26)}" rx="${_f1(2.6+r()*2)}" ry="${_f1(1.8+r()*1.4)}" transform="rotate(${Math.round(r()*180)} ${_f1(v.x)} ${_f1(v.y)})" fill="${_jdPick(r,['#7E9466','#93A87A','#6E8458'])}" opacity=".85"/>`; return `<g class="jd-fade" data-ivy="${v.k}" opacity="0">${g}</g>`; }).join('');
-  s += `<g id="jd-stones" class="jd-fade" opacity="0">${Array.from({length:12},(_,k)=>`<ellipse cx="${150+k*78+(k%2)*10}" cy="${548-(k%2)*3}" rx="22" ry="6" fill="#D2C9B8"/>`).join('')}</g>`;
-  s += `<g id="jd-bench" class="jd-fade" opacity="0"><rect x="28" y="478" width="92" height="7" rx="2" fill="#8B7259"/><rect x="30" y="458" width="88" height="6" rx="2" fill="#8B7259"/><rect x="34" y="485" width="5" height="30" fill="#6F5A45"/><rect x="109" y="485" width="5" height="30" fill="#6F5A45"/><rect x="34" y="462" width="4" height="20" fill="#6F5A45"/><rect x="110" y="462" width="4" height="20" fill="#6F5A45"/></g>`;
-  s += `<g id="jd-bath" class="jd-fade" opacity="0"><rect x="1130" y="470" width="12" height="70" fill="#D2C9B8"/><ellipse cx="1136" cy="540" rx="22" ry="6" fill="#D2C9B8"/><path d="M1104 464h64l-8 14h-48z" fill="#D2C9B8"/><ellipse cx="1136" cy="465" rx="30" ry="5" fill="#BFD3D6"/></g>`;
-  s += _jd.slots.map((o, k) => `<g transform="translate(${_f1(o.x)} ${_f1(o.y)}) scale(${_f1(o.p*100)/100})"><g class="jd-gw" data-k="${k}" style="transform:scale(${_jdSize(o, _jd.months)})"><g class="jd-sw" style="animation-duration:${_f1(o.sway)}s;animation-delay:${_f1(o.delay)}s">${o.svg}</g></g></g>`).join('');
-  s += _jd.H.map((h, hi) => { const sp = JD_SP[h.sp], z = zs[hi];
-    if (sp.bugs) return `<g class="jd-fade" data-bugs="${hi}" opacity="0">${[0,1,2].map(j => `<g transform="translate(${_f1(z.x0 + 30 + j*(z.x1-z.x0-80)/3)} ${400 + j*22})"><g class="jd-bf" style="animation-delay:${-j*3}s;animation-duration:${8+j*1.5}s"><g class="jd-wg"><ellipse cx="-4" cy="0" rx="5" ry="3.6" fill="${j%2?'#F0C766':'#B7A3E6'}"/><ellipse cx="4" cy="0" rx="5" ry="3.6" fill="${j%2?'#F0C766':'#B7A3E6'}"/></g><rect x="-.8" y="-3" width="1.6" height="6" rx=".8" fill="#4A4F3C"/></g></g>`).join('')}</g>`;
-    if (sp.birds){ const t = _jd.slots.find(o => o.h === h && o.i === 0); return t ? `<g class="jd-fade" data-birds="${hi}" opacity="0"><path d="M${_f1(t.x-20)} ${_f1(t.y-150*t.p)}q6-6 12 0q6-6 12 0" stroke="#4A4F3C" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M${_f1(t.x+26)} ${_f1(t.y-178*t.p)}q5-5 10 0q5-5 10 0" stroke="#4A4F3C" stroke-width="2" fill="none" stroke-linecap="round"/></g>` : ''; }
-    return ''; }).join('');
-  const top = _jdTop();
-  s += `<g id="jd-names" style="${_jd.names?'':'display:none'}">${_jd.H.map((h, hi) => { const z = zs[hi], cx = (z.x0+z.x1)/2, isTop = h === top, w = Math.max(90, h.name.length*7.4+28);
-    return `<g class="jd-zone" onclick="jdFocus(${h.id})"><rect x="${_f1(cx-w/2)}" y="256" width="${_f1(w)}" height="24" rx="12" fill="${isTop?'#EEF2E6':'rgba(255,255,255,.78)'}" stroke="${isTop?'#6B7A4E':'#CFDAB8'}" stroke-width="1.2"/><text x="${_f1(cx)}" y="272.5" text-anchor="middle" font-family="Inter,sans-serif" font-size="12" font-weight="800" fill="${isTop?'#6B7A4E':'#4A5040'}">${_jdEsc(h.name)}</text>${isTop?`<text x="${_f1(cx)}" y="249" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" font-weight="800" fill="#6B7A4E">MÁS EMPEÑO</text>`:''}</g>`; }).join('')}</g>`;
-  svg.innerHTML = s;
-  _jdUpdate();
-}
-function _jdUnlocks(total, m){
-  const bugs = _jd.H.some(h => JD_SP[h.sp].bugs && _jdCount(h,m)/JD_SP[h.sp].maxN > .45 && h.rate >= .4);
-  const birds = _jd.H.some(h => JD_SP[h.sp].birds && _jd.slots.some(o=>o.h===h&&o.i===0&&_jdSize(o,m)>.7));
-  return [
-    { on: total >= 300, t:'Hiedra en el muro', d:'Sube un poco cada 300 días cuidados' },
-    { on: total >= 365, t:'Camino de piedras', d:'Al llegar a 365 días' },
-    { on: total >= 1500, t:'Banca para sentarte', d:'A los 1,500 días' },
-    { on: total >= 3000, t:'Bebedero de pájaros', d:'A los 3,000 días' },
-    { on: bugs, t:'Mariposas', d:'Cuando tu lavanda, romero o cempasúchil se llena' },
-    { on: birds, t:'Pájaros en el olivo', d:'Cuando el primer olivo madura' },
-  ];
-}
-function _jdUpdate(){
-  const svg = document.getElementById('jd-scene'); if (!svg) return;
-  const m = _jd.months;
-  svg.querySelectorAll('.jd-gw').forEach(g => { g.style.transform = `scale(${_jdSize(_jd.slots[g.dataset.k], m)})`; });
-  const total = _jd.H.reduce((a,h)=>a+_jdCare(h,m),0);
-  svg.querySelectorAll('[data-ivy]').forEach(g => g.setAttribute('opacity', total >= 300 * (+g.dataset.ivy + 1) ? 1 : 0));
-  const U = _jdUnlocks(total, m), set = (id, on) => { const e = document.getElementById(id); if (e) e.setAttribute('opacity', on ? 1 : 0); };
-  set('jd-stones', U[1].on); set('jd-bench', U[2].on); set('jd-bath', U[3].on);
-  _jd.H.forEach((h, hi) => {
-    const b = svg.querySelector(`[data-bugs="${hi}"]`); if (b) b.setAttribute('opacity', _jdCount(h,m)/JD_SP[h.sp].maxN > .45 && h.rate >= .4 ? 1 : 0);
-    const bd = svg.querySelector(`[data-birds="${hi}"]`), t0 = _jd.slots.find(o=>o.h===h&&o.i===0); if (bd) bd.setAttribute('opacity', t0 && _jdSize(t0, m) > .7 ? 1 : 0);
-  });
-  const d = new Date(); d.setDate(1); d.setMonth(d.getMonth() + m);
-  const yrs = Math.floor(m/12);
-  document.getElementById('jd-year').textContent = d.getFullYear();
-  document.getElementById('jd-sub').textContent = m === 0 ? 'Hoy' : `${d.toLocaleDateString('es-MX',{month:'short'}).replace('.','')} · en ${m < 12 ? m + (m===1?' mes':' meses') : yrs + (yrs===1?' año':' años')}, a tu ritmo`;
-  document.getElementById('jd-days').textContent = Math.round(total).toLocaleString('es-MX');
-  const end = document.getElementById('jd-tl-end'); if (end) end.textContent = `En ${_jd.yrs===1?'1 año':_jd.yrs+' años'} · ${new Date().getFullYear()+_jd.yrs}`;
-  const un = document.getElementById('jd-un'); if (un) un.innerHTML = U.map(u => `<li class="${u.on?'on':''}"><i></i><span><b>${u.t}</b>${u.d}</span></li>`).join('');
-  const top = _jdTop();
-  document.querySelectorAll('.jd-card').forEach(c => { const on = !!top && String(top.id) === c.dataset.h; c.classList.toggle('top', on); c.querySelector('.jd-tag').hidden = !on; });
-}
-function _jdIcon(on){ const p = document.getElementById('jd-play-ic'); if (p) p.setAttribute('d', on ? 'M4 2.5h3v11H4zM9 2.5h3v11H9z' : 'M4 2.5v11l9-5.5z'); }
-function jdStop(){ clearInterval(_jd.timer); _jd.timer = null; _jdIcon(false); }
-function jdPlay(){
-  if (_jd.timer) return jdStop();
-  if (_jd.months >= _jdMax()) _jd.months = 0;
-  _jdIcon(true); const step = Math.max(1, Math.round(_jdMax() / 40));
-  _jd.timer = setInterval(() => { _jd.months = Math.min(_jdMax(), _jd.months + step); const tl = document.getElementById('jd-tl'); if (!tl) return jdStop(); tl.value = _jd.months; _jdUpdate(); if (_jd.months >= _jdMax()) jdStop(); }, 160);
-}
-function jdSeek(v){ jdStop(); _jd.months = Math.max(0, Math.min(_jdMax(), Number(v)||0)); const tl = document.getElementById('jd-tl'); if (tl) tl.value = _jd.months; _jdUpdate(); }
-function jdYears(v){ _jd.yrs = Number(v)||5; jdStop(); if (_jd.months > _jdMax()) _jd.months = _jdMax(); renderJardin(); }
-function jdNames(){ _jd.names = !_jd.names; const n = document.getElementById('jd-names'); if (n) n.style.display = _jd.names ? '' : 'none'; const b = document.querySelector('.jd-chips .pill'); if (b) b.classList.toggle('active', _jd.names); }
-function jdToggle(id, ds){ const hl = _getHlog(); if (!hl[ds]) hl[ds] = {}; hl[ds][id] = !hl[ds][id]; _saveHlog(hl); _jd.H = _jdData(); _jdCards(); _jdBuild(); }
-function jdSetPlant(id, v){ const hs = _getHabits(), x = hs.find(y => y.id === id); if (x) { x.plant = v; _saveHabits(hs); } _jd.H = _jdData(); _jdCards(); _jdBuild(); }
-function jdFocus(id){ const c = document.querySelector(`.jd-card[data-h="${id}"]`); if (!c) return; c.scrollIntoView({behavior:'smooth', block:'center'}); c.animate([{boxShadow:'0 0 0 6px #CFDAB8'},{boxShadow:'0 0 0 0 transparent'}],{duration:900}); }
+const _jdEsc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function jdToggle(id, ds){ const hl = _getHlog(); if (!hl[ds]) hl[ds] = {}; hl[ds][id] = !hl[ds][id]; _saveHlog(hl);
+  Garden.sync(_getHabits(), _getHlog(), todayStr()); _jdCards(); _jdPaint(); }
 
 function selectLogDay(ds) {
   activeLogDate = ds;
@@ -2803,7 +2759,7 @@ function _putEntry(e){ const j = _getJournal().filter(x=>x.id!==e.id); e.at = ne
 function _dayPrio(ds){ return (_dayEntry(ds).prio||[]).filter(id=>items.some(i=>i.id===id && !i.archived)); }
 
 let _ar = null;   // estado del arranque mientras está abierto
-const AR_STEPS = 8;
+const AR_STEPS = 6;
 function _arNeed(ds){ const d = new Date(ds+'T12:00:00').getDay(); return (d===5||d===6||d===0) ? 9 : 7; }
 function _arAdd(ds, n){ const d = new Date(ds+'T12:00:00'); d.setDate(d.getDate()+n); return _ymd(d); }
 function _hm(m){ return Math.floor(m/60)+':'+String(m%60).padStart(2,'0'); }
@@ -2830,33 +2786,24 @@ function openArranque(){
   _ar.lateIds = late.map(i=>i.id).filter(id=>_ar.late[id]);
   late.forEach(i=>{ if (!_ar.late[i.id]) _ar.late[i.id] = {to:'hoy', d:_arAdd(today,1)}; });
   _ar.lateIds = late.map(i=>i.id);
+  _ar.md = null; _ar$.raf = 0; _ar$.labT = 0;
+  _arGarden();
   _arRender();
 }
-function _arSaveDraft(){ const today = todayStr(), e = _dayEntry(today); const { step, swap, wk, wkDone, wkEdit, ...ans } = _ar; e.arr = Object.assign({}, e.arr, { ans }); _putEntry(e); }
+function _arSaveDraft(){ const today = todayStr(), e = _dayEntry(today); const { step, swap, md, ...ans } = _ar; e.arr = Object.assign({}, e.arr, { ans }); _putEntry(e); }
 function arSkip(){ const today = todayStr(), e = _dayEntry(today); e.arr = Object.assign({}, e.arr, { skipped:true }); _putEntry(e); _arClose(); showToast('Puedes hacer tu arranque más tarde desde Pulso'); }
-function _arClose(){ _ar = null; const o = document.getElementById('arranque'); if (o) o.remove(); document.body.classList.remove('ar-open'); renderCurrent(); }
-function arBack(){ if (_ar.step > 1) { _ar.step--; _ar.swap = null; _arRender(); } }
+function _arClose(){ _ar = null; _ar$.raf = 0; const o = document.getElementById('arranque'); if (o) o.remove(); document.body.classList.remove('ar-open'); renderCurrent(); }
+function arBack(){ if (_ar.step > 1) { _ar.step--; _ar.swap = null; _ar.md = null; _arGo(); _arRender(); } }
 // ---- Metas en el Arranque
 function _arGoals(){ return goals.filter(g=>!g.notStarted && _metaPct(g) < 100); }
-function _arGoalToday(g){ const c = _weekCommit()[g.id];
-  if (_gMode(g)==='num' && c) { const falta = Math.max(0, c - _gWeek(g)); return falta ? `Esta semana te falta ${_gFmt(g, falta)}` : 'Compromiso de la semana cumplido'; }
-  const m = c ? (g.milestones||[]).find(x=>String(x.id)===String(c)) : null; if (m && !m.done) return 'Esta semana: ' + m.text;
-  const nx = _gNextMs(g); return nx ? 'Siguiente: ' + nx.text : (_gMode(g)==='num' ? `Llevas ${_gFmt(g, g.cur||0)} de ${_gFmt(g, g.target)}` : 'Sin pasos definidos'); }
 function _arGoalTask(g){ const c = _weekCommit()[g.id];
   if (_gMode(g)==='num' && c) { const falta = Math.max(0, c - _gWeek(g)); if (falta) return `${g.title}: avanzar ${_gFmt(g, falta)}`; }
   const m = (c ? (g.milestones||[]).find(x=>String(x.id)===String(c) && !x.done) : null) || _gNextMs(g);
   return m ? `${g.title}: ${m.text}` : `${g.title}: avanzar`; }
-function arWk(id, v){ _ar.wk[id] = v; }
-function arWkSave(){ const w = _dayEntry('week-'+_weekStart()); w.commit = {};
-  Object.entries(_ar.wk||{}).forEach(([k,v])=>{ if (v!=='' && v!=null) w.commit[k] = isNaN(Number(v)) ? v : Number(v); });
-  _putEntry(w); _ar.wkDone = true; _ar.wkEdit = false; _ar.prio = null; _arRender(); }
-function arWkEdit(){ _ar.wkEdit = true; _ar.wkDone = false; _ar.wk = null; _arRender(); }
-function arExGoal(id){ _ar.exGoal = _ar.exGoal===id ? null : id; _ar.prio = null; _arRender(); }
 function arNext(){
-  if (_ar.step === 5 && _ar.wk && !_ar.wkDone) { arWkSave(); return; }
-  if (_ar.step === 7 && !_arPrio().length) { showToast('Elige al menos una prioridad'); return; }
+  if (_ar.step === 5 && !_arPrio().length) { showToast('Elige al menos una prioridad'); return; }
   _arSaveDraft();
-  if (_ar.step < AR_STEPS) { _ar.step++; _ar.swap = null; _arRender(); } else arFinish();
+  if (_ar.step < AR_STEPS) { _ar.step++; _ar.swap = null; _ar.md = null; _arGo(); _arRender(); } else arFinish();
 }
 
 // ---- candidatos
@@ -2878,11 +2825,15 @@ function _arFrogTasks(){
 }
 function _arPrio(){
   if (_ar.prio) return _ar.prio.filter(x=>x && (x.id ? items.some(i=>i.id===x.id && _live(i)) : true));
+  return _arPrioAuto();
+}
+function _arPrioAuto(){
   const list = [];
   const push = x => { if (x && list.length<3 && !list.some(y=>(y.id&&y.id===x.id)||(y.key&&y.key===x.key))) list.push(x); };
   if (_ar.frog) push({ id:_ar.frog, why:'No te emociona · va primero' });
   _arCoverTasks().filter(c=>!c.later).forEach(c=>push(c));
   if (_ar.exGoal) { const g = goals.find(x=>x.id===_ar.exGoal); if (g) push({ key:'goal-'+g.id, text:_arGoalTask(g), why:'Empuja tu meta · ' + g.title, mins:60 }); }
+  if (_ar.exTask) { const t = items.find(i=>i.id===_ar.exTask); if (t && _live(t)) push({ id:t.id, why:'Empuja tu proyecto' }); }
   items.filter(i=>_live(i) && i.date===todayStr() && i.urgent===true && i.important===true).forEach(i=>push({ id:i.id, why:'Urgente e importante' }));
   items.filter(i=>_live(i) && i.date===todayStr()).forEach(i=>push({ id:i.id, why:'De tu día' }));
   return list;
@@ -2934,7 +2885,7 @@ function arFinish(){
   // horas sugeridas a las prioridades
   const plan = _arPlan();
   plan.filter(b=>b.kind==='p').forEach(b=>{ const id = b.ref.id || keyId[b.ref.key]; const t = items.find(i=>i.id===id); if (t && !t.time) t.time = _hm(b.from).padStart(5,'0'); });
-  const e = _dayEntry(today); const { step, swap, wk, wkDone, wkEdit, ...ans } = _ar;
+  const e = _dayEntry(today); const { step, swap, md, ...ans } = _ar;
   e.prio = prio; e.fam = _ar.fam.on ? { from:_ar.fam.from, to:_ar.fam.to } : null;
   e.arr = { done:true, ans, at:new Date().toISOString() };
   _putEntry(e); save();
@@ -2942,100 +2893,144 @@ function arFinish(){
 }
 
 // ---- acciones de cada paso
-function arHab(id){ const hl = _getHlog(), t = todayStr(); hl[t] = hl[t] || {}; hl[t][id] = !hl[t][id]; _saveHlog(hl); _arRender(); }
+function arHab(id){ const hl = _getHlog(), t = todayStr(); hl[t] = hl[t] || {}; const on = !hl[t][id]; hl[t][id] = on; _saveHlog(hl);
+  const gid = String(id); if (typeof Garden !== 'undefined' && Garden.cnt && Garden.cnt[gid] !== undefined) { if (on) _arOnMark(Garden.mark(gid)); else Garden.unmark(gid); }
+  _arRender(); }
 function arLav(k, d){ const L = _ar.lav[k], need = _arNeed(todayStr()); L.have = Math.max(0, Math.min(15, L.have + d)); if (L.have < need && L.st===0) L.st = 1; if (L.have >= need && L.st===1) L.st = 0; _arRender(); }
 function arLavSt(k, st){ _ar.lav[k].st = st; _ar.prio = null; _arRender(); }
 function arLate(id, to){ _ar.late[id].to = to; _ar.prio = null; _arRender(); }
 function arLateD(id, v){ _ar.late[id].d = v; }
 function arFam(on){ _ar.fam.on = on; _arRender(); }
 function arFamT(k, v){ _ar.fam[k] = v; }
-function arExCat(id){ if (_ar.exTask===id) { _ar.exTask = null; _ar.exSub = null; } else { _ar.exTask = id; const s0 = _arProjSubs(id)[0]; _ar.exSub = s0 ? s0._k : null; } _ar.prio = null; _arRender(); }
-function arExSub(k){ _ar.exSub = k; _ar.prio = null; _arRender(); }
 function arFrog(id){ _ar.frog = _ar.frog===id ? null : id; _ar.prio = null; _arRender(); }
-function arSwap(k){ _ar.prio = _arPrio(); _ar.swap = k; _arRender(); }
-function arSwapTo(k, v){ const P = _arPrio(); const id = Number(v); if (id) P[k] = { id, why:'La elegiste tú' }; else P.splice(k,1); _ar.prio = P; _ar.swap = null; _arRender(); }
-function arAddPrio(){ _ar.prio = _arPrio(); _ar.swap = _ar.prio.length; _arRender(); }
 
-// ---- pantalla
-function _arOpt(on, text, click, right){ return `<button type="button" class="ar-opt${on?' on':''}" onclick="${click}"><span class="ar-box">${on?ico('check',14):''}</span><span class="ar-ot">${text}</span>${right||''}</button>`; }
+// ---- pantalla nueva: jardín arriba + hoja con la pregunta
+const AR_QS = ['Morning ritual','¿Qué proyecto te emociona?','Eat that frog','Mis compromisos','Tus 3 prioridades hoy','This is your day'];
+const AR_CAM = [
+  () => (Garden.last ? { x:Garden.last.x, y:Garden.last.y-60, sw:780 } : { x:520, y:960, sw:1000 }),
+  { x:700, y:420, sw:1150 }, { x:1400, y:800, sw:1000 }, { x:1390, y:660, sw:1000 }, { x:1300, y:560, sw:1150 }, { x:900, y:720, sw:1270 } ];
+const _ar$ = { cam:{x:900,y:720,sw:1270}, tg:{x:900,y:720,sw:1270}, raf:0, labT:0 };
+const _arSvg = (p,c,s) => `<svg width="${s||30}" height="${s||30}" viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const AR_HIC = {
+  wake:'<circle cx="12" cy="13" r="4"/><path d="M12 4v2M4.5 8l1.5 1.2M19.5 8L18 9.2M3 17h18"/>',
+  coffee:'<path d="M5 9h11v5a4 4 0 0 1-4 4H9a4 4 0 0 1-4-4z"/><path d="M16 10h1.5a2 2 0 0 1 0 4H16M8 3v2M12 3v2"/>',
+  werk:'<path d="M6.5 7v10M17.5 7v10M3.5 10v4M20.5 10v4M6.5 12h11"/>',
+  leaf:'<path d="M5 19c0-8 5-13 14-14 0 9-5 14-13 14M5 19l7-7"/>' };
+const AR_PIC = {
+  nfc:'<path d="M8 8a6 6 0 0 1 0 8M12 5.5a10 10 0 0 1 0 13M16 3a14 14 0 0 1 0 18"/>',
+  book:'<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h11"/>',
+  cam:'<path d="M4 8h3l1.5-2h7L17 8h3v11H4z"/><circle cx="12" cy="13" r="3"/>',
+  bot:'<path d="M10 3h4v3l2 3v11H8V9l2-3zM8 13h8"/>',
+  cart:'<path d="M3 5h3l2 10h10l2-7H7M10 19.5h.01M17 19.5h.01"/>',
+  star:'<path d="M12 3l2.4 5.6 6 .5-4.6 4 1.4 5.9L12 15.8 6.8 19l1.4-5.9-4.6-4 6-.5z"/>' };
+const _arHKind = t => /wake|despert|strech|stretch|levant/i.test(t||'') ? 'wake' : /coffee|caf[eé]|read|lee|lectur/i.test(t||'') ? 'coffee' : /werk|work|gym|ejerc|entren|run|corr|padel|hiit/i.test(t||'') ? 'werk' : 'leaf';
+const _arHShort = hb => ({wake:'Wake up', coffee:'Coffee', werk:'Werkout'}[_arHKind(hb.text)] || String(hb.text||'Hábito').split(/\s+/).slice(0,2).join(' '));
+const _arPIcon = t => /nfc|tarjeta|rese/i.test(t) ? 'nfc' : /manual|libro|curso|lectur/i.test(t) ? 'book' : /c[aá]mara|seguridad|cctv/i.test(t) ? 'cam' : /aroma|botella|producto|etiqueta/i.test(t) ? 'bot' : /compra|app|carrito/i.test(t) ? 'cart' : 'star';
+const _arCk = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#34C759" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+function _arT(o){ return `<button type="button" class="ar-tl${o.on?' on':''}${o.bad?' bad':''}" onclick="${o.click}">${o.html}</button>`; }
 function _arSeg(list, sel, fn){ return `<div class="ar-seg">${list.map((t,k)=>`<button type="button" class="${k===sel?'on':''}" onclick="${fn(k)}">${t}</button>`).join('')}</div>`; }
-function _arRender(){
-  let o = document.getElementById('arranque');
-  if (!o) { o = document.createElement('div'); o.id = 'arranque'; document.body.appendChild(o); document.body.classList.add('ar-open'); }
-  const today = todayStr(), S = _ar.step, need = _arNeed(today), D = new Date(today+'T12:00:00');
-  const dayTxt = D.toLocaleDateString('es-MX',{weekday:'long'})+' '+D.getDate();
-  let q = '', sub = '', body = '', note = '', btn = 'Siguiente';
-  if (S===1) {
-    const hr = new Date().getHours();
-    q = `${hr<12?'Buenos días':hr<19?'Buenas tardes':'Buenas noches'}, Montse. ¿Ya hiciste tu morning ritual?`;
-    sub = 'Toca lo que ya hiciste. Se marca en tus hábitos.';
-    const hl = _getHlog()[today]||{}, hs = _getHabits();
-    body = hs.length ? hs.map(hb=>_arOpt(!!hl[hb.id], h(hb.text), `arHab(${hb.id})`)).join('') : '<div class="ar-empty">Aún no tienes hábitos. Agrégalos en el Log diario.</div>';
+function _arGarden(){
+  if (typeof Garden === 'undefined') return;
+  Garden.init(); Garden.subs = []; Garden.sync(_getHabits(), _getHlog(), todayStr()); Garden.on(()=>{ if (!_ar$.raf) _arPaint(); });
+}
+function _arCamFor(){ const c = AR_CAM[Math.max(0, Math.min(5, (_ar?_ar.step:1)-1))]; return typeof c === 'function' ? c() : c; }
+function _arPaint(){
+  const cv = document.getElementById('ar-cv'); if (!cv || typeof Garden === 'undefined') return;
+  const c = _ar$.cam; Garden.blit(cv, c.x, c.y, c.sw);
+  const l = document.getElementById('ar-lab'); if (!l) return;
+  if (Garden.last && _ar$.labT > Date.now()) {
+    const w = cv.clientWidth, sw = Math.min(c.sw, 1440*cv.width/cv.height), sh = sw*cv.height/cv.width,
+      sx = Math.max(0, Math.min(1800-sw, c.x-sw/2)), sy = Math.max(0, Math.min(1440-sh, c.y-sh/2));
+    l.style.left = Math.max(80, Math.min(w-80, (Garden.last.x-sx)/sw*w)) + 'px';
+    l.style.top = Math.min(cv.clientHeight-60, (Garden.last.y-sy)/sh*cv.clientHeight+6) + 'px'; l.style.opacity = 1;
+  } else l.style.opacity = 0;
+}
+function _arTick(){
+  const k = .12; let m = 0;
+  for (const a of ['x','y','sw']) { const d = _ar$.tg[a]-_ar$.cam[a]; _ar$.cam[a] += d*k; m = Math.max(m, Math.abs(d)); }
+  _arPaint(); _ar$.raf = (m > 1 && document.getElementById('ar-cv')) ? requestAnimationFrame(_arTick) : 0;
+}
+function _arGo(snap){ _ar$.tg = Object.assign({}, _arCamFor()); if (snap) _ar$.cam = Object.assign({}, _ar$.tg); if (!_ar$.raf) _ar$.raf = requestAnimationFrame(_arTick); }
+function _arOnMark(s){ if (!s) return; _ar$.tg = { x:s.x, y:s.y-60, sw:780 }; _ar$.labT = Date.now()+4200; if (!_ar$.raf) _ar$.raf = requestAnimationFrame(_arTick); setTimeout(_arPaint, 4300); }
+
+// candidatos a prioridad (tarjetas del paso 5)
+function _arCands(){
+  const today = todayStr(), out = [], seen = new Set();
+  const add = x => { const k = x.id!=null ? 'i'+x.id : x.key; if (seen.has(k)) return; seen.add(k); out.push(x); };
+  _arCoverTasks().filter(c=>!c.later).forEach(c=>add({ key:c.key, text:c.text, tag:'faltan hoy', mins:c.mins }));
+  if (_ar.exGoal) { const g = goals.find(x=>x.id===_ar.exGoal); if (g) add({ key:'goal-'+g.id, text:_arGoalTask(g), tag:'proyecto', mins:60 }); }
+  if (_ar.exTask) { const t = items.find(i=>i.id===_ar.exTask); if (t && _live(t)) add({ id:t.id, text:t.text, tag:'proyecto' }); }
+  items.filter(i=>_live(i) && ((i.date && i.date<today && (_ar.late[i.id]||{}).to==='hoy') || i.date===today))
+    .sort((a,b)=>(a.date<today?0:1)-(b.date<today?0:1)).forEach(i=>add({ id:i.id, text:i.text, tag:i.date<today?'pendiente':(i.time||'de hoy') }));
+  const au = _arPrioAuto(), rank = c => { const k = au.findIndex(x=>_arSame(x,c)); return k<0 ? 99 : k; };
+  return out.map((c,k)=>({c,k})).sort((x,y)=>(rank(x.c)-rank(y.c)) || (x.k-y.k)).map(x=>x.c).slice(0,10);
+}
+const _arSame = (x,y) => (x.id!=null && x.id===y.id) || (x.key && x.key===y.key);
+function arTp(k){ const c = _arCands()[k]; if (!c) return; let p = _arPrio().slice(); const i = p.findIndex(x=>_arSame(x,c));
+  if (i>=0) p.splice(i,1); else if (p.length<3) p.push(c.id!=null ? { id:c.id, why:'La elegiste tú' } : { key:c.key, text:c.text, mins:c.mins, why:'La elegiste tú' });
+  _ar.prio = p; _arRender(); }
+function arProj(kind, id){ const same = (kind==='g' && _ar.exGoal===id) || (kind==='t' && _ar.exTask===id);
+  _ar.exGoal = null; _ar.exTask = null; if (!same) { if (kind==='g') _ar.exGoal = id; else _ar.exTask = id; } _ar.prio = null; _arRender(); }
+function arMd(k){ _ar.md = k; _arRender(); }
+function arMdClose(){ _ar.md = null; _arRender(); }
+function arLavSt2(k, j){ _ar.lav[k].st = j===0 ? 1 : 2; _ar.prio = null; _arRender(); }
+function _arBodyHtml(S){
+  const today = todayStr(), need = _arNeed(today); let b = '';
+  if (S===1) { const hl = _getHlog()[today]||{}, hs = _getHabits();
+    b = hs.length ? `<div class="ar-tiles">${hs.slice(0,6).map(hb=>{ const on = !!hl[hb.id];
+      return `<button type="button" class="${on?'on':''}" onclick="arHab(${hb.id})"><div class="s"><span class="ck">${_arCk}</span>${_arSvg(AR_HIC[_arHKind(hb.text)], on?'#1C2018':'#9aa08f', 34)}</div><b>${h(_arHShort(hb))}</b></button>`; }).join('')}</div>`
+      : '<div class="ar-empty">Aún no tienes hábitos. Agrégalos en el Log diario.</div>';
   } else if (S===2) {
-    const dn = D.toLocaleDateString('es-MX',{weekday:'long'});
-    q = '¿Cómo estás de lavadores hoy?';
-    sub = `${dn.charAt(0).toUpperCase()+dn.slice(1)}: necesitas ${need} por sucursal. ${need===7?'Viernes a domingo, 9.':'Entre semana, 7.'}`;
-    body = [['ref','Refugio'],['ala','Álamos']].map(([k,n])=>{ const L = _ar.lav[k]; return `<div class="ar-card">
-      <div class="ar-row"><b>${n}</b><span class="ar-mut">hoy necesitas <b>${need}</b></span></div>
-      <div class="ar-count"><button type="button" onclick="arLav('${k}',-1)" aria-label="Menos">–</button><span class="ar-big">${L.have}</span><span class="ar-mut">de ${need} lavadores</span><button type="button" onclick="arLav('${k}',1)" aria-label="Más" style="margin-left:auto">+</button></div>
-      ${_arSeg(['Completos','Faltan hoy','Faltarán'], L.st, j=>`arLavSt('${k}',${j})`)}</div>`; }).join('');
-    const c = _arCoverTasks(); note = c.length ? 'Voy a crear: ' + c.map(x=>`"${x.text}"${x.later?' para esta semana':''}`).join(' y ') + '.' : '';
-  } else if (S===3) {
-    q = _ar.lateIds.length ? 'Esto quedó pendiente' : 'Nada quedó pendiente';
-    sub = _ar.lateIds.length ? '¿Lo traemos a hoy?' : 'Ayer cerraste todo. Bien.';
-    body = _ar.lateIds.map(id=>{ const t = items.find(i=>i.id===id); if (!t) return ''; const v = _ar.late[id];
-      const ago = Math.round((new Date(today) - new Date(t.date))/864e5);
-      return `<div class="ar-card"><div class="ar-row"><b class="ar-tt">${h(t.text)}</b><span class="ar-mut">${ago===1?'ayer':'hace '+ago+' días'}</span></div>
-        ${_arSeg(['A hoy','Otro día','A la Bandeja'], ['hoy','otro','bandeja'].indexOf(v.to), j=>`arLate(${id},'${['hoy','otro','bandeja'][j]}')`)}
-        ${v.to==='otro'?`<input type="date" class="ar-date" value="${v.d}" min="${_arAdd(today,1)}" onchange="arLateD(${id},this.value)"/>`:''}</div>`; }).join('');
+    const gs = _arGoals().slice(0,6).map(g=>({ k:'g', id:g.id, t:g.title })), ps = _arProjects().slice(0, Math.max(0, 6-gs.length)).map(t=>({ k:'t', id:t.id, t:t.text }));
+    const L = gs.concat(ps);
+    b = L.length ? `<div class="ar-g3">${L.map(m=>{ const on = m.k==='g' ? _ar.exGoal===m.id : _ar.exTask===m.id;
+      return _arT({ on, click:`arProj('${m.k}',${m.id})`, html:`<span>${_arSvg(AR_PIC[_arPIcon(m.t)], on?'#1C2018':'#9aa08f')}</span><span>${h(m.t)}</span>` }); }).join('')}</div>`
+      : '<div class="ar-empty">Aún no tienes proyectos ni metas activas.</div>';
+  } else if (S===3) { const ft = _arFrogTasks();
+    b = ft.length ? `<div class="ar-g2">${ft.map(t=>_arT({ on:_ar.frog===t.id, click:`arFrog(${t.id})`, html:`<span>${h(t.text)}</span><small>${t.date && t.date<today ? 'pendiente' : 'de hoy'}</small>` })).join('')}</div>`
+      : '<div class="ar-empty">No tienes tareas para hoy todavía.</div>';
   } else if (S===4) {
-    q = '¿Hoy hay family time?'; sub = 'Lo aparto en tu día y no te acomodo tareas a esa hora.';
-    body = `${_arSeg(['Sí','Hoy no'], _ar.fam.on?0:1, j=>`arFam(${j===0})`)}
-      ${_ar.fam.on?`<div class="ar-card"><div class="ar-mut" style="font-weight:700">¿A qué hora?</div>
-      <div class="ar-times"><input type="time" value="${_ar.fam.from}" onchange="arFamT('from',this.value)"/><span class="ar-mut">a</span><input type="time" value="${_ar.fam.to}" onchange="arFamT('to',this.value)"/></div></div>`:''}`;
-  } else if (S===5) {
-    const gl = _arGoals(), wk = _weekCommit(), needWeek = gl.length && (new Date(today+'T12:00:00').getDay()===1 || !Object.keys(wk).length || _ar.wkEdit);
-    if (!gl.length) { q = '¿Qué meta empujas hoy?'; sub = 'Aún no tienes metas activas.'; body = '<div class="ar-empty">Crea tus metas en la pestaña Metas y aquí te ayudo a empujarlas cada día.</div>'; }
-    else if (needWeek && !_ar.wkDone) {
-      if (!_ar.wk) { _ar.wk = {}; gl.forEach(g=>{ const prev = wk[g.id]; _ar.wk[g.id] = prev!=null ? prev : (_gMode(g)==='num' ? (g.step||1) : ((_gNextMs(g)||{}).id ?? '')); }); }
-      q = 'Tu compromiso de esta semana'; sub = 'Cuánto empujas cada meta de lunes a domingo.';
-      body = gl.map(g=>{ const num = _gMode(g)==='num';
-        const ctl = num ? `<span class="ar-wkin">${(g.unit||'').trim()==='$'?'$':''}<input type="number" min="0" value="${_ar.wk[g.id]}" onchange="arWk(${g.id},this.value)"/>${(g.unit||'').trim()&&(g.unit||'').trim()!=='$'?` <small>${h(g.unit)}</small>`:''}</span>`
-          : `<select class="ar-sel" onchange="arWk(${g.id},this.value)"><option value="">Sin compromiso</option>${(g.milestones||[]).filter(m=>!m.done).map(m=>`<option value="${m.id}"${String(m.id)===String(_ar.wk[g.id])?' selected':''}>${h(m.text)}</option>`).join('')}</select>`;
-        return `<div class="ar-card" style="gap:8px"><div class="ar-row"><b class="ar-tt">${h(g.title)}</b><span class="ar-mut">${num?`llevas ${h(_gFmt(g,g.cur||0))}`:''}</span></div>${ctl}</div>`; }).join('');
-      btn = 'Guardar mi semana';
-    } else {
-      q = '¿Qué meta empujas hoy?'; sub = 'Entra a tu día como prioridad.';
-      body = gl.map(g=>_arOpt(_ar.exGoal===g.id, `${h(g.title)}<div class="ar-why" style="font-weight:600">${h(_arGoalToday(g))}</div>`, `arExGoal(${g.id})`)).join('')
-        + `<button type="button" class="ar-link" style="align-self:flex-start;margin-top:4px" onclick="arWkEdit()">Cambiar mi compromiso de la semana</button>`;
-    }
-  } else if (S===6) {
-    q = '¿Qué no te emociona pero tiene que salir?'; sub = 'Va primero, para quitártela temprano.';
-    const ft = _arFrogTasks();
-    body = ft.map(t=>_arOpt(_ar.frog===t.id, h(t.text), `arFrog(${t.id})`, t.date && t.date<today ? '<span class="ar-tag">pendiente</span>' : '')).join('') || '<div class="ar-empty">No tienes tareas para hoy todavía. Puedes saltar este paso.</div>';
-  } else if (S===7) {
-    q = 'Tus 3 prioridades de hoy'; sub = 'Te las propuse con lo que contestaste. Cambia la que quieras.';
-    const P = _arPrio(), opts = items.filter(_live).slice(0,300);
-    const sel = k => `<select class="ar-sel" onchange="arSwapTo(${k},this.value)"><option value="">${P[k]?'Quitar esta prioridad':'Elige una tarea…'}</option>${opts.map(i=>`<option value="${i.id}">${h(i.text)}</option>`).join('')}</select>`;
-    body = P.map((x,k)=>_ar.swap===k ? `<div class="ar-pr"><span class="ar-n">${k+1}</span>${sel(k)}</div>` :
-      `<div class="ar-pr"><span class="ar-n">${k+1}</span><div style="flex:1;min-width:0"><div class="ar-tt">${h(_arLabel(x))}</div><div class="ar-why">${x.why||''}</div></div><button type="button" class="ar-link" onclick="arSwap(${k})">Cambiar</button></div>`).join('')
-      + (P.length<3 ? (_ar.swap===P.length ? `<div class="ar-pr"><span class="ar-n">${P.length+1}</span>${sel(P.length)}</div>` : `<button type="button" class="ar-link" style="align-self:flex-start;margin-top:4px" onclick="arAddPrio()">+ Agregar prioridad</button>`) : '');
-    btn = 'Ver mi día';
+    const miss = k => Math.max(0, need - _ar.lav[k].have), nLate = _ar.lateIds.length;
+    b = `<div class="ar-g2">${[['ref','Refugio'],['ala','Álamos']].map(([k,n])=>_arT({ on:!miss(k), bad:!!miss(k), click:`arMd('${k}')`, html:`<small>Lavadores · ${n}</small><span class="v">${_ar.lav[k].have}/${need}</span>` })).join('')}
+      ${_arT({ on:_ar.fam.on, click:"arMd('fam')", html:`<small>Family time</small><span class="v">${_ar.fam.on?_ar.fam.from:'No'}</span>` })}
+      ${_arT({ on:true, click:"arMd('pen')", html:`<small>Pendientes de ayer</small><span class="v">${nLate}</span>` })}</div>`;
+  } else if (S===5) { const p = _arPrio();
+    b = `<div class="ar-g2">${_arCands().map((c,k)=>{ const i = p.findIndex(x=>_arSame(x,c));
+      return _arT({ on:i>=0, click:`arTp(${k})`, html:`${i>=0?`<span class="bg">${i+1}</span>`:''}<span>${h(c.text)}</span><small>${h(c.tag||'de hoy')}</small>` }); }).join('') || '<div class="ar-empty">No hay tareas para hoy todavía.</div>'}</div>`;
   } else {
-    q = 'Así queda tu día'; sub = 'Con horas sugeridas. Puedes mover cualquier cosa en el Log diario.';
-    const tag = { p:'Prioridad', a:'Agendado', f:'Family time', o:'' };
-    body = `<div class="ar-plan">${_arPlan().map(b=>`<div class="ar-b"><div class="ar-bt">${_hm(b.from)}</div><div class="ar-bb k-${b.kind}"><div class="ar-row"><b>${h(b.text)}</b>${tag[b.kind]?`<span class="ar-btag">${tag[b.kind]}</span>`:''}</div><div class="ar-bh">${_hm(b.from)}–${_hm(b.to)}</div></div></div>`).join('') || '<div class="ar-empty">Tu día está libre.</div>'}</div>`;
-    btn = 'Empezar';
+    const col = { p:'#FF2D55', a:'#C9CCC3', f:'#FF9F0A', o:'#E5E7E0' };
+    b = _arPlan().map(x=>`<div class="ar-pl"><span class="h">${_hm(x.from)}</span><span class="ar-dt" style="background:${x.kind==='p' && _arIsProj(x.ref) ? '#0A84FF' : col[x.kind]}"></span><span style="flex:1;min-width:0">${h(x.text)}</span></div>`).join('')
+      || '<div class="ar-empty">Tu día está libre.</div>';
   }
-  const dots = Array.from({length:AR_STEPS},(_,k)=>`<i class="${k+1===S?'cur':k+1<S?'on':''}"></i>`).join('');
-  o.innerHTML = `<div class="ar-wrap">
-    <div class="ar-top">${S>1?`<button type="button" class="ar-back" onclick="arBack()" aria-label="Atrás"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>`:''}<div class="ar-dots">${dots}</div><button type="button" class="ar-skip" onclick="arSkip()">Saltar por hoy</button></div>
-    <div class="ar-k">Arranque · ${h(dayTxt)}</div>
-    <div class="ar-q">${q}</div><div class="ar-sub">${sub}</div>
-    <div class="ar-body">${body}</div>
-    ${note?`<div class="ar-note">${h(note)}</div>`:''}
-    <button type="button" class="ar-go" onclick="arNext()">${btn}</button>
-  </div>`;
+  return b;
+}
+const _arIsProj = x => !!x && ((x.key && String(x.key).indexOf('goal-')===0) || (x.id!=null && x.id===_ar.exTask));
+function _arModal(){
+  const k = _ar.md, today = todayStr(), need = _arNeed(today); if (!k) return '';
+  let b = '';
+  if (k==='ref' || k==='ala') { const L = _ar.lav[k], miss = Math.max(0, need-L.have), n = k==='ref'?'Refugio':'Álamos';
+    b = `<div class="ar-eb">Lavadores · ${n}</div><div class="ar-stp" style="margin:18px 0 10px"><button type="button" onclick="arLav('${k}',-1)">–</button><b>${L.have}</b><span class="ar-mut">de ${need}</span><button type="button" onclick="arLav('${k}',1)" style="margin-left:auto">+</button></div>
+      ${miss ? `<div style="margin:6px 0 10px">${_arSeg(['Cubrir hoy','Más adelante'], L.st===2?1:0, j=>`arLavSt2('${k}',${j})`)}</div><div class="ar-mut" style="color:#C4003C">Faltan ${miss} · creo una tarea${L.st===2?' para esta semana':' para hoy'}.</div>` : '<div class="ar-mut" style="color:#15803d">Completos.</div>'}`;
+  } else if (k==='fam') {
+    b = `<div class="ar-eb">Family time</div><div style="margin:14px 0">${_arSeg(['Sí','Hoy no'], _ar.fam.on?0:1, j=>`arFam(${j===0})`)}</div>${_ar.fam.on?`<div class="ar-times"><input type="time" value="${_ar.fam.from}" onchange="arFamT('from',this.value);_arRender()"/><span class="ar-mut">a</span><input type="time" value="${_ar.fam.to}" onchange="arFamT('to',this.value);_arRender()"/></div>`:''}`;
+  } else {
+    b = `<div class="ar-eb">Pendientes de ayer</div><div style="margin-top:12px">${_ar.lateIds.map(id=>{ const t = items.find(i=>i.id===id); if (!t) return ''; const v = _ar.late[id], ago = Math.round((new Date(today)-new Date(t.date))/864e5);
+      return `<div class="ar-card"><div class="ar-row" style="margin-bottom:10px"><span style="font-size:.9rem;font-weight:400;min-width:0">${h(t.text)}</span><span class="ar-mut" style="white-space:nowrap">${ago===1?'ayer':'hace '+ago+' d'}</span></div>${_arSeg(['A hoy','Otro día','Bandeja'], ['hoy','otro','bandeja'].indexOf(v.to), j=>`arLate(${id},'${['hoy','otro','bandeja'][j]}')`)}${v.to==='otro'?`<input type="date" style="margin-top:8px" value="${v.d}" min="${_arAdd(today,1)}" onchange="arLateD(${id},this.value)"/>`:''}</div>`; }).join('') || '<div class="ar-empty">Nada quedó pendiente. Bien.</div>'}</div>`;
+  }
+  return `<div class="ar-mdc" onclick="arMdClose()"></div><div class="ar-mds">${b}<button type="button" class="ar-go" style="margin-top:12px" onclick="arMdClose()">Listo</button></div>`;
+}
+function _arRender(){
+  let o = document.getElementById('arranque'), fresh = false;
+  if (!o) { fresh = true; o = document.createElement('div'); o.id = 'arranque'; document.body.appendChild(o); document.body.classList.add('ar-open');
+    o.innerHTML = `<div class="ar-app"><div class="ar-view"><canvas id="ar-cv"></canvas><div class="ar-top"><span class="ar-pill" id="ar-pl"></span><button type="button" class="ar-pill b" onclick="arSkip()">Saltar por hoy</button></div><div class="ar-lab" id="ar-lab">hoy salió esta matita</div><div class="ar-dots" id="ar-dots"></div></div><div class="ar-sheet" id="ar-sh"></div><div class="ar-md" id="ar-md"></div></div>`; }
+  const S = _ar.step, D = new Date(todayStr()+'T12:00:00');
+  document.getElementById('ar-pl').textContent = D.toLocaleDateString('es-MX',{weekday:'long',day:'numeric'});
+  document.getElementById('ar-dots').innerHTML = AR_CAM.map((_,k)=>`<i class="${k+1===S?'cur':k+1<S?'on':''}"></i>`).join('');
+  const bd = document.querySelector('#ar-sh .ar-bd'), sc = bd ? bd.scrollTop : 0;
+  document.getElementById('ar-sh').innerHTML = `<div><div class="ar-eb">${S} / ${AR_STEPS}</div><div class="ar-hh">${AR_QS[S-1]}</div></div><div class="ar-bd">${_arBodyHtml(S)}</div><div class="ar-nav">${S>1?'<button type="button" class="ar-go ghost" onclick="arBack()" aria-label="Atrás">‹</button>':''}<button type="button" class="ar-go" onclick="arNext()">${S===AR_STEPS?'Empezar':'Siguiente'}</button></div>`;
+  const nb = document.querySelector('#ar-sh .ar-bd'); if (nb && sc) nb.scrollTop = sc;
+  const md = document.getElementById('ar-md'); md.innerHTML = _arModal(); md.classList.toggle('o', !!_ar.md);
+  if (fresh) requestAnimationFrame(()=>{ _arGo(true); _arPaint(); });
 }
 
 function renderDash() {
