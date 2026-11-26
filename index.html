@@ -977,7 +977,7 @@ body.dy-noselect{user-select:none;-webkit-user-select:none}
 .jd-yrs{display:flex;align-items:center;gap:8px;font-size:.75rem;font-weight:700;color:var(--text2);white-space:nowrap}
 .jd select{font:inherit;font-size:.78rem;font-weight:700;color:var(--text);background:#fff;border:1.5px solid var(--border);border-radius:9px;height:34px;padding:0 8px;outline:none}
 .jd select:focus{border-color:var(--accent)}
-.jg-view{position:relative;height:min(56vh,440px);border-radius:22px;overflow:hidden;background:#e9a86a;box-shadow:0 1px 3px rgba(16,24,40,.07),0 4px 14px rgba(16,24,40,.05);touch-action:none}.jg-view canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}.jg-days{position:absolute;left:14px;top:14px;background:rgba(255,255,255,.94);border-radius:99px;padding:7px 12px;font-size:.72rem;letter-spacing:.04em;box-shadow:0 2px 10px rgba(16,24,40,.12)}.jg-days b{font-weight:800}
+.jg-view{position:relative;width:min(100%,calc(62vh*1.3));aspect-ratio:1.3;margin:0 auto;border-radius:22px;overflow:hidden;background:#e9a86a;box-shadow:0 1px 3px rgba(16,24,40,.07),0 4px 14px rgba(16,24,40,.05);touch-action:none}.jg-view canvas{position:absolute;inset:0;width:100%;height:100%;display:block;cursor:grab}.jg-days{position:absolute;left:14px;top:14px;background:rgba(255,255,255,.94);border-radius:99px;padding:7px 12px;font-size:.72rem;letter-spacing:.04em;box-shadow:0 2px 10px rgba(16,24,40,.12)}.jg-days b{font-weight:800}
 .jd-chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}
 .jd-chips .pill.active{background:var(--accent-light);color:var(--accent);border-color:#CFDAB8}
 .jd-row{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:16px;margin-top:16px;align-items:start}
@@ -2627,7 +2627,7 @@ function _habitWeek7(id){
 // MI JARDÍN — una especie por hábito; cada día que lo marcas nace una mata nueva
 // ============================================================
 const _jd = { cam:{x:900,y:720,sw:1270}, tg:{x:900,y:720,sw:1270}, raf:0, drag:null };
-const JD_ALL = [['Plantas',{x:520,y:960,sw:1000},0],['Pérgola',{x:700,y:420,sw:1150},110],['Laguito',{x:1400,y:800,sw:1000},60],['Macetas',{x:1390,y:660,sw:1000},0],['Todo',{x:900,y:720,sw:1270},0]];
+const JD_ALL = [['Plantas',{x:520,y:960,sw:1000},0],['Pérgola',{x:700,y:420,sw:1150},110],['Laguito',{x:1400,y:800,sw:1000},60],['Macetas',{x:1390,y:660,sw:1000},0],['Todo',{x:900,y:800,sw:1500},0]];
 let JD_VIEWS = JD_ALL;
 const JD_NOM = { lav:'lavanda', plu:'pasto plumoso', rom:'romero' };
 function jdStop(){ _jd.raf = 0; }
