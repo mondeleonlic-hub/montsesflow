@@ -1125,6 +1125,21 @@ body.jardin-full .content-area{padding:0}
 .gz-mo-r{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
 .gz-mo-b{border:none;background:#F0F1EC;color:#4b5563;border-radius:99px;padding:8px 16px;font-size:.8rem;font-weight:800;cursor:pointer}
 .gz-mo-b.on{background:#1C2018;color:#fff}
+.gz-more{margin-top:14px;border:none;border-radius:99px;background:rgba(28,32,24,.82);color:#fff;font-size:.76rem;font-weight:800;padding:8px 16px;cursor:pointer}
+.gz-side{position:absolute;right:16px;top:70px;bottom:98px;width:340px;max-width:calc(100% - 32px);padding:18px 20px;overflow-y:auto;scrollbar-width:thin}
+.gz-x{border:none;background:rgba(28,32,24,.08);color:var(--text);width:28px;height:28px;border-radius:50%;font-size:1.1rem;line-height:1;cursor:pointer}
+.gz-sh{margin:18px 0 8px;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#4b5563}
+.gz-lv>div{display:flex;gap:9px;align-items:baseline;padding:4px 0;font-size:.8rem;font-weight:600;color:#5b6270}
+.gz-lv>div.on{color:var(--text)}.gz-lv>div.next span{color:var(--text);font-weight:800}
+.gz-lv b{width:14px;font-size:.72rem;color:#9aa0a6}.gz-lv .on b{color:#34C759}
+.gz-lv span{flex:1}.gz-lv em{font-style:normal;font-size:.72rem;color:#5b6270}
+.gz-fd{margin-bottom:12px}.gz-fdd{font-size:.7rem;font-weight:800;color:#4b5563;margin-bottom:4px}
+.gz-fr{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:.82rem;font-weight:600}
+.gz-ft{flex:1;min-width:0}.gz-ft small{display:block;font-size:.68rem;font-weight:600;color:#5b6270}
+.gz-fm{border:none;background:rgba(28,32,24,.08);color:#374151;border-radius:99px;padding:4px 10px;font-size:.68rem;font-weight:800;cursor:pointer}
+.gz-mvz{margin:2px 0 8px}
+.gz-empty{font-size:.8rem;font-weight:600;color:#5b6270}
+@media(max-width:768px){#gz-ui.side-open .gz-det{display:none}.gz-side{left:12px;right:12px;width:auto;max-width:none;top:auto;bottom:84px;max-height:58%}}
 </style>
 </head>
 <body>
@@ -2023,11 +2038,24 @@ const Garden={cnt:{},marked:{},D:0,last:null,habs:[],subs:[],_seeded:false,
   if(U.oro().on){const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,'rgba(255,170,60,.2)');gr.addColorStop(1,'rgba(255,200,110,.12)');g.fillStyle=gr;g.fillRect(0,0,W,H)}
   if(S.rest){g.fillStyle='rgba(255,226,205,.1)';g.fillRect(0,0,W,H)}},
  // dibuja el recorte (cx,cy = centro, sw = ancho visible) manteniendo la proporción del canvas
- blit(cv,cx,cy,sw){const dpr=Math.min(2,window.devicePixelRatio||1),w=cv.clientWidth||cv.width,h=cv.clientHeight||cv.height;
+ blit(cv,cx,cy,sw,far){const dpr=Math.min(2,window.devicePixelRatio||1),w=cv.clientWidth||cv.width,h=cv.clientHeight||cv.height;
   if(cv.width!=Math.round(w*dpr)||cv.height!=Math.round(h*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr)}
-  const AR=cv.width/cv.height;sw=Math.min(sw,W,H*AR);const sh=sw/AR;cx=cl(cx,sw/2,W-sw/2);cy=cl(cy,sh/2,H-sh/2);
-  this.step();const g=cv.getContext('2d'),k=cv.width/sw;g.setTransform(k,0,0,k,-(cx-sw/2)*k,-(cy-sh/2)*k);this.paint(g,performance.now()/1000);g.setTransform(1,0,0,1,0,0);
-  this.view={cx,cy,sw,sh}}};
+  const AR=cv.width/cv.height;sw=Math.min(sw,far?this.farMax(AR):Math.min(W,H*AR));const sh=sw/AR;
+  cx=sw>=W?W/2:cl(cx,sw/2,W-sw/2);cy=sh>=H?H/2:cl(cy,sh/2,H-sh/2);
+  this.step();const g=cv.getContext('2d'),k=cv.width/sw,t=performance.now()/1000;
+  if(sw>W+1||sh>H+1){ // vista lejana: el jardín completo y los bordes se extienden suavemente
+   if(!this._off){this._off=mk(W,H);this._offg=this._off.getContext('2d')}
+   const o=this._offg;o.setTransform(1,0,0,1,0,0);this.paint(o,t);
+   const x0=-(cx-sw/2)*k,y0=-(cy-sh/2)*k,ww=W*k,hh=H*k,O=this._off;g.setTransform(1,0,0,1,0,0);g.fillStyle='#fff';g.fillRect(0,0,cv.width,cv.height);
+   const E=this._E||(this._E={});const avg=(key,sx,sy,sw2,sh2,dw,dh)=>{const m=E[key]||(E[key]={a:mk(Math.max(dw,Math.round(sw2/5)),Math.max(dh,Math.round(sh2/5))),b:mk(dw,dh)});const ga=m.a.getContext('2d'),gb=m.b.getContext('2d');ga.imageSmoothingQuality=gb.imageSmoothingQuality='high';ga.drawImage(O,sx,sy,sw2,sh2,0,0,m.a.width,m.a.height);gb.drawImage(m.a,0,0,m.a.width,m.a.height,0,0,dw,dh);return m.b};
+   g.imageSmoothingEnabled=true;g.imageSmoothingQuality='high';
+   if(x0>0){g.drawImage(avg('l',0,0,40,H,1,40),0,y0,x0+1,hh);g.drawImage(avg('r',W-40,0,40,H,1,40),x0+ww-1,y0,cv.width-x0-ww+1,hh)}
+   if(y0>0){g.drawImage(avg('t',0,0,W,40,40,1),x0,0,ww,y0+1);g.drawImage(avg('b',0,H-40,W,40,40,1),x0,y0+hh-1,ww,cv.height-y0-hh+1)}
+   g.fillStyle='rgba(255,255,255,.3)';g.fillRect(0,0,cv.width,cv.height);
+   g.drawImage(O,x0,y0,ww,hh);
+  }else{g.setTransform(k,0,0,k,-(cx-sw/2)*k,-(cy-sh/2)*k);this.paint(g,t);g.setTransform(1,0,0,1,0,0)}
+  this.view={cx,cy,sw,sh}},
+ farMax(AR){return AR>=1.25?Math.min(3400,H*AR):H*AR*1.4}};
 window.Garden=Garden;
 })();
 </script>
@@ -2986,6 +3014,7 @@ function _saveRest(r){ localStorage.setItem('mf_rest', JSON.stringify(r)); if (_
 function _gzRestOn(){ const r = _getRest(); return !!(r && r.on && (!r.until || r.until >= todayStr())); }
 function _gzDiff(a, b){ return Math.round((new Date(a+'T12:00:00') - new Date(b+'T12:00:00'))/864e5); }
 function _gzHabZone(h){
+  if (h.zone && GZ_ZONES.some(z=>z[0]===h.zone)) return h.zone;
   const z = _gzKw(h.text);
   if (z) return z;
   const k = (typeof _arHKind==='function') ? _arHKind(h.text) : '';
@@ -3034,18 +3063,20 @@ function toggleSb(){ const on = document.body.classList.toggle('sb-min'); try{ l
   document.querySelectorAll('.nav-item').forEach(n=>{ const l = n.querySelector('.nav-label'); if (l) n.title = l.textContent.trim(); }); })();
 
 // ---- pantalla del jardín
-const _gz = { cam:{x:900,y:720,sw:1800}, tg:{x:900,y:720,sw:1800}, sel:'all', gen:0, pts:new Map(), moved:0, pinch:0 };
+const _gz = { cam:{x:900,y:720,sw:1800}, tg:{x:900,y:720,sw:1800}, sel:'all', open:false, mv:null, gen:0, pts:new Map(), moved:0, pinch:0 };
 function jdStop(){ _gz.gen++; document.body.classList.remove('jardin-full'); }
-function _gzHome(){ const cv = document.getElementById('gz-cv'); const ar = cv ? (cv.clientWidth||1)/(cv.clientHeight||1) : 1.6; return { x:900, y: ar>1.5 || ar<.9 ? 780 : 700, sw:1800 }; }
+function _gzAR(){ const cv = document.getElementById('gz-cv'); return cv ? (cv.clientWidth||1)/(cv.clientHeight||1) : 1.6; }
+function _gzFar(){ return typeof Garden !== 'undefined' && Garden.farMax ? Garden.farMax(_gzAR()) : 1800; }
+function _gzHome(){ const ar = _gzAR(); return { x:900, y:720, sw: ar>=1.25 ? _gzFar() : Math.min(_gzFar(), 1440*ar*1.25) }; }
 function _gzLoop(gen){
   const cv = document.getElementById('gz-cv');
   if (gen !== _gz.gen || !cv || activeTab !== 'jardin') return;
   for (const a of ['x','y','sw']) _gz.cam[a] += (_gz.tg[a]-_gz.cam[a])*.12;
-  Garden.blit(cv, _gz.cam.x, _gz.cam.y, _gz.cam.sw);
+  Garden.blit(cv, _gz.cam.x, _gz.cam.y, _gz.cam.sw, true);
   requestAnimationFrame(()=>_gzLoop(gen));
 }
 function gzFocus(id){
-  _gz.sel = id;
+  _gz.sel = id; _gz.mv = null; if (id==='all') _gz.open = false;
   _gz.tg = id==='all' ? _gzHome() : Object.assign({}, Garden.focus(id));
   _gzUI();
 }
@@ -3059,7 +3090,7 @@ function _gzBind(cv){
     const k = Garden.view ? Garden.view.sw/(cv.clientWidth||1) : 1;
     if (_gz.pts.size >= 2) {
       const [a,b] = [..._gz.pts.values()], d = Math.hypot(a.x-b.x, a.y-b.y);
-      if (_gz.pinch) _gz.tg.sw = Math.max(520, Math.min(1800, _gz.tg.sw * _gz.pinch/d));
+      if (_gz.pinch) _gz.tg.sw = Math.max(520, Math.min(_gzFar(), _gz.tg.sw * _gz.pinch/d));
       _gz.pinch = d; _gz.cam.sw = _gz.tg.sw; return;
     }
     _gz.tg.x -= dx*k; _gz.tg.y -= dy*k; _gz.cam.x = _gz.tg.x; _gz.cam.y = _gz.tg.y;
@@ -3067,7 +3098,7 @@ function _gzBind(cv){
   const up = e => { const was = _gz.pts.has(e.pointerId); _gz.pts.delete(e.pointerId); if (_gz.pts.size < 2) _gz.pinch = 0;
     if (was && e.type==='pointerup' && _gz.moved < 6 && !_gz.pts.size) { const w = _gzWorld(e); if (w) { const id = Garden.hit(w.x, w.y); if (id) gzFocus(id); } } };
   cv.onpointerup = up; cv.onpointercancel = up;
-  cv.onwheel = e => { e.preventDefault(); _gz.tg.sw = Math.max(520, Math.min(1800, _gz.tg.sw*(e.deltaY>0?1.1:.9))); };
+  cv.onwheel = e => { e.preventDefault(); _gz.tg.sw = Math.max(520, Math.min(_gzFar(), _gz.tg.sw*(e.deltaY>0?1.1:.9))); };
 }
 function gzRest(){
   const r = _getRest(), on = _gzRestOn();
@@ -3090,13 +3121,49 @@ function _gzUI(){
     const z = Zs.find(x=>x.id===_gz.sel), nxt = z.th.find(v=>v>z.days);
     det = `<div class="gz-card gz-det"><div class="gz-dh"><div class="gz-dt">${z.n}</div><span class="gz-st" style="color:${col(z)}"><i style="background:${col(z)}"></i>${st(z)}</span></div>
       <div class="gz-sub">Nivel ${z.lvl} de 5 · ${z.days} ${z.days===1?'día':'días'}${nxt ? ` · faltan ${nxt-z.days} para el siguiente` : ''}</div>
-      <div class="gz-el">${z.el.map((n,i)=>`<div class="${z.lvl>i?'on':''}"><b>${z.lvl>i?'✓':'○'}</b>${n}</div>`).join('')}</div></div>`;
+      <div class="gz-el">${z.el.map((n,i)=>`<div class="${z.lvl>i?'on':''}"><b>${z.lvl>i?'✓':'○'}</b>${n}</div>`).join('')}</div>
+      <button type="button" class="gz-more" onclick="gzSide(${_gz.open?0:1})">${_gz.open?'Ocultar detalle':'Ver detalle'}</button></div>`;
   }
+  ui.className = _gz.open && _gz.sel!=='all' ? 'side-open' : '';
   ui.innerHTML = `<div class="gz-card gz-title"><div class="dl-eb">${act} de 9 zonas activas</div><div class="dl-h1">Mi jardín</div></div>
     <div class="gz-rest">${rest ? `<input type="date" value="${r.until||''}" min="${todayStr()}" onchange="gzRestUntil(this.value)" aria-label="Regreso"/>` : ''}<button type="button" class="gz-card gz-pill${rest?' on':''}" onclick="gzRest()">${_gzIcon('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>')}Descanso</button></div>
     ${det}
+    ${_gz.open && _gz.sel!=='all' ? _gzSideHtml(Zs.find(x=>x.id===_gz.sel)) : ''}
     <div class="gz-dock"><button type="button" class="gz-card gz-tile${_gz.sel==='all'?' sel':''}" onclick="gzFocus('all')"><b>Todo</b></button>${Zs.map(z=>`<button type="button" class="gz-card gz-tile${_gz.sel===z.id?' sel':''}" onclick="gzFocus('${z.id}')"><b>${z.n}</b><span class="gz-dots">${dots(z)}</span><i class="gz-sd" style="background:${col(z)}"></i></button>`).join('')}</div>`;
 }
+
+// ---- detalle de una zona: lo que la alimenta + niveles que siguen
+function _gzFeed(zid){
+  const today = todayStr(), days = {};
+  const put = (d, o) => { (days[d] = days[d] || []).push(o); };
+  items.forEach(it => { if (it.done && it.doneDate && it.doneDate <= today && zoneOf(it) === zid) { const c = it.cat!=null ? cats.find(x=>x.id===it.cat) : null; put(it.doneDate, { k:'t', id:it.id, text:it.text, sub:c ? c.name : '' }); } });
+  const hl = _getHlog();
+  _getHabits().forEach(h => { if (_gzHabZone(h) !== zid) return; Object.keys(hl).forEach(d => { if (d <= today && hl[d] && hl[d][h.id]) put(d, { k:'h', id:h.id, text:h.text||'Hábito', sub:'hábito' }); }); });
+  const mo = _getMoments(), MN = { family:'Familia', love:'Bren', vibes:'Me gustó' };
+  Object.keys(mo).forEach(d => { if (d <= today && mo[d] && mo[d][zid]) put(d, { k:'m', id:zid, text:MN[zid], sub:'momento' }); });
+  return Object.keys(days).sort().reverse().slice(0, 60).map(d => [d, days[d]]);
+}
+function gzSide(on){ _gz.open = !!on; _gz.mv = null; _gzUI(); }
+function gzMvOpen(key){ _gz.mv = _gz.mv === key ? null : key; _gzUI(); }
+function gzMove(k, id, zone){
+  if (k === 't') { const it = items.find(i=>i.id===id); if (!it) return; it.zone = zone; save(); }
+  else if (k === 'h') { const hs = _getHabits(), h = hs.find(x=>String(x.id)===String(id)); if (!h) return; h.zone = zone; _saveHabits(hs); }
+  _gz.mv = null; _gzSync(); _gzUI(); showToast('Movida a ' + (GZ_ZONES.find(z=>z[0]===zone)||[,zone])[1]);
+}
+function _gzSideHtml(z){
+  const feed = _gzFeed(z.id), fmt = d => { const t = new Date(d+'T12:00:00').toLocaleDateString('es-MX',{weekday:'short',day:'numeric',month:'short'}).replace(/\./g,''); return t.charAt(0).toUpperCase()+t.slice(1); };
+  const lv = z.el.map((n,i)=>`<div class="${z.lvl>i?'on':''}${z.lvl===i?' next':''}"><b>${z.lvl>i?'✓':'○'}</b><span>${n}</span><em>${z.th[i]} ${z.th[i]===1?'día':'días'}</em></div>`).join('');
+  const rows = feed.length ? feed.map(([d,list]) => `<div class="gz-fd"><div class="gz-fdd">${fmt(d)}</div>${list.map(o => {
+    const key = o.k+o.id+d, can = o.k !== 'm';
+    return `<div class="gz-fr"><span class="gz-ft">${_gzEsc(o.text)}${o.sub?`<small>${_gzEsc(o.sub)}</small>`:''}</span>${can?`<button type="button" class="gz-fm" onclick="gzMvOpen('${key}')">Mover</button>`:''}</div>`
+      + (_gz.mv===key ? `<div class="gz-zc gz-mvz">${GZ_ZONES.filter(x=>x[0]!==z.id).map(([id2,n])=>`<button type="button" class="gz-zb" onclick="gzMove('${o.k}',${typeof o.id==='number'?o.id:`'${o.id}'`},'${id2}')">${n}</button>`).join('')}</div>` : ''); }).join('')}</div>`).join('')
+    : `<div class="gz-empty">Todavía nada. Aquí aparecerán tus actividades.</div>`;
+  return `<div class="gz-card gz-side"><div class="gz-dh"><div class="gz-dt">${z.n}</div><button type="button" class="gz-x" onclick="gzSide(0)" aria-label="Cerrar">×</button></div>
+    <div class="gz-sub">Nivel ${z.lvl} de 5 · ${z.days} ${z.days===1?'día':'días'}</div>
+    <div class="gz-sh">Niveles</div><div class="gz-lv">${lv}</div>
+    <div class="gz-sh">Lo que la alimenta</div><div class="gz-feed">${rows}</div></div>`;
+}
+const _gzEsc = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 function _gzRefresh(){ _gzSync(); _gzUI(); }
 function renderJardin(){
   const el = document.getElementById('panel-jardin'); if (!el) return;
