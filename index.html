@@ -1713,11 +1713,11 @@ function boulder(g,x,y,w,h,seed,dv=0){const R=rng(seed),n=10,pts=[];for(let i=0;
  for(let i=0;i<5;i++){g.strokeStyle='rgba(40,28,20,.2)';g.lineWidth=1.2;g.beginPath();const sx=x+(R()-.5)*w*.7,sy=y+(R()-.5)*h*.6;g.moveTo(sx,sy);g.lineTo(sx+(R()-.5)*20,sy+4+R()*9);g.stroke()}
  if(R()<.55){for(let i=0;i<7;i++)ell(g,x+(R()-.5)*w*.6,y-h*.36+R()*h*.18,4+R()*5,2+R()*2,mixc(pick(R,['#5d7a3a','#6f8a40','#4b6a30']),'#8a7a4a',dv),R()*3)}
  g.restore()}
-function pond(p,DV=0){const c=mk(W,H),g=c.getContext('2d'),r=rng(21);if(p<=0)return c;const s=(.35+.65*p)*(1-.38*DV),cx=POND.cx,cy=POND.cy,rx=POND.rx*s*.84,ry=POND.ry*s*.84;
+function pond(p,DV=0){const c=mk(W,H),g=c.getContext('2d'),r=rng(21);if(p<=0)return c;const s=(.14+.86*p)*(1-.38*DV),cx=POND.cx,cy=POND.cy,rx=POND.rx*s*.84,ry=POND.ry*s*.84;
  // tierra húmeda
  g.fillStyle='rgba(70,48,28,'+(.28+DV*.35)+')';pshape(g,cx,cy+6,rx,ry,1.18);g.fill();
  if(DV>.05){g.fillStyle='rgba(110,82,50,'+(DV*.5)+')';pshape(g,cx,cy+4,rx,ry,1.12);g.fill()}
- const N=Math.round(34*Math.min(1,.45+p)),rocks=[];for(let i=0;i<N;i++){const a=Math.PI*2*(i+r()*.7)/N,back=Math.sin(a)<0,[x,y]=pedge(cx,cy,rx,ry,a,back?1.04:1.02),sz=(back?1:.78)*(40+r()*44)*(.6+.5*Math.min(1,s));rocks.push({a,back,x,y:y+(back?-4:4),w:sz*1.25,h:sz*.82,seed:Math.floor(r()*1e6)})}
+ const N=Math.round(34*Math.min(1,.2+1.4*p)),rocks=[];for(let i=0;i<N;i++){const a=Math.PI*2*(i+r()*.7)/N,back=Math.sin(a)<0,[x,y]=pedge(cx,cy,rx,ry,a,back?1.04:1.02),sz=(back?1:.78)*(40+r()*44)*(.4+.7*Math.min(1,s));rocks.push({a,back,x,y:y+(back?-4:4),w:sz*1.25,h:sz*.82,seed:Math.floor(r()*1e6)})}
  // piedras de atrás y segunda hilera
  rocks.filter(o=>o.back).forEach(o=>boulder(g,o.x,o.y,o.w,o.h,o.seed,DV));
  if(p>.3)for(let i=0;i<Math.round(14*p);i++){const a=Math.PI*(1.05+.9*r()),[x,y]=pedge(cx,cy,rx,ry,a,1.1);boulder(g,x,y-14-r()*14,(50+r()*40)*Math.min(1.2,s+.3),(34+r()*24)*Math.min(1.2,s+.3),Math.floor(r()*1e6),DV)}
@@ -1929,7 +1929,7 @@ function fallAnim(c,q,t,dv){const x0=POND.cx+q.rx*.62,y0=POND.cy-q.ry*.62,f=1-dv
 /* ====== composición (se rehace solo cuando algo cambia) ====== */
 const FULL=mk(W,H),fx=FULL.getContext('2d'),FRONT=mk(W,H),fxF=FRONT.getContext('2d');let SIG='';
 const pondP=L=>[0,.06,.4,.64,.86,1][L],pergP=L=>[0,.12,.38,.56,.76,1][L];
-function pondGeom(){const z=ZB.mind,p=pondP(lvl(z)),s=(.35+.65*p)*(1-.38*z.dv);return{p,rx:POND.rx*s*.84,ry:POND.ry*s*.84}}
+function pondGeom(){const z=ZB.mind,p=pondP(lvl(z)),s=(.14+.86*p)*(1-.38*z.dv);return{p,rx:POND.rx*s*.84,ry:POND.ry*s*.84}}
 function compose(){const g=fx;g.clearRect(0,0,W,H);g.drawImage(baseC,0,0);
  const m=ZB.mind,lm=lvl(m),lp=lvl(ZB.learning),dvm=m.dv,dvl=ZB.learning.dv;
  if(lm>=1)g.drawImage(layer('pond',pondP(lm),dvm,(p,d)=>pond(p,d)),0,0);
